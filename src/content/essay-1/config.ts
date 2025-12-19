@@ -6,6 +6,7 @@ export const ESSAY_META = {
   title: 'Value under Physical Constraint',
   version: 'v0.1',
   status: 'Working Draft',
+  date: 'December 2024',
   lastUpdated: '2024-12-19',
 };
 
