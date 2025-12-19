@@ -1,0 +1,588 @@
+---
+// Explore page - visualize the distinction network
+import { CONCEPTS } from '../content/graph/concepts';
+import { DISTINCTIONS } from '../content/graph/distinctions';
+import { RELATIONSHIPS } from '../content/graph/relationships';
+import { getGraphStats, getConceptContext } from '../content/graph/index';
+
+const stats = getGraphStats();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Explore — Distinction Network</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <a href="/essay" class="nav-link">Essay</a>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>Distinction Network</h1>
+        <p class="subtitle">The underlying knowledge graph</p>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-value">{stats.conceptCount}</span>
+            <span class="stat-label">Concepts</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">{stats.distinctionCount}</span>
+            <span class="stat-label">Distinctions</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">{stats.relationshipCount}</span>
+            <span class="stat-label">Relationships</span>
+          </div>
+        </div>
+
+        <div class="status-breakdown">
+          <span class="status-chip established">{stats.establishedCount} Established</span>
+          <span class="status-chip derived">{stats.derivedCount} Derived</span>
+          <span class="status-chip contested">{stats.contestedCount} Contested</span>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Concepts</h2>
+        <div class="concepts-grid">
+          {CONCEPTS.map(concept => (
+            <div class="concept-card" data-status={concept.epistemicStatus}>
+              <div class="concept-header">
+                <h3>{concept.name}</h3>
+                <span class={`status-badge ${concept.epistemicStatus}`}>{concept.epistemicStatus}</span>
+              </div>
+              <p class="definition">{concept.definition}</p>
+              <div class="resolutions">
+                <details>
+                  <summary>Simple</summary>
+                  <p>{concept.resolutions.simple}</p>
+                </details>
+                <details>
+                  <summary>Formal</summary>
+                  <p>{concept.resolutions.formal}</p>
+                </details>
+                {concept.resolutions.implications.length > 0 && (
+                  <details>
+                    <summary>Implications ({concept.resolutions.implications.length})</summary>
+                    <ul>
+                      {concept.resolutions.implications.map(imp => (
+                        <li>{imp}</li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
+              </div>
+              <div class="tags">
+                {concept.tags.map(tag => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Distinctions</h2>
+        <div class="distinctions-list">
+          {DISTINCTIONS.map(distinction => {
+            const conceptA = CONCEPTS.find(c => c.id === distinction.conceptA);
+            const conceptB = CONCEPTS.find(c => c.id === distinction.conceptB);
+            return (
+              <div class="distinction-card">
+                <div class="distinction-header">
+                  <span class="concept-name">{conceptA?.name || distinction.conceptA}</span>
+                  <span class="vs">vs</span>
+                  <span class="concept-name">{conceptB?.name || distinction.conceptB}</span>
+                  <span class={`status-badge ${distinction.epistemicStatus}`}>{distinction.epistemicStatus}</span>
+                </div>
+                <div class="dimension">
+                  <strong>Dimension:</strong> {distinction.dimension}
+                </div>
+                <p class="explanation">{distinction.explanation}</p>
+                <div class="comparison">
+                  <div class="comparison-item">
+                    <div class="comparison-label">Shared</div>
+                    <p>{distinction.comparison.sharedProperty}</p>
+                  </div>
+                  <div class="comparison-item">
+                    <div class="comparison-label">Different</div>
+                    <p>{distinction.comparison.differingProperty}</p>
+                  </div>
+                  <div class="comparison-row">
+                    <div class="comparison-item a">
+                      <div class="comparison-label">{conceptA?.name}</div>
+                      <p>{distinction.comparison.aPosition}</p>
+                    </div>
+                    <div class="comparison-item b">
+                      <div class="comparison-label">{conceptB?.name}</div>
+                      <p>{distinction.comparison.bPosition}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Relationships</h2>
+        <div class="relationships-table">
+          <table>
+            <thead>
+              <tr>
+                <th>From</th>
+                <th>Type</th>
+                <th>To</th>
+                <th>Strength</th>
+              </tr>
+            </thead>
+            <tbody>
+              {RELATIONSHIPS.map(rel => {
+                const source = CONCEPTS.find(c => c.id === rel.source);
+                const target = CONCEPTS.find(c => c.id === rel.target);
+                return (
+                  <tr>
+                    <td>{source?.name || rel.source}</td>
+                    <td class="rel-type">
+                      <span class={`type-badge ${rel.type}`}>{rel.type.replace('_', ' ')}</span>
+                      {rel.bidirectional && <span class="bi">↔</span>}
+                    </td>
+                    <td>{target?.name || rel.target}</td>
+                    <td class={`strength ${rel.strength}`}>{rel.strength}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+        --established: #4a9eff;
+        --derived: #50c878;
+        --contested: #ffa500;
+        --open: #a855f7;
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .top-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .nav-link {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+
+      .nav-link:hover {
+        color: var(--accent);
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 80px 2rem 4rem;
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.5rem;
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .stat-value {
+        font-family: var(--font-mono);
+        font-size: 2rem;
+        color: var(--accent);
+      }
+
+      .stat-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .status-breakdown {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      .status-chip {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        border: 1px solid;
+      }
+
+      .status-chip.established { color: var(--established); border-color: var(--established); }
+      .status-chip.derived { color: var(--derived); border-color: var(--derived); }
+      .status-chip.contested { color: var(--contested); border-color: var(--contested); }
+
+      .section {
+        margin-bottom: 4rem;
+      }
+
+      .section h2 {
+        font-family: var(--font-display);
+        font-size: 1.75rem;
+        font-weight: 400;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+
+      /* Concepts Grid */
+      .concepts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .concept-card {
+        background: var(--depth-1);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 8px;
+        padding: 1.25rem;
+      }
+
+      .concept-card[data-status="established"] { border-left: 3px solid var(--established); }
+      .concept-card[data-status="derived"] { border-left: 3px solid var(--derived); }
+      .concept-card[data-status="contested"] { border-left: 3px solid var(--contested); }
+      .concept-card[data-status="open"] { border-left: 3px solid var(--open); }
+
+      .concept-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+      }
+
+      .concept-header h3 {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 500;
+      }
+
+      .status-badge {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        border: 1px solid;
+      }
+
+      .status-badge.established { color: var(--established); border-color: var(--established); }
+      .status-badge.derived { color: var(--derived); border-color: var(--derived); }
+      .status-badge.contested { color: var(--contested); border-color: var(--contested); }
+      .status-badge.open { color: var(--open); border-color: var(--open); }
+
+      .definition {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        margin-bottom: 1rem;
+      }
+
+      .resolutions {
+        margin-bottom: 1rem;
+      }
+
+      .resolutions details {
+        margin-bottom: 0.5rem;
+      }
+
+      .resolutions summary {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 0.25rem 0;
+      }
+
+      .resolutions summary:hover {
+        color: var(--accent);
+      }
+
+      .resolutions p, .resolutions ul {
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        padding: 0.5rem 0 0.5rem 1rem;
+        border-left: 2px solid rgba(255,255,255,0.1);
+        margin-top: 0.25rem;
+      }
+
+      .resolutions ul {
+        padding-left: 2rem;
+      }
+
+      .resolutions li {
+        margin-bottom: 0.25rem;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .tag {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        color: var(--text-muted);
+        padding: 0.15rem 0.5rem;
+        background: rgba(255,255,255,0.05);
+        border-radius: 3px;
+      }
+
+      /* Distinctions */
+      .distinctions-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .distinction-card {
+        background: var(--depth-1);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 8px;
+        padding: 1.5rem;
+      }
+
+      .distinction-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .concept-name {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        color: var(--accent);
+      }
+
+      .vs {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        font-style: italic;
+      }
+
+      .dimension {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.75rem;
+      }
+
+      .explanation {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        margin-bottom: 1rem;
+        padding-left: 1rem;
+        border-left: 2px solid var(--accent);
+      }
+
+      .comparison {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .comparison-item {
+        background: rgba(255,255,255,0.03);
+        padding: 0.75rem 1rem;
+        border-radius: 4px;
+      }
+
+      .comparison-label {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.25rem;
+      }
+
+      .comparison-item p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+
+      .comparison-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .comparison-item.a {
+        border-left: 2px solid var(--accent);
+      }
+
+      .comparison-item.b {
+        border-left: 2px solid var(--derived);
+      }
+
+      /* Relationships Table */
+      .relationships-table {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+
+      th {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        background: var(--depth-1);
+      }
+
+      td {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+
+      .rel-type {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .type-badge {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        background: rgba(255,255,255,0.05);
+      }
+
+      .type-badge.depends_on { color: var(--accent); }
+      .type-badge.implies { color: var(--derived); }
+      .type-badge.contrasts_with { color: var(--contested); }
+      .type-badge.exemplifies { color: #9f9fff; }
+      .type-badge.part_of { color: #ff9fdf; }
+      .type-badge.prerequisite { color: var(--established); }
+
+      .bi {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .strength {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+      }
+
+      .strength.strong { color: var(--text-primary); }
+      .strength.moderate { color: var(--text-secondary); }
+      .strength.weak { color: var(--text-muted); }
+
+      @media (max-width: 768px) {
+        .concepts-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .comparison-row {
+          grid-template-columns: 1fr;
+        }
+
+        .stats {
+          gap: 1.5rem;
+        }
+      }
+    </style>
+  </body>
+</html>
