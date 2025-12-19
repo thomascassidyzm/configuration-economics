@@ -1,0 +1,598 @@
+---
+// Essay 1: Value under Physical Constraint
+// Main essay page with collapse modes and Guide integration
+
+import Guide from '../../components/Guide.astro';
+import { ESSAY_META, SECTIONS as SECTION_META } from '../../content/essay-1/config';
+import { SECTIONS as SECTION_CONTENT } from '../../content/essay-1/sections';
+
+// Simple markdown parser for content
+function parseMarkdown(text: string): string {
+  return text
+    .split('\n\n')
+    .map(para => {
+      // Handle list items
+      if (para.startsWith('* ')) {
+        const items = para.split('\n').map(line => {
+          const content = line.replace(/^\* /, '');
+          return `<li>${content}</li>`;
+        }).join('');
+        return `<ul>${items}</ul>`;
+      }
+      // Regular paragraphs
+      let processed = para
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>');
+      return `<p>${processed}</p>`;
+    })
+    .join('');
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{ESSAY_META.title} — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-meta">
+        <span class="version">{ESSAY_META.version}</span>
+        <span class="status">{ESSAY_META.status}</span>
+      </div>
+    </nav>
+
+    <header class="essay-header">
+      <div class="essay-number">Essay 1</div>
+      <h1>{ESSAY_META.title}</h1>
+
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="essay">Essay</button>
+        <button class="mode-btn" data-mode="overview">Overview</button>
+        <button class="mode-btn" data-mode="academic">Academic</button>
+      </div>
+    </header>
+
+    <aside class="section-nav">
+      <div class="nav-label">Sections</div>
+      {SECTION_META.map((section, i) => (
+        <a href={`#section-${section.id}`} class="section-link" data-status={section.epistemicStatus}>
+          <span class="section-num">{section.number}</span>
+          <span class="section-title">{section.shortTitle}</span>
+          <span class={`status-dot ${section.epistemicStatus}`} title={section.epistemicStatus}></span>
+        </a>
+      ))}
+
+      <div class="status-legend">
+        <div class="legend-item"><span class="status-dot established"></span> Established</div>
+        <div class="legend-item"><span class="status-dot derived"></span> Derived</div>
+        <div class="legend-item"><span class="status-dot contested"></span> Contested</div>
+        <div class="legend-item"><span class="status-dot open"></span> Open</div>
+      </div>
+    </aside>
+
+    <main class="essay-content">
+      <!-- Overview Mode: Key Points -->
+      <div class="mode-content overview-mode" style="display: none;">
+        {SECTION_META.map((meta, i) => {
+          const content = SECTION_CONTENT.find(s => s.id === meta.id);
+          return (
+            <section class="section-overview" id={`overview-${meta.id}`}>
+              <div class="section-header">
+                <span class="section-number">{meta.number}</span>
+                <h2>{meta.title}</h2>
+                <span class={`epistemic-badge ${meta.epistemicStatus}`}>{meta.epistemicStatus}</span>
+              </div>
+              {content?.keyPoints && (
+                <ul class="key-points">
+                  {content.keyPoints.map(point => (
+                    <li>{point}</li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          );
+        })}
+      </div>
+
+      <!-- Essay Mode: Full Text -->
+      <div class="mode-content essay-mode">
+        {SECTION_META.map((meta, i) => {
+          const content = SECTION_CONTENT.find(s => s.id === meta.id);
+          return (
+            <section class="section-full" id={`section-${meta.id}`} data-section-id={meta.id}>
+              <div class="section-header">
+                <span class="section-number">{meta.number}</span>
+                <h2>{meta.title}</h2>
+                <span class={`epistemic-badge ${meta.epistemicStatus}`}>{meta.epistemicStatus}</span>
+              </div>
+              <div class="section-body" set:html={parseMarkdown(content?.content || '')} />
+            </section>
+          );
+        })}
+      </div>
+
+      <!-- Academic Mode: With citations and formal structure -->
+      <div class="mode-content academic-mode" style="display: none;">
+        <div class="academic-header">
+          <h1>Value under Physical Constraint</h1>
+          <p class="academic-subtitle">A Framework for Economic Accounting under Thermodynamic Limits</p>
+          <p class="academic-meta">Working Paper • Version {ESSAY_META.version}</p>
+        </div>
+
+        <div class="abstract">
+          <h3>Abstract</h3>
+          <p>This essay examines the coherence of economic value accounting when physical constraints—conservation of matter, bounded energy flux, and entropic increase—are taken as foundational rather than peripheral. We propose that value be understood as configuration that preserves and expands future option space under bounded energy flux, and explore the consequences of this reframing for concepts of work, growth, and economic coordination.</p>
+        </div>
+
+        {SECTION_META.map((meta, i) => {
+          const content = SECTION_CONTENT.find(s => s.id === meta.id);
+          return (
+            <section class="section-academic" id={`academic-${meta.id}`}>
+              <h2><span class="section-ref">{meta.number}</span> {meta.title}</h2>
+              <div class="section-body" set:html={parseMarkdown(content?.content || '')} />
+            </section>
+          );
+        })}
+      </div>
+    </main>
+
+    <Guide currentSection="Essay 1" />
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+
+        --established: #4a9eff;
+        --derived: #50c878;
+        --contested: #ffa500;
+        --open: #a855f7;
+
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.7;
+      }
+
+      /* Top Navigation */
+      .top-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+        font-weight: 400;
+      }
+
+      .nav-meta {
+        display: flex;
+        gap: 1rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+      }
+
+      .version {
+        color: var(--accent);
+      }
+
+      .status {
+        color: var(--text-muted);
+      }
+
+      /* Essay Header */
+      .essay-header {
+        padding: 8rem 2rem 3rem;
+        max-width: 800px;
+        margin: 0 auto 0 280px;
+      }
+
+      .essay-number {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+
+      .essay-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.5rem;
+        font-weight: 400;
+        margin-bottom: 2rem;
+        line-height: 1.2;
+      }
+
+      /* Mode Selector */
+      .mode-selector {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .mode-btn {
+        font-family: var(--font-body);
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.1);
+        color: var(--text-secondary);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .mode-btn:hover {
+        border-color: rgba(255,255,255,0.2);
+        color: var(--text-primary);
+      }
+
+      .mode-btn.active {
+        background: rgba(74, 158, 255, 0.1);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      /* Section Navigation */
+      .section-nav {
+        position: fixed;
+        left: 0;
+        top: 56px;
+        bottom: 0;
+        width: 260px;
+        padding: 2rem 1rem;
+        overflow-y: auto;
+        border-right: 1px solid rgba(255,255,255,0.06);
+        background: rgba(10, 10, 12, 0.5);
+      }
+
+      .nav-label {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        color: var(--text-muted);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        padding: 0 0.5rem;
+      }
+
+      .section-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem;
+        text-decoration: none;
+        color: var(--text-secondary);
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        margin-bottom: 0.25rem;
+      }
+
+      .section-link:hover {
+        background: rgba(255,255,255,0.05);
+        color: var(--text-primary);
+      }
+
+      .section-link.active {
+        background: rgba(74, 158, 255, 0.1);
+        color: var(--text-primary);
+      }
+
+      .section-num {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        width: 24px;
+      }
+
+      .section-title {
+        font-size: 0.8125rem;
+        flex: 1;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .status-dot.established { background: var(--established); }
+      .status-dot.derived { background: var(--derived); }
+      .status-dot.contested { background: var(--contested); }
+      .status-dot.open { background: var(--open); }
+
+      .status-legend {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.6875rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+      }
+
+      /* Essay Content */
+      .essay-content {
+        max-width: 800px;
+        margin-left: 280px;
+        padding: 0 2rem 6rem;
+      }
+
+      .mode-content {
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Section Styles */
+      .section-full,
+      .section-overview,
+      .section-academic {
+        margin-bottom: 4rem;
+        scroll-margin-top: 80px;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: baseline;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .section-number {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        color: var(--text-muted);
+      }
+
+      .section-header h2 {
+        font-family: var(--font-display);
+        font-size: 1.75rem;
+        font-weight: 400;
+        flex: 1;
+      }
+
+      .epistemic-badge {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+        background: rgba(255,255,255,0.05);
+      }
+
+      .epistemic-badge.established { color: var(--established); border: 1px solid var(--established); }
+      .epistemic-badge.derived { color: var(--derived); border: 1px solid var(--derived); }
+      .epistemic-badge.contested { color: var(--contested); border: 1px solid var(--contested); }
+      .epistemic-badge.open { color: var(--open); border: 1px solid var(--open); }
+
+      .section-body {
+        font-size: 1.0625rem;
+        color: var(--text-secondary);
+      }
+
+      .section-body p {
+        margin-bottom: 1.25rem;
+      }
+
+      .section-body strong {
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .section-body em {
+        font-style: italic;
+        color: var(--text-primary);
+      }
+
+      .section-body ul {
+        margin: 1rem 0;
+        padding-left: 1.5rem;
+      }
+
+      .section-body li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Overview Mode */
+      .key-points {
+        list-style: none;
+        padding: 0;
+      }
+
+      .key-points li {
+        padding: 0.75rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+        color: var(--text-secondary);
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+      }
+
+      .key-points li:before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
+
+      /* Academic Mode */
+      .academic-header {
+        text-align: center;
+        margin-bottom: 4rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .academic-header h1 {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+
+      .academic-subtitle {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        font-style: italic;
+        margin-bottom: 0.5rem;
+      }
+
+      .academic-meta {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .abstract {
+        background: rgba(255,255,255,0.02);
+        border-left: 3px solid var(--accent);
+        padding: 1.5rem;
+        margin-bottom: 3rem;
+      }
+
+      .abstract h3 {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+      }
+
+      .abstract p {
+        font-size: 0.9375rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+      }
+
+      .section-academic h2 {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+
+      .section-ref {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        color: var(--text-muted);
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .section-nav {
+          display: none;
+        }
+
+        .essay-header,
+        .essay-content {
+          margin-left: 0;
+        }
+
+        .essay-header {
+          padding: 6rem 1.5rem 2rem;
+        }
+
+        .essay-content {
+          padding: 0 1.5rem 4rem;
+        }
+      }
+    </style>
+
+    <script>
+      // Mode switching
+      const modeButtons = document.querySelectorAll('.mode-btn');
+      const modeContents = document.querySelectorAll('.mode-content');
+
+      modeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mode = btn.dataset.mode;
+
+          modeButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          modeContents.forEach(content => {
+            content.style.display = content.classList.contains(`${mode}-mode`) ? 'block' : 'none';
+          });
+        });
+      });
+
+      // Section navigation highlighting
+      const sections = document.querySelectorAll('.section-full');
+      const navLinks = document.querySelectorAll('.section-link');
+
+      const observerOptions = {
+        root: null,
+        rootMargin: '-80px 0px -70% 0px',
+        threshold: 0
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const sectionId = entry.target.dataset.sectionId;
+            navLinks.forEach(link => {
+              link.classList.toggle('active', link.getAttribute('href') === `#section-${sectionId}`);
+            });
+
+            // Update Guide context
+            window.currentSection = entry.target.querySelector('h2')?.textContent || 'Essay 1';
+          }
+        });
+      }, observerOptions);
+
+      sections.forEach(section => observer.observe(section));
+    </script>
+  </body>
+</html>

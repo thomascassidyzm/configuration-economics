@@ -97,6 +97,15 @@
         transform: translateY(-2px);
       }
 
+      a.primary-link {
+        border-color: var(--accent);
+        background: rgba(74, 158, 255, 0.08);
+      }
+
+      a.primary-link:hover {
+        background: rgba(74, 158, 255, 0.15);
+      }
+
       .note {
         font-size: 0.875rem;
         color: var(--text-muted);
@@ -113,14 +122,15 @@
       <span class="status">Development Preview</span>
 
       <div class="links">
-        <a href="/concept-dark">Format Exploration — Dark Mode</a>
-        <a href="/concept-light">Format Exploration — Light Mode</a>
+        <a href="/essay" class="primary-link">Essay 1: Value under Physical Constraint</a>
+        <a href="/concept-dark">Format Exploration — Dark</a>
+        <a href="/concept-light">Format Exploration — Light</a>
       </div>
 
       <p class="note">
-        This is a new publication format where content exists in superposition
-        until the reader's intent causes collapse into an appropriate projection.
-        Configuration Economics will be the first work published in this format.
+        A living epistemic work where content can be read at multiple resolutions,
+        each section carries its epistemic status, and an embedded guide helps
+        navigate the framework at your own depth.
       </p>
     </div>
   </body>

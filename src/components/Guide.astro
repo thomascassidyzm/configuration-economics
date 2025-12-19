@@ -1,6 +1,13 @@
 ---
 // Guide Component - Epistemic companion for Configuration Economics
 // Implements the layered presence: indicator → panel → conversation
+
+interface Props {
+  currentSection?: string;
+  epistemicStatus?: string;
+}
+
+const { currentSection = 'Configuration Economics', epistemicStatus = 'Overview' } = Astro.props;
 ---
 
 <div id="guide-container" class="guide-container">
@@ -22,7 +29,7 @@
     <div class="guide-context">
       <div class="context-item">
         <span class="context-label">Currently Reading</span>
-        <span id="guide-section" class="context-value">Configuration Economics</span>
+        <span id="guide-section" class="context-value" data-default-section={currentSection}>{currentSection}</span>
       </div>
       <div class="context-item">
         <span class="context-label">Section Status</span>
@@ -568,12 +575,29 @@
     let conversationHistory: Array<{role: 'user' | 'assistant', content: string}> = [];
     let isLoading = false;
 
-    // Get current section from page
+    // Get current section from page - checks for dynamically set section or falls back to default
     function getCurrentContext() {
-      const section = document.querySelector('[data-section]')?.getAttribute('data-section') || 'Overview';
+      // Check for window.currentSection (set by essay page on scroll)
+      const dynamicSection = (window as any).currentSection;
+      const sectionEl = document.getElementById('guide-section');
+      const defaultSection = sectionEl?.getAttribute('data-default-section') || 'Configuration Economics';
+      const section = dynamicSection || sectionEl?.textContent || defaultSection;
+
       const status = document.querySelector('[data-epistemic-status]')?.getAttribute('data-epistemic-status') || 'established';
       return { section, status };
     }
+
+    // Update the displayed section when window.currentSection changes
+    function updateDisplayedSection() {
+      const sectionEl = document.getElementById('guide-section');
+      const dynamicSection = (window as any).currentSection;
+      if (sectionEl && dynamicSection) {
+        sectionEl.textContent = dynamicSection;
+      }
+    }
+
+    // Poll for section changes (simpler than MutationObserver for this case)
+    setInterval(updateDisplayedSection, 500);
 
     // Smooth scroll to bottom
     function scrollToBottom() {
