@@ -310,6 +310,34 @@
     opacity: 0.85;
   }
 
+  /* Follow-up buttons */
+  .message.assistant :global(.follow-ups) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--guide-border, rgba(255,255,255,0.1));
+  }
+
+  .message.assistant :global(.follow-up-btn) {
+    font-size: 0.7rem;
+    padding: 5px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--guide-border, rgba(255,255,255,0.15));
+    background: transparent;
+    color: var(--guide-text-secondary, #a0a0b8);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .message.assistant :global(.follow-up-btn:hover) {
+    border-color: var(--guide-accent, #4a9eff);
+    color: var(--guide-text, #e8e8f0);
+    background: var(--guide-accent-soft, rgba(74, 158, 255, 0.1));
+  }
+
   /* Typing indicator */
   .typing-indicator {
     display: flex;
@@ -632,6 +660,33 @@
       }
     }
 
+    // Create follow-up buttons after a response
+    function createFollowUpButtons(): HTMLElement {
+      const container = document.createElement('div');
+      container.className = 'follow-ups';
+
+      const options = [
+        { label: 'Say more', query: 'Can you expand on that last point?' },
+        { label: 'Related concepts', query: 'What concepts relate to what you just described?' },
+        { label: 'How does this fit in?', query: 'How does this fit into the broader framework?' },
+        { label: 'What follows?', query: 'What are the logical consequences of this?' },
+      ];
+
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'follow-up-btn';
+        btn.textContent = opt.label;
+        btn.addEventListener('click', () => {
+          // Remove all follow-up buttons when one is clicked
+          document.querySelectorAll('.follow-ups').forEach(el => el.remove());
+          sendMessage(opt.query);
+        });
+        container.appendChild(btn);
+      });
+
+      return container;
+    }
+
     // Send message to API
     async function sendMessage(message: string) {
       if (isLoading) return;
@@ -678,6 +733,10 @@
 
         // Clear typing indicator and render the full response
         typingEl.innerHTML = parseMarkdown(data.message);
+
+        // Add follow-up buttons after the response
+        const followUps = createFollowUpButtons();
+        typingEl.appendChild(followUps);
 
         // Scroll to show the START of the response (not the end)
         scrollToElement(typingEl);
