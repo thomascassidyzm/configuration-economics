@@ -49,6 +49,13 @@
       <button class="suggestion" data-query="How does energy income differ from energy savings?">Key distinctions</button>
     </div>
 
+    <!-- Scroll to bottom indicator -->
+    <button id="scroll-indicator" class="scroll-indicator" aria-label="Scroll to bottom" style="display: none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </button>
+
     <form id="guide-form" class="guide-input-form">
       <input
         type="text"
@@ -126,7 +133,7 @@
     display: none;
     flex-direction: column;
     box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    overflow: hidden;
+    overflow: visible; /* Allow scroll indicator to show */
   }
 
   .guide-panel.open {
@@ -331,6 +338,37 @@
   .message.error {
     background: rgba(255, 100, 100, 0.1);
     color: #ff6b6b;
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--guide-accent, #4a9eff);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+    z-index: 10;
+    animation: bounce-hint 2s ease-in-out infinite;
+  }
+
+  .scroll-indicator:hover {
+    transform: translateX(-50%) scale(1.1);
+  }
+
+  @keyframes bounce-hint {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(3px); }
   }
 
   /* Suggestions */
@@ -546,6 +584,18 @@
       });
     });
 
+    // Scroll indicator click - scroll to bottom
+    const scrollIndicator = document.getElementById('scroll-indicator');
+    scrollIndicator?.addEventListener('click', () => {
+      scrollToBottom();
+      updateScrollIndicator();
+    });
+
+    // Update scroll indicator on scroll
+    messagesContainer?.addEventListener('scroll', () => {
+      updateScrollIndicator();
+    });
+
     // Handle form submit
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -556,41 +606,30 @@
       }
     });
 
-    // Type out message character by character
-    async function typeMessage(element: HTMLElement, content: string) {
-      const chars = content.split('');
-      let currentText = '';
-
-      for (let i = 0; i < chars.length; i++) {
-        currentText += chars[i];
-
-        // Render markdown on each update
-        element.innerHTML = parseMarkdown(currentText);
-
-        // Scroll every few characters
-        if (i % 5 === 0) {
-          scrollToBottom();
-        }
-
-        // Variable typing speed
-        const char = chars[i];
-        let delay = 12; // Base speed: ~83 chars/second
-
-        if (char === '.' || char === '!' || char === '?') {
-          delay = 200; // Pause at sentence end
-        } else if (char === ',' || char === ';' || char === ':') {
-          delay = 80; // Brief pause at clauses
-        } else if (char === '\n') {
-          delay = 100; // Pause at line breaks
-        } else if (char === ' ') {
-          delay = 8; // Faster on spaces
-        }
-
-        await new Promise(resolve => setTimeout(resolve, delay));
+    // Scroll to show a specific element (top of it visible)
+    function scrollToElement(element: HTMLElement) {
+      if (messagesContainer) {
+        const containerRect = messagesContainer.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+        const offsetTop = elementRect.top - containerRect.top + messagesContainer.scrollTop;
+        messagesContainer.scrollTop = offsetTop - 10; // Small padding from top
       }
+    }
 
-      // Final scroll
-      scrollToBottom();
+    // Check if scrolled to bottom
+    function isAtBottom(): boolean {
+      if (!messagesContainer) return true;
+      const threshold = 50;
+      return messagesContainer.scrollHeight - messagesContainer.scrollTop - messagesContainer.clientHeight < threshold;
+    }
+
+    // Update scroll indicator visibility
+    function updateScrollIndicator() {
+      const indicator = document.getElementById('scroll-indicator');
+      if (indicator && messagesContainer) {
+        const shouldShow = !isAtBottom() && messagesContainer.scrollHeight > messagesContainer.clientHeight;
+        indicator.style.display = shouldShow ? 'flex' : 'none';
+      }
     }
 
     // Send message to API
@@ -637,9 +676,14 @@
 
         const data = await response.json();
 
-        // Clear typing indicator and type the response
-        typingEl.innerHTML = '';
-        await typeMessage(typingEl, data.message);
+        // Clear typing indicator and render the full response
+        typingEl.innerHTML = parseMarkdown(data.message);
+
+        // Scroll to show the START of the response (not the end)
+        scrollToElement(typingEl);
+
+        // Show scroll indicator if there's more content
+        updateScrollIndicator();
 
         // Update history
         conversationHistory.push(
