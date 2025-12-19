@@ -2,7 +2,7 @@
 // Essay 1: Value under Physical Constraint
 // Main essay page with collapse modes and Guide integration
 
-import Guide from '../../components/Guide.astro';
+import GuidePanel from '../../components/GuidePanel.astro';
 import { ESSAY_META, SECTIONS as SECTION_META } from '../../content/essay-1/config';
 import { SECTIONS as SECTION_CONTENT } from '../../content/essay-1/sections';
 
@@ -67,14 +67,6 @@ function parseMarkdown(text: string): string {
         <button class="mode-btn" data-mode="academic">Academic</button>
       </div>
 
-      <div class="guide-intro">
-        <div class="guide-intro-icon">
-          <span class="guide-dot-small"></span>
-        </div>
-        <div class="guide-intro-text">
-          <strong>The Guide</strong> is your epistemic companion. It knows this content deeply and can explain, challenge, and find connections at whatever level you prefer. Look for the blue dot in the corner.
-        </div>
-      </div>
     </header>
 
     <aside class="section-nav">
@@ -161,7 +153,7 @@ function parseMarkdown(text: string): string {
       </div>
     </main>
 
-    <Guide currentSection="Essay 1" />
+    <GuidePanel currentSection="Essay 1" epistemicStatus="Overview" />
 
     <style>
       :root {
@@ -240,8 +232,9 @@ function parseMarkdown(text: string): string {
       /* Essay Header */
       .essay-header {
         padding: 8rem 2rem 3rem;
-        max-width: 800px;
-        margin: 0 auto 0 280px;
+        max-width: 700px;
+        margin-left: 280px;
+        margin-right: 380px;
       }
 
       .essay-number {
@@ -289,50 +282,6 @@ function parseMarkdown(text: string): string {
 
       .meta-date {
         color: var(--text-muted);
-      }
-
-      /* Guide Introduction */
-      .guide-intro {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        padding: 1rem 1.25rem;
-        background: rgba(74, 158, 255, 0.06);
-        border: 1px solid rgba(74, 158, 255, 0.15);
-        border-radius: 8px;
-        margin-top: 1.5rem;
-      }
-
-      .guide-intro-icon {
-        flex-shrink: 0;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .guide-dot-small {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--accent);
-        animation: pulse 2s ease-in-out infinite;
-      }
-
-      @keyframes pulse {
-        0%, 100% { opacity: 0.6; transform: scale(1); }
-        50% { opacity: 1; transform: scale(1.1); }
-      }
-
-      .guide-intro-text {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        line-height: 1.5;
-      }
-
-      .guide-intro-text strong {
-        color: var(--accent);
       }
 
       /* Mode Selector */
@@ -450,8 +399,9 @@ function parseMarkdown(text: string): string {
 
       /* Essay Content */
       .essay-content {
-        max-width: 800px;
+        max-width: 700px;
         margin-left: 280px;
+        margin-right: 380px;
         padding: 0 2rem 6rem;
       }
 
@@ -620,7 +570,16 @@ function parseMarkdown(text: string): string {
         color: var(--text-muted);
       }
 
-      /* Responsive */
+      /* Responsive - Guide panel collapses first */
+      @media (max-width: 1100px) {
+        .essay-header,
+        .essay-content {
+          margin-right: 0;
+          max-width: 800px;
+        }
+      }
+
+      /* Then section nav collapses */
       @media (max-width: 900px) {
         .section-nav {
           display: none;
@@ -629,6 +588,7 @@ function parseMarkdown(text: string): string {
         .essay-header,
         .essay-content {
           margin-left: 0;
+          margin-right: 0;
         }
 
         .essay-header {
@@ -678,7 +638,12 @@ function parseMarkdown(text: string): string {
             });
 
             // Update Guide context
-            window.currentSection = entry.target.querySelector('h2')?.textContent || 'Essay 1';
+            const sectionTitle = entry.target.querySelector('h2')?.textContent || 'Essay 1';
+            const epistemicBadge = entry.target.querySelector('.epistemic-badge');
+            const status = epistemicBadge?.textContent || 'established';
+
+            (window as any).currentSection = sectionTitle;
+            (window as any).currentStatus = status;
           }
         });
       }, observerOptions);
