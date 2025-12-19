@@ -248,11 +248,17 @@ CONCEPTS.forEach(c => {
     // Find and mark concept terms in the essay content
     function markConceptTerms() {
       const contentAreas = document.querySelectorAll('.section-body');
+      console.log('[ConceptPopover] Found', contentAreas.length, 'content areas');
+
+      let markedCount = 0;
 
       contentAreas.forEach(area => {
         const strongTags = area.querySelectorAll('strong');
 
         strongTags.forEach(strong => {
+          // Skip if already marked
+          if (strong.classList.contains('concept-term')) return;
+
           const text = strong.textContent?.trim().toLowerCase();
           if (!text) return;
 
@@ -261,9 +267,13 @@ CONCEPTS.forEach(c => {
           if (conceptId) {
             strong.classList.add('concept-term');
             strong.dataset.conceptId = conceptId;
+            markedCount++;
+            console.log('[ConceptPopover] Marked:', text, '→', conceptId);
           }
         });
       });
+
+      console.log('[ConceptPopover] Total marked:', markedCount);
     }
 
     // Show popover for a concept
@@ -364,8 +374,11 @@ CONCEPTS.forEach(c => {
       }
     }
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
+    // Initialize function
+    function init() {
+      console.log('[ConceptPopover] Initializing...');
+      console.log('[ConceptPopover] termVariations:', Object.keys(termVariations));
+
       markConceptTerms();
 
       // Use event delegation for term clicks
@@ -376,14 +389,22 @@ CONCEPTS.forEach(c => {
       if (diveBtn) {
         diveBtn.addEventListener('click', handleDiveClick);
       }
-    });
 
-    // Re-mark terms after mode changes (for academic/overview modes)
-    const modeButtons = document.querySelectorAll('.mode-btn');
-    modeButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        setTimeout(markConceptTerms, 100);
+      // Re-mark terms after mode changes (for academic/overview modes)
+      const modeButtons = document.querySelectorAll('.mode-btn');
+      modeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          setTimeout(markConceptTerms, 100);
+        });
       });
-    });
+    }
+
+    // Run init - handle both cases: DOM already ready or still loading
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      // DOM already loaded, run immediately
+      init();
+    }
   })();
 </script>
