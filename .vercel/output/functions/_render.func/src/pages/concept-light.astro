@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Living Epistemic Work — Light Mode</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Warm cream palette - matches deep blue depth with warmth */
+      --cream-deep: #f8f5f0;
+      --cream-warm: #faf8f4;
+      --cream-light: #fcfbf8;
+      --cream-paper: #fffefa;
+
+      --ink-primary: #1a1816;
+      --ink-secondary: #3d3835;
+      --ink-muted: #6b6460;
+      --ink-faint: #9a948e;
+
+      /* Semantic colors - muted to work on cream */
+      --established: #2563a8;      /* Deep blue */
+      --contested: #b85c1a;        /* Warm amber */
+      --open: #6b4c9a;             /* Muted purple */
+      --derived: #1a7a5c;          /* Forest green */
+
+      /* Accent */
+      --accent: #2563a8;
+      --accent-soft: rgba(37, 99, 168, 0.08);
+
+      /* Typography */
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'Sora', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Spacing */
+      --space-unit: 8px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--cream-warm);
+      color: var(--ink-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ================================
+       THE ARRIVAL EXPERIENCE
+       ================================ */
+
+    .arrival {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: var(--cream-paper);
+    }
+
+    /* Subtle texture overlay */
+    .arrival::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      pointer-events: none;
+    }
+
+    /* Depth field - warm, subtle */
+    .depth-field {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .depth-field::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(37, 99, 168, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(107, 76, 154, 0.03) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 80%, rgba(26, 122, 92, 0.02) 0%, transparent 30%);
+      animation: breathe 8s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+
+    /* Graph hint - subtle on cream */
+    .graph-hint {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      opacity: 0.25;
+    }
+
+    .node {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--ink-faint);
+      border-radius: 50%;
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    .node::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--ink-faint), transparent);
+      transform-origin: left center;
+      opacity: 0.3;
+    }
+
+    .node:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+    .node:nth-child(1)::before { transform: rotate(45deg); }
+    .node:nth-child(2) { top: 35%; left: 25%; animation-delay: 0.5s; }
+    .node:nth-child(2)::before { transform: rotate(-20deg); }
+    .node:nth-child(3) { top: 25%; left: 75%; animation-delay: 1s; }
+    .node:nth-child(3)::before { transform: rotate(160deg); }
+    .node:nth-child(4) { top: 60%; left: 80%; animation-delay: 1.5s; }
+    .node:nth-child(4)::before { transform: rotate(-135deg); }
+    .node:nth-child(5) { top: 70%; left: 20%; animation-delay: 2s; }
+    .node:nth-child(5)::before { transform: rotate(30deg); }
+    .node:nth-child(6) { top: 45%; left: 60%; animation-delay: 2.5s; }
+    .node:nth-child(6)::before { transform: rotate(-60deg); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.5); }
+    }
+
+    /* Title treatment */
+    .arrival-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 calc(var(--space-unit) * 4);
+    }
+
+    .work-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: calc(var(--space-unit) * 3);
+      color: var(--ink-primary);
+    }
+
+    .work-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--ink-muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: calc(var(--space-unit) * 6);
+    }
+
+    .version-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-faint);
+      padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 4px;
+      margin-bottom: calc(var(--space-unit) * 8);
+      background: var(--cream-light);
+    }
+
+    /* Intent expression */
+    .intent-prompt {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--ink-secondary);
+      margin-bottom: calc(var(--space-unit) * 4);
+    }
+
+    .intent-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: calc(var(--space-unit) * 2);
+      justify-content: center;
+    }
+
+    .intent-option {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--ink-secondary);
+      background: var(--cream-light);
+      border: 1px solid rgba(0,0,0,0.08);
+      padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intent-option:hover {
+      border-color: var(--accent);
+      color: var(--ink-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .intent-option span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ================================
+       COLLAPSE MODES
+       ================================ */
+
+    .modes-section {
+      padding: calc(var(--space-unit) * 12) calc(var(--space-unit) * 4);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: calc(var(--space-unit) * 8);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--ink-primary);
+      margin-bottom: calc(var(--space-unit) * 2);
+    }
+
+    .section-desc {
+      font-size: 1rem;
+      color: var(--ink-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .mode-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: calc(var(--space-unit) * 3);
+    }
+
+    .mode-card {
+      background: var(--cream-paper);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 12px;
+      padding: calc(var(--space-unit) * 4);
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--accent));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .mode-card:hover {
+      border-color: var(--card-accent, var(--accent));
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .mode-card:hover::before {
+      opacity: 1;
+    }
+
+    .mode-card[data-mode="overview"] { --card-accent: var(--established); }
+    .mode-card[data-mode="essay"] { --card-accent: var(--ink-primary); }
+    .mode-card[data-mode="academic"] { --card-accent: var(--derived); }
+    .mode-card[data-mode="explore"] { --card-accent: var(--open); }
+    .mode-card[data-mode="guided"] { --card-accent: var(--contested); }
+    .mode-card[data-mode="research"] { --card-accent: var(--open); }
+
+    .mode-icon {
+      font-size: 2rem;
+      margin-bottom: calc(var(--space-unit) * 2);
+      opacity: 0.6;
+    }
+
+    .mode-name {
+      font-family: var(--font-body);
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: var(--ink-primary);
+      margin-bottom: calc(var(--space-unit) * 1);
+    }
+
+    .mode-desc {
+      font-size: 0.875rem;
+      color: var(--ink-secondary);
+      line-height: 1.6;
+    }
+
+    /* ================================
+       EPISTEMIC STATUS
+       ================================ */
+
+    .epistemic-section {
+      padding: calc(var(--space-unit) * 12) calc(var(--space-unit) * 4);
+      background: var(--cream-deep);
+    }
+
+    .epistemic-grid {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      gap: calc(var(--space-unit) * 4);
+    }
+
+    .epistemic-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: calc(var(--space-unit) * 4);
+      align-items: start;
+      padding: calc(var(--space-unit) * 3);
+      border-radius: 8px;
+      background: var(--cream-paper);
+      border-left: 3px solid var(--item-color);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .epistemic-item[data-status="established"] { --item-color: var(--established); }
+    .epistemic-item[data-status="derived"] { --item-color: var(--derived); }
+    .epistemic-item[data-status="contested"] { --item-color: var(--contested); }
+    .epistemic-item[data-status="open"] { --item-color: var(--open); }
+
+    .status-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: calc(var(--space-unit) * 1);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--item-color);
+    }
+
+    .status-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--item-color);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .epistemic-content h4 {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--ink-primary);
+      margin-bottom: calc(var(--space-unit) * 1);
+    }
+
+    .epistemic-content p {
+      font-size: 0.875rem;
+      color: var(--ink-secondary);
+      line-height: 1.6;
+    }
+
+    /* ================================
+       GUIDE INTEGRATION
+       ================================ */
+
+    .guide-section {
+      padding: calc(var(--space-unit) * 12) calc(var(--space-unit) * 4);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .guide-demo {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: calc(var(--space-unit) * 4);
+      margin-top: calc(var(--space-unit) * 6);
+    }
+
+    @media (max-width: 900px) {
+      .guide-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .content-pane {
+      background: var(--cream-paper);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 12px;
+      padding: calc(var(--space-unit) * 5);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    .content-pane h3 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 400;
+      color: var(--ink-primary);
+      margin-bottom: calc(var(--space-unit) * 3);
+    }
+
+    .content-pane p {
+      font-size: 1rem;
+      color: var(--ink-secondary);
+      line-height: 1.8;
+      margin-bottom: calc(var(--space-unit) * 2);
+    }
+
+    .content-pane .highlight {
+      color: var(--established);
+      border-bottom: 1px dotted var(--established);
+      cursor: help;
+    }
+
+    .guide-pane {
+      background: var(--cream-deep);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .guide-header {
+      padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+      background: rgba(0,0,0,0.02);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      gap: calc(var(--space-unit) * 1.5);
+    }
+
+    .guide-presence {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--derived);
+      animation: guide-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes guide-pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .guide-title {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .guide-context {
+      padding: calc(var(--space-unit) * 3);
+      flex: 1;
+    }
+
+    .guide-context-label {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: calc(var(--space-unit) * 1);
+    }
+
+    .guide-context-value {
+      font-size: 0.875rem;
+      color: var(--ink-secondary);
+      line-height: 1.6;
+    }
+
+    .guide-suggestions {
+      padding: calc(var(--space-unit) * 3);
+      border-top: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .suggestion {
+      font-size: 0.8125rem;
+      color: var(--ink-muted);
+      padding: calc(var(--space-unit) * 1.5);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: calc(var(--space-unit) * 1);
+    }
+
+    .suggestion:hover {
+      background: rgba(0,0,0,0.03);
+      color: var(--ink-secondary);
+    }
+
+    .suggestion::before {
+      content: '→ ';
+      opacity: 0.4;
+    }
+
+    /* ================================
+       DEPTH VISUALIZATION
+       ================================ */
+
+    .depth-section {
+      padding: calc(var(--space-unit) * 12) calc(var(--space-unit) * 4);
+      background: var(--cream-deep);
+    }
+
+    .depth-demo {
+      max-width: 800px;
+      margin: calc(var(--space-unit) * 6) auto 0;
+      position: relative;
+    }
+
+    .depth-layer {
+      background: var(--cream-paper);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 8px;
+      padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 4);
+      margin-bottom: calc(var(--space-unit) * 2);
+      position: relative;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .depth-layer::before {
+      content: '';
+      position: absolute;
+      left: calc(var(--space-unit) * -3);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cream-paper);
+      border: 2px solid var(--layer-color, var(--ink-faint));
+    }
+
+    .depth-layer[data-depth="0"] { --layer-color: var(--established); }
+    .depth-layer[data-depth="1"] { --layer-color: var(--derived); margin-left: calc(var(--space-unit) * 4); }
+    .depth-layer[data-depth="2"] { --layer-color: var(--contested); margin-left: calc(var(--space-unit) * 8); }
+    .depth-layer[data-depth="3"] { --layer-color: var(--open); margin-left: calc(var(--space-unit) * 12); opacity: 0.8; }
+
+    .depth-layer:hover {
+      border-color: var(--layer-color);
+      transform: translateX(4px);
+    }
+
+    .depth-label {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--layer-color);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: calc(var(--space-unit) * 0.5);
+    }
+
+    .depth-content {
+      font-size: 0.9375rem;
+      color: var(--ink-secondary);
+      line-height: 1.6;
+    }
+
+    /* Connector line */
+    .depth-demo::before {
+      content: '';
+      position: absolute;
+      left: calc(var(--space-unit) * -3 + 3px);
+      top: calc(var(--space-unit) * 3);
+      bottom: calc(var(--space-unit) * 3);
+      width: 2px;
+      background: linear-gradient(180deg, var(--established), var(--derived), var(--contested), var(--open));
+      opacity: 0.2;
+      border-radius: 1px;
+    }
+
+    /* ================================
+       FOOTER
+       ================================ */
+
+    .explore-cta {
+      padding: calc(var(--space-unit) * 16) calc(var(--space-unit) * 4);
+      text-align: center;
+      position: relative;
+      background: var(--cream-warm);
+    }
+
+    .explore-cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.1));
+    }
+
+    .cta-text {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--ink-secondary);
+      margin-bottom: calc(var(--space-unit) * 4);
+    }
+
+    .cta-note {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* Theme toggle hint */
+    .theme-toggle {
+      position: fixed;
+      top: calc(var(--space-unit) * 3);
+      right: calc(var(--space-unit) * 3);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-faint);
+      background: var(--cream-paper);
+      border: 1px solid rgba(0,0,0,0.08);
+      padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 2);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 100;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--ink-secondary);
+    }
+
+    /* ================================
+       RESPONSIVE
+       ================================ */
+
+    @media (max-width: 600px) {
+      .intent-options {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .epistemic-item {
+        grid-template-columns: 1fr;
+        gap: calc(var(--space-unit) * 2);
+      }
+
+      .status-indicator {
+        flex-direction: row;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" onclick="window.location.href='index.html'">◐ Dark Mode</button>
+
+  <!-- ARRIVAL -->
+  <section class="arrival">
+    <div class="depth-field"></div>
+
+    <div class="graph-hint">
+      <div class="node"></div>
+      <div class="node"></div>
+      <div class="node"></div>
+      <div class="node"></div>
+      <div class="node"></div>
+      <div class="node"></div>
+    </div>
+
+    <div class="arrival-content">
+      <h1 class="work-title">Configuration Economics</h1>
+      <p class="work-subtitle">A Living Epistemic Work</p>
+      <span class="version-badge">v0.1 — Working Draft</span>
+
+      <p class="intent-prompt">How would you like to approach this?</p>
+
+      <div class="intent-options">
+        <button class="intent-option"><span>What is this?</span></button>
+        <button class="intent-option"><span>Explain simply</span></button>
+        <button class="intent-option"><span>Show me the structure</span></button>
+        <button class="intent-option"><span>Academic format</span></button>
+        <button class="intent-option"><span>What's contested?</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLAPSE MODES -->
+  <section class="modes-section">
+    <header class="section-header">
+      <h2 class="section-title">The Same Work, Different Projections</h2>
+      <p class="section-desc">
+        The content exists as a structure of relationships. Your intent determines
+        which projection you see. Each mode reveals the same underlying work
+        through a different lens.
+      </p>
+    </header>
+
+    <div class="mode-cards">
+      <div class="mode-card" data-mode="overview">
+        <div class="mode-icon">◉</div>
+        <h3 class="mode-name">Overview</h3>
+        <p class="mode-desc">See the whole structure. Core claims, relationships, and how ideas connect. The map before the territory.</p>
+      </div>
+
+      <div class="mode-card" data-mode="essay">
+        <div class="mode-icon">¶</div>
+        <h3 class="mode-name">Essay</h3>
+        <p class="mode-desc">Linear reading. Traditional narrative flow. Start at the beginning and read through to the end.</p>
+      </div>
+
+      <div class="mode-card" data-mode="academic">
+        <div class="mode-icon">§</div>
+        <h3 class="mode-name">Academic</h3>
+        <p class="mode-desc">Formal structure. Full citations. Exportable to PDF. The canonical, citable version.</p>
+      </div>
+
+      <div class="mode-card" data-mode="explore">
+        <div class="mode-icon">⬡</div>
+        <h3 class="mode-name">Explore</h3>
+        <p class="mode-desc">Graph mode. See connections. "What relates to this?" becomes navigable. Follow your curiosity.</p>
+      </div>
+
+      <div class="mode-card" data-mode="guided">
+        <div class="mode-icon">◈</div>
+        <h3 class="mode-name">Guided</h3>
+        <p class="mode-desc">Let the Guide lead. Adaptive to your current understanding. Socratic scaffolding through the ideas.</p>
+      </div>
+
+      <div class="mode-card" data-mode="research">
+        <div class="mode-icon">◇</div>
+        <h3 class="mode-name">Research Frontier</h3>
+        <p class="mode-desc">What's open? What's contested? Where are the edges of current thinking? The living boundary.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EPISTEMIC STATUS -->
+  <section class="epistemic-section">
+    <header class="section-header">
+      <h2 class="section-title">Epistemic Status — Visual Language</h2>
+      <p class="section-desc">
+        Different claims have different standing. The visual language makes
+        epistemic status immediately apparent, without requiring explanation.
+      </p>
+    </header>
+
+    <div class="epistemic-grid">
+      <div class="epistemic-item" data-status="established">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span class="status-label">Established</span>
+        </div>
+        <div class="epistemic-content">
+          <h4>Physics precedes preference</h4>
+          <p>Matter is conserved. Energy flux is bounded. Entropy increases globally. These are foundational constraints that any economic system must respect.</p>
+        </div>
+      </div>
+
+      <div class="epistemic-item" data-status="derived">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span class="status-label">Derived</span>
+        </div>
+        <div class="epistemic-content">
+          <h4>Treating savings as income produces instability</h4>
+          <p>This follows from the distinction between energy income (flux) and energy savings (stock). Conflating them creates false signals that cannot persist.</p>
+        </div>
+      </div>
+
+      <div class="epistemic-item" data-status="contested">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span class="status-label">Contested</span>
+        </div>
+        <div class="epistemic-content">
+          <h4>Transition dynamics and timeline</h4>
+          <p>How quickly can throughput-based systems shift to configuration-aware accounting? Multiple views exist on feasibility and pathway.</p>
+        </div>
+      </div>
+
+      <div class="epistemic-item" data-status="open">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span class="status-label">Open</span>
+        </div>
+        <div class="epistemic-content">
+          <h4>Precise measurement of option space</h4>
+          <p>How do we quantify "future configurability"? This is acknowledged as an open research question requiring further development.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUIDE -->
+  <section class="guide-section">
+    <header class="section-header">
+      <h2 class="section-title">Guide Integration</h2>
+      <p class="section-desc">
+        The Guide is context-aware — it knows what you're reading and can
+        surface relevant connections, explain at different resolutions,
+        and acknowledge what remains open.
+      </p>
+    </header>
+
+    <div class="guide-demo">
+      <div class="content-pane">
+        <h3>Energy Income vs Savings</h3>
+        <p>
+          A foundational distinction: <span class="highlight">energy income</span>
+          refers to continuous renewable flux — solar radiation, wind, ecological
+          cycles that provide ongoing energy availability.
+        </p>
+        <p>
+          <span class="highlight">Energy savings</span>, by contrast, are finite
+          stocks accumulated over deep time — fossil fuels, mineral concentrations,
+          groundwater reserves.
+        </p>
+        <p>
+          Treating savings as income produces false signals of prosperity and value.
+          It enables consumption patterns that cannot persist beyond the depletion
+          of the stock.
+        </p>
+      </div>
+
+      <div class="guide-pane">
+        <div class="guide-header">
+          <div class="guide-presence"></div>
+          <span class="guide-title">Guide</span>
+        </div>
+
+        <div class="guide-context">
+          <div class="guide-context-label">Currently Reading</div>
+          <div class="guide-context-value">Foundations › Energy Income vs Savings</div>
+        </div>
+
+        <div class="guide-context">
+          <div class="guide-context-label">This Claim Is</div>
+          <div class="guide-context-value" style="color: var(--established);">
+            Established — follows from distinction between stock and flux
+          </div>
+        </div>
+
+        <div class="guide-suggestions">
+          <div class="suggestion">Explain this more simply</div>
+          <div class="suggestion">What are the implications?</div>
+          <div class="suggestion">How does this connect to value?</div>
+          <div class="suggestion">What objections exist?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPTH -->
+  <section class="depth-section">
+    <header class="section-header">
+      <h2 class="section-title">Resolution Layers</h2>
+      <p class="section-desc">
+        The same content exists at multiple depths. Surface understanding
+        connects to increasingly precise formulations. You can stop at
+        any level or go deeper.
+      </p>
+    </header>
+
+    <div class="depth-demo">
+      <div class="depth-layer" data-depth="0">
+        <div class="depth-label">Core Claim</div>
+        <div class="depth-content">
+          Value is about what enables future possibilities, not what gets consumed.
+        </div>
+      </div>
+
+      <div class="depth-layer" data-depth="1">
+        <div class="depth-label">Formal Definition</div>
+        <div class="depth-content">
+          Value = configurations that increase future option space for living systems
+          under bounded energy flux.
+        </div>
+      </div>
+
+      <div class="depth-layer" data-depth="2">
+        <div class="depth-label">Implications</div>
+        <div class="depth-content">
+          This distinguishes value from price, preference, labour, or throughput.
+          Short-term gains can be value-negative if they reduce future configurability.
+        </div>
+      </div>
+
+      <div class="depth-layer" data-depth="3">
+        <div class="depth-label">Open Questions</div>
+        <div class="depth-content">
+          How do we measure option space? What time horizons? How do we handle
+          trade-offs between different living systems? These remain active research areas.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="explore-cta">
+    <p class="cta-text">
+      "The form implies the function"
+    </p>
+    <p class="cta-note">
+      This is a format exploration for Living Epistemic Works —
+      a new publication format where content exists in superposition
+      until the reader's intent causes collapse into an appropriate projection.
+      <br><br>
+      Configuration Economics will be the first work published in this format.
+    </p>
+  </section>
+
+</body>
+</html>
