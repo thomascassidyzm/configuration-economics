@@ -6,8 +6,8 @@ export const ESSAY_META = {
   title: 'Value under Physical Constraint',
   version: 'v0.1',
   status: 'Working Draft',
-  date: 'December 2024',
-  lastUpdated: '2024-12-19',
+  date: 'December 2025',
+  lastUpdated: '2025-12-19',
 };
 
 export type EpistemicStatus = 'established' | 'derived' | 'contested' | 'open';
