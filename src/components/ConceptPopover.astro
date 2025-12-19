@@ -245,31 +245,93 @@ CONCEPTS.forEach(c => {
     let activeTermEl = null;
     let currentConceptId = null;
 
+    // Build regex for term matching (longest terms first to avoid partial matches)
+    const sortedTerms = Object.keys(termVariations).sort((a, b) => b.length - a.length);
+    const termPattern = new RegExp('\\b(' + sortedTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\b', 'gi');
+
     // Find and mark concept terms in the essay content
     function markConceptTerms() {
       const contentAreas = document.querySelectorAll('.section-body');
       console.log('[ConceptPopover] Found', contentAreas.length, 'content areas');
+      console.log('[ConceptPopover] Term pattern:', termPattern);
 
       let markedCount = 0;
 
       contentAreas.forEach(area => {
-        const strongTags = area.querySelectorAll('strong');
+        // Skip if already processed
+        if (area.dataset.conceptsProcessed) return;
+        area.dataset.conceptsProcessed = 'true';
 
-        strongTags.forEach(strong => {
-          // Skip if already marked
-          if (strong.classList.contains('concept-term')) return;
-
-          const text = strong.textContent?.trim().toLowerCase();
-          if (!text) return;
-
-          // Check if this matches a concept
-          const conceptId = termVariations[text];
-          if (conceptId) {
-            strong.classList.add('concept-term');
-            strong.dataset.conceptId = conceptId;
-            markedCount++;
-            console.log('[ConceptPopover] Marked:', text, '→', conceptId);
+        // Process text nodes within paragraphs
+        const walker = document.createTreeWalker(
+          area,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode: (node) => {
+              // Skip if parent is already a concept-term or is a script/style
+              const parent = node.parentElement;
+              if (!parent) return NodeFilter.FILTER_REJECT;
+              if (parent.classList?.contains('concept-term')) return NodeFilter.FILTER_REJECT;
+              if (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+              // Only process text in p, li, strong, em
+              const validTags = ['P', 'LI', 'STRONG', 'EM', 'SPAN', 'DIV'];
+              if (!validTags.includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_ACCEPT;
+            }
           }
+        );
+
+        const textNodes = [];
+        let node;
+        while (node = walker.nextNode()) {
+          textNodes.push(node);
+        }
+
+        textNodes.forEach(textNode => {
+          const text = textNode.textContent;
+          if (!text || text.trim().length < 3) return;
+
+          // Check if this text contains any concept terms
+          const matches = [];
+          let match;
+          termPattern.lastIndex = 0;
+          while ((match = termPattern.exec(text)) !== null) {
+            matches.push({
+              term: match[0],
+              index: match.index,
+              conceptId: termVariations[match[0].toLowerCase()]
+            });
+          }
+
+          if (matches.length === 0) return;
+
+          // Build new content with wrapped terms
+          const fragment = document.createDocumentFragment();
+          let lastIndex = 0;
+
+          matches.forEach(m => {
+            // Add text before match
+            if (m.index > lastIndex) {
+              fragment.appendChild(document.createTextNode(text.slice(lastIndex, m.index)));
+            }
+            // Add wrapped term
+            const span = document.createElement('span');
+            span.className = 'concept-term';
+            span.dataset.conceptId = m.conceptId;
+            span.textContent = m.term;
+            fragment.appendChild(span);
+            markedCount++;
+            console.log('[ConceptPopover] Marked:', m.term, '→', m.conceptId);
+            lastIndex = m.index + m.term.length;
+          });
+
+          // Add remaining text
+          if (lastIndex < text.length) {
+            fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+          }
+
+          // Replace original text node
+          textNode.parentNode.replaceChild(fragment, textNode);
         });
       });
 
@@ -394,6 +456,10 @@ CONCEPTS.forEach(c => {
       const modeButtons = document.querySelectorAll('.mode-btn');
       modeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
+          // Reset processed state for all content areas
+          document.querySelectorAll('.section-body').forEach(area => {
+            delete area.dataset.conceptsProcessed;
+          });
           setTimeout(markConceptTerms, 100);
         });
       });
