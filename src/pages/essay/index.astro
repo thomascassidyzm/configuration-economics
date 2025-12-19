@@ -3,6 +3,7 @@
 // Main essay page with collapse modes and Guide integration
 
 import GuidePanel from '../../components/GuidePanel.astro';
+import ConceptPopover from '../../components/ConceptPopover.astro';
 import { ESSAY_META, SECTIONS as SECTION_META } from '../../content/essay-1/config';
 import { SECTIONS as SECTION_CONTENT } from '../../content/essay-1/sections';
 
@@ -154,6 +155,7 @@ function parseMarkdown(text: string): string {
     </main>
 
     <GuidePanel currentSection="Essay 1" epistemicStatus="Overview" />
+    <ConceptPopover />
 
     <style>
       :root {

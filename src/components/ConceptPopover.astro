@@ -1,0 +1,389 @@
+---
+// ConceptPopover Component
+// Provides interactive concept term detection and popover display
+// Injected once into pages that need concept highlighting
+
+import { CONCEPTS, getConceptById } from '../content/graph/concepts';
+import { getDistinctionsForConcept } from '../content/graph/distinctions';
+import { getRelationshipsFor } from '../content/graph/relationships';
+
+// Build a lookup map for client-side use
+const conceptLookup = CONCEPTS.map(c => ({
+  id: c.id,
+  name: c.name,
+  definition: c.definition,
+  epistemicStatus: c.epistemicStatus,
+  simple: c.resolutions.simple,
+  implications: c.resolutions.implications,
+  tags: c.tags,
+  relatedCount: getDistinctionsForConcept(c.id).length + getRelationshipsFor(c.id).length
+}));
+
+// Terms to match (including variations)
+const termVariations: Record<string, string> = {};
+CONCEPTS.forEach(c => {
+  // Exact name
+  termVariations[c.name.toLowerCase()] = c.id;
+  // Without parenthetical
+  const withoutParen = c.name.replace(/\s*\([^)]*\)/, '').trim();
+  if (withoutParen !== c.name) {
+    termVariations[withoutParen.toLowerCase()] = c.id;
+  }
+  // Common variations
+  if (c.id === 'physical-envelope') {
+    termVariations['envelope'] = c.id;
+  }
+  if (c.id === 'energy-income') {
+    termVariations['income'] = c.id;
+    termVariations['continuous energy income'] = c.id;
+  }
+  if (c.id === 'energy-savings') {
+    termVariations['savings'] = c.id;
+    termVariations['finite energy savings'] = c.id;
+  }
+  if (c.id === 'option-space') {
+    termVariations['option space'] = c.id;
+    termVariations['option-space'] = c.id;
+    termVariations['future option space'] = c.id;
+  }
+  if (c.id === 'viable-objective') {
+    termVariations['viable objective function'] = c.id;
+  }
+  if (c.id === 'accounting-error') {
+    termVariations['accounting error'] = c.id;
+  }
+  if (c.id === 'epistemic-status') {
+    termVariations['epistemic status'] = c.id;
+  }
+});
+---
+
+<!-- Popover Container (rendered once, positioned dynamically) -->
+<div id="concept-popover" class="concept-popover" aria-hidden="true">
+  <div class="popover-arrow"></div>
+  <div class="popover-content">
+    <div class="popover-header">
+      <span class="popover-name"></span>
+      <span class="popover-status"></span>
+    </div>
+    <p class="popover-definition"></p>
+    <p class="popover-simple"></p>
+    <div class="popover-footer">
+      <span class="popover-related"></span>
+      <button class="popover-dive">Explore concept →</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .concept-popover {
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .concept-popover.visible {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .popover-arrow {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--depth-1, #12121a);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  .popover-content {
+    background: var(--depth-1, #12121a);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    min-width: 300px;
+    max-width: 400px;
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.4),
+      0 0 40px rgba(74, 158, 255, 0.05);
+  }
+
+  .popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .popover-name {
+    font-family: var(--font-display, 'Cormorant Garamond', serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text-primary, #e8e8f0);
+  }
+
+  .popover-status {
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.625rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .popover-status.established {
+    color: var(--established, #4a9eff);
+    border: 1px solid var(--established, #4a9eff);
+  }
+  .popover-status.derived {
+    color: var(--derived, #50c878);
+    border: 1px solid var(--derived, #50c878);
+  }
+  .popover-status.contested {
+    color: var(--contested, #ffa500);
+    border: 1px solid var(--contested, #ffa500);
+  }
+  .popover-status.open {
+    color: var(--open, #a855f7);
+    border: 1px solid var(--open, #a855f7);
+  }
+
+  .popover-definition {
+    font-family: var(--font-body, 'Sora', sans-serif);
+    font-size: 0.8125rem;
+    color: var(--text-primary, #e8e8f0);
+    line-height: 1.5;
+    margin: 0 0 0.5rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .popover-simple {
+    font-family: var(--font-body, 'Sora', sans-serif);
+    font-size: 0.75rem;
+    color: var(--text-secondary, #a0a0b8);
+    line-height: 1.6;
+    margin: 0 0 0.75rem 0;
+    font-style: italic;
+  }
+
+  .popover-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .popover-related {
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.6875rem;
+    color: var(--text-muted, #606080);
+  }
+
+  .popover-dive {
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.6875rem;
+    letter-spacing: 0.03em;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--accent, #4a9eff);
+    background: transparent;
+    color: var(--accent, #4a9eff);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .popover-dive:hover {
+    background: rgba(74, 158, 255, 0.1);
+  }
+
+  /* Concept term styling in content */
+  :global(.concept-term) {
+    color: var(--text-primary, #e8e8f0);
+    text-decoration: underline;
+    text-decoration-color: rgba(74, 158, 255, 0.4);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  :global(.concept-term:hover) {
+    text-decoration-color: var(--accent, #4a9eff);
+    background: rgba(74, 158, 255, 0.1);
+  }
+
+  :global(.concept-term.active) {
+    background: rgba(74, 158, 255, 0.15);
+    text-decoration-color: var(--accent, #4a9eff);
+  }
+</style>
+
+<script define:vars={{ conceptLookup, termVariations }}>
+  // Initialize concept popover system
+  (function() {
+    const popover = document.getElementById('concept-popover');
+    if (!popover) return;
+
+    const nameEl = popover.querySelector('.popover-name');
+    const statusEl = popover.querySelector('.popover-status');
+    const definitionEl = popover.querySelector('.popover-definition');
+    const simpleEl = popover.querySelector('.popover-simple');
+    const relatedEl = popover.querySelector('.popover-related');
+    const diveBtn = popover.querySelector('.popover-dive');
+
+    let activeTermEl = null;
+    let currentConceptId = null;
+
+    // Find and mark concept terms in the essay content
+    function markConceptTerms() {
+      const contentAreas = document.querySelectorAll('.section-body');
+
+      contentAreas.forEach(area => {
+        const strongTags = area.querySelectorAll('strong');
+
+        strongTags.forEach(strong => {
+          const text = strong.textContent?.trim().toLowerCase();
+          if (!text) return;
+
+          // Check if this matches a concept
+          const conceptId = termVariations[text];
+          if (conceptId) {
+            strong.classList.add('concept-term');
+            strong.dataset.conceptId = conceptId;
+          }
+        });
+      });
+    }
+
+    // Show popover for a concept
+    function showPopover(termEl, conceptId) {
+      const concept = conceptLookup.find(c => c.id === conceptId);
+      if (!concept) return;
+
+      // Update content
+      nameEl.textContent = concept.name;
+      statusEl.textContent = concept.epistemicStatus;
+      statusEl.className = 'popover-status ' + concept.epistemicStatus;
+      definitionEl.textContent = concept.definition;
+      simpleEl.textContent = concept.simple;
+      relatedEl.textContent = concept.relatedCount + ' connections';
+
+      currentConceptId = conceptId;
+
+      // Position popover
+      const rect = termEl.getBoundingClientRect();
+      const popoverRect = popover.getBoundingClientRect();
+
+      let left = rect.left + (rect.width / 2) - 175; // Center on term (300px / 2 + some padding)
+      let top = rect.bottom + 12;
+
+      // Keep within viewport
+      if (left < 16) left = 16;
+      if (left + 350 > window.innerWidth) left = window.innerWidth - 366;
+
+      // If would go off bottom, show above
+      if (top + 200 > window.innerHeight) {
+        top = rect.top - 12;
+        popover.style.transform = 'translateY(-100%)';
+        popover.querySelector('.popover-arrow').style.top = 'auto';
+        popover.querySelector('.popover-arrow').style.bottom = '-6px';
+        popover.querySelector('.popover-arrow').style.transform = 'translateX(-50%) rotate(225deg)';
+      } else {
+        popover.style.transform = '';
+        popover.querySelector('.popover-arrow').style.top = '-6px';
+        popover.querySelector('.popover-arrow').style.bottom = 'auto';
+        popover.querySelector('.popover-arrow').style.transform = 'translateX(-50%) rotate(45deg)';
+      }
+
+      popover.style.left = left + 'px';
+      popover.style.top = top + 'px';
+
+      // Mark active
+      if (activeTermEl) activeTermEl.classList.remove('active');
+      activeTermEl = termEl;
+      termEl.classList.add('active');
+
+      // Show
+      popover.classList.add('visible');
+      popover.setAttribute('aria-hidden', 'false');
+    }
+
+    function hidePopover() {
+      popover.classList.remove('visible');
+      popover.setAttribute('aria-hidden', 'true');
+      if (activeTermEl) {
+        activeTermEl.classList.remove('active');
+        activeTermEl = null;
+      }
+      currentConceptId = null;
+    }
+
+    // Event handlers
+    function handleTermClick(e) {
+      const termEl = e.target.closest('.concept-term');
+      if (!termEl) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      const conceptId = termEl.dataset.conceptId;
+      if (conceptId === currentConceptId) {
+        hidePopover();
+      } else {
+        showPopover(termEl, conceptId);
+      }
+    }
+
+    function handleDocumentClick(e) {
+      if (!popover.contains(e.target) && !e.target.closest('.concept-term')) {
+        hidePopover();
+      }
+    }
+
+    function handleKeydown(e) {
+      if (e.key === 'Escape') {
+        hidePopover();
+      }
+    }
+
+    function handleDiveClick() {
+      if (currentConceptId) {
+        // Navigate to explore page with concept focused
+        window.location.href = '/explore#concept-' + currentConceptId;
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      markConceptTerms();
+
+      // Use event delegation for term clicks
+      document.addEventListener('click', handleTermClick);
+      document.addEventListener('click', handleDocumentClick);
+      document.addEventListener('keydown', handleKeydown);
+
+      if (diveBtn) {
+        diveBtn.addEventListener('click', handleDiveClick);
+      }
+    });
+
+    // Re-mark terms after mode changes (for academic/overview modes)
+    const modeButtons = document.querySelectorAll('.mode-btn');
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setTimeout(markConceptTerms, 100);
+      });
+    });
+  })();
+</script>

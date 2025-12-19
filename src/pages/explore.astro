@@ -55,7 +55,7 @@ const stats = getGraphStats();
         <h2>Concepts</h2>
         <div class="concepts-grid">
           {CONCEPTS.map(concept => (
-            <div class="concept-card" data-status={concept.epistemicStatus}>
+            <div class="concept-card" id={`concept-${concept.id}`} data-status={concept.epistemicStatus}>
               <div class="concept-header">
                 <h3>{concept.name}</h3>
                 <span class={`status-badge ${concept.epistemicStatus}`}>{concept.epistemicStatus}</span>
@@ -583,6 +583,47 @@ const stats = getGraphStats();
           gap: 1.5rem;
         }
       }
+
+      /* Highlight animation for linked concepts */
+      .concept-card.highlight {
+        animation: highlightPulse 2s ease-out;
+      }
+
+      @keyframes highlightPulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(74, 158, 255, 0.7);
+        }
+        50% {
+          box-shadow: 0 0 20px 4px rgba(74, 158, 255, 0.4);
+        }
+        100% {
+          box-shadow: none;
+        }
+      }
     </style>
+
+    <script>
+      // Handle hash navigation to concepts
+      function scrollToHash() {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#concept-')) {
+          const element = document.querySelector(hash);
+          if (element) {
+            // Scroll with offset for nav
+            const offset = 80;
+            const top = element.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({ top, behavior: 'smooth' });
+
+            // Add highlight
+            element.classList.add('highlight');
+            setTimeout(() => element.classList.remove('highlight'), 2000);
+          }
+        }
+      }
+
+      // Run on load and hash change
+      window.addEventListener('load', scrollToHash);
+      window.addEventListener('hashchange', scrollToHash);
+    </script>
   </body>
 </html>
