@@ -465,8 +465,46 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
     const sectionEl = document.getElementById('guide-section');
     const statusEl = document.getElementById('guide-status');
 
+    // Load conversation history from sessionStorage
+    const STORAGE_KEY = 'guide-conversation';
     let conversationHistory: Array<{role: 'user' | 'assistant', content: string}> = [];
     let isLoading = false;
+
+    // Restore previous conversation if exists
+    try {
+      const stored = sessionStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        conversationHistory = JSON.parse(stored);
+        // Restore messages to UI
+        const welcome = messagesContainer?.querySelector('.guide-welcome');
+        if (welcome && conversationHistory.length > 0) {
+          welcome.remove();
+          suggestionsContainer?.classList.add('hidden');
+          conversationHistory.forEach(msg => {
+            const el = document.createElement('div');
+            el.className = `message ${msg.role === 'user' ? 'user' : 'assistant'}`;
+            if (msg.role === 'assistant') {
+              el.innerHTML = parseMarkdown(msg.content);
+            } else {
+              el.textContent = msg.content;
+            }
+            messagesContainer?.appendChild(el);
+          });
+          scrollToBottom();
+        }
+      }
+    } catch (e) {
+      // Ignore storage errors
+    }
+
+    // Save conversation to sessionStorage
+    function saveConversation() {
+      try {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(conversationHistory));
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
 
     // Mobile toggle
     mobileTrigger?.addEventListener('click', () => {
@@ -642,9 +680,13 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
           { role: 'assistant', content: data.message }
         );
 
+        // Keep history manageable
         if (conversationHistory.length > 10) {
           conversationHistory = conversationHistory.slice(-10);
         }
+
+        // Persist to sessionStorage
+        saveConversation();
 
       } catch (error) {
         typingEl.remove();
