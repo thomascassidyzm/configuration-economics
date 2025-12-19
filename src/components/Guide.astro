@@ -241,7 +241,7 @@
     padding: 10px 14px;
     border-radius: 8px;
     font-size: 0.875rem;
-    line-height: 1.6;
+    line-height: 1.7;
     max-width: 90%;
   }
 
@@ -259,9 +259,73 @@
     border-bottom-left-radius: 4px;
   }
 
-  .message.loading {
-    color: var(--guide-muted, #606080);
+  /* Markdown content styling */
+  .message.assistant :global(p) {
+    margin: 0 0 0.75em 0;
+  }
+
+  .message.assistant :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .message.assistant :global(strong) {
+    color: var(--guide-text, #e8e8f0);
+    font-weight: 600;
+  }
+
+  .message.assistant :global(em) {
     font-style: italic;
+    opacity: 0.9;
+  }
+
+  .message.assistant :global(ul),
+  .message.assistant :global(ol) {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+  }
+
+  .message.assistant :global(li) {
+    margin-bottom: 0.25em;
+  }
+
+  .message.assistant :global(code) {
+    background: rgba(255,255,255,0.1);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+  }
+
+  .message.assistant :global(blockquote) {
+    border-left: 3px solid var(--guide-accent, #4a9eff);
+    margin: 0.5em 0;
+    padding-left: 1em;
+    opacity: 0.85;
+  }
+
+  /* Typing indicator */
+  .typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 8px 0;
+  }
+
+  .typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: var(--guide-accent, #4a9eff);
+    border-radius: 50%;
+    animation: typing-bounce 1.4s infinite ease-in-out;
+    opacity: 0.5;
+  }
+
+  .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+  .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0s; }
+
+  @keyframes typing-bounce {
+    0%, 80%, 100% { transform: scale(0.8); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 0.8; }
   }
 
   .message.error {
@@ -361,6 +425,14 @@
     --guide-input-bg: rgba(0,0,0,0.03);
   }
 
+  :global(.light-mode) .message.assistant :global(strong) {
+    color: #1a1816;
+  }
+
+  :global(.light-mode) .message.assistant :global(code) {
+    background: rgba(0,0,0,0.06);
+  }
+
   /* Responsive */
   @media (max-width: 480px) {
     .guide-container {
@@ -376,13 +448,53 @@
 </style>
 
 <script>
+  // Simple markdown parser
+  function parseMarkdown(text: string): string {
+    let html = text;
+
+    // Escape HTML
+    html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    // Bold: **text** or __text__
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+
+    // Italic: *text* or _text_
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
+
+    // Inline code: `code`
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Blockquotes: > text
+    html = html.replace(/^&gt;\s*(.+)$/gm, '<blockquote>$1</blockquote>');
+
+    // Unordered lists: - item or * item
+    html = html.replace(/^[\-\*]\s+(.+)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+
+    // Line breaks: double newline = paragraph
+    html = html.split(/\n\n+/).map(p => {
+      p = p.trim();
+      if (p && !p.startsWith('<ul>') && !p.startsWith('<blockquote>')) {
+        return `<p>${p}</p>`;
+      }
+      return p;
+    }).join('');
+
+    // Single newlines within paragraphs
+    html = html.replace(/([^>])\n([^<])/g, '$1<br>$2');
+
+    return html;
+  }
+
   // Guide functionality
   document.addEventListener('DOMContentLoaded', () => {
     const trigger = document.getElementById('guide-trigger');
     const panel = document.getElementById('guide-panel');
     const closeBtn = document.getElementById('guide-close');
     const form = document.getElementById('guide-form');
-    const input = document.getElementById('guide-input');
+    const input = document.getElementById('guide-input') as HTMLInputElement;
     const messagesContainer = document.getElementById('guide-messages');
     const suggestionsContainer = document.getElementById('guide-suggestions');
     const suggestions = document.querySelectorAll('.suggestion');
@@ -395,6 +507,13 @@
       const section = document.querySelector('[data-section]')?.getAttribute('data-section') || 'Overview';
       const status = document.querySelector('[data-epistemic-status]')?.getAttribute('data-epistemic-status') || 'established';
       return { section, status };
+    }
+
+    // Smooth scroll to bottom
+    function scrollToBottom() {
+      if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
     }
 
     // Toggle panel
@@ -437,6 +556,43 @@
       }
     });
 
+    // Type out message character by character
+    async function typeMessage(element: HTMLElement, content: string) {
+      const chars = content.split('');
+      let currentText = '';
+
+      for (let i = 0; i < chars.length; i++) {
+        currentText += chars[i];
+
+        // Render markdown on each update
+        element.innerHTML = parseMarkdown(currentText);
+
+        // Scroll every few characters
+        if (i % 5 === 0) {
+          scrollToBottom();
+        }
+
+        // Variable typing speed
+        const char = chars[i];
+        let delay = 12; // Base speed: ~83 chars/second
+
+        if (char === '.' || char === '!' || char === '?') {
+          delay = 200; // Pause at sentence end
+        } else if (char === ',' || char === ';' || char === ':') {
+          delay = 80; // Brief pause at clauses
+        } else if (char === '\n') {
+          delay = 100; // Pause at line breaks
+        } else if (char === ' ') {
+          delay = 8; // Faster on spaces
+        }
+
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+
+      // Final scroll
+      scrollToBottom();
+    }
+
     // Send message to API
     async function sendMessage(message: string) {
       if (isLoading) return;
@@ -448,10 +604,18 @@
       suggestionsContainer?.classList.add('hidden');
 
       // Add user message
-      addMessage(message, 'user');
+      const userEl = document.createElement('div');
+      userEl.className = 'message user';
+      userEl.textContent = message;
+      messagesContainer?.appendChild(userEl);
+      scrollToBottom();
 
-      // Add loading indicator
-      const loadingEl = addMessage('Thinking...', 'assistant loading');
+      // Add typing indicator
+      const typingEl = document.createElement('div');
+      typingEl.className = 'message assistant';
+      typingEl.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+      messagesContainer?.appendChild(typingEl);
+      scrollToBottom();
 
       const context = getCurrentContext();
 
@@ -473,11 +637,9 @@
 
         const data = await response.json();
 
-        // Remove loading indicator
-        loadingEl?.remove();
-
-        // Add assistant response
-        addMessage(data.message, 'assistant');
+        // Clear typing indicator and type the response
+        typingEl.innerHTML = '';
+        await typeMessage(typingEl, data.message);
 
         // Update history
         conversationHistory.push(
@@ -491,21 +653,15 @@
         }
 
       } catch (error) {
-        loadingEl?.remove();
-        addMessage('I apologize, but I\'m having trouble connecting. Please try again.', 'assistant error');
+        typingEl.remove();
+        const errorEl = document.createElement('div');
+        errorEl.className = 'message assistant error';
+        errorEl.textContent = "I apologize, but I'm having trouble connecting. Please try again.";
+        messagesContainer?.appendChild(errorEl);
+        scrollToBottom();
       }
 
       isLoading = false;
-    }
-
-    // Add message to UI
-    function addMessage(text: string, className: string): HTMLElement | null {
-      const el = document.createElement('div');
-      el.className = `message ${className}`;
-      el.textContent = text;
-      messagesContainer?.appendChild(el);
-      messagesContainer?.scrollTo(0, messagesContainer.scrollHeight);
-      return el;
     }
   });
 </script>
