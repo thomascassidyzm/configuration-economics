@@ -3,6 +3,7 @@
 // Text-first, calm, invitational
 
 import { PROPOSITIONS, getLinkedPropositions } from '../content/propositions';
+import { VERSION, BUILD } from '../lib/version';
 ---
 
 <html lang="en">
@@ -18,7 +19,11 @@ import { PROPOSITIONS, getLinkedPropositions } from '../content/propositions';
   <body>
     <nav class="top-nav">
       <a href="/" class="nav-home">Configuration Economics</a>
-      <a href="/essay" class="nav-link">Essay</a>
+      <div class="nav-right">
+        <a href="/essay" class="nav-link">Essay</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
     </nav>
 
     <main>
@@ -143,6 +148,26 @@ import { PROPOSITIONS, getLinkedPropositions } from '../content/propositions';
 
       .nav-link:hover {
         color: var(--accent);
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+      }
+
+      .nav-version {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+
+      .nav-build {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        opacity: 0.7;
       }
 
       main {

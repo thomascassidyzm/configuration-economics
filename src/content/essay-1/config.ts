@@ -1,13 +1,16 @@
 // Essay 1 Configuration
 // Version and metadata for "Value under Physical Constraint"
 
+import { VERSION, BUILD } from '../../lib/version';
+
 export const ESSAY_META = {
   id: 'essay-1',
   title: 'Value under Physical Constraint',
-  version: 'v0.1',
+  version: VERSION,
+  build: BUILD,
   status: 'Working Draft',
   date: 'December 2025',
-  lastUpdated: '2025-12-19',
+  lastUpdated: '2025-12-20',
 };
 
 export type EpistemicStatus = 'established' | 'derived' | 'contested' | 'open';
