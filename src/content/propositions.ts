@@ -1,4 +1,4 @@
-// Proposition Nodes v0.1
+// Proposition Nodes v0.2
 // Self-contained, meaningful in isolation, connected by simple links
 
 export interface Proposition {
@@ -132,6 +132,119 @@ Scarcity remains. Trade-offs remain. What changes is how they are handled.`,
       conclusion: 'Participation should be unconditional within physical constraints; contribution can remain differentiated.'
     },
     linksTo: ['value-option-space', 'work-wrong-question']
+  },
+
+  // --- v0.2 additions ---
+
+  {
+    id: 'structural-memory',
+    title: 'Economies Remember Through Structure',
+    surface: `Societies remember in more ways than one.
+
+Some memory lives in people: skills, habits, expectations. Some lives in things: buildings, tools, institutions, laws. Much of it is not written down at all, but embedded in how easily certain actions can be taken and how difficult others become.
+
+When these structures are well aligned with reality, they make sensible behaviour easy. When they are misaligned, effort increases while outcomes worsen.
+
+An economy is not just a system of exchange. It is a system of memory.`,
+    logic: {
+      claim: 'Economic systems encode past decisions as structural memory that shapes future behaviour.',
+      premises: [
+        'Configurations persist over time and constrain action.',
+        'Institutions and infrastructures embody accumulated choices.',
+        'Behaviour responds to ease and friction more than intention.'
+      ],
+      conclusion: 'Misaligned structures perpetuate errors even when intentions improve.'
+    },
+    linksTo: ['value-option-space', 'complexity-maintenance']
+  },
+
+  {
+    id: 'complexity-maintenance',
+    title: 'Complexity Has a Maintenance Cost',
+    surface: `Complex systems feel powerful when they are first built.
+
+They coordinate large populations, move resources efficiently, and solve problems that once seemed impossible. Over time, however, something quieter happens. Keeping the system running begins to require more effort, more oversight, more energy.
+
+When the surrounding conditions are generous, this cost stays hidden. When they tighten, complexity starts to weigh on the system that produced it.
+
+Complexity is never free. It borrows from the future.`,
+    logic: {
+      claim: 'Increasing complexity carries an ongoing maintenance cost that grows over time.',
+      premises: [
+        'Complex systems require coordination, monitoring, and repair.',
+        'Maintenance consumes energy and attention.',
+        'Energy income is bounded.'
+      ],
+      conclusion: 'Excess complexity can reduce net capacity even if it once increased it.',
+      predictive: 'Late-stage systems experience rising overhead and declining flexibility.'
+    },
+    linksTo: ['energy-income-inheritance', 'structural-memory', 'care-as-configuration']
+  },
+
+  {
+    id: 'care-as-configuration',
+    title: 'Care as Configuration, Not Sentiment',
+    surface: `Care is often spoken about in emotional terms, as something personal or moral.
+
+But care also has a structural dimension. It preserves capacity. It prevents damage from becoming irreversible. It keeps options open that would otherwise close quietly and permanently.
+
+When care is absent, systems do not fail immediately. They degrade. Possibilities narrow. Recovery becomes expensive or impossible.
+
+Seen this way, care is not a luxury. It is a form of configuration maintenance.`,
+    logic: {
+      claim: 'Care functions as configuration maintenance that preserves future option space.',
+      premises: [
+        'Living systems degrade without ongoing attention.',
+        'Early intervention prevents compounding damage.',
+        'Restoration costs exceed maintenance costs.'
+      ],
+      conclusion: 'Care is value-positive even when it produces no immediate output.'
+    },
+    linksTo: ['value-option-space', 'complexity-maintenance', 'prevention-over-repair']
+  },
+
+  {
+    id: 'prevention-over-repair',
+    title: 'Prevention Is Cheaper Than Repair (But Harder to See)',
+    surface: `Many of the most important economic actions leave little trace.
+
+A problem that never materialises does not show up in statistics. A crisis that is quietly avoided rarely becomes a headline. What remains visible is the effort that follows failure, not the attention that prevented it.
+
+This creates a bias. Systems that reward visible response over quiet prevention slowly train themselves to fail first and fix later.
+
+Over time, this is expensive.`,
+    logic: {
+      claim: 'Preventive actions generate more value than reactive ones but are systematically undervalued.',
+      premises: [
+        'Prevention avoids irreversible damage.',
+        'Avoided costs are difficult to attribute.',
+        'Economic signals favour visible activity.'
+      ],
+      conclusion: 'Systems drift toward reactive expenditure even when it is inefficient.'
+    },
+    linksTo: ['care-as-configuration', 'throughput-cost']
+  },
+
+  {
+    id: 'stability-not-stasis',
+    title: 'Stability Is Not Stasis',
+    surface: `Stability is often mistaken for stillness.
+
+In living systems, stability comes from continual adjustment. Forests shift, bodies adapt, languages evolve. What remains stable is not the arrangement, but the ability to respond without breaking.
+
+Economic systems that confuse stability with freezing existing structures become brittle. When conditions change, they crack rather than flex.
+
+A stable economy is one that keeps moving—carefully.`,
+    logic: {
+      claim: 'Stability arises from adaptive capacity, not static preservation.',
+      premises: [
+        'Environments change over time.',
+        'Fixed structures resist adjustment.',
+        'Flexibility preserves function under variation.'
+      ],
+      conclusion: 'Systems must prioritise adaptability over preservation of form.'
+    },
+    linksTo: ['value-option-space', 'structural-memory']
   }
 ];
 
