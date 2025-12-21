@@ -1,4 +1,4 @@
-// Proposition Nodes v0.2
+// Proposition Nodes v0.3
 // Self-contained, meaningful in isolation, connected by simple links
 
 export interface Proposition {
@@ -245,6 +245,208 @@ A stable economy is one that keeps moving—carefully.`,
       conclusion: 'Systems must prioritise adaptability over preservation of form.'
     },
     linksTo: ['value-option-space', 'structural-memory']
+  },
+
+  // --- v0.3 additions ---
+
+  {
+    id: 'time-asymmetry',
+    title: 'Time Is Not Symmetric',
+    surface: `Economic decisions are often discussed as if time were neutral.
+
+Costs and benefits are discounted, averaged, or projected forward as though losses and gains could be freely exchanged across decades. Yet many changes do not reverse. Forests regrow slowly, if at all. Species vanish permanently. Skills atrophy. Trust erodes quietly.
+
+Time does not treat all actions equally. Some close doors forever.`,
+    logic: {
+      claim: 'Economic effects are time-asymmetric; losses are often irreversible while gains are not.',
+      premises: [
+        'Physical and biological processes are path-dependent.',
+        'Some damages permanently reduce future option space.',
+        'Discounting obscures irreversibility.'
+      ],
+      conclusion: 'Accounting systems that treat time symmetrically misprice risk.'
+    },
+    linksTo: ['value-option-space', 'prevention-over-repair']
+  },
+
+  {
+    id: 'displaced-costs',
+    title: 'Not All Costs Appear at the Point of Exchange',
+    surface: `Many transactions look clean at the moment they occur.
+
+Payment is made. Goods change hands. Accounts balance. What does not appear is what has been displaced: the wear transferred elsewhere, the waste deferred, the future constrained.
+
+Costs often arrive later, or in places no longer connected to the original decision.`,
+    logic: {
+      claim: 'Significant costs are displaced in time, space, or system boundaries.',
+      premises: [
+        'Physical effects propagate beyond transaction boundaries.',
+        'Markets price what is legible, not what is distant.',
+        'Deferred costs compound.'
+      ],
+      conclusion: 'Local optimisation creates global instability.'
+    },
+    linksTo: ['throughput-cost', 'time-asymmetry', 'prevention-over-repair']
+  },
+
+  {
+    id: 'contextual-scarcity',
+    title: 'Scarcity Is Contextual, Not Absolute',
+    surface: `Scarcity is usually spoken of as a fixed condition.
+
+In practice, it shifts with technology, organisation, and configuration. What is scarce in one arrangement becomes abundant in another. What seems plentiful can vanish when coordination fails.
+
+Scarcity is not simply "how much exists". It is how easily something can be accessed, reused, or substituted.`,
+    logic: {
+      claim: 'Scarcity depends on configuration, not just quantity.',
+      premises: [
+        'Access and substitution affect availability.',
+        'Configuration alters effective supply.',
+        'Breakdown increases scarcity without reducing stock.'
+      ],
+      conclusion: 'Managing scarcity requires managing arrangements, not just extraction.'
+    },
+    linksTo: ['value-option-space', 'coordination-wealth']
+  },
+
+  {
+    id: 'substitution-limits',
+    title: 'Substitution Has Limits',
+    surface: `Technological optimism often rests on substitution.
+
+If one resource runs short, another will replace it. If one process becomes expensive, a new one will emerge. This has sometimes been true — but not without friction, delay, or loss.
+
+Some substitutions are slow. Some are partial. Some trade one constraint for another.`,
+    logic: {
+      claim: 'Substitution cannot be assumed to be frictionless or unlimited.',
+      premises: [
+        'Substitutes require time, energy, and infrastructure.',
+        'Many resources are functionally unique.',
+        'Transitions incur temporary losses.'
+      ],
+      conclusion: 'Relying on substitution alone increases systemic risk.'
+    },
+    linksTo: ['energy-income-inheritance', 'transition-fragility']
+  },
+
+  {
+    id: 'growth-masks-strain',
+    title: 'Growth Masks Distributional Strain',
+    surface: `When total output increases, tensions often soften.
+
+Losses in one place are offset by gains elsewhere. Conflict can be deferred. Inequality feels tolerable when absolute conditions improve.
+
+When growth slows, these buffers vanish. Distributional questions move from background noise to central concern.`,
+    logic: {
+      claim: 'Growth suppresses visibility of distributional stress.',
+      premises: [
+        'Expanding systems absorb conflict.',
+        'Stagnant systems expose allocation choices.',
+        'Energy constraints limit expansion.'
+      ],
+      conclusion: 'Slowing growth forces explicit value decisions.'
+    },
+    linksTo: ['energy-income-inheritance', 'participation-limits']
+  },
+
+  {
+    id: 'money-as-signal',
+    title: 'Money Is a Signal, Not a Substance',
+    surface: `Money coordinates action by compressing complexity.
+
+Prices summarise many variables into a single figure. This is powerful, but also dangerous. When the signal detaches from physical reality, coordination continues even as the underlying system degrades.
+
+The signal remains legible long after its referent has changed.`,
+    logic: {
+      claim: 'Monetary signals do not guarantee physical correspondence.',
+      premises: [
+        'Prices abstract away material specifics.',
+        'Feedback delays allow divergence.',
+        'Markets optimise signals, not substrates.'
+      ],
+      conclusion: 'Money must be anchored to physical accounting to remain informative.'
+    },
+    linksTo: ['throughput-cost', 'legibility-truth-tradeoff']
+  },
+
+  {
+    id: 'coordination-wealth',
+    title: 'Coordination Is a Form of Wealth',
+    surface: `Some societies achieve more with less.
+
+They waste less energy resolving conflict, duplicating effort, or repairing avoidable damage. Much of their "wealth" lies not in assets, but in shared understanding and trust.
+
+Coordination reduces the cost of acting together.`,
+    logic: {
+      claim: 'Effective coordination reduces throughput requirements.',
+      premises: [
+        'Misalignment generates friction.',
+        'Trust lowers transaction costs.',
+        'Coordination compounds over time.'
+      ],
+      conclusion: 'Social coherence is configuration-positive.'
+    },
+    linksTo: ['structural-memory', 'participation-limits', 'care-as-configuration']
+  },
+
+  {
+    id: 'legibility-truth-tradeoff',
+    title: 'Legibility Trades Off Against Truth',
+    surface: `Systems prefer what can be counted.
+
+Simple metrics travel well. They fit dashboards, headlines, incentives. Unfortunately, the most important things often resist simplification.
+
+As legibility increases, nuance is lost. What cannot be seen stops being protected.`,
+    logic: {
+      claim: 'Metrics simplify reality at the cost of accuracy.',
+      premises: [
+        'Measurement requires reduction.',
+        'Incentives follow metrics.',
+        'Unmeasured factors decay.'
+      ],
+      conclusion: 'Over-legibility accelerates hidden loss.'
+    },
+    linksTo: ['complexity-maintenance', 'prevention-over-repair', 'money-as-signal']
+  },
+
+  {
+    id: 'transition-fragility',
+    title: 'Transitions Are the Most Fragile Phase',
+    surface: `Stable systems tolerate inefficiency.
+
+Unstable ones do not. During transitions, buffers shrink. Old supports weaken before new ones fully form. Errors that were once survivable become critical.
+
+This is when accounting honesty matters most.`,
+    logic: {
+      claim: 'System transitions amplify risk and error sensitivity.',
+      premises: [
+        'Redundancy declines during change.',
+        'New configurations are immature.',
+        'External shocks persist.'
+      ],
+      conclusion: 'Transitional periods require conservative assumptions.'
+    },
+    linksTo: ['energy-income-inheritance', 'complexity-maintenance', 'stability-not-stasis']
+  },
+
+  {
+    id: 'ignoring-physics',
+    title: 'Ignoring Physics Is Still a Choice',
+    surface: `No economy escapes physical reality.
+
+What differs is whether limits are acknowledged early or imposed later. Ignoring constraints does not remove them. It merely postpones their effects until they arrive uninvited.
+
+Denial is not neutral. It is a decision with predictable consequences.`,
+    logic: {
+      claim: 'Disregarding physical limits produces delayed but amplified failure.',
+      premises: [
+        'Physical constraints operate regardless of belief.',
+        'Delay increases system brittleness.',
+        'Correction costs rise over time.'
+      ],
+      conclusion: 'Early alignment is cheaper than forced adjustment.'
+    },
+    linksTo: ['energy-income-inheritance', 'time-asymmetry', 'transition-fragility']
   }
 ];
 

@@ -5,7 +5,7 @@
 // - Major: fundamental framework changes
 // - Minor: new propositions, significant rewrites
 // - Patch: refinements, fixes, code improvements
-export const VERSION = 'v0.1.2';
+export const VERSION = 'v0.1.3';
 
 // Build number: injected at build time from git (commit count + short hash)
 // @ts-ignore - __BUILD_NUMBER__ is defined by Vite at build time
