@@ -524,11 +524,29 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
 
     // Get current context from page
     function getCurrentContext() {
-      const dynamicSection = (window as any).currentSection;
+      const dynamicSectionId = (window as any).currentSectionId;  // For proposition lookup
+      const dynamicSection = (window as any).currentSection;       // For display
       const dynamicStatus = (window as any).currentStatus;
       const defaultSection = panel?.getAttribute('data-default-section') || 'Essay 1';
+
+      // Read directly from DOM as additional fallback
+      const displayedSection = sectionEl?.textContent?.trim();
+
+      const finalSection = dynamicSection || displayedSection || defaultSection;
+      const finalSectionId = dynamicSectionId || null;
+
+      // Debug logging (remove in production)
+      console.log('[Guide Context]', {
+        dynamicSectionId,
+        dynamicSection,
+        displayedSection,
+        finalSection,
+        finalSectionId
+      });
+
       return {
-        section: dynamicSection || sectionEl?.textContent || defaultSection,
+        sectionId: finalSectionId,  // Machine-readable ID
+        section: finalSection,       // Human-readable title
         status: dynamicStatus || 'established'
       };
     }
@@ -650,18 +668,25 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
 
       const context = getCurrentContext();
 
+      // Build the request payload
+      const requestPayload = {
+        message,
+        history: conversationHistory,
+        context: {
+          currentSection: context.sectionId || context.section,  // Prefer ID for proposition lookup
+          currentSectionTitle: context.section,  // Keep title for display context
+          epistemicStatus: context.status
+        }
+      };
+
+      // Debug logging (remove in production)
+      console.log('[Guide Request]', requestPayload.context);
+
       try {
         const response = await fetch('/api/guide', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message,
-            history: conversationHistory,
-            context: {
-              currentSection: context.section,
-              epistemicStatus: context.status
-            }
-          })
+          body: JSON.stringify(requestPayload)
         });
 
         if (!response.ok) throw new Error('Guide unavailable');

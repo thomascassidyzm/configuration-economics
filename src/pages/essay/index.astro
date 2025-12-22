@@ -655,7 +655,8 @@ function parseMarkdown(text: string): string {
             const epistemicBadge = entry.target.querySelector('.epistemic-badge');
             const status = epistemicBadge?.textContent || 'established';
 
-            (window as any).currentSection = sectionTitle;
+            (window as any).currentSectionId = sectionId;  // For proposition lookup
+            (window as any).currentSection = sectionTitle;  // For display
             (window as any).currentStatus = status;
           }
         });

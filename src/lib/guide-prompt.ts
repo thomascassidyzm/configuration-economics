@@ -1,6 +1,114 @@
 // Configuration Economics Guide System Prompt
 // This is the core epistemic contract for the guide
 
+// Section-to-proposition mappings for contextual injection
+// Keys match section IDs from essay-1/config.ts
+export const SECTION_PROPOSITIONS: Record<string, string[]> = {
+  'orientation': [],  // General framing
+  'physical-envelope': ['energy-income-inheritance'],
+  'accounting-error': ['energy-income-inheritance', 'throughput-cost'],
+  'throughput-proxy': ['throughput-cost', 'displaced-costs', 'money-as-signal'],
+  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration'],
+  'configuration-not-information': ['configuration-not-information'],
+  'work-wrong-question': ['work-wrong-question', 'participation-limits'],
+  'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain'],
+  'viable-objective': ['viable-objective', 'value-option-space'],
+  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis'],
+  'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry']
+};
+
+// Compact proposition index for Alexander
+export const PROPOSITION_INDEX: Record<string, { title: string; claim: string }> = {
+  'energy-income-inheritance': {
+    title: 'Energy Income and Inheritance',
+    claim: 'Modern economies behave as though they are living on income while materially spending down finite energy stocks.'
+  },
+  'throughput-cost': {
+    title: 'Throughput and Cost',
+    claim: 'Material and energy throughput measure cost, not success.'
+  },
+  'value-option-space': {
+    title: 'Value and Future Option Space',
+    claim: 'Value consists in configurations that expand future option space under bounded energy flux.'
+  },
+  'work-wrong-question': {
+    title: 'Why Work Stops Being the Right Question',
+    claim: 'When labour is used as the gatekeeper of participation, misaligned incentives produce performative work.'
+  },
+  'participation-limits': {
+    title: 'Participation within Physical Limits',
+    claim: 'Stable economies guarantee participation within physical limits rather than enforcing labour as a condition of survival.'
+  },
+  'structural-memory': {
+    title: 'Economies Remember Through Structure',
+    claim: 'Economic systems encode past decisions as structural memory that shapes future behaviour.'
+  },
+  'complexity-maintenance': {
+    title: 'Complexity Has a Maintenance Cost',
+    claim: 'Increasing complexity carries an ongoing maintenance cost that grows over time.'
+  },
+  'care-as-configuration': {
+    title: 'Care as Configuration, Not Sentiment',
+    claim: 'Care functions as configuration maintenance that preserves future option space.'
+  },
+  'prevention-over-repair': {
+    title: 'Prevention Is Cheaper Than Repair',
+    claim: 'Preventive actions generate more value than reactive ones but are systematically undervalued.'
+  },
+  'stability-not-stasis': {
+    title: 'Stability Is Not Stasis',
+    claim: 'Stability arises from adaptive capacity, not static preservation.'
+  },
+  'time-asymmetry': {
+    title: 'Time Is Not Symmetric',
+    claim: 'Economic effects are time-asymmetric; losses are often irreversible while gains are not.'
+  },
+  'displaced-costs': {
+    title: 'Not All Costs Appear at the Point of Exchange',
+    claim: 'Significant costs are displaced in time, space, or system boundaries.'
+  },
+  'contextual-scarcity': {
+    title: 'Scarcity Is Contextual, Not Absolute',
+    claim: 'Scarcity depends on configuration, not just quantity.'
+  },
+  'substitution-limits': {
+    title: 'Substitution Has Limits',
+    claim: 'Substitution cannot be assumed to be frictionless or unlimited.'
+  },
+  'growth-masks-strain': {
+    title: 'Growth Masks Distributional Strain',
+    claim: 'Growth suppresses visibility of distributional stress.'
+  },
+  'money-as-signal': {
+    title: 'Money Is a Signal, Not a Substance',
+    claim: 'Monetary signals do not guarantee physical correspondence.'
+  },
+  'coordination-wealth': {
+    title: 'Coordination Is a Form of Wealth',
+    claim: 'Effective coordination reduces throughput requirements.'
+  },
+  'legibility-truth-tradeoff': {
+    title: 'Legibility Trades Off Against Truth',
+    claim: 'Metrics simplify reality at the cost of accuracy.'
+  },
+  'transition-fragility': {
+    title: 'Transitions Are the Most Fragile Phase',
+    claim: 'System transitions amplify risk and error sensitivity.'
+  },
+  'ignoring-physics': {
+    title: 'Ignoring Physics Is Still a Choice',
+    claim: 'Disregarding physical limits produces delayed but amplified failure.'
+  },
+  'configuration-not-information': {
+    title: 'Configuration Is Not Information Alone',
+    claim: 'Configuration is broader than information and cannot be reduced to symbols or data.'
+  },
+  'viable-objective': {
+    title: 'The Viable Objective',
+    claim: 'A viable economic objective under physical constraint is the maximisation of durable flourishing per unit of bounded throughput.'
+  }
+};
+
 export const GUIDE_SYSTEM_PROMPT = `You are the epistemic guide for Configuration Economics, a living epistemic work. You are a **thinking companion** whose purpose is to help readers form precise distinctions and navigate this body of work at their own resolution.
 
 ## YOUR IDENTITY
@@ -181,29 +289,88 @@ Leaves intact: markets, trade, ambition, innovation, disagreement within constra
 **Section 8 - Inevitability** [OPEN]
 This framework depends on physics, not agreement or virtue. Societies will adopt reality-respecting accounting or burn option space. The transition is not guaranteed, but the failure of throughput-blind economics is. The next task is accounting.
 
+## CONTEXT AWARENESS (critical)
+
+You always receive a CURRENT CONTEXT block at the end of this prompt that tells you:
+- Which section the reader is currently viewing
+- The section's epistemic status
+- Relevant propositions for that section
+
+**When the reader says "this section", "this part", "explain this", or similar phrases, they are referring to the section shown in CURRENT CONTEXT.** Don't ask which section they mean—you already know from the context.
+
+For example, if CURRENT CONTEXT shows "The Physical Envelope" and the reader asks "explain this section", explain The Physical Envelope.
+
+## PROPOSITION AWARENESS
+
+This work is built on **22 self-contained propositions**. Each proposition has:
+- A **title** (e.g., "Energy Income and Inheritance")
+- A **claim** (the core assertion)
+- **Underlying logic** (premises, conclusion, sometimes predictive consequences)
+- **Links** to related propositions
+
+When helping readers, you may:
+- Reference propositions by title when they're directly relevant
+- Mention that "this section draws on the proposition on X" when appropriate
+- Offer to explain the underlying logic if a reader wants to go deeper
+- Point readers to related propositions when they'd help clarify connections
+
+You don't need to reference propositions constantly. Use them when:
+- A reader asks "what's the basis for this?"
+- A connection would help clarify the argument
+- You're explaining how different parts of the framework relate
+
+The propositions visible to you in RELEVANT PROPOSITIONS are the ones most relevant to what the reader is viewing.
+
 ## SUMMARY
 
 You are a thinking companion for a physics-grounded analytical framework. You explain clearly, distinguish precisely, and never preach. You're interested in what's true and what follows from it, not in convincing anyone of anything. If the physics is correct, the conclusions follow whether anyone likes them or not—and that's interesting enough without adding urgency or moral weight.`;
 
 export interface GuideContext {
-  currentSection?: string;
+  currentSection?: string;         // Section ID for proposition lookup
+  currentSectionTitle?: string;    // Human-readable section title
   readingHistory?: string[];
   epistemicStatus?: 'established' | 'derived' | 'contested' | 'open';
 }
 
+// Build proposition context from section
+function getPropositionsForSection(sectionId: string): string {
+  const propIds = SECTION_PROPOSITIONS[sectionId] || [];
+  if (propIds.length === 0) return '';
+
+  const lines = propIds.map(id => {
+    const prop = PROPOSITION_INDEX[id];
+    if (!prop) return '';
+    return `• **${prop.title}**: ${prop.claim}`;
+  }).filter(Boolean);
+
+  if (lines.length === 0) return '';
+  return `\n\nRELEVANT PROPOSITIONS:\n${lines.join('\n')}`;
+}
+
 export function buildPromptWithContext(userMessage: string, context: GuideContext): string {
-  let contextBlock = '';
+  let contextBlock = '\n\n';
 
   if (context.currentSection) {
-    contextBlock += `\n\nCURRENT CONTEXT:\nThe reader is viewing: ${context.currentSection}`;
+    // Show human-readable title if available, otherwise use the section ID
+    const displaySection = context.currentSectionTitle || context.currentSection;
+    contextBlock += `CURRENT CONTEXT:\nThe reader is viewing: ${displaySection}`;
+
+    // Inject relevant propositions for this section (using the ID)
+    const propositionContext = getPropositionsForSection(context.currentSection);
+    if (propositionContext) {
+      contextBlock += propositionContext;
+    }
+
+    if (context.epistemicStatus) {
+      contextBlock += `\nThe current section's epistemic status is: ${context.epistemicStatus}`;
+    }
+  } else {
+    // Fallback when no section context is available
+    contextBlock += `CURRENT CONTEXT:\nThe reader is viewing: Essay 1 (section not specified)\nIf they ask about "this section", ask them to clarify which section.`;
   }
 
   if (context.readingHistory && context.readingHistory.length > 0) {
     contextBlock += `\nThey have previously read: ${context.readingHistory.join(', ')}`;
-  }
-
-  if (context.epistemicStatus) {
-    contextBlock += `\nThe current section's epistemic status is: ${context.epistemicStatus}`;
   }
 
   return GUIDE_SYSTEM_PROMPT + contextBlock;

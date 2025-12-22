@@ -93,11 +93,13 @@ Needed:
 
 ## Proposed Next Steps (Priority Order)
 
-### Phase 1: Alexander Integration
-1. Update Alexander's prompt to include proposition awareness
-2. Give Alexander the list of propositions with their claims
-3. Test: Can Alexander reference propositions appropriately?
-4. Test: Can Alexander explain logic when asked?
+### Phase 1: Alexander Integration ✓ (v0.1.5)
+1. ✓ Updated Alexander's prompt to include proposition awareness
+2. ✓ Added compact proposition index (22 propositions with titles + claims)
+3. ✓ Section-to-proposition mapping for contextual injection
+4. ✓ Relevant propositions injected into prompt based on current section
+5. Test: Can Alexander reference propositions appropriately?
+6. Test: Can Alexander explain logic when asked?
 
 ### Phase 2: Reader Orientation
 5. Create "How to read this" page

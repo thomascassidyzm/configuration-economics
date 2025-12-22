@@ -19,6 +19,9 @@ export const POST: APIRoute = async ({ request }) => {
     const body: GuideRequest = await request.json();
     const { message, history = [], context = {} } = body;
 
+    // Debug logging (remove in production)
+    console.log('[Guide API] Received context:', JSON.stringify(context));
+
     if (!message) {
       return new Response(JSON.stringify({ error: 'Message is required' }), {
         status: 400,
@@ -35,6 +38,10 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const systemPrompt = buildPromptWithContext(message, context);
+
+    // Debug: log the end of the system prompt to see context block
+    const contextPortion = systemPrompt.slice(-500);
+    console.log('[Guide API] Prompt ends with:', contextPortion);
 
     // Build messages array with history
     const messages = [
