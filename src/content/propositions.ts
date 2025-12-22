@@ -1,4 +1,4 @@
-// Proposition Nodes v0.3
+// Proposition Nodes v0.4
 // Self-contained, meaningful in isolation, connected by simple links
 
 export interface Proposition {
@@ -447,6 +447,57 @@ Denial is not neutral. It is a decision with predictable consequences.`,
       conclusion: 'Early alignment is cheaper than forced adjustment.'
     },
     linksTo: ['energy-income-inheritance', 'time-asymmetry', 'transition-fragility']
+  },
+
+  // --- v0.4 additions ---
+
+  {
+    id: 'configuration-not-information',
+    title: 'Configuration Is Not Information Alone',
+    surface: `There is a tempting shortcut in discussions of configuration.
+
+If value lies in arrangement rather than material, perhaps everything can be digitised. Data is cheap to copy. Symbols travel freely. The constraints that bind physical systems might be escaped through abstraction.
+
+This is a misunderstanding. Configuration includes bodies, skills, relationships, institutions, infrastructures, and ecological arrangements. Most of it cannot be uploaded. All of it must be maintained.
+
+A forest is not a database of trees. A skill is not a video of someone performing it. A functioning institution is not its org chart.
+
+Configuration that ignores its physical substrate is not configuration at all. It is description.`,
+    logic: {
+      claim: 'Configuration is broader than information and cannot be reduced to symbols or data.',
+      premises: [
+        'Information can be copied at near-zero marginal cost; configuration cannot.',
+        'Configuration includes physical arrangements with ongoing maintenance requirements.',
+        'Digitisation preserves description but not function.'
+      ],
+      conclusion: 'Optimism about escaping physical constraints through abstraction is misplaced.'
+    },
+    linksTo: ['value-option-space', 'complexity-maintenance', 'care-as-configuration']
+  },
+
+  {
+    id: 'viable-objective',
+    title: 'The Viable Objective',
+    surface: `If throughput cannot serve as the measure of success, what replaces it?
+
+One candidate: durable human flourishing per unit of constrained throughput.
+
+This is not a slogan. It is a ratio. The numerator values what persists and expands possibility. The denominator constrains what is consumed in the process.
+
+Under this framing, an activity that burns energy savings for transient benefit scores poorly. An activity that increases coherence, capability, or future possibility with minimal dissipation scores well.
+
+The economy does not grow or shrink. It reorients toward what the ratio rewards.`,
+    logic: {
+      claim: 'A viable economic objective under physical constraint is the maximisation of durable flourishing per unit of bounded throughput.',
+      premises: [
+        'Throughput is a cost, not a benefit.',
+        'Flourishing depends on configuration quality, not volume.',
+        'Energy income is bounded.'
+      ],
+      conclusion: 'Success should be measured as the ratio of durable value to necessary cost.',
+      predictive: 'Systems optimising this ratio will favour resilience, learning, care, and option preservation over speed, accumulation, and short-term yield.'
+    },
+    linksTo: ['throughput-cost', 'value-option-space', 'energy-income-inheritance']
   }
 ];
 
