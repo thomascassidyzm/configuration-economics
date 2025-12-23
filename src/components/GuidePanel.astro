@@ -245,8 +245,8 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
     color: #fff;
   }
 
-  /* Typing indicator - tiny horizontal dots */
-  .typing-indicator {
+  /* Typing indicator - tiny horizontal dots (global for dynamic elements) */
+  :global(.typing-indicator) {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -254,7 +254,7 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
     padding: 8px 0;
   }
 
-  .typing-indicator span {
+  :global(.typing-indicator span) {
     width: 6px;
     height: 6px;
     background: var(--guide-accent, #4a9eff);
@@ -262,9 +262,9 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
     animation: typing-pulse 1.2s infinite ease-in-out;
   }
 
-  .typing-indicator span:nth-child(1) { animation-delay: 0s; }
-  .typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
-  .typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
+  :global(.typing-indicator span:nth-child(1)) { animation-delay: 0s; }
+  :global(.typing-indicator span:nth-child(2)) { animation-delay: 0.15s; }
+  :global(.typing-indicator span:nth-child(3)) { animation-delay: 0.3s; }
 
   @keyframes typing-pulse {
     0%, 60%, 100% {
