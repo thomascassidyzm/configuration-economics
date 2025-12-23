@@ -13,27 +13,29 @@
 
 ---
 
-## Current State (v0.1.4, Dec 2025)
+## Current State (v0.1.5, Dec 2025)
 
 ### What exists:
 - **22 proposition nodes** with surface text + underlying logic
 - **Essay 1** (11 sections) mapped to propositions
-- **Alexander** present as contextual guide (right panel)
+- **Alexander** - proposition-aware epistemic guide (right panel)
 - **Epistemic status markers** (established, derived, contested, open)
-- **Version + build tracking**
+- **Version + build tracking** (semantic + git hash)
 - **/explore page** showing all propositions
+- **Typing indicator** (blue dots while Alexander thinks)
 
 ### What's working:
 - Propositions are self-contained, meaningful in isolation
 - Essay reads well as linear narrative
-- Alexander responds contextually
+- Alexander responds contextually and knows current section
+- Alexander can reference relevant propositions
 - Site feels calm, invitational, legible
 
 ### Known gaps:
-- Alexander doesn't explicitly know the propositions
 - No way to enter at different levels
 - One open question: coordination mechanisms under constraint
-- Essay and propositions exist in parallel but aren't deeply connected
+- Essay and propositions exist in parallel but visible connection is minimal
+- Option space not yet rigorously defined
 
 ---
 
@@ -184,10 +186,58 @@ v0.4: configuration-not-information, viable-objective
 
 ---
 
+## Theoretical Foundation: Distinction Physics Connection
+
+### The Bridge
+
+Configuration Economics is the 2026 application of Distinction Physics (2025).
+
+**Distinction Physics foundation** (from V7 Module 0):
+- Distinctions are ontologically primitive
+- Distinctions cost energy (Axiom 1)
+- Observers have finite energy budgets (Axiom 2)
+- From these alone: effective discreteness, quantization, thermodynamics
+
+**Configuration Economics extends this**:
+- Configurations = patterns of distinctions
+- Value = configurations that expand future distinction-making potential
+- Option space = future distinction-making potential
+
+### Option Space Definition (Working)
+
+> **Option Space(C)** = The set of distinction-patterns realizable from configuration C, given bounded energy input.
+
+This is **forward-looking** complexity (what can be made FROM this), unlike:
+- Assembly Index (Cronin) - backward-looking (what went INTO making this)
+- Logical Depth (Bennett) - computational history embedded
+
+### The Viable Objective (Restated)
+
+> Maximize sustainable future distinction-making potential per unit of constrained energy throughput.
+
+### Connection to Assembly Theory
+
+Lee Cronin's Assembly Theory explored as potential grounding:
+- Assembly Index measures minimum steps to construct something
+- Useful for backward complexity but not forward potential
+- Gap identified: need forward-looking measure
+- Potential bridge: configurations that ENABLE high-assembly-index futures with less energy
+
+### Key Insight
+
+The framework doesn't need external grounding from Assembly Theory - Distinction Physics provides the rigorous foundation:
+- Distinctions are quantized (finite energy)
+- Option space is therefore countable, not continuous
+- Value becomes measurable in principle
+
+---
+
 ## Notes for Future Sessions
 
 - This document is the reference for where we are and where we're going
-- Start with Phase 1 (Alexander integration) - it's highest leverage
-- Don't expand surface area until integration is solid
+- Phase 1 (Alexander integration) is complete
+- Next: Phase 2 (Reader Orientation) or theoretical deepening
 - The goal is depth and coherence, not breadth
 - Restraint is a feature
+- Distinction Physics V7 Module 0 is relevant reading (`/Users/tomcassidy/Distinction_Project/`)
+- "Option Potential" preferred over "FAP" as terminology
