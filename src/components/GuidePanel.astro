@@ -245,30 +245,36 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
     color: #fff;
   }
 
-  /* Typing indicator */
+  /* Typing indicator - tiny horizontal dots */
   .typing-indicator {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 12px 0;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 8px 0;
   }
 
   .typing-indicator span {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
     background: var(--guide-accent, #4a9eff);
     border-radius: 50%;
-    animation: typing-bounce 1.4s infinite ease-in-out;
+    animation: typing-pulse 1.2s infinite ease-in-out;
   }
 
-  .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-  .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-  .typing-indicator span:nth-child(3) { animation-delay: 0s; }
+  .typing-indicator span:nth-child(1) { animation-delay: 0s; }
+  .typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
 
-  @keyframes typing-bounce {
-    0%, 80%, 100% { transform: scale(0.7); opacity: 0.3; }
-    40% { transform: scale(1); opacity: 1; }
+  @keyframes typing-pulse {
+    0%, 60%, 100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    30% {
+      opacity: 1;
+      transform: scale(1.15);
+    }
   }
 
   .message.error {
