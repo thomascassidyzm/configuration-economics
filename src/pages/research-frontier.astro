@@ -1,0 +1,452 @@
+---
+// Research Frontier: where current thinking ends.
+// Surfaces `open` and `contested` propositions with their open-questions
+// layer foregrounded. Treats the reader as a potential collaborator, not
+// a learner.
+
+import { PROPOSITIONS, getPropositionsByStatus } from '../content/propositions';
+import { VERSION, BUILD } from '../lib/version';
+
+const openProps = getPropositionsByStatus('open');
+const contestedProps = getPropositionsByStatus('contested');
+
+// Formal definition fallback: use layers.formalDefinition if present, else logic.claim
+function formalDef(prop: typeof PROPOSITIONS[number]): string {
+  return prop.layers?.formalDefinition ?? prop.logic.claim;
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Research Frontier — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/overview" class="nav-link">Overview</a>
+        <a href="/essay" class="nav-link">Essay</a>
+        <a href="/explore" class="nav-link">Explore</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>Research Frontier</h1>
+        <p class="subtitle">Where the work's current thinking ends. Open questions and live disagreements.</p>
+        <p class="note">This mode treats you as a potential collaborator, not a learner. The claims here are the ones this work cannot yet close.</p>
+      </header>
+
+      <section class="frontier-block">
+        <div class="block-header">
+          <span class="block-marker status-open">◇</span>
+          <h2 class="block-title">Open</h2>
+          <span class="block-note">genuinely unresolved — {openProps.length} {openProps.length === 1 ? 'proposition' : 'propositions'}</span>
+        </div>
+
+        <ul class="frontier-list">
+          {openProps.map(p => (
+            <li class="frontier-item">
+              <div class="item-head">
+                <a href={`/explore#${p.id}`} class="item-title">{p.title}</a>
+                <span class={`status status-${p.epistemicStatus}`}>{p.epistemicStatus}</span>
+              </div>
+              <p class="item-formal">{formalDef(p)}</p>
+              {p.layers?.openQuestions && (
+                <div class="item-open">
+                  <span class="label">What's open</span>
+                  <p>{p.layers.openQuestions}</p>
+                </div>
+              )}
+              {p.logic.predictive && (
+                <div class="item-predictive">
+                  <span class="label">Predictive consequence</span>
+                  <p>{p.logic.predictive}</p>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="frontier-block">
+        <div class="block-header">
+          <span class="block-marker status-contested">◇</span>
+          <h2 class="block-title">Contested</h2>
+          <span class="block-note">reasonable disagreement exists — {contestedProps.length} propositions</span>
+        </div>
+
+        <ul class="frontier-list">
+          {contestedProps.map(p => (
+            <li class="frontier-item">
+              <div class="item-head">
+                <a href={`/explore#${p.id}`} class="item-title">{p.title}</a>
+                <span class={`status status-${p.epistemicStatus}`}>{p.epistemicStatus}</span>
+              </div>
+              <p class="item-formal">{formalDef(p)}</p>
+              {p.layers?.openQuestions && (
+                <div class="item-open">
+                  <span class="label">Where the disagreement lives</span>
+                  <p>{p.layers.openQuestions}</p>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="frontier-block candidate">
+        <div class="block-header">
+          <span class="block-marker">◈</span>
+          <h2 class="block-title">Candidate formalisations in progress</h2>
+        </div>
+        <p class="candidate-note">
+          Work-in-progress technical material sits in the <code>drafts/</code> directory of this repository. The highest-leverage draft is a candidate formalisation of option space as reachable configurations under a bounded exergy budget, weighted by Assembly Index. It is not yet promoted here; when it is, it will appear as a full appendix-depth treatment.
+        </p>
+        <p class="candidate-note">
+          If you're here because you want to engage with the unresolved technical problems, Alexander (in research-frontier mode) is a good thinking partner. Ask about any of the open or contested propositions above.
+        </p>
+      </section>
+
+      <footer class="page-footer">
+        <p>
+          Return to the <a href="/overview">overview</a>, the full <a href="/essay">essay</a>,
+          or the <a href="/explore">explore</a> view with every proposition.
+        </p>
+      </footer>
+    </main>
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.7;
+      }
+
+      .top-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .nav-link {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+
+      .nav-link:hover { color: var(--accent); }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+      }
+
+      .nav-version {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+
+      .nav-build {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      main {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 100px 2rem 6rem;
+      }
+
+      .page-header {
+        margin-bottom: 4rem;
+      }
+
+      .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        font-weight: 400;
+        margin-bottom: 0.75rem;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .note {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      .frontier-block {
+        margin-bottom: 4rem;
+        padding-bottom: 2.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .frontier-block:last-of-type {
+        border-bottom: none;
+      }
+
+      .block-header {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .block-marker {
+        font-family: var(--font-mono);
+        font-size: 1.5rem;
+        line-height: 1;
+      }
+
+      .block-marker.status-open { color: #a66bd8; }
+      .block-marker.status-contested { color: #e6a545; }
+
+      .block-title {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .block-note {
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+        font-style: italic;
+      }
+
+      .frontier-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .frontier-item {
+        padding-left: 1.5rem;
+        border-left: 2px solid rgba(255,255,255,0.08);
+      }
+
+      .item-head {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.75rem;
+      }
+
+      .item-title {
+        font-family: var(--font-body);
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .item-title:hover {
+        text-decoration: underline;
+      }
+
+      .item-formal {
+        color: var(--text-primary);
+        font-size: 0.9375rem;
+        line-height: 1.65;
+        margin-bottom: 1rem;
+      }
+
+      .item-open,
+      .item-predictive {
+        margin-top: 0.75rem;
+        padding: 0.75rem 1rem;
+        border-radius: 4px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .item-open {
+        border-left: 2px solid #a66bd8;
+      }
+
+      .item-predictive {
+        border-left: 2px solid var(--accent);
+      }
+
+      .item-open .label,
+      .item-predictive .label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.4rem;
+      }
+
+      .item-open p,
+      .item-predictive p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+
+      .item-predictive p {
+        font-style: italic;
+      }
+
+      /* Status badges */
+      .status {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.2rem 0.45rem;
+        border-radius: 3px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .status-established {
+        color: #4a9eff;
+        border-color: rgba(74, 158, 255, 0.3);
+        background: rgba(74, 158, 255, 0.05);
+      }
+
+      .status-derived {
+        color: #6abf4a;
+        border-color: rgba(106, 191, 74, 0.3);
+        background: rgba(106, 191, 74, 0.05);
+      }
+
+      .status-contested {
+        color: #e6a545;
+        border-color: rgba(230, 165, 69, 0.3);
+        background: rgba(230, 165, 69, 0.05);
+      }
+
+      .status-open {
+        color: #a66bd8;
+        border-color: rgba(166, 107, 216, 0.3);
+        background: rgba(166, 107, 216, 0.05);
+      }
+
+      .candidate {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 6px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .candidate .block-marker {
+        color: var(--text-muted);
+      }
+
+      .candidate-note {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+      }
+
+      .candidate-note:last-child {
+        margin-bottom: 0;
+      }
+
+      .candidate-note code {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        background: rgba(255,255,255,0.06);
+        padding: 0.15em 0.4em;
+        border-radius: 3px;
+      }
+
+      .page-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      .page-footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .page-footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 600px) {
+        main {
+          padding: 80px 1.25rem 4rem;
+        }
+
+        .page-header h1 {
+          font-size: 1.75rem;
+        }
+
+        .block-title {
+          font-size: 1.25rem;
+        }
+
+        .frontier-item {
+          padding-left: 1rem;
+        }
+      }
+    </style>
+  </body>
+</html>

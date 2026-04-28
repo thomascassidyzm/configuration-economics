@@ -2,8 +2,25 @@
 // Explore: Proposition Nodes
 // Text-first, calm, invitational
 
-import { PROPOSITIONS, getLinkedPropositions } from '../content/propositions';
+import { PROPOSITIONS, getLinkedPropositions, type EpistemicStatus } from '../content/propositions';
 import { VERSION, BUILD } from '../lib/version';
+
+// Read optional status filter from URL (?status=contested etc.)
+const VALID_STATUSES: EpistemicStatus[] = ['established', 'derived', 'contested', 'open'];
+const statusParam = Astro.url.searchParams.get('status');
+const initialFilter: EpistemicStatus | 'all' =
+  statusParam && VALID_STATUSES.includes(statusParam as EpistemicStatus)
+    ? (statusParam as EpistemicStatus)
+    : 'all';
+
+// Counts per status for filter chip labels
+const counts = {
+  all: PROPOSITIONS.length,
+  established: PROPOSITIONS.filter(p => p.epistemicStatus === 'established').length,
+  derived: PROPOSITIONS.filter(p => p.epistemicStatus === 'derived').length,
+  contested: PROPOSITIONS.filter(p => p.epistemicStatus === 'contested').length,
+  open: PROPOSITIONS.filter(p => p.epistemicStatus === 'open').length,
+};
 ---
 
 <html lang="en">
@@ -31,14 +48,27 @@ import { VERSION, BUILD } from '../lib/version';
         <h1>Propositions</h1>
         <p class="subtitle">Each node is self-contained and meaningful in isolation.</p>
         <p class="note">Logic is present but not foregrounded. Expand to see the underlying structure.</p>
+        <p class="note">Each proposition carries an epistemic status: <span class="status status-established inline">established</span> <span class="status status-derived inline">derived</span> <span class="status status-contested inline">contested</span> <span class="status status-open inline">open</span>.</p>
       </header>
 
-      <div class="propositions">
+      <div class="status-filter" role="group" aria-label="Filter by epistemic status">
+        <span class="filter-label">Show:</span>
+        <button class="filter-chip" data-filter="all" aria-pressed={initialFilter === 'all'}>All <span class="count">({counts.all})</span></button>
+        <button class="filter-chip status-established" data-filter="established" aria-pressed={initialFilter === 'established'}>Established <span class="count">({counts.established})</span></button>
+        <button class="filter-chip status-derived" data-filter="derived" aria-pressed={initialFilter === 'derived'}>Derived <span class="count">({counts.derived})</span></button>
+        <button class="filter-chip status-contested" data-filter="contested" aria-pressed={initialFilter === 'contested'}>Contested <span class="count">({counts.contested})</span></button>
+        <button class="filter-chip status-open" data-filter="open" aria-pressed={initialFilter === 'open'}>Open <span class="count">({counts.open})</span></button>
+      </div>
+
+      <div class="propositions" data-filter={initialFilter}>
         {PROPOSITIONS.map(prop => {
           const linked = getLinkedPropositions(prop.id);
           return (
-            <article class="proposition" id={prop.id}>
-              <h2>{prop.title}</h2>
+            <article class="proposition" id={prop.id} data-status={prop.epistemicStatus}>
+              <div class="proposition-header">
+                <h2>{prop.title}</h2>
+                <span class={`status status-${prop.epistemicStatus}`}>{prop.epistemicStatus}</span>
+              </div>
 
               <div class="surface">
                 {prop.surface.split('\n\n').map(para => (
@@ -209,12 +239,141 @@ import { VERSION, BUILD } from '../lib/version';
         scroll-margin-top: 80px;
       }
 
+      .proposition-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+
       .proposition h2 {
         font-family: var(--font-display);
         font-size: 1.5rem;
         font-weight: 500;
-        margin-bottom: 1.5rem;
         color: var(--text-primary);
+      }
+
+      .status {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .status.inline {
+        margin: 0 0.25rem;
+      }
+
+      .status-established {
+        color: #4a9eff;
+        border-color: rgba(74, 158, 255, 0.3);
+        background: rgba(74, 158, 255, 0.05);
+      }
+
+      .status-derived {
+        color: #6abf4a;
+        border-color: rgba(106, 191, 74, 0.3);
+        background: rgba(106, 191, 74, 0.05);
+      }
+
+      .status-contested {
+        color: #e6a545;
+        border-color: rgba(230, 165, 69, 0.3);
+        background: rgba(230, 165, 69, 0.05);
+      }
+
+      .status-open {
+        color: #a66bd8;
+        border-color: rgba(166, 107, 216, 0.3);
+        background: rgba(166, 107, 216, 0.05);
+      }
+
+      /* Filter chips */
+      .status-filter {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .filter-label {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-right: 0.5rem;
+      }
+
+      .filter-chip {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.375rem 0.75rem;
+        border-radius: 4px;
+        border: 1px solid rgba(255,255,255,0.1);
+        background: transparent;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .filter-chip:hover {
+        border-color: rgba(255,255,255,0.2);
+        color: var(--text-primary);
+      }
+
+      .filter-chip[aria-pressed="true"] {
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(255,255,255,0.25);
+        color: var(--text-primary);
+      }
+
+      .filter-chip.status-established[aria-pressed="true"] {
+        background: rgba(74, 158, 255, 0.1);
+        border-color: rgba(74, 158, 255, 0.5);
+        color: #4a9eff;
+      }
+
+      .filter-chip.status-derived[aria-pressed="true"] {
+        background: rgba(106, 191, 74, 0.1);
+        border-color: rgba(106, 191, 74, 0.5);
+        color: #6abf4a;
+      }
+
+      .filter-chip.status-contested[aria-pressed="true"] {
+        background: rgba(230, 165, 69, 0.1);
+        border-color: rgba(230, 165, 69, 0.5);
+        color: #e6a545;
+      }
+
+      .filter-chip.status-open[aria-pressed="true"] {
+        background: rgba(166, 107, 216, 0.1);
+        border-color: rgba(166, 107, 216, 0.5);
+        color: #a66bd8;
+      }
+
+      .filter-chip .count {
+        opacity: 0.6;
+        font-weight: normal;
+      }
+
+      /* Filter mechanism: hide non-matching propositions via data-attributes */
+      .propositions[data-filter="established"] .proposition:not([data-status="established"]),
+      .propositions[data-filter="derived"] .proposition:not([data-status="derived"]),
+      .propositions[data-filter="contested"] .proposition:not([data-status="contested"]),
+      .propositions[data-filter="open"] .proposition:not([data-status="open"]) {
+        display: none;
       }
 
       .surface {
@@ -367,5 +526,34 @@ import { VERSION, BUILD } from '../lib/version';
         }
       }
     </style>
+
+    <script>
+      // Filter chips: update the propositions container's data-filter and
+      // reflect state in URL (no reload), so the view is shareable/bookmarkable.
+      const container = document.querySelector('.propositions');
+      const chips = document.querySelectorAll<HTMLButtonElement>('.filter-chip');
+
+      function setFilter(value: string) {
+        if (!container) return;
+        container.setAttribute('data-filter', value);
+        chips.forEach(chip => {
+          chip.setAttribute('aria-pressed', String(chip.dataset.filter === value));
+        });
+        const url = new URL(window.location.href);
+        if (value === 'all') {
+          url.searchParams.delete('status');
+        } else {
+          url.searchParams.set('status', value);
+        }
+        history.replaceState(null, '', url.toString());
+      }
+
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          const filter = chip.dataset.filter || 'all';
+          setFilter(filter);
+        });
+      });
+    </script>
   </body>
 </html>

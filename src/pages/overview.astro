@@ -1,0 +1,400 @@
+---
+// Overview: The whole structure at a glance.
+// Maps essay sections to the propositions that ground them, showing each
+// proposition's core claim (or logic.claim as fallback until layers populate).
+
+import { PROPOSITIONS } from '../content/propositions';
+import { SECTIONS } from '../content/essay-1/config';
+import { SECTION_PROPOSITIONS } from '../lib/guide-prompt';
+import { VERSION, BUILD } from '../lib/version';
+
+function getProp(id: string) {
+  return PROPOSITIONS.find(p => p.id === id);
+}
+
+// Use layers.coreClaim if present, else fall back to logic.claim
+function displayClaim(propId: string): string {
+  const p = getProp(propId);
+  if (!p) return '';
+  return p.layers?.coreClaim ?? p.logic.claim;
+}
+
+// Cross-cutting propositions: those not bound to any single essay section.
+const mappedIds = new Set(Object.values(SECTION_PROPOSITIONS).flat());
+const crossCutting = PROPOSITIONS.filter(p => !mappedIds.has(p.id));
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Overview — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/essay" class="nav-link">Essay</a>
+        <a href="/explore" class="nav-link">Explore</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>Overview</h1>
+        <p class="subtitle">The whole structure. Core claims, in the order the essay develops them.</p>
+        <p class="note">Each section of the essay is grounded by one or more propositions. Click a proposition to see its full logic on the Explore page.</p>
+      </header>
+
+      <div class="sections">
+        {SECTIONS.map(section => {
+          const propIds = SECTION_PROPOSITIONS[section.id] ?? [];
+          const sectionProps = propIds.flatMap(id => {
+            const p = getProp(id);
+            return p ? [p] : [];
+          });
+          return (
+            <section class="section-block">
+              <div class="section-header">
+                <span class="section-number">§{section.number}</span>
+                <h2 class="section-title">{section.title}</h2>
+                <span class={`status status-${section.epistemicStatus}`}>{section.epistemicStatus}</span>
+              </div>
+
+              {sectionProps.length > 0 ? (
+                <ul class="prop-list">
+                  {sectionProps.map(p => (
+                    <li class="prop-item">
+                      <div class="prop-head">
+                        <a href={`/explore#${p.id}`} class="prop-title">{p.title}</a>
+                        <span class={`status status-${p.epistemicStatus}`}>{p.epistemicStatus}</span>
+                      </div>
+                      <p class="prop-claim">{displayClaim(p.id)}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p class="no-props">General framing — no specific propositions mapped.</p>
+              )}
+            </section>
+          );
+        })}
+      </div>
+
+      {crossCutting.length > 0 && (
+        <section class="section-block cross-cutting">
+          <div class="section-header">
+            <span class="section-number">↔</span>
+            <h2 class="section-title">Cross-cutting</h2>
+            <span class="section-note">propositions the essay draws on across sections rather than anchoring to one</span>
+          </div>
+
+          <ul class="prop-list">
+            {crossCutting.map(p => (
+              <li class="prop-item">
+                <div class="prop-head">
+                  <a href={`/explore#${p.id}`} class="prop-title">{p.title}</a>
+                  <span class={`status status-${p.epistemicStatus}`}>{p.epistemicStatus}</span>
+                </div>
+                <p class="prop-claim">{displayClaim(p.id)}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <footer class="page-footer">
+        <p>Read the full essay at <a href="/essay">/essay</a>, or browse every proposition with its full logic at <a href="/explore">/explore</a>.</p>
+      </footer>
+    </main>
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.7;
+      }
+
+      .top-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .nav-link {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+
+      .nav-link:hover {
+        color: var(--accent);
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+      }
+
+      .nav-version {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+
+      .nav-build {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      main {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 100px 2rem 6rem;
+      }
+
+      .page-header {
+        margin-bottom: 4rem;
+      }
+
+      .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        font-weight: 400;
+        margin-bottom: 0.75rem;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .note {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      .sections {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+      }
+
+      .section-block {
+        padding-bottom: 2.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .section-block:last-child {
+        border-bottom: none;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+        flex-wrap: wrap;
+      }
+
+      .section-number {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+      }
+
+      .section-title {
+        font-family: var(--font-display);
+        font-size: 1.375rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        flex: 1;
+        min-width: 0;
+      }
+
+      .section-note {
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+        font-style: italic;
+      }
+
+      .cross-cutting {
+        margin-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        padding-top: 2.5rem;
+      }
+
+      .prop-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        margin-left: 1.25rem;
+        border-left: 1px solid rgba(255,255,255,0.06);
+        padding-left: 1.5rem;
+      }
+
+      .prop-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+      }
+
+      .prop-head {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .prop-title {
+        font-family: var(--font-body);
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .prop-title:hover {
+        text-decoration: underline;
+      }
+
+      .prop-claim {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.6;
+      }
+
+      .no-props {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        font-style: italic;
+        margin-left: 1.25rem;
+      }
+
+      /* Status badges (matches explore.astro) */
+      .status {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.2rem 0.45rem;
+        border-radius: 3px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .status-established {
+        color: #4a9eff;
+        border-color: rgba(74, 158, 255, 0.3);
+        background: rgba(74, 158, 255, 0.05);
+      }
+
+      .status-derived {
+        color: #6abf4a;
+        border-color: rgba(106, 191, 74, 0.3);
+        background: rgba(106, 191, 74, 0.05);
+      }
+
+      .status-contested {
+        color: #e6a545;
+        border-color: rgba(230, 165, 69, 0.3);
+        background: rgba(230, 165, 69, 0.05);
+      }
+
+      .status-open {
+        color: #a66bd8;
+        border-color: rgba(166, 107, 216, 0.3);
+        background: rgba(166, 107, 216, 0.05);
+      }
+
+      .page-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      .page-footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .page-footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 600px) {
+        main {
+          padding: 80px 1.25rem 4rem;
+        }
+
+        .page-header h1 {
+          font-size: 1.75rem;
+        }
+
+        .section-title {
+          font-size: 1.125rem;
+        }
+
+        .prop-list {
+          margin-left: 0.5rem;
+          padding-left: 1rem;
+        }
+      }
+    </style>
+  </body>
+</html>

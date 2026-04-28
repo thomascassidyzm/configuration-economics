@@ -74,10 +74,12 @@ v0.4: configuration-not-information, viable-objective
 ## Theoretical Foundation
 
 ### Connection to Distinction Physics
-Configuration Economics builds on Distinction Physics (separate project at `/Users/tomcassidy/Distinction_Project/`):
+Configuration Economics builds on Distinction Physics (separate project at `/Users/tomcassidy/distinction-physics/`):
 
 - **Distinction Physics**: Distinctions are primitive, cost energy, observers have finite budgets
 - **Configuration Economics**: Configurations (patterns of distinctions) expand or contract future distinction-making potential
+
+Per v0.2 direction (April 2026, see `PLAN.md`), CE's main argument now stands on non-equilibrium thermodynamics + ecological economics. DP is offered as preferred foundational vocabulary, not required grounding. A specific §4.2 variational bridge is worked out as one optional formalisation of option space.
 
 ### Option Space Definition (Working)
 > **Option Space** = Future distinction-making potential
@@ -119,8 +121,8 @@ Deployed on Vercel - auto-deploys from main branch.
 
 ## Related Projects
 
-- **Distinction Physics** (`/Users/tomcassidy/Distinction_Project/`) - Foundational meta-theory, V7 in progress
-- This work is the 2026 application of that foundation
+- **Distinction Physics** (`/Users/tomcassidy/distinction-physics/`) - Foundational meta-theory, actively evolving. CE treats it as preferred foundational vocabulary, not required grounding (see `PLAN.md` v0.2 direction).
+- This work is the 2026 application of that foundation, now decoupled from any single DP version.
 
 ## Style Notes
 
