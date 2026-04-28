@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { buildPromptWithContext, type GuideContext } from '../../lib/guide-prompt';
+import { extractAndRenderMath } from '../../lib/math';
 
 export const prerender = false;
 
@@ -8,19 +9,25 @@ interface ChatMessage {
   content: string;
 }
 
+type ModelTier = 'haiku' | 'sonnet' | 'opus';
+
+const MODEL_BY_TIER: Record<ModelTier, string> = {
+  haiku: 'claude-haiku-4-5-20251001',
+  sonnet: 'claude-sonnet-4-6',
+  opus: 'claude-opus-4-7',
+};
+
 interface GuideRequest {
   message: string;
   history?: ChatMessage[];
   context?: GuideContext;
+  tier?: ModelTier;
 }
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body: GuideRequest = await request.json();
-    const { message, history = [], context = {} } = body;
-
-    // Debug logging (remove in production)
-    console.log('[Guide API] Received context:', JSON.stringify(context));
+    const { message, history = [], context = {}, tier } = body;
 
     if (!message) {
       return new Response(JSON.stringify({ error: 'Message is required' }), {
@@ -37,13 +44,11 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
+    const selectedTier: ModelTier = tier && tier in MODEL_BY_TIER ? tier : 'haiku';
+    const selectedModel = MODEL_BY_TIER[selectedTier];
+
     const systemPrompt = buildPromptWithContext(message, context);
 
-    // Debug: log the end of the system prompt to see context block
-    const contextPortion = systemPrompt.slice(-500);
-    console.log('[Guide API] Prompt ends with:', contextPortion);
-
-    // Build messages array with history
     const messages = [
       ...history.map((msg) => ({
         role: msg.role,
@@ -63,7 +68,7 @@ export const POST: APIRoute = async ({ request }) => {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: selectedModel,
         max_tokens: 2048,
         system: systemPrompt,
         messages,
@@ -81,9 +86,18 @@ export const POST: APIRoute = async ({ request }) => {
 
     const data = await response.json();
     const assistantMessage = data.content[0]?.text || 'I apologize, but I was unable to generate a response.';
+    const { text: messageWithTokens, math: mathBlocks } = extractAndRenderMath(assistantMessage);
 
     return new Response(JSON.stringify({
-      message: assistantMessage,
+      // Display version (math replaced with XXMATH<n>XX tokens). Used by the
+      // client for rendering with substituteMath().
+      message: messageWithTokens,
+      math: mathBlocks,
+      // Raw version (original LaTeX intact). The client stores this in
+      // conversation history so subsequent turns send the model real LaTeX,
+      // not opaque placeholder tokens.
+      rawMessage: assistantMessage,
+      tier: selectedTier,
       context: context,
     }), {
       status: 200,

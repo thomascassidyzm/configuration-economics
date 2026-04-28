@@ -200,49 +200,128 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
   }
 
   .message.assistant {
-    background: rgba(255,255,255,0.05);
-    color: var(--guide-text, #e8e8f0);
+    background: rgba(255,255,255,0.04);
+    color: var(--guide-text-secondary, #a0a0b8);
     align-self: flex-start;
     border-bottom-left-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.05);
+    /* Alexander reads as a separate voice: serif italic, lighter than body */
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.0625rem;
+    line-height: 1.6;
   }
 
-  /* Markdown styling */
-  .message.assistant :global(p) { margin: 0 0 0.75em 0; }
-  .message.assistant :global(p:last-child) { margin-bottom: 0; }
-  .message.assistant :global(strong) { color: var(--guide-text, #e8e8f0); font-weight: 600; }
-  .message.assistant :global(em) { font-style: italic; opacity: 0.9; }
-  .message.assistant :global(ul), .message.assistant :global(ol) { margin: 0.5em 0; padding-left: 1.5em; }
-  .message.assistant :global(li) { margin-bottom: 0.25em; }
-  .message.assistant :global(code) { background: rgba(255,255,255,0.1); padding: 0.15em 0.4em; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
+  /* All rules below target dynamically-injected elements (markdown-parsed
+     assistant text, follow-up buttons, deeper-tier buttons, KaTeX math).
+     They use :global() on the full selector because the JS-created parent
+     .message.assistant doesn't carry Astro's scoped data attribute. */
+  :global(.message.assistant p) { margin: 0 0 0.75em 0; }
+  :global(.message.assistant p:last-child) { margin-bottom: 0; }
+  :global(.message.assistant strong) { color: #e8e8f0; font-weight: 600; font-style: normal; }
+  :global(.message.assistant em) { font-style: normal; opacity: 0.95; }
+  :global(.message.assistant ul), :global(.message.assistant ol) { margin: 0.5em 0; padding-left: 1.5em; }
+  :global(.message.assistant li) { margin-bottom: 0.25em; }
+  :global(.message.assistant code) {
+    background: rgba(255,255,255,0.08);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
+    font-size: 0.85em;
+  }
 
-  /* Follow-up buttons */
-  .message.assistant :global(.follow-ups) {
+  /* KaTeX-rendered math: not italic, sized to match the prose around it */
+  :global(.message.assistant .katex) {
+    font-style: normal;
+    color: #e8e8f0;
+    font-size: 1em;
+  }
+
+  :global(.message.assistant .katex-display) {
+    margin: 0.75em 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  :global(.message.assistant .katex-display > .katex) {
+    font-size: 1.05em;
+  }
+
+  /* Follow-up buttons (existing pre-baked Socratic next-step suggestions) */
+  :global(.message.assistant .follow-ups) {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 16px;
     padding-top: 14px;
-    border-top: 1px solid var(--guide-border, rgba(255,255,255,0.08));
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-style: normal;
   }
 
-  .message.assistant :global(.follow-up-btn) {
+  :global(.message.assistant .follow-up-btn) {
     font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
     font-size: 0.6875rem;
     letter-spacing: 0.03em;
     padding: 6px 12px;
     border-radius: 4px;
-    border: 1px solid var(--guide-accent, #4a9eff);
+    border: 1px solid #4a9eff;
     background: transparent;
-    color: var(--guide-accent, #4a9eff);
+    color: #4a9eff;
     cursor: pointer;
     transition: all 0.2s ease;
     text-transform: uppercase;
   }
 
-  .message.assistant :global(.follow-up-btn:hover) {
+  :global(.message.assistant .follow-up-btn:hover) {
     background: rgba(74, 158, 255, 0.15);
     color: #fff;
+  }
+
+  /* Deeper-tier escalation buttons — distinct from follow-ups: re-answer
+     the same question at a stronger model rather than asking a new one */
+  :global(.message.assistant .deeper-actions) {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255,255,255,0.06);
+  }
+
+  :global(.message.assistant .deeper-btn) {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #a0a0b8;
+    font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  :global(.message.assistant .deeper-btn:hover) {
+    border-color: #4a9eff;
+    color: #e8e8f0;
+  }
+
+  /* Tier divider — appears between two assistant messages when the user
+     escalated from one tier to another */
+  :global(.tier-divider) {
+    align-self: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #606080;
+    padding: 6px 0 2px;
+    opacity: 0.7;
   }
 
   /* Typing indicator - tiny horizontal dots (global for dynamic elements) */
@@ -460,6 +539,16 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
     return html;
   }
 
+  // Substitute KaTeX-rendered math placeholders (XXMATH<n>XX) with the
+  // corresponding pre-rendered HTML returned from the API. Math is rendered
+  // server-side so we don't ship KaTeX in the client bundle.
+  function substituteMath(html: string, mathBlocks: string[] = []): string {
+    return html.replace(/XXMATH(\d+)XX/g, (_match, idx) => {
+      const i = parseInt(idx, 10);
+      return mathBlocks[i] !== undefined ? mathBlocks[i] : `[math ${i}]`;
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const panel = document.getElementById('guide-panel');
     const mobileTrigger = document.getElementById('guide-mobile-trigger');
@@ -471,10 +560,22 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
     const sectionEl = document.getElementById('guide-section');
     const statusEl = document.getElementById('guide-status');
 
-    // Load conversation history from sessionStorage
+    // Session-scoped conversation history. Each assistant entry stores:
+    //   content       — raw LaTeX-intact text (sent back to the model on
+    //                   subsequent turns)
+    //   displayContent — placeholder-tokenised text (XXMATH<n>XX) used for
+    //                    re-rendering math after a page reload
+    //   math          — array of pre-rendered KaTeX HTML
+    interface HistoryEntry {
+      role: 'user' | 'assistant';
+      content: string;
+      displayContent?: string;
+      math?: string[];
+    }
     const STORAGE_KEY = 'guide-conversation';
-    let conversationHistory: Array<{role: 'user' | 'assistant', content: string}> = [];
+    let conversationHistory: HistoryEntry[] = [];
     let isLoading = false;
+    type Tier = 'haiku' | 'sonnet' | 'opus';
 
     // Restore previous conversation if exists
     try {
@@ -490,7 +591,8 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
             const el = document.createElement('div');
             el.className = `message ${msg.role === 'user' ? 'user' : 'assistant'}`;
             if (msg.role === 'assistant') {
-              el.innerHTML = parseMarkdown(msg.content);
+              const displayText = msg.displayContent || msg.content;
+              el.innerHTML = substituteMath(parseMarkdown(displayText), msg.math);
             } else {
               el.textContent = msg.content;
             }
@@ -528,11 +630,26 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       }
     });
 
+    // Infer the reader's current collapse mode from URL pathname.
+    // Pages can override by setting window.currentMode explicitly.
+    function inferModeFromUrl(): string {
+      const path = window.location.pathname;
+      if (path === '/' || path.startsWith('/format') || path.startsWith('/concept')) return 'entry';
+      if (path.startsWith('/overview')) return 'overview';
+      if (path.startsWith('/essay')) return 'essay';
+      if (path.startsWith('/explore')) return 'explore';
+      if (path.startsWith('/academic')) return 'academic';
+      if (path.startsWith('/research-frontier')) return 'research-frontier';
+      if (path.startsWith('/guided')) return 'guided';
+      return 'essay';
+    }
+
     // Get current context from page
     function getCurrentContext() {
       const dynamicSectionId = (window as any).currentSectionId;  // For proposition lookup
       const dynamicSection = (window as any).currentSection;       // For display
       const dynamicStatus = (window as any).currentStatus;
+      const dynamicMode = (window as any).currentMode;             // Page-override for mode
       const defaultSection = panel?.getAttribute('data-default-section') || 'Essay 1';
 
       // Read directly from DOM as additional fallback
@@ -540,6 +657,7 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
 
       const finalSection = dynamicSection || displayedSection || defaultSection;
       const finalSectionId = dynamicSectionId || null;
+      const finalMode = dynamicMode || inferModeFromUrl();
 
       // Debug logging (remove in production)
       console.log('[Guide Context]', {
@@ -547,13 +665,15 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
         dynamicSection,
         displayedSection,
         finalSection,
-        finalSectionId
+        finalSectionId,
+        finalMode
       });
 
       return {
         sectionId: finalSectionId,  // Machine-readable ID
         section: finalSection,       // Human-readable title
-        status: dynamicStatus || 'established'
+        status: dynamicStatus || 'established',
+        mode: finalMode
       };
     }
 
@@ -651,8 +771,44 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       return container;
     }
 
+    // Tier-escalation buttons under each Alexander response. 'haiku' shows
+    // both Sonnet and Opus; 'sonnet' shows only Opus; 'opus' shows nothing
+    // (already at top tier).
+    function appendDeeperActions(messageEl: HTMLElement, currentTier: Tier) {
+      if (currentTier === 'opus') return;
+      const actions = document.createElement('div');
+      actions.className = 'deeper-actions';
+
+      if (currentTier === 'haiku') {
+        const sonnetBtn = document.createElement('button');
+        sonnetBtn.className = 'deeper-btn';
+        sonnetBtn.textContent = '↗ Deeper';
+        sonnetBtn.title = 'Reanswer with Sonnet 4.6';
+        sonnetBtn.addEventListener('click', () => escalate('sonnet'));
+        actions.appendChild(sonnetBtn);
+      }
+
+      const opusBtn = document.createElement('button');
+      opusBtn.className = 'deeper-btn';
+      opusBtn.textContent = '↗↗ Deeper still';
+      opusBtn.title = 'Reanswer with Opus 4.7';
+      opusBtn.addEventListener('click', () => escalate('opus'));
+      actions.appendChild(opusBtn);
+
+      messageEl.appendChild(actions);
+    }
+
+    async function escalate(tier: Tier) {
+      if (isLoading) return;
+      const divider = document.createElement('div');
+      divider.className = 'tier-divider';
+      divider.textContent = tier === 'sonnet' ? '⤵ Deeper (Sonnet 4.6)' : '⤵ Deeper still (Opus 4.7)';
+      messagesContainer?.appendChild(divider);
+      await sendMessage('Could you go deeper on that?', tier, true);
+    }
+
     // Send message
-    async function sendMessage(message: string) {
+    async function sendMessage(message: string, tier: Tier = 'haiku', hideUserBubble: boolean = false) {
       if (isLoading) return;
       isLoading = true;
 
@@ -660,11 +816,13 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       if (welcome) welcome.remove();
       suggestionsContainer?.classList.add('hidden');
 
-      const userEl = document.createElement('div');
-      userEl.className = 'message user';
-      userEl.textContent = message;
-      messagesContainer?.appendChild(userEl);
-      scrollToBottom();
+      if (!hideUserBubble) {
+        const userEl = document.createElement('div');
+        userEl.className = 'message user';
+        userEl.textContent = message;
+        messagesContainer?.appendChild(userEl);
+        scrollToBottom();
+      }
 
       const typingEl = document.createElement('div');
       typingEl.className = 'message assistant';
@@ -674,19 +832,19 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
 
       const context = getCurrentContext();
 
-      // Build the request payload
+      // Build the request payload. Only send role + content to the API;
+      // displayContent and math are client-side rendering aids.
       const requestPayload = {
         message,
-        history: conversationHistory,
+        history: conversationHistory.map(({ role, content }) => ({ role, content })),
         context: {
           currentSection: context.sectionId || context.section,  // Prefer ID for proposition lookup
           currentSectionTitle: context.section,  // Keep title for display context
+          currentMode: context.mode,
           epistemicStatus: context.status
-        }
+        },
+        tier
       };
-
-      // Debug logging (remove in production)
-      console.log('[Guide Request]', requestPayload.context);
 
       try {
         const response = await fetch('/api/guide', {
@@ -698,17 +856,26 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
         if (!response.ok) throw new Error('Guide unavailable');
 
         const data = await response.json();
-        typingEl.innerHTML = parseMarkdown(data.message);
+        const mathBlocks: string[] = Array.isArray(data.math) ? data.math : [];
+        typingEl.innerHTML = substituteMath(parseMarkdown(data.message), mathBlocks);
 
         const followUps = createFollowUpButtons();
         typingEl.appendChild(followUps);
 
+        const respondedTier: Tier = (data.tier as Tier) || tier;
+        appendDeeperActions(typingEl, respondedTier);
+
         scrollToElement(typingEl);
         updateScrollIndicator();
 
+        // Store the raw (LaTeX-intact) version in history so subsequent
+        // turns send the model real LaTeX instead of opaque placeholder
+        // tokens. data.message (with tokens) and the math array are kept
+        // for re-rendering after a page reload.
+        const rawMessage: string = typeof data.rawMessage === 'string' ? data.rawMessage : data.message;
         conversationHistory.push(
           { role: 'user', content: message },
-          { role: 'assistant', content: data.message }
+          { role: 'assistant', content: rawMessage, displayContent: data.message, math: mathBlocks }
         );
 
         // Keep history manageable

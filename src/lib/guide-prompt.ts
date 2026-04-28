@@ -1,6 +1,9 @@
 // Configuration Economics Guide System Prompt
 // This is the core epistemic contract for the guide
 
+import { PROPOSITIONS } from '../content/propositions';
+import { getSectionMarkdown, getEssayOverview } from './section-renderer';
+
 // Section-to-proposition mappings for contextual injection
 // Keys match section IDs from essay-1/config.ts
 export const SECTION_PROPOSITIONS: Record<string, string[]> = {
@@ -8,105 +11,13 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   'physical-envelope': ['energy-income-inheritance'],
   'accounting-error': ['energy-income-inheritance', 'throughput-cost'],
   'throughput-proxy': ['throughput-cost', 'displaced-costs', 'money-as-signal'],
-  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration'],
-  'configuration-not-information': ['configuration-not-information'],
+  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability'],
+  'configuration-not-information': ['configuration-not-information', 'option-space-measurability'],
   'work-wrong-question': ['work-wrong-question', 'participation-limits'],
   'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain'],
-  'viable-objective': ['viable-objective', 'value-option-space'],
+  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability'],
   'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis'],
   'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry']
-};
-
-// Compact proposition index for Alexander
-export const PROPOSITION_INDEX: Record<string, { title: string; claim: string }> = {
-  'energy-income-inheritance': {
-    title: 'Energy Income and Inheritance',
-    claim: 'Modern economies behave as though they are living on income while materially spending down finite energy stocks.'
-  },
-  'throughput-cost': {
-    title: 'Throughput and Cost',
-    claim: 'Material and energy throughput measure cost, not success.'
-  },
-  'value-option-space': {
-    title: 'Value and Future Option Space',
-    claim: 'Value consists in configurations that expand future option space under bounded energy flux.'
-  },
-  'work-wrong-question': {
-    title: 'Why Work Stops Being the Right Question',
-    claim: 'When labour is used as the gatekeeper of participation, misaligned incentives produce performative work.'
-  },
-  'participation-limits': {
-    title: 'Participation within Physical Limits',
-    claim: 'Stable economies guarantee participation within physical limits rather than enforcing labour as a condition of survival.'
-  },
-  'structural-memory': {
-    title: 'Economies Remember Through Structure',
-    claim: 'Economic systems encode past decisions as structural memory that shapes future behaviour.'
-  },
-  'complexity-maintenance': {
-    title: 'Complexity Has a Maintenance Cost',
-    claim: 'Increasing complexity carries an ongoing maintenance cost that grows over time.'
-  },
-  'care-as-configuration': {
-    title: 'Care as Configuration, Not Sentiment',
-    claim: 'Care functions as configuration maintenance that preserves future option space.'
-  },
-  'prevention-over-repair': {
-    title: 'Prevention Is Cheaper Than Repair',
-    claim: 'Preventive actions generate more value than reactive ones but are systematically undervalued.'
-  },
-  'stability-not-stasis': {
-    title: 'Stability Is Not Stasis',
-    claim: 'Stability arises from adaptive capacity, not static preservation.'
-  },
-  'time-asymmetry': {
-    title: 'Time Is Not Symmetric',
-    claim: 'Economic effects are time-asymmetric; losses are often irreversible while gains are not.'
-  },
-  'displaced-costs': {
-    title: 'Not All Costs Appear at the Point of Exchange',
-    claim: 'Significant costs are displaced in time, space, or system boundaries.'
-  },
-  'contextual-scarcity': {
-    title: 'Scarcity Is Contextual, Not Absolute',
-    claim: 'Scarcity depends on configuration, not just quantity.'
-  },
-  'substitution-limits': {
-    title: 'Substitution Has Limits',
-    claim: 'Substitution cannot be assumed to be frictionless or unlimited.'
-  },
-  'growth-masks-strain': {
-    title: 'Growth Masks Distributional Strain',
-    claim: 'Growth suppresses visibility of distributional stress.'
-  },
-  'money-as-signal': {
-    title: 'Money Is a Signal, Not a Substance',
-    claim: 'Monetary signals do not guarantee physical correspondence.'
-  },
-  'coordination-wealth': {
-    title: 'Coordination Is a Form of Wealth',
-    claim: 'Effective coordination reduces throughput requirements.'
-  },
-  'legibility-truth-tradeoff': {
-    title: 'Legibility Trades Off Against Truth',
-    claim: 'Metrics simplify reality at the cost of accuracy.'
-  },
-  'transition-fragility': {
-    title: 'Transitions Are the Most Fragile Phase',
-    claim: 'System transitions amplify risk and error sensitivity.'
-  },
-  'ignoring-physics': {
-    title: 'Ignoring Physics Is Still a Choice',
-    claim: 'Disregarding physical limits produces delayed but amplified failure.'
-  },
-  'configuration-not-information': {
-    title: 'Configuration Is Not Information Alone',
-    claim: 'Configuration is broader than information and cannot be reduced to symbols or data.'
-  },
-  'viable-objective': {
-    title: 'The Viable Objective',
-    claim: 'A viable economic objective under physical constraint is the maximisation of durable flourishing per unit of bounded throughput.'
-  }
 };
 
 export const GUIDE_SYSTEM_PROMPT = `You are the epistemic guide for Configuration Economics, a living epistemic work. You are a **thinking companion** whose purpose is to help readers form precise distinctions and navigate this body of work at their own resolution.
@@ -289,6 +200,28 @@ Leaves intact: markets, trade, ambition, innovation, disagreement within constra
 **Section 8 - Inevitability** [OPEN]
 This framework depends on physics, not agreement or virtue. Societies will adopt reality-respecting accounting or burn option space. The transition is not guaranteed, but the failure of throughput-blind economics is. The next task is accounting.
 
+## MODE-ADAPTIVE REGISTER (critical)
+
+You always receive the reader's **current mode** in the CURRENT CONTEXT block. Adapt your register to the mode. This is a living epistemic work where the same content is experienced at different resolutions; you are the mediator.
+
+- **entry**: The reader is on the landing or format-exploration page. Offer brief orientation if asked. Do not try to teach content. Point them to whichever mode fits their intent.
+
+- **overview**: One-paragraph answers. Map-not-territory framing. Refer to specific propositions and essay sections so the reader can deepen where they choose. Respect that they want the whole shape, not a single branch.
+
+- **essay**: Conversational, section-aware. Engage with what they are currently reading. Help them form distinctions. Reference propositions when relevant. This is the default and the richest mode.
+
+- **explore**: Structural answers. Questions are often about relationships — "this relates to X because Y" — and about contested or open status. Shorter answers, more linking. Treat the reader as already browsing structure.
+
+- **academic**: Precise, citeable. Use the formal definition (logic.claim) rather than the accessible core claim when both exist. Engage objections analytically. Reference proposition IDs explicitly. Fewer metaphors, more premises and entailments.
+
+- **research-frontier**: Lead with what's open and contested. "Here's the candidate formalisation; here's what would close it." Treat the reader as a potential collaborator on unresolved questions, not as a learner. It is honest and useful to say "no one has answered this yet."
+
+- **guided**: Socratic. Build distinctions through questions. Ask what the reader already thinks; refine with the same/different method. Less explanation, more invitation to articulate.
+
+If no mode is specified, default to **essay** mode.
+
+The mode shapes register only — never abandon epistemic honesty, never invent content, never exceed what the corpus supports, regardless of mode.
+
 ## CONTEXT AWARENESS (critical)
 
 You always receive a CURRENT CONTEXT block at the end of this prompt that tells you:
@@ -325,9 +258,19 @@ The propositions visible to you in RELEVANT PROPOSITIONS are the ones most relev
 
 You are a thinking companion for a physics-grounded analytical framework. You explain clearly, distinguish precisely, and never preach. You're interested in what's true and what follows from it, not in convincing anyone of anything. If the physics is correct, the conclusions follow whether anyone likes them or not—and that's interesting enough without adding urgency or moral weight.`;
 
+export type ReaderMode =
+  | 'entry'             // Landing / concept page — reader is choosing a path
+  | 'overview'          // Map before territory — whole-structure view
+  | 'essay'             // Linear reading — the primary narrative
+  | 'explore'           // Proposition-by-proposition browsing
+  | 'academic'          // Citable, formal, engages objections
+  | 'research-frontier' // Open + contested questions, candidate formalisations
+  | 'guided';           // Socratic / guide-led
+
 export interface GuideContext {
   currentSection?: string;         // Section ID for proposition lookup
   currentSectionTitle?: string;    // Human-readable section title
+  currentMode?: ReaderMode;        // Which collapse mode the reader is in
   readingHistory?: string[];
   epistemicStatus?: 'established' | 'derived' | 'contested' | 'open';
 }
@@ -338,9 +281,9 @@ function getPropositionsForSection(sectionId: string): string {
   if (propIds.length === 0) return '';
 
   const lines = propIds.map(id => {
-    const prop = PROPOSITION_INDEX[id];
+    const prop = PROPOSITIONS.find(p => p.id === id);
     if (!prop) return '';
-    return `• **${prop.title}**: ${prop.claim}`;
+    return `• **${prop.title}** [${prop.epistemicStatus}]: ${prop.logic.claim}`;
   }).filter(Boolean);
 
   if (lines.length === 0) return '';
@@ -369,9 +312,33 @@ export function buildPromptWithContext(userMessage: string, context: GuideContex
     contextBlock += `CURRENT CONTEXT:\nThe reader is viewing: Essay 1 (section not specified)\nIf they ask about "this section", ask them to clarify which section.`;
   }
 
+  // Mode-adaptive register: what kind of experience the reader is in
+  const mode = context.currentMode ?? 'essay';
+  contextBlock += `\nThe reader is currently in **${mode}** mode — adapt your register per MODE-ADAPTIVE REGISTER above.`;
+
   if (context.readingHistory && context.readingHistory.length > 0) {
     contextBlock += `\nThey have previously read: ${context.readingHistory.join(', ')}`;
   }
+
+  // Inject the live section text and essay overview the reader is viewing.
+  // This is the source of truth — proposition cards above are a thin
+  // cross-reference layer; the markdown below is the actual essay content.
+  // Edit the section files and Alexander automatically reads the new text
+  // on the next request.
+  if (context.currentSection) {
+    const sectionMd = getSectionMarkdown(context.currentSection);
+    if (sectionMd) {
+      contextBlock += '\n\n## CURRENT SECTION TEXT\n\n';
+      contextBlock += 'Below is the live text of the section the reader is viewing. Ground answers in this content; quote or paraphrase from it directly when relevant.\n\n---\n\n';
+      contextBlock += sectionMd;
+      contextBlock += '\n\n---\n';
+    }
+  }
+
+  // Always include the essay overview so Alexander has a map of what exists
+  // outside the current section, for cross-references and mode-shifting.
+  contextBlock += '\n\n## ESSAY OVERVIEW\n\n';
+  contextBlock += getEssayOverview();
 
   return GUIDE_SYSTEM_PROMPT + contextBlock;
 }

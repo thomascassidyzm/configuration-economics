@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.2",
-    "astro": "^5.16.6"
+    "astro": "^5.16.6",
+    "katex": "^0.16.45"
   }
 }
