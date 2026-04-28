@@ -308,8 +308,11 @@ export function buildPromptWithContext(userMessage: string, context: GuideContex
       contextBlock += `\nThe current section's epistemic status is: ${context.epistemicStatus}`;
     }
   } else {
-    // Fallback when no section context is available
-    contextBlock += `CURRENT CONTEXT:\nThe reader is viewing: Essay 1 (section not specified)\nIf they ask about "this section", ask them to clarify which section.`;
+    // No specific section is active — reader is at top-of-essay, on /overview,
+    // or otherwise not bound to a single section. Defer entirely to the
+    // mode-adaptive register; do NOT instruct Alexander to ask which section.
+    // Questions like "explain this" mean "explain at the level of my current mode."
+    contextBlock += `CURRENT CONTEXT:\nThe reader is reading at the level of their current mode; no specific essay section is in their viewport right now. Use the essay overview below to orient them, and refer to specific sections by name when deepening would genuinely help — but do not ask them to pick a section. Treat questions like "explain this" or "what is this" as questions about Configuration Economics at the resolution their mode implies.`;
   }
 
   // Mode-adaptive register: what kind of experience the reader is in

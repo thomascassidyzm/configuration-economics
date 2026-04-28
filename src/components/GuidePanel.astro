@@ -650,13 +650,16 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       const dynamicSection = (window as any).currentSection;       // For display
       const dynamicStatus = (window as any).currentStatus;
       const dynamicMode = (window as any).currentMode;             // Page-override for mode
-      const defaultSection = panel?.getAttribute('data-default-section') || 'Essay 1';
 
-      // Read directly from DOM as additional fallback
+      // A specific section is "active" only when the IntersectionObserver
+      // has set window.currentSectionId. The panel's data-default-section
+      // is just a placeholder for display — it must not flow through to the
+      // API, otherwise Alexander binds to a bogus section.
+      const hasActiveSection = !!dynamicSectionId;
       const displayedSection = sectionEl?.textContent?.trim();
 
-      const finalSection = dynamicSection || displayedSection || defaultSection;
-      const finalSectionId = dynamicSectionId || null;
+      const finalSection = hasActiveSection ? (dynamicSection || displayedSection) : null;
+      const finalSectionId = hasActiveSection ? dynamicSectionId : null;
       const finalMode = dynamicMode || inferModeFromUrl();
 
       // Debug logging (remove in production)
