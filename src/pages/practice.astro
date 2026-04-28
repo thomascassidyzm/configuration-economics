@@ -1,0 +1,458 @@
+---
+// Practice: how the work-practice tries to embody the structure the theory describes.
+// Names the homomorphism between content and form, and is explicit that
+// coherence is not correctness — the page exists to be honest about the
+// meta-claim, not to celebrate it.
+
+import { VERSION, BUILD } from '../lib/version';
+
+interface Practice {
+  name: string;
+  what: string;
+  instantiates: string;
+}
+
+const PRACTICES: Practice[] = [
+  {
+    name: 'Drafts before canonical content',
+    what: 'New material lives in <code>drafts/</code> for review before promotion. Moves are reversible until they are deliberate.',
+    instantiates:
+      'P10 <em>stability-not-stasis</em> and P19 <em>transition-fragility</em>. Premature commitment closes the reachable set; deferring closure preserves longitudinal option space until a move is well-evaluated.',
+  },
+  {
+    name: 'Every claim carries an epistemic status',
+    what: 'Each proposition is labelled <span class="status-inline status-established">established</span>, <span class="status-inline status-derived">derived</span>, <span class="status-inline status-contested">contested</span>, or <span class="status-inline status-open">open</span>. The label is part of the claim, not metadata.',
+    instantiates:
+      'A partial ordering over claims. Some dominate, some are incomparable. Naming this honestly is a precondition for good moves later — and it mirrors the partial-order revision the framework is making to its own viable-objective.',
+  },
+  {
+    name: 'The same content, multiple modes',
+    what: 'Overview, Essay, Explore, Research Frontier — each projects the work differently. The guide adapts its register to the reader’s mode.',
+    instantiates:
+      'Observer-relative reachable sets. Different readers carve different slices of the work; each mode is a slice. This is the Wolfram <em>Observers Like Us</em> move applied to the audience.',
+  },
+  {
+    name: 'Layered propositions',
+    what: 'Each proposition surfaces progressively: core claim → formal definition → implications → open questions. Readers stop at the depth they want.',
+    instantiates:
+      'Reading under bounded budget. The reader’s attention is finite exergy; the layers let them spend it where the return is highest, without forcing depth they didn’t ask for.',
+  },
+  {
+    name: 'Autonomous sessions produce drafts, not commits',
+    what: 'Long generative work surfaces candidate moves into <code>drafts/</code>. The decision to promote stays with the author.',
+    instantiates:
+      'Generative without lock-in. The work expands its reachable set through exploration; it does not collapse onto a single trajectory until a move is taken deliberately.',
+  },
+  {
+    name: 'Partial order over claims, not total order',
+    what: 'Where two claims compete, the work names the incomparability rather than picking a winner. Where one dominates, dominance is stated.',
+    instantiates:
+      'P22 <em>viable-objective</em> in its revised form. Configurations dominate where they dominate; pretending to a total order would falsify the structure the framework describes.',
+  },
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Practice — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/overview" class="nav-link">Overview</a>
+        <a href="/essay" class="nav-link">Essay</a>
+        <a href="/explore" class="nav-link">Explore</a>
+        <a href="/research-frontier" class="nav-link">Frontier</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>Practice</h1>
+        <p class="subtitle">How this work tries to embody the structure it describes.</p>
+        <p class="note">If the framework is right that value lives in configurations preserving longitudinal option space for living entities, then the work itself — the way it is being built — should look like an instance of that. This page names where it does, and is explicit about what that does and does not mean.</p>
+      </header>
+
+      <section class="prose-block">
+        <h2 class="block-title">The homomorphism</h2>
+        <p>
+          The framework describes value as configurations that preserve longitudinal option space under bounded exergy. Each move that opens or closes that space is evaluable, like a chess move played on the configuration of a system.
+        </p>
+        <p>
+          The work itself is a configuration — of claims, drafts, propositions, modes — and is being built through moves that try to preserve its <em>own</em> longitudinal option space. The mapping below pairs each practice with the principle from the framework it instantiates.
+        </p>
+      </section>
+
+      <section class="practices">
+        <ol class="practice-list">
+          {PRACTICES.map((p, i) => (
+            <li class="practice-item">
+              <div class="practice-head">
+                <span class="practice-number">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="practice-name">{p.name}</h3>
+              </div>
+              <div class="practice-body">
+                <div class="practice-row">
+                  <span class="row-label">What</span>
+                  <p class="row-text" set:html={p.what} />
+                </div>
+                <div class="practice-row">
+                  <span class="row-label">Instantiates</span>
+                  <p class="row-text" set:html={p.instantiates} />
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="prose-block disclaimer">
+        <h2 class="block-title">Coherence is not correctness</h2>
+        <p>
+          A framework that exhibits self-similarity at every scale feels true. The temptation to treat that feeling as evidence is real, and it should be resisted. Wolfram has the same temptation with the ruliad. Resist it here too.
+        </p>
+        <p>
+          The work-practice is consistent with the theory because it was <em>designed</em> to be. Drafts emerged from wanting reversibility. Epistemic status came from wanting auditability. Modes came from wanting observer-relative reading. These choices are downstream of the theory; they are not independent confirmations of it.
+        </p>
+        <p>
+          This page demonstrates one thing: the theory is <em>implementable</em> as a way of doing intellectual work. It does not demonstrate that the theory is correct about economics. Those are separate questions, settled by separate evidence — empirical, mathematical, and adversarial — and the work owes that evidence elsewhere.
+        </p>
+        <p class="quiet">
+          Coherence at this depth is not nothing. It is the floor — necessary for the framework to be taken seriously — but it is not the ceiling.
+        </p>
+      </section>
+
+      <footer class="page-footer">
+        <p>
+          Read the full <a href="/essay">essay</a>, browse <a href="/explore">every proposition</a>, or visit the <a href="/research-frontier">research frontier</a>.
+        </p>
+      </footer>
+    </main>
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.7;
+      }
+
+      .top-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .nav-link {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+
+      .nav-link:hover { color: var(--accent); }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+        flex-wrap: wrap;
+      }
+
+      .nav-version {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+
+      .nav-build {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      main {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 100px 2rem 6rem;
+      }
+
+      .page-header {
+        margin-bottom: 4rem;
+      }
+
+      .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        font-weight: 400;
+        margin-bottom: 0.75rem;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .note {
+        color: var(--text-muted);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+      }
+
+      .prose-block {
+        margin-bottom: 4rem;
+        padding-bottom: 2.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .prose-block:last-of-type {
+        border-bottom: none;
+      }
+
+      .block-title {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 1.25rem;
+      }
+
+      .prose-block p {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.75;
+        margin-bottom: 1rem;
+      }
+
+      .prose-block p:last-child {
+        margin-bottom: 0;
+      }
+
+      .prose-block em {
+        color: var(--text-primary);
+        font-style: italic;
+      }
+
+      .practices {
+        margin-bottom: 4rem;
+      }
+
+      .practice-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2.25rem;
+      }
+
+      .practice-item {
+        padding-left: 1.5rem;
+        border-left: 2px solid rgba(255,255,255,0.08);
+      }
+
+      .practice-head {
+        display: flex;
+        align-items: baseline;
+        gap: 0.875rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .practice-number {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        letter-spacing: 0.08em;
+      }
+
+      .practice-name {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .practice-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .practice-row {
+        display: grid;
+        grid-template-columns: 7rem 1fr;
+        gap: 1rem;
+        align-items: baseline;
+      }
+
+      .row-label {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .row-text {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+      }
+
+      .row-text em {
+        color: var(--text-primary);
+        font-style: italic;
+      }
+
+      .row-text code {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        background: rgba(255,255,255,0.06);
+        padding: 0.15em 0.4em;
+        border-radius: 3px;
+      }
+
+      .disclaimer {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-left: 2px solid var(--accent);
+        border-radius: 4px;
+        padding: 2rem 2rem 2rem 1.875rem;
+        margin-top: 2rem;
+      }
+
+      .disclaimer .quiet {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        font-style: italic;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        margin-top: 0.5rem;
+      }
+
+      .status-inline {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.1rem 0.35rem;
+        border-radius: 3px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .status-established {
+        color: #4a9eff;
+        border-color: rgba(74, 158, 255, 0.3);
+        background: rgba(74, 158, 255, 0.05);
+      }
+
+      .status-derived {
+        color: #6abf4a;
+        border-color: rgba(106, 191, 74, 0.3);
+        background: rgba(106, 191, 74, 0.05);
+      }
+
+      .status-contested {
+        color: #e6a545;
+        border-color: rgba(230, 165, 69, 0.3);
+        background: rgba(230, 165, 69, 0.05);
+      }
+
+      .status-open {
+        color: #a66bd8;
+        border-color: rgba(166, 107, 216, 0.3);
+        background: rgba(166, 107, 216, 0.05);
+      }
+
+      .page-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      .page-footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .page-footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 600px) {
+        main {
+          padding: 80px 1.25rem 4rem;
+        }
+
+        .page-header h1 {
+          font-size: 1.75rem;
+        }
+
+        .block-title {
+          font-size: 1.25rem;
+        }
+
+        .practice-item {
+          padding-left: 1rem;
+        }
+
+        .practice-name {
+          font-size: 1.0625rem;
+        }
+
+        .practice-row {
+          grid-template-columns: 1fr;
+          gap: 0.25rem;
+        }
+
+        .disclaimer {
+          padding: 1.5rem 1.25rem;
+        }
+      }
+    </style>
+  </body>
+</html>
