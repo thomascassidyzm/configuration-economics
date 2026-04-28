@@ -8,6 +8,24 @@ This is the keystone work from step 1 of the v0.2 push plan. It responds directl
 
 ---
 
+## Round 3 — Observer-relative + chess-moves additions (2026-04-29)
+
+A companion draft now sits at `drafts/observer-relative-option-space-and-chess-moves.md`. It does not replace this draft — it supplements it. Three specific updates worth flagging before reading the rest:
+
+1. **Open question #5 (the observer).** This draft flags "Option space for whom?" as open. The companion gives it a structural answer via Wolfram's *Observers Like Us*: the relevant slice is `R_living(C, B, T)` — reachable configurations in which life-persisting observers continue to exist and make distinctions. "For whom" becomes "for the class of life-persisting observers," which is principled rather than arbitrary.
+
+2. **Open question #1 (computing R).** This draft notes that R is computationally intractable. The companion partially dodges the problem by shifting from global ω(C) evaluation to local Δω(move) evaluation. Most policy and configuration changes are moves evaluable directionally — closing or opening R_living at given horizons — even when the global measure isn't computable.
+
+3. **The §"What this doesn't solve" measurability concession.** That section concedes intractability honestly. The companion strengthens the response: global ω is non-computable, but local Δω is evaluable directionally. The Lens 6 attack lands on the global frame; the chess-moves frame is a separate (local) mode of evaluation that the attack does not touch.
+
+The four-candidate-measures section below still holds — it covers global ω comparisons. The chess-moves frame is a separate mode, not a replacement. Both modes live alongside each other.
+
+The forest-vs-monoculture worked example below gets reframed in the companion as a *move evaluation* (clearcut closes R_living at multi-decade horizons) rather than a *state comparison* (forest dominates monoculture in the partial order). Same direction, different frame.
+
+This draft retains structural precedence; the companion is supplementary until both are reviewed for promotion.
+
+---
+
 ## Why a formalisation is needed
 
 Lens 6's most urgent attack (#2 in the ranked list): "Option space has no unit, no measurement procedure, no error bars — yet you propose it replaces GDP. Give me the unit."

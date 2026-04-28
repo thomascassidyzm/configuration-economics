@@ -183,6 +183,25 @@ Third collapse mode now live; Alexander adapts to any mode automatically.
 - Populate `layers` on any future new propositions (all current 23 are populated).
 - Promote the draft propositions `exergy-not-energy` and `binding-constraint` to fill the empty `established` bucket.
 
+### Round 8 — `/practice` shipped + observer-relative option space (2026-04-29)
+
+A conceptual conversation tonight produced two outputs: one shipped, one in flight.
+
+- **`/practice` page shipped** (commit 68e2286). Names the work-as-instance-of-theory homomorphism explicitly — the site is itself a configuration whose value is its capacity to expand future distinction-making in readers. The coherence-not-correctness disclaimer is rendered as a weighted block rather than buried in prose, so the epistemic stance is visible on entry. Linked from the index.
+- **New draft `drafts/observer-relative-option-space-and-chess-moves.md` written** (not yet promoted). Captures five substantive moves on the keystone formalisation:
+  1. **Observer-relative R from Wolfram's *Observers Like Us*.** Option space isn't intrinsic to configuration space; it's the slice life-persisting observers access. Defines `R_living(C, B, T)` as reachable configurations in which living entities continue to exist and make distinctions. Gives "for whom" a principled answer rather than a concession.
+  2. **Chess-moves as operationalisation.** Don't compute ω(C) globally (intractable). Compute Δω(move) locally. Each policy or configuration-change is a move evaluable directionally even when global ω isn't computable. Dodges the measurability attack at the local level.
+  3. **Scope: "for major classes of life," not "for all individuals".** Structural criterion (preserves capacity for life as a category) replaces utilitarian aggregation. Closer to Aubin's viability theory than to welfare economics.
+  4. **Longitudinal as trump.** Horizon (B, T) becomes an explicit parameter; partial order is (B, T)-relative. Short-horizon dominance can lose to long-horizon dominance.
+  5. **No-regret reformulation of P22.** Viable objective restated as preservation, not maximisation: "prefer moves that keep R_living open at all relevant horizons; reject moves that close it at any horizon a class of life depends on." Closer to first-do-no-harm than to economic optimisation.
+
+**Implications for existing drafts:**
+- `drafts/proposition-tightening.md` — P22 needs another pass. The current rewrite still reads as scalar maximisation; the no-regret form is closer to the honest claim.
+- Candidate proposition `option-space-as-chess-moves` worth queuing — local Δω evaluation is a distinct move from the global-measure framing already covered by `option-space-measurability` and the (still hypothetical) `option-space-as-reachable-set`.
+- `drafts/counterargument-engagement.md` Lens 6 attack #2 (measurability) now has a stronger response. Global ω remains non-computable; local Δω is evaluable directionally — the attack lands on the global frame and is dodged at the local frame.
+
+Neither the new draft nor the P22 revision is promoted. Both wait on review.
+
 The Phase 1–4 plan below represents prior direction (pre-review) and is retained for history. v0.2 direction supersedes it.
 
 ---
