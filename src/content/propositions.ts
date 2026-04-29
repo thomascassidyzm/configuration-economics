@@ -683,30 +683,34 @@ Until it is, "option space" functions as a direction for measurement rather than
     epistemicStatus: 'contested',
     surface: `If throughput cannot serve as the measure of success, what replaces it?
 
-One candidate: durable human flourishing per unit of constrained throughput.
+The instinctive move is to nominate a new quantity to maximise — durable flourishing, well-being, sustainability, configuration quality. Each of these names something real, but each runs into the same trouble: maximising a single scalar across many living systems requires an aggregation rule, and any aggregation rule trades off against some class of life it weighs lightly.
 
-This is not a slogan. It is a ratio. The numerator values what persists and expands possibility. The denominator constrains what is consumed in the process.
+A different shape is available. Instead of asking *which configuration is best*, ask *which moves preserve the future*. The objective becomes a no-regret criterion over moves rather than an optimisation over states.
 
-Under this framing, an activity that burns energy savings for transient benefit scores poorly. An activity that increases coherence, capability, or future possibility with minimal dissipation scores well.
+Prefer changes that keep the reachable set of life-supporting configurations open for all major classes of life across all relevant horizons. Reject changes that asymptotically close that reachable set for any such class at any such horizon.
 
-The economy does not grow or shrink. It reorients toward what the ratio rewards.`,
+This is closer to medicine's *first do no harm* than to economics' *maximise utility*. It tolerates incomparability between dominant configurations — it does not need to pick a winner among non-dominated states. It only needs to refuse moves that close categorical possibility.
+
+Under this framing, the economy does not grow or shrink as a whole. It reorients toward moves that keep major classes of life in play.`,
     logic: {
-      claim: 'A viable economic objective under physical constraint is the maximisation of durable flourishing per unit of bounded throughput.',
+      claim: 'A viable economic objective under physical constraint is no-regret preservation of reachable life-supporting configurations across all major classes of life and all relevant horizons.',
       premises: [
-        'Throughput is a cost, not a benefit.',
-        'Flourishing depends on configuration quality, not volume.',
-        'Energy income is bounded.'
+        'Throughput is a cost, not a benefit; the question is what is preserved per unit of cost.',
+        'Single-scalar maximisation requires an aggregation rule that trades off against some class of life it weighs lightly.',
+        'Move-evaluation is implementable where state-comparison is not (see option-space-as-chess-moves).',
+        'No-regret over moves tolerates incomparability between dominant states — it only refuses moves that close categorical possibility.'
       ],
-      conclusion: 'Success should be measured as the ratio of durable value to necessary cost.',
-      predictive: 'Systems optimising this ratio will favour resilience, learning, care, and option preservation over speed, accumulation, and short-term yield.'
+      conclusion: 'Prefer configuration-changes that preserve the reachable set of life-supporting configurations for all major classes of life across all relevant horizons; reject configuration-changes that asymptotically collapse that reachable set for any such class at any such horizon.',
+      predictive: 'Decision-procedures organised around this criterion will favour reversibility, redundancy, restoration, and structural preservation over speed, accumulation, and short-term yield. They will also produce convergent verdicts across observers on the most consequential cases — irreversible loss, structural lock-in, asymptotic collapse — even where state-comparison remains contested.'
     },
     layers: {
-      coreClaim: 'If throughput is a cost, the objective shifts: get more enduring possibility from less exergy spent.',
-      formalDefinition: 'A viable economic objective under physical constraint is the maximisation of durable flourishing per unit of bounded throughput.',
-      implications: 'The economy does not grow or shrink as a whole. It reorients toward configurations that return more future option space per unit of dissipation.',
-      openQuestions: 'What "flourishing" means precisely, and how to operationalise the ratio, remain open. The ratio is a direction before it is a measure.'
+      coreClaim: 'The objective is not a quantity to maximise but a class of moves to refuse: anything that asymptotically closes future possibility for major classes of life. Closer to first-do-no-harm than to maximise-this-number.',
+      formalDefinition: 'A viable economic objective is a no-regret preservation criterion over moves: prefer Δω(move) ≥ 0 on R_living(C, B, T) for every major class of life and every relevant horizon T; reject any move that asymptotically empties R_living for some such class at some such horizon. State-comparison is the static frame (partial order over configurations); move-evaluation is the dynamic frame (no-regret over horizons). Both are needed.',
+      implications: 'The economy does not grow or shrink as a whole. It reorients toward moves that keep major classes of life in play. Earlier framings of this proposition as scalar maximisation ("maximise durable flourishing per unit of throughput") were tighter to read but smuggled in an aggregation rule the criterion does not require. The no-regret form survives observer-relativity (different observer-classes can disagree on optimal states and still agree on which moves are option-space-degrading) and matches the chess-moves operationalisation.',
+      openQuestions: 'The operational definition of "major class of life" — phylum-level, functional ecological role, capacity for distinction-making? Selection of the relevant horizon for any specific decision (default: the longest horizon any major class depends on, but this is contestable). Gradations between elimination and narrowing of R_living. What to do when no available move avoids long-horizon collapse — probably a fallback like "minimise the horizon at which collapse becomes asymptotic."'
     },
-    linksTo: ['throughput-cost', 'value-option-space', 'energy-income-inheritance']
+    revisedAt: '2026-04-29',
+    linksTo: ['throughput-cost', 'value-option-space', 'energy-income-inheritance', 'option-space-as-chess-moves', 'option-space-measurability']
   },
 
   // --- v0.6 additions (April 2026, from physics-rigour review and the
