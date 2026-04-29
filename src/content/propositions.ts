@@ -431,21 +431,23 @@ If one resource runs short, another will replace it. If one process becomes expe
 
 Some substitutions are slow. Some are partial. Some trade one constraint for another.`,
     logic: {
-      claim: 'Substitution cannot be assumed to be frictionless or unlimited.',
+      claim: 'Substitution is empirically bounded by specific physical and ecological invariants that no technology has demonstrated the ability to circumvent.',
       premises: [
-        'Substitutes require time, energy, and infrastructure.',
-        'Many resources are functionally unique.',
-        'Transitions incur temporary losses.'
+        'Substitution has succeeded historically for many resources (whale oil → petroleum, horses → engines, timber → steel) where the function depended on a class of physical property rather than a specific atom or sink.',
+        'Some functions depend on specific physical invariants: phosphorus cannot be synthesised, only extracted; atmospheric and oceanic sinks for CO₂ have no technological replicate at planetary scale; extinct species cannot be re-created; deep fertile topsoil regenerates over millennia, not decades.',
+        'Manufactured substitutes for invariant-dependent functions (hydroponic agriculture, direct-air capture, geoengineering) carry their own dependencies on inputs that circle back to the same invariants.'
       ],
-      conclusion: 'Relying on substitution alone increases systemic risk.'
+      conclusion: 'Relying on substitution for the specific invariants currently binding (phosphorus stocks, atmospheric sink capacity, biodiversity, topsoil, fresh water) is not merely risky but structurally incoherent. The strong-sustainability position (Daly, Hickel) is the defensible default; weak-sustainability claims (Solow, Stiglitz) generalise from a substitution record that does not transfer to invariant-dependent cases.',
+      predictive: 'Policy and investment built on assumed substitution of currently-binding invariants will fail at the substitution boundary; the failure will not be gradual but threshold-like, since invariants do not degrade smoothly.'
     },
     layers: {
-      coreClaim: 'Technology has found substitutes before, but not always, not for everything, and not without loss.',
-      formalDefinition: 'Substitution cannot be assumed to be frictionless or unlimited; specific physical and ecological invariants have resisted technological substitution.',
-      implications: 'Relying on substitution alone increases systemic risk. Certain resources — phosphorus, atmospheric sinks, biodiversity — have no demonstrated technological substitutes.',
-      openQuestions: 'Which invariants are truly non-substitutable versus not-yet-substituted is a live empirical question. The strong-sustainability debate continues.'
+      coreClaim: 'Technology has found substitutes before — but not for everything, not always, and not without loss. Some atoms, some sinks, some ecological functions have no demonstrated technological replacement.',
+      formalDefinition: 'Substitution is empirically bounded by specific physical and ecological invariants that no technology has demonstrated the ability to circumvent. The Daly–Solow–Stiglitz debate (1970s–present) crystallised this as the strong-vs-weak sustainability disagreement; the strong-sustainability position is defended by the empirical specifics (phosphorus, atmospheric sinks, biodiversity, topsoil), not by a general principle.',
+      implications: 'Cornucopian techno-optimism generalises from a real but bounded substitution record (energy carriers, materials with shared physical properties) to a domain (invariant-dependent functions) where the record does not apply. The cornucopian extrapolation is a category error, not just an empirical mistake.',
+      openQuestions: 'Which currently-cited invariants are truly non-substitutable versus not-yet-substituted is a live empirical question — the strong-sustainability case is empirical, not categorical, and remains testable as new technologies arrive. The case is strongest for phosphorus and atmospheric sinks; somewhat softer for individual species (functional redundancy) and topsoil (rebuildable but slow).'
     },
-    linksTo: ['energy-income-inheritance', 'transition-fragility']
+    revisedAt: '2026-04-29',
+    linksTo: ['energy-income-inheritance', 'transition-fragility', 'binding-constraint', 'displaced-costs']
   },
 
   {
