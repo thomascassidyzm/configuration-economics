@@ -67,7 +67,12 @@ const counts = {
             <article class="proposition" id={prop.id} data-status={prop.epistemicStatus}>
               <div class="proposition-header">
                 <h2>{prop.title}</h2>
-                <span class={`status status-${prop.epistemicStatus}`}>{prop.epistemicStatus}</span>
+                <div class="proposition-tags">
+                  <span class={`status status-${prop.epistemicStatus}`}>{prop.epistemicStatus}</span>
+                  {prop.revisedAt && (
+                    <span class="revised" title={`Revised ${prop.revisedAt} — this proposition has been changed since first publication.`}>revised {prop.revisedAt}</span>
+                  )}
+                </div>
               </div>
 
               <div class="surface">
@@ -255,6 +260,13 @@ const counts = {
         color: var(--text-primary);
       }
 
+      .proposition-tags {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
       .status {
         font-family: var(--font-mono);
         font-size: 0.6875rem;
@@ -264,6 +276,18 @@ const counts = {
         border-radius: 3px;
         border: 1px solid;
         white-space: nowrap;
+      }
+
+      .revised {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+        color: var(--text-muted);
+        white-space: nowrap;
+        cursor: help;
       }
 
       .status.inline {
