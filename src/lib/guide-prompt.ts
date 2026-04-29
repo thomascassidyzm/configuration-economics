@@ -8,15 +8,15 @@ import { getSectionMarkdown, getEssayOverview } from './section-renderer';
 // Keys match section IDs from essay-1/config.ts
 export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   'orientation': [],  // General framing
-  'physical-envelope': ['energy-income-inheritance'],
-  'accounting-error': ['energy-income-inheritance', 'throughput-cost'],
-  'throughput-proxy': ['throughput-cost', 'displaced-costs', 'money-as-signal'],
-  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability'],
+  'physical-envelope': ['energy-income-inheritance', 'exergy-not-energy', 'binding-constraint'],
+  'accounting-error': ['energy-income-inheritance', 'throughput-cost', 'exergy-not-energy', 'binding-constraint'],
+  'throughput-proxy': ['throughput-cost', 'displaced-costs', 'money-as-signal', 'exergy-not-energy'],
+  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability', 'option-space-as-chess-moves'],
   'configuration-not-information': ['configuration-not-information', 'option-space-measurability'],
   'work-wrong-question': ['work-wrong-question', 'participation-limits'],
   'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain'],
-  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability'],
-  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis'],
+  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves'],
+  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves'],
   'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry']
 };
 

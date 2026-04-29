@@ -35,6 +35,12 @@ export interface Proposition {
   // back to surface/logic when absent. Populate over time per proposition.
   layers?: ResolutionLayers;
 
+  // ISO date (YYYY-MM-DD) marking the most recent substantive revision to
+  // claim/premises/conclusion or surface text. Living-epistemic-work
+  // provenance — set when a proposition is added or rewritten, not on
+  // typo fixes. Renderers may surface this as a "revised" badge.
+  revisedAt?: string;
+
   // Simple non-semantic links
   linksTo: string[];
 }
@@ -170,13 +176,14 @@ When participation is bounded by physical reality rather than enforced scarcity,
 
 Scarcity remains. Trade-offs remain. What changes is how they are handled.`,
     logic: {
-      claim: 'Stable economies guarantee participation within physical limits rather than enforcing labour as a condition of survival.',
+      claim: 'Economies that maintain long-term social stability tend to decouple basic participation from labour performance.',
       premises: [
-        'Participation is necessary for social stability.',
-        'Energy and material availability are bounded.',
-        'Deprivation is a blunt coordination mechanism.'
+        'Long-term social stability depends on continued broad-based participation.',
+        'Automation and energy constraints are decoupling production from human labour input.',
+        'Economies that use deprivation as the primary participation-enforcement mechanism accumulate instability faster than the instability they prevent.'
       ],
-      conclusion: 'Participation should be unconditional within physical constraints; contribution can remain differentiated.'
+      conclusion: 'Under physical constraint, economies that condition basic access on labour tend to accumulate instability; those that decouple access from labour tend to persist.',
+      predictive: 'The correlation between coercive-labour arrangements and system instability will strengthen as automation and energy constraints both tighten.'
     },
     layers: {
       coreClaim: 'Economies that persist find ways for everyone to participate without making participation depend on forced labour.',
@@ -184,6 +191,7 @@ Scarcity remains. Trade-offs remain. What changes is how they are handled.`,
       implications: 'Deprivation as a coordination mechanism accumulates instability faster than the instability it prevents. Economies relying on it become harder to sustain over time.',
       openQuestions: 'What non-coercive coordination mechanisms scale without falling back on deprivation is a live research and design question.'
     },
+    revisedAt: '2026-04-29',
     linksTo: ['value-option-space', 'work-wrong-question']
   },
 
@@ -315,19 +323,21 @@ Economic systems that confuse stability with freezing existing structures become
 
 A stable economy is one that keeps moving—carefully.`,
     logic: {
-      claim: 'Stability arises from adaptive capacity, not static preservation.',
+      claim: 'Stability in living and social systems emerges from adaptive capacity rather than static preservation.',
       premises: [
-        'Environments change over time.',
-        'Fixed structures resist adjustment.',
-        'Flexibility preserves function under variation.'
+        'Environments change over time at scales relevant to any persistent system.',
+        'Systems with fixed structures resist adjustment and accumulate mismatch between form and conditions.',
+        'Systems with adaptive capacity can preserve function while adjusting form.'
       ],
-      conclusion: 'Systems must prioritise adaptability over preservation of form.'
+      conclusion: 'Systems that persist under changing conditions exhibit adaptive capacity; those that prioritise preservation of form become brittle.',
+      predictive: 'Systems facing regime-level environmental or technological change will show differential persistence correlated with adaptive capacity.'
     },
     layers: {
       coreClaim: 'Stability doesn\'t mean standing still — it means being able to move without breaking.',
       formalDefinition: 'Stability arises from adaptive capacity, not static preservation.',
       implications: 'Systems that confuse stability with freezing existing structures become brittle. Those that adapt preserve function across varying conditions.'
     },
+    revisedAt: '2026-04-29',
     linksTo: ['value-option-space', 'structural-memory']
   },
 
@@ -474,13 +484,14 @@ Prices summarise many variables into a single figure. This is powerful, but also
 
 The signal remains legible long after its referent has changed.`,
     logic: {
-      claim: 'Monetary signals do not guarantee physical correspondence.',
+      claim: 'Monetary signals track physical reality only insofar as feedback mechanisms maintain their correspondence.',
       premises: [
-        'Prices abstract away material specifics.',
-        'Feedback delays allow divergence.',
-        'Markets optimise signals, not substrates.'
+        'Prices abstract away material specifics by design.',
+        'Feedback delays between monetary and physical quantities allow divergence to accumulate.',
+        'Market optimisation targets signals (prices) rather than substrates (physical stocks, flows, or sinks).'
       ],
-      conclusion: 'Money must be anchored to physical accounting to remain informative.'
+      conclusion: 'Absent explicit feedback between monetary signals and physical accounting, monetary signals lose informativeness about physical state over time.',
+      predictive: 'Economies whose monetary signals are detached from physical feedback mechanisms will show growing divergence between financial performance and physical performance — eventually resolving in either re-alignment or disorderly correction.'
     },
     layers: {
       coreClaim: 'Prices are signals about physical reality — and like any signal, they can drift from what they\'re meant to track.',
@@ -488,6 +499,7 @@ The signal remains legible long after its referent has changed.`,
       implications: 'Without explicit feedback between monetary signals and physical accounting, monetary signals lose informativeness over time. Coordination continues on price, even as the underlying system degrades.',
       openQuestions: 'What feedback mechanisms could re-anchor monetary signals to physical reality, and how disruptive that re-anchoring would be, remain open.'
     },
+    revisedAt: '2026-04-29',
     linksTo: ['throughput-cost', 'legibility-truth-tradeoff']
   },
 
@@ -554,19 +566,21 @@ Unstable ones do not. During transitions, buffers shrink. Old supports weaken be
 
 This is when accounting honesty matters most.`,
     logic: {
-      claim: 'System transitions amplify risk and error sensitivity.',
+      claim: 'System transitions amplify error sensitivity and narrow the margin for correction.',
       premises: [
-        'Redundancy declines during change.',
-        'New configurations are immature.',
-        'External shocks persist.'
+        'During transitions, redundancy in the outgoing configuration declines before the incoming configuration matures.',
+        'New configurations have untested failure modes and smaller recovery buffers.',
+        'Environmental and systemic shocks continue independently of transition state.'
       ],
-      conclusion: 'Transitional periods require conservative assumptions.'
+      conclusion: 'Transitional periods are disproportionately sensitive to error, and trajectories through them show high sensitivity to initial conditions and early decisions.',
+      predictive: 'Systems traversing transitions with the error-handling tolerances appropriate to steady-state operation fail at rates substantially higher than equivalent non-transitional failures.'
     },
     layers: {
       coreClaim: 'Systems changing form are more fragile than systems at rest — errors that were survivable become critical.',
       formalDefinition: 'System transitions amplify error sensitivity and narrow the margin for correction.',
       implications: 'Transitional periods benefit from conservative assumptions because small mistakes compound faster when buffers have thinned. The right tolerances for a steady-state system are wrong for a transitioning one.'
     },
+    revisedAt: '2026-04-29',
     linksTo: ['energy-income-inheritance', 'complexity-maintenance', 'stability-not-stasis']
   },
 
@@ -693,6 +707,104 @@ The economy does not grow or shrink. It reorients toward what the ratio rewards.
       openQuestions: 'What "flourishing" means precisely, and how to operationalise the ratio, remain open. The ratio is a direction before it is a measure.'
     },
     linksTo: ['throughput-cost', 'value-option-space', 'energy-income-inheritance']
+  },
+
+  // --- v0.6 additions (April 2026, from physics-rigour review and the
+  // observer-relative / chess-moves session 2026-04-29) ---
+
+  {
+    id: 'exergy-not-energy',
+    title: 'What Is Actually Spent Is Exergy',
+    epistemicStatus: 'established',
+    surface: `When this work speaks of economies "spending energy" or "running on energy income," the physically precise term is exergy: the portion of energy available to do useful work.
+
+Energy itself is conserved. It cannot be spent. What is spent is its ability to do work — its distance from thermodynamic equilibrium with the surroundings. A battery contains the same energy before and after it powers a laptop; what changed is that a usable gradient has become dispersed heat.
+
+This distinction is implicit throughout. Where the essay uses "energy" in economic contexts, "exergy" is what the physics supports.
+
+In accessible prose, "energy" reads better and is familiar. In formal claims, "exergy" is precise.`,
+    logic: {
+      claim: 'Economic activity that "consumes energy" is rigorously described as exergy destruction; energy itself is conserved.',
+      premises: [
+        'The first law of thermodynamics: energy is conserved in any closed process.',
+        'Economic processes reduce the availability of energy to do further work — they increase entropy.',
+        'Exergy (available work) tracks this reduction; energy does not.'
+      ],
+      conclusion: 'Accurate physical accounting of economic activity measures exergy throughput, not energy throughput.'
+    },
+    layers: {
+      coreClaim: 'Economies don\'t consume energy — energy is conserved. What they consume is exergy: the usable, work-capable fraction of energy.',
+      formalDefinition: 'Economic activity that "consumes energy" is rigorously described as exergy destruction. Exergy is the portion of energy available to do useful work, measured as distance from thermodynamic equilibrium with the surroundings.',
+      implications: 'The casual language of "energy consumption" misnames the physics. What rises with economic activity is entropy; what declines is the exergy stock available to future work. Where this work uses "energy" in accessible prose, exergy is the precise referent.',
+      openQuestions: 'How to render exergy accounting at the resolution of actual economic decisions — sectoral exergy budgets, exergy-LCA — is operationalisable in principle but not standard in policy or business accounting.'
+    },
+    revisedAt: '2026-04-29',
+    linksTo: ['throughput-cost', 'energy-income-inheritance']
+  },
+
+  {
+    id: 'binding-constraint',
+    title: 'The Binding Constraint Is Not Energy Influx',
+    epistemicStatus: 'derived',
+    surface: `Earth receives solar exergy at roughly 175 PW continuously. Human civilisation dissipates roughly 18 TW. By the raw thermodynamic budget, we are nowhere near a ceiling.
+
+This matters because a common reading of "bounded energy flux" is that economic activity is hitting the second law. At planetary scale, it is not. The active constraints are elsewhere.
+
+Waste heat and waste configurations must go somewhere, and the biosphere, oceans, and atmosphere are the sink. Specific materials — phosphorus, rare earths, fresh water, topsoil — are bounded not by total quantity but by extraction and regeneration rates. Biospheric integrity governs which configurations remain stable at all.
+
+"Bounded energy flux" in this work names these practical bindings, not the distant thermodynamic ceiling. The ceiling is far; the floor of what the biosphere can absorb is close.`,
+    logic: {
+      claim: 'The operative physical constraints on human economic activity are entropy-dump capacity, specific materials, and biosphere integrity — not total energy influx.',
+      premises: [
+        'Solar exergy influx to Earth (~175 PW) vastly exceeds current human dissipation (~18 TW).',
+        'Waste heat and waste configurations must be absorbed by finite biospheric, oceanic, and atmospheric sinks.',
+        'Specific materials face extraction-rate and regeneration-rate bindings independent of total stock.',
+        'Biosphere integrity governs which configurations remain stable.'
+      ],
+      conclusion: '"Bounded energy flux" names these practical bindings, not the thermodynamic ceiling.'
+    },
+    layers: {
+      coreClaim: 'Earth gets ~175 PW of solar exergy; humans use ~18 TW. We\'re nowhere near the thermodynamic ceiling. The real limits are sinks (where waste goes), specific materials, and biosphere integrity.',
+      formalDefinition: 'The operative physical constraints on human economic activity are entropy-dump capacity (atmospheric, oceanic, biospheric sinks), specific materials at their extraction/regeneration rate, and biosphere integrity. Total solar exergy influx is not the binding constraint at current civilisational scale.',
+      implications: 'Framing economic constraint as "running into the second law" is wrong and invites cornucopian dismissal. The honest framing is: the sink wall is close, the material-rate wall is close, the biosphere wall is close. These are the bindings the framework names. The ceiling is far.',
+      openQuestions: 'How to integrate sink-side, material-rate, and biosphere-integrity constraints into a unified accounting frame remains open. Each is currently tracked by different communities (climate, ecological economics, industrial ecology, planetary boundaries) with limited cross-talk.'
+    },
+    revisedAt: '2026-04-29',
+    linksTo: ['exergy-not-energy', 'energy-income-inheritance', 'displaced-costs', 'configuration-not-information']
+  },
+
+  {
+    id: 'option-space-as-chess-moves',
+    title: 'Option Space Is Evaluated Move by Move',
+    epistemicStatus: 'derived',
+    surface: `If global option space is hard to measure, the practical question is whether it can be evaluated locally — move by move — well enough to act on.
+
+Chess engines do not compute the full game tree. They evaluate moves by whether the resulting position has more or fewer good options. Did this move open up the position or close it? Even directionally, this is enough to play.
+
+The same operation is available here. Every policy decision, infrastructure commitment, land-use change, institutional reform is a move on the configuration. The question is local: does this move expand or contract the reachable set of life-supporting configurations, over the horizon a class of life depends on?
+
+Mass extinction events, monoculture conversions, fossil-fuel commitments locking in 4°C are unambiguously option-space-degrading even when global option space after the move is non-computable. Local gradient evaluation is tractable where global value computation isn't.
+
+This is not new. Dave Snowden has articulated next best move as the central practical primitive in complex domains since Cynefin took its modern form. Aubin's viability theory formalises admissible trajectories under non-empty constraint sets. This work inherits both lineages and adds physical grounding — moves are evaluated over an explicit exergy budget and horizon, restricted to the class of observers that maintain themselves and persist.`,
+    logic: {
+      claim: 'Option space is evaluable locally as the differential effect of moves, even where it is not computable globally as a state measure.',
+      premises: [
+        'Global option space ω(C) is currently non-computable for all candidate measures (cardinality, diversity-weighted, Assembly-weighted, compositional).',
+        'Local move evaluation Δω(move) does not require global computation — it requires only directional comparison between the pre-move and post-move reachable sets.',
+        'In practice, many consequential moves (mass extinction, irreversible lock-in, asymptotic ecosystem collapse) have unambiguous Δω signs even when global ω remains non-computable.',
+        'Snowden\'s next-best-move stance and Aubin\'s viability theory establish that local evaluation under structural criteria is operational in complex domains.'
+      ],
+      conclusion: 'The framework ships with a usable decision procedure: evaluate moves by their effect on the reachable set of life-supporting configurations, over the horizon a class of life depends on.',
+      predictive: 'Move-evaluation will produce convergent verdicts across observers on the most consequential cases (irreversible loss, structural lock-in, asymptotic collapse), even where state-comparison remains contested.'
+    },
+    layers: {
+      coreClaim: 'Don\'t compute the whole board. Evaluate each move by whether it opens or closes future options. Chess engines do this; the same logic applies to policy and infrastructure choices.',
+      formalDefinition: 'Δω(move) on R_living(C, B, T) — local gradient evaluation of moves on the observer-relative reachable set, exergy-bounded by B, horizon-tagged by T, restricted to the class of life-persisting observers. Lineage: Snowden\'s next best move (Cynefin, ~2003–present) for the operational stance; Aubin\'s viability theory for admissible trajectories under non-empty constraint sets; Real Options theory (Dixit & Pindyck) as the financial-register precedent. This work\'s addition: physical grounding (R_living defined over an exergy budget) and the retained forward-looking measurement aspiration.',
+      implications: 'The single-board chess metaphor extends to polychess — multiple games on multiple boards, with pieces shared across boards, players often unaware that other games are even being played. Externalities reframe from "side effects" to uncounted moves on boards you didn\'t know you were playing on. GDP is the score on one board. Standard economics plays one board; ecological economics adds one more; this work is explicitly polychess. The unit of value is preserved option space across the poly-board, not the score on any single board.',
+      openQuestions: 'Aggregation across simultaneous moves by many agents (chess has one player; the biosphere has many). The operational definition of "major class of life" — phylum-level, functional ecological role, capacity for distinction-making? Selection of the relevant horizon for any specific decision (default: the longest horizon any major class depends on, but this is contestable). When does a move eliminate a class\'s reachable set vs. merely narrow it — the criterion as currently stated is binary; reality is graded.'
+    },
+    revisedAt: '2026-04-29',
+    linksTo: ['value-option-space', 'option-space-measurability', 'viable-objective', 'transition-fragility', 'displaced-costs']
   }
 ];
 
