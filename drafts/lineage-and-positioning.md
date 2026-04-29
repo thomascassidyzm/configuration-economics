@@ -91,6 +91,16 @@ Arthur's work on increasing returns, path dependence, and non-equilibrium; Beinh
 - **What CE inherits:** Non-equilibrium framing; evolutionary dynamics of configurations.
 - **What CE differs on:** Grounding. Complexity economics grounds in algorithmic/computational metaphors; CE grounds in physics (thermodynamics + distinctions). P21 (`configuration-not-information`) is a direct argument against the pure-information framing that complexity economics sometimes slides into.
 
+### Dave Snowden (1999–present) — *Cynefin*, complexity-management practice
+
+Snowden developed the Cynefin framework over two decades to distinguish complex from merely complicated problem domains, and to argue that complex domains demand entirely different practice from complicated ones. Cause and effect in the complex domain are knowable only retrospectively, so the right operational primitive is *probe-sense-respond on the next best move* rather than analyse-plan-execute on the optimal solution. The practitioner-side complement to Aubin's mathematical viability theory.
+
+- **What he established:** The complicated/complex distinction as a domain criterion. *Next best move* as the operational primitive in complex systems — directionally good moves evaluated locally, not globally optimised. *Vector measurement* (where + direction of change) over scalar (where alone). Constraint-mapping as the management discipline: manage enabling and governing constraints, don't chase causal chains. Probe-sense-respond as method.
+- **What CE inherits:** The local move-evaluation stance is Snowden's, not ours. CE's chess-moves / local Δω evaluation (see `observer-relative-option-space-and-chess-moves.md`, Move 2) is structurally his next-best-move applied to R_living. The principled stance on non-computability of global optima in the complex domain — global ω(C) is not just hard, it's the *wrong target* in a complex system because cause-effect is retrospective. The constraint-management framing also sits behind CE's "preserve major classes of life from asymptotic collapse" criterion.
+- **What CE adds (or differs on):** Physics-grounding of the vector. Snowden is deliberately anti-quantification in the complex domain; CE retains a forward-looking measurement aspiration (option space as research programme), even when local Δω is the practical near-term form. CE narrows to the life-persisting observer class where Cynefin is generic across complex domains. Snowden's frame is methodological (how to act); CE attempts ontological (what value is). Registers are compatible; aspirations diverge.
+
+**Note:** Snowden's reception in formal academia is mixed — practitioner-credentialled but sometimes dismissed as consulting-flavoured. Cite him alongside Aubin's viability theory so the lineage carries both registers; Aubin is the mathematical anchor, Snowden the operational companion.
+
 ### Jason Hickel / Tim Jackson — Degrowth / Post-Growth
 
 Hickel's *Less Is More* (2020); Jackson's *Prosperity Without Growth* (2009/2017). Both argue that absolute decoupling of GDP from material throughput is empirically unsupported at the scale required, and that economic coordination must be rethought to function within planetary boundaries.
@@ -128,7 +138,7 @@ From the above, what is genuinely new in CE:
 
 The strongest form of the novelty attack (from Lens 6):
 
-> "Soddy 1926. Georgescu-Roegen 1971. Daly 1977. Tainter 1988. Hickel 2020. What is new here?"
+> "Soddy 1926. Georgescu-Roegen 1971. Daly 1977. Tainter 1988. Snowden 2003. Hickel 2020. What is new here?"
 
 The answer, staked:
 

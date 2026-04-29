@@ -60,7 +60,11 @@ The same move works here. Each policy decision, infrastructure commitment, land-
 
 > Does this move expand or contract R_living on balance, over the horizon a class of life depends on?
 
-Local gradient evaluation can be tractable when global value computation isn't. Three concrete consequences:
+Local gradient evaluation can be tractable when global value computation isn't.
+
+**Lineage note.** This is not new. Dave Snowden has been articulating *next best move* as the central practical primitive in complex domains since Cynefin took its modern form (~2003). His claim — that you cannot compute optimal global states in complex systems and must instead identify directionally good moves and evaluate as you go — is the move CE is inheriting here. Snowden's vocabulary (probe-sense-respond, vectors, constraint-mapping) is more accurate than the chess metaphor to the open-system multi-agent reality, since chess assumes a single player and a closed game. The chess framing is retained for accessibility but should cite Snowden directly when this draft promotes. CE's specific addition to Snowden's stance is *physical grounding* (R_living defined over an exergy budget B and horizon T, restricted to the life-persisting observer class) and the retained *forward-looking measurement aspiration* — Snowden is deliberately anti-quantification in the complex domain; CE diverges and treats option space as a research programme rather than a categorically wrong target.
+
+Three concrete consequences:
 
 1. **The framework ships with a usable decision-procedure.** "Is this configuration valuable?" is hard. "Is this move opening or closing R_living?" is easier — sometimes obviously so. Mass extinction events, monoculture conversions, fossil-fuel commitments locking in 4°C are unambiguous Δω-negative even when global ω(post-state) is non-computable.
 
@@ -148,9 +152,10 @@ Tracking specifically because the keystone is the document of record.
 1. **Wolfram parallel is suggestive, not formally worked out.** Either commit to the formalism or be explicit it's analogy. v0.2 stance: analogical, with the option to formalise later.
 2. **"Major class of life" needs operational definition.** Phylum-level? Functional ecological role? Capacity for distinction-making (DP-grounded)? Open.
 3. **Relevant-horizon selection is contested per decision.** Framework owns the parameter; doesn't dictate the value.
-4. **Real options theory (Dixit & Pindyck) and viability theory (Aubin) are the closest prior art.** Real options literally measures reachable configurations under uncertainty. Viability theory formalises admissible trajectories under non-empty constraint sets. Both must be cited and engaged in `lineage-and-positioning.md`. The framework's specific delta over each:
+4. **Real options theory (Dixit & Pindyck), viability theory (Aubin), and Snowden's complexity-management practice (Cynefin, ~2003–present) are the closest prior art.** Real options literally measures reachable configurations under uncertainty. Viability theory formalises admissible trajectories under non-empty constraint sets. Snowden's *next best move* frames the operational stance Move 2 inherits. All three must be cited and engaged in `lineage-and-positioning.md`. The framework's specific delta over each:
    - vs. Real Options: forward, *for living-entity-class observers*, with structural rather than monetary valuation
    - vs. Viability Theory: option-space *expansion* rather than viability-set *non-emptiness* (CE wants more than survival; it wants flourishing)
+   - vs. Snowden: physics-grounding (R_living defined over exergy budget B and horizon T) and a retained forward-looking measurement aspiration where Snowden is deliberately anti-quantification in the complex domain
 5. **Aggregation across simultaneous agents.** Chess has one player. Biosphere has many. Structural criterion (Move 2 last bullet) probably handles it but needs articulation.
 
 ---
