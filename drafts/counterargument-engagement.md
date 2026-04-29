@@ -31,21 +31,42 @@ Solar flux scale (Attack #6) is handled by `binding-constraint` proposition in `
 
 ### Response
 
-Acknowledge fully. Option space is not currently measurable — this is captured in the `option-space-measurability` proposition, status `open`. The measurability problem is not an oversight; it is the hard research problem this work identifies.
+The attack assumes the framework requires a global state-measure ω(C). It does not.
 
-But non-measurability is not the same as non-existence. Utility in early neoclassical economics (Jevons, Menger, Marshall) had no unit and no measurement procedure for decades. The framework was valuable as a *direction* long before revealed-preference theory (Samuelson, 1938) and ordinal utility made it tractable. Economics proceeded on intuitive utility until technical tools caught up. The intuitive concept was not thereby worthless.
+Two distinct evaluation modes are available, and the attack only lands against one of them.
 
-Similarly: option space is currently a direction of measurement. It says "the thing we should be counting is not throughput or labour but the preservation and expansion of future reachable configurations." Whether the right measure turns out to be Assembly-weighted reachable sets (see `drafts/option-space-formalisation.md`), or Kauffman's adjacent possible, or something not yet named, is the research problem.
+**Global ω(C) — state-measurement of total option space.** Currently non-computable for all four candidate measures (cardinality, diversity-weighted, Assembly-weighted, compositional). The work concedes this in the `option-space-measurability` proposition, status `open`. This is the hard research problem.
 
-The framework remains diagnostic now — it can say which existing measures *do* and *don't* capture the underlying quantity. It becomes prescriptive only when measurement matures. That sequence is honest and conventional for any foundational reframing.
+**Local Δω(move) — gradient evaluation of moves.** This is computable directionally, often unambiguously. Chess engines work this way: not by computing the full game tree but by evaluating whether a move opens or closes the position. Mass extinction events, monoculture conversions, fossil-fuel commitments locking in 4°C are unambiguously option-space-degrading even when the global ω of the post-state isn't computable.
+
+The framework ships with a usable decision procedure now, not a deferred one: evaluate moves by their effect on R_living — the reachable set of life-supporting configurations — over the horizon a class of life depends on. Local gradient evaluation is tractable where global value computation isn't.
+
+This is not new and the work doesn't claim it is. Dave Snowden has articulated *next best move* as the central practical primitive in complex domains since Cynefin took its modern form (~2003). Aubin's viability theory formalises admissible trajectories under non-empty constraint sets. Real Options theory (Dixit & Pindyck) measures reachable configurations under uncertainty in the financial register. The work inherits all three lineages and adds physical grounding: Δω is evaluated over an explicit exergy budget B, a horizon T, and restricted to the class of life-persisting observers (R_living rather than R, following the observer-relativity move from Wolfram's *Observers Like Us*).
+
+See the candidate proposition `option-space-as-chess-moves` in `drafts/proposed-propositions.md` and the structural reformulation in `drafts/observer-relative-option-space-and-chess-moves.md` for the operational machinery.
+
+### Why utility is the wrong analogy here
+
+An earlier draft of this response leaned on the historical parallel — utility in early neoclassical economics had no unit and no measurement procedure for decades, yet was valuable as a direction. That analogy is true but unnecessarily defensive. The work isn't asking for credit-now-utility-later. It's pointing at an evaluation mode (local Δω) that is operational now, alongside a state-measurement mode (global ω) that is genuinely open research.
+
+The honest framing is: state-measurement is open; move-evaluation is implementable. The framework is not waiting on the former before the latter is usable.
 
 ### What a hostile critic would still say
 
-"You're asking for credit for a framework that might become useful later. That's not how science or policy works."
+"Local Δω is just qualitative judgement dressed in symbols. You're calling 'this seems bad' a measurement."
 
 ### Honest reply
 
-Fair. The work does not claim current operational policy use. It claims conceptual clarification: existing measures are misaligned with what actually matters under physical constraint, and the direction of the fix is legible even before the measure is built. Policy implications follow measurement, not framework.
+The criterion has structure even when it doesn't yet have units. *Move M is option-space-degrading iff it asymptotically eliminates R_living for some major class of life over horizon T.* This is binary at the limit, graded in practice, and convergent across observers in the most consequential cases (extinction events, irreversible lock-ins, ecosystem collapse). Convergent inter-observer verdicts on the high-stakes cases is exactly what a useful evaluation procedure provides — it doesn't have to produce a real-valued cardinal score to be more informative than GDP.
+
+What remains genuinely contested:
+
+- aggregation across simultaneous moves by many agents
+- the operational definition of "major class of life"
+- selection of the relevant horizon for a given decision
+- gradations between elimination and narrowing of R_living
+
+These are real open questions, not artefacts of the framing. The work names them rather than papering them over.
 
 ---
 
