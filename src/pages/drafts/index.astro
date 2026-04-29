@@ -1,0 +1,408 @@
+---
+// Drafts index: lists every draft markdown file in the drafts/ directory
+// with its title and a one-paragraph summary. Drafts are work-in-progress;
+// this page makes them visible without promoting them to canonical.
+
+import { VERSION, BUILD } from '../../lib/version';
+
+interface DraftEntry {
+  slug: string;
+  title: string;
+  summary: string;
+  filename: string;
+}
+
+const draftModules = import.meta.glob('../../../drafts/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+// Hand-curated grouping. Drafts produced in the 2026-04-29 session form a
+// coherent unit and deserve to be foregrounded; the rest are predecessor
+// material from the v0.2 push.
+const SESSION_2026_04_29 = new Set([
+  'observer-relative-option-space-and-chess-moves',
+  'polychess-as-teaching-device',
+]);
+
+const drafts: DraftEntry[] = Object.entries(draftModules)
+  .filter(([path]) => !path.endsWith('README.md'))
+  .map(([path, content]) => {
+    const filename = path.split('/').pop()!.replace(/\.md$/, '');
+
+    // Title from first H1
+    const titleMatch = content.match(/^#\s+(.+)$/m);
+    const title = titleMatch ? titleMatch[1].trim() : filename;
+
+    // Summary: first non-heading, non-empty paragraph after the title
+    const afterTitle = content.replace(/^#\s+.+$/m, '').trim();
+    const paragraphs = afterTitle.split(/\n\s*\n/);
+    const firstReal = paragraphs.find(p => !p.startsWith('#') && !p.startsWith('---') && p.trim().length > 0);
+    let summary = firstReal ? firstReal.replace(/\n+/g, ' ').replace(/\*\*/g, '').replace(/`/g, '').trim() : '';
+    if (summary.length > 320) {
+      summary = summary.slice(0, 320).trim() + '…';
+    }
+
+    return { slug: filename, title, summary, filename: filename + '.md' };
+  })
+  .sort((a, b) => a.title.localeCompare(b.title));
+
+const tonightDrafts = drafts.filter(d => SESSION_2026_04_29.has(d.slug));
+const otherDrafts = drafts.filter(d => !SESSION_2026_04_29.has(d.slug));
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Drafts — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/research-frontier" class="nav-link">Frontier</a>
+        <a href="/explore" class="nav-link">Explore</a>
+        <a href="/essay" class="nav-link">Essay</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>Drafts</h1>
+        <p class="subtitle">Work in progress. Reasoning published openly because the work is a living epistemic project.</p>
+        <p class="note">Drafts sit here for review before promotion to canonical content. Voice, structure, and substance may shift. The drafts pattern is itself one of the practices the work commits to — see <a href="/practice">/practice</a>.</p>
+      </header>
+
+      {tonightDrafts.length > 0 && (
+        <section class="draft-block">
+          <div class="block-header">
+            <span class="block-marker">◈</span>
+            <h2 class="block-title">Latest session — 2026-04-29</h2>
+            <span class="block-note">conceptual moves and the layered teaching device that came out of one evening</span>
+          </div>
+
+          <ul class="draft-list">
+            {tonightDrafts.map(d => (
+              <li class="draft-item">
+                <div class="item-head">
+                  <a href={`/drafts/${d.slug}`} class="item-title">{d.title}</a>
+                  <span class="status-badge">DRAFT</span>
+                </div>
+                <p class="item-summary">{d.summary}</p>
+                <span class="item-filename">{d.filename}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section class="draft-block">
+        <div class="block-header">
+          <span class="block-marker">◇</span>
+          <h2 class="block-title">v0.2 push drafts</h2>
+          <span class="block-note">predecessor material from the April 2026 review — keystone formalisation, lineage, counterargument engagement, proposition tightening</span>
+        </div>
+
+        <ul class="draft-list">
+          {otherDrafts.map(d => (
+            <li class="draft-item">
+              <div class="item-head">
+                <a href={`/drafts/${d.slug}`} class="item-title">{d.title}</a>
+                <span class="status-badge">DRAFT</span>
+              </div>
+              <p class="item-summary">{d.summary}</p>
+              <span class="item-filename">{d.filename}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <footer class="page-footer">
+        <p>Drafts are also visible in the repository at <code>drafts/</code>. Promotion to canonical content happens deliberately, with voice review.</p>
+        <p>Return to the <a href="/research-frontier">research frontier</a>, or browse <a href="/explore">every proposition</a>.</p>
+      </footer>
+    </main>
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+        --status-draft: #e6a545;
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.7;
+      }
+
+      .top-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .nav-link {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+
+      .nav-link:hover { color: var(--accent); }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+        flex-wrap: wrap;
+      }
+
+      .nav-version {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+
+      .nav-build {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      main {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 100px 2rem 6rem;
+      }
+
+      .page-header {
+        margin-bottom: 4rem;
+      }
+
+      .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        font-weight: 400;
+        margin-bottom: 0.75rem;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .note {
+        color: var(--text-muted);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+      }
+
+      .note a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .note a:hover {
+        text-decoration: underline;
+      }
+
+      .draft-block {
+        margin-bottom: 4rem;
+        padding-bottom: 2.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .draft-block:last-of-type {
+        border-bottom: none;
+      }
+
+      .block-header {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .block-marker {
+        font-family: var(--font-mono);
+        font-size: 1.5rem;
+        line-height: 1;
+        color: var(--text-muted);
+      }
+
+      .block-title {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .block-note {
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+        font-style: italic;
+        flex-basis: 100%;
+        padding-left: 2.25rem;
+      }
+
+      .draft-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.75rem;
+      }
+
+      .draft-item {
+        padding-left: 1.5rem;
+        border-left: 2px solid rgba(255,255,255,0.08);
+      }
+
+      .item-head {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.6rem;
+      }
+
+      .item-title {
+        font-family: var(--font-display);
+        font-size: 1.1875rem;
+        font-weight: 500;
+        color: var(--accent);
+        text-decoration: none;
+        line-height: 1.35;
+      }
+
+      .item-title:hover {
+        text-decoration: underline;
+      }
+
+      .status-badge {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 0.2rem 0.45rem;
+        border-radius: 3px;
+        color: var(--status-draft);
+        border: 1px solid rgba(230, 165, 69, 0.4);
+        background: rgba(230, 165, 69, 0.06);
+      }
+
+      .item-summary {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.65;
+        margin-bottom: 0.5rem;
+      }
+
+      .item-filename {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--text-muted);
+      }
+
+      .page-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        line-height: 1.7;
+      }
+
+      .page-footer p {
+        margin-bottom: 0.5rem;
+      }
+
+      .page-footer p:last-child {
+        margin-bottom: 0;
+      }
+
+      .page-footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .page-footer a:hover {
+        text-decoration: underline;
+      }
+
+      .page-footer code {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        background: rgba(255,255,255,0.06);
+        padding: 0.15em 0.4em;
+        border-radius: 3px;
+      }
+
+      @media (max-width: 600px) {
+        main {
+          padding: 80px 1.25rem 4rem;
+        }
+
+        .page-header h1 {
+          font-size: 1.75rem;
+        }
+
+        .block-title {
+          font-size: 1.25rem;
+        }
+
+        .block-note {
+          padding-left: 0;
+        }
+
+        .draft-item {
+          padding-left: 1rem;
+        }
+
+        .item-title {
+          font-size: 1.0625rem;
+        }
+      }
+    </style>
+  </body>
+</html>
