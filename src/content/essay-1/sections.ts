@@ -59,17 +59,20 @@ This is not ideology. It is accounting.`,
       'Modern economies treat energy savings (fossil fuels) as income',
       'Fossil fuels are a one-time inheritance, not a revenue stream',
       'This produces false signals of productivity and growth',
-      'Growth slows because savings decline, not because of policy failure',
+      'Declining EROI is one major factor in growth slowdown — not the only one',
     ],
-    content: `Modern industrial economies are built on a profound and largely unexamined accounting error: the treatment of **energy savings as income**.
+    content: `Modern industrial economies are built on a profound and largely unexamined accounting error: the treatment of **exergy savings as income**.
 
-Fossil fuels are not a revenue stream. They are a one-time inheritance—dense stores of energy accumulated over geological time and released over a few human generations. Treating this inheritance as ordinary income produces a false signal of productivity, abundance, and growth.
+Fossil fuels are not a revenue stream. They are a one-time inheritance—dense stores of available work accumulated over geological time and released over a few human generations. Treating this inheritance as ordinary income produces a false signal of productivity, abundance, and growth.
 
-The apparent success of industrial economics is inseparable from this drawdown. Productivity gains, GDP expansion, and rising material standards of living are amplified by spending energy savings while externalising the future costs of depletion, pollution, and system maintenance.
+The apparent success of industrial economics is inseparable from this drawdown. Productivity gains, GDP expansion, and rising material standards of living are amplified by spending exergy savings while externalising the future costs of depletion, pollution, and system maintenance.
 
-Once this distinction is made explicit, many puzzles dissolve. Growth slows not primarily because of policy failure, but because savings decline. Productivity appears to stagnate because easy energy has already been spent. Increasing effort yields diminishing returns because complexity maintenance rises as energy inheritance shrinks.
+Once this distinction is made explicit, many puzzles begin to clarify. Productivity appears to stagnate because easy exergy has already been spent. Increasing effort yields diminishing returns because complexity maintenance rises as the exergy inheritance shrinks. Declining energy-return-on-investment as the easiest fossil stocks deplete is a documented and load-bearing factor in the growth slowdown of advanced economies since the 1970s — though not the only factor; technological exhaustion, capital-allocation shifts, and demographic transitions are also in play. The claim is that EROI decline is *one major factor among several*, not the single cause.
 
-An economy that confuses savings with income will inevitably misprice risk, undervalue durability, and overproduce activities that narrow future option space.`,
+The decoupling literature deserves direct engagement. Some advanced economies have grown GDP while *territorial* material footprint has declined. Two distinctions matter. **Relative versus absolute** decoupling: most cited cases are relative — GDP grows faster than throughput, but both grow. **Territorial versus consumption-based** accounting: under territorial accounting, where goods are produced, some advanced economies show apparent absolute decoupling. Under consumption-based accounting, where goods are consumed, the decoupling mostly disappears — it turns out to be production offshoring, not actual reduction. The Hickel–Kallis meta-analysis (2019) and related work conclude that absolute decoupling of GDP from material throughput and CO₂ at the scale and rate required for 2 °C targets has no empirical precedent. This is consistent with the EROI story, not in tension with it.
+
+An economy that confuses savings with income will misprice risk, undervalue durability, and overproduce activities that narrow future option space.`,
+    revisedAt: '2026-04-29',
   },
   {
     id: 'throughput-proxy',
