@@ -5,6 +5,7 @@ export interface Section {
   id: string;
   content: string;
   keyPoints?: string[];  // For overview mode
+  revisedAt?: string;    // ISO date (YYYY-MM-DD) of most recent substantive rewrite
 }
 
 export const SECTIONS: Section[] = [
@@ -31,23 +32,26 @@ The claim is simple: when the underlying constraints change, the proxies used to
     id: 'physical-envelope',
     keyPoints: [
       'Every economy operates inside physical constraints that cannot be negotiated',
-      'Atoms are conserved, energy flows are bounded, entropy increases globally',
-      'An economy on energy income can persist; one depleting savings cannot',
-      'This is accounting, not ideology',
+      'Atoms are conserved; energy is conserved; what economic activity consumes is exergy — energy\'s capacity to do work',
+      'The binding constraints are not raw solar influx but sink capacity, specific materials, and biosphere integrity',
+      'An economy on continuous exergy income can persist; one depleting exergy savings cannot',
     ],
     content: `Every economy operates inside a physical envelope that is not subject to negotiation.
 
 Atoms are conserved.
-Energy flows are bounded.
-Entropy increases globally, even where local order is temporarily created.
+Energy is conserved; what economic activity actually consumes is **exergy** — the fraction of energy available to do work.
+Entropy increases globally. Local order persists for as long as living systems maintain it, which is to say: for billions of years, ongoing.
 
 These facts do not prescribe how humans must live, but they strictly limit how any system of value exchange can persist over time. Economic theories that ignore this envelope may function briefly, but they accumulate hidden fragility that eventually dominates outcomes.
 
+The binding constraint is not the raw thermodynamic ceiling. Earth receives solar exergy at a scale far above current civilisational use — roughly four orders of magnitude above. The constraints that actually bind operate elsewhere: in the rate at which atmospheric, oceanic, and biospheric **sinks** can absorb waste; in the rate at which specific materials can be extracted or regenerated; and in the integrity of the biosphere on which all stable configurations depend. The ceiling is far. The floor of what the biosphere can absorb is close.
+
 For most of human history, this envelope was invisible at the scale of daily life. Energy flows were small, populations limited, and the distinction between renewable income and finite savings was not sharply felt. Today, that distinction defines the economic landscape.
 
-An economy that lives on continuous energy income can, in principle, persist indefinitely. An economy that depends on drawing down finite energy savings cannot.
+An economy that lives on continuous exergy income can, in principle, persist indefinitely. An economy that depends on drawing down finite exergy savings cannot.
 
 This is not ideology. It is accounting.`,
+    revisedAt: '2026-04-29',
   },
   {
     id: 'accounting-error',

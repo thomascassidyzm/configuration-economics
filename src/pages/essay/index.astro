@@ -124,6 +124,9 @@ function parseMarkdown(text: string): string {
                 <span class="section-number">{meta.number}</span>
                 <h2>{meta.title}</h2>
                 <span class={`epistemic-badge ${meta.epistemicStatus}`}>{meta.epistemicStatus}</span>
+                {content?.revisedAt && (
+                  <span class="revised-badge" title={`Revised ${content.revisedAt} — this section has been rewritten since first publication.`}>revised {content.revisedAt}</span>
+                )}
               </div>
               <div class="section-body" set:html={parseMarkdown(content?.content || '')} />
             </section>
@@ -471,6 +474,18 @@ function parseMarkdown(text: string): string {
       .epistemic-badge.derived { color: var(--derived); border: 1px solid var(--derived); }
       .epistemic-badge.contested { color: var(--contested); border: 1px solid var(--contested); }
       .epistemic-badge.open { color: var(--open); border: 1px solid var(--open); }
+
+      .revised-badge {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        letter-spacing: 0.04em;
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        color: var(--text-muted, rgba(255,255,255,0.4));
+        white-space: nowrap;
+        cursor: help;
+      }
 
       .section-body {
         font-size: 1.0625rem;
