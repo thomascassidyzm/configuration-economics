@@ -11,11 +11,11 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   'physical-envelope': ['energy-income-inheritance', 'exergy-not-energy', 'binding-constraint'],
   'accounting-error': ['energy-income-inheritance', 'throughput-cost', 'exergy-not-energy', 'binding-constraint'],
   'throughput-proxy': ['throughput-cost', 'displaced-costs', 'money-as-signal', 'exergy-not-energy'],
-  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability', 'option-space-as-chess-moves'],
+  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space'],
   'configuration-not-information': ['configuration-not-information', 'option-space-measurability'],
   'work-wrong-question': ['work-wrong-question', 'participation-limits'],
   'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain'],
-  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves'],
+  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space'],
   'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves'],
   'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry']
 };

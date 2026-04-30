@@ -719,6 +719,44 @@ Under this framing, the economy does not grow or shrink as a whole. It reorients
   // observer-relative / chess-moves session 2026-04-29) ---
 
   {
+    id: 'observer-relative-option-space',
+    title: 'Option Space Is Observer-Relative',
+    epistemicStatus: 'derived',
+    surface: `If value lies in configurations that expand future option space, a question follows immediately: option space *for whom*?
+
+The same physical state contains very different reachable sets depending on which observer asks. A configuration that opens many futures for a corporation may foreclose them for a watershed; a configuration that secures a phylum's continuation may eliminate a species within it.
+
+Standard responses are unsatisfactory. Aggregating across all conceivable observers requires a weighting rule that simply pushes the disagreement up one level. Choosing humanity as the privileged observer is parochial and unstable across timescales.
+
+A different move is available, and physics has already made it. Stephen Wolfram's *Observers Like Us* argues that the laws of physics we observe aren't intrinsic to the underlying structure of reality — they're the slice that observers of our class (computationally bounded, persistent, sequentialising) access. Different observer-classes carve up the same underlying structure differently. The principled move is to make the observer-class explicit, not to deny it.
+
+The parallel for value accounting: option space isn't intrinsic to configuration space. It's the slice that **life-persisting observers** access — the set of futures in which living entities continue to exist and make distinctions. Reachable configurations are tagged with the observer-class that can reach them.
+
+Formally: R_living(C, B, T) — configurations reachable from C, given an exergy budget B and horizon T, in which living entities continue to exist and make distinctions. Observer-relative by design, not by concession.
+
+This gives the "for whom" question a structural answer. Not utilitarian aggregation across individuals — most living individuals will be replaced over any meaningful horizon. The criterion is at the **category** level: preserves the capacity for life to exist as a category, with current functional diversity, over the relevant horizon.`,
+    logic: {
+      claim: 'Option space is not intrinsic to configuration space; it is observer-relative, and the structurally principled observer-class for value accounting is the class of life-persisting observers — those that maintain themselves and make distinctions.',
+      premises: [
+        'Different observer-classes have different reachable sets of the same configuration space (Wolfram, Observers Like Us).',
+        'Aggregating reachable sets across all observers requires a weighting rule that displaces rather than resolves the question of "for whom."',
+        'Living systems share the structural property of maintaining themselves and persisting — a non-arbitrary basis for an observer-class.',
+        'Aubin\'s viability theory formalises admissible trajectories under non-empty constraint sets; the life-persisting observer-class corresponds to the constraint that some major class of life remains viable.'
+      ],
+      conclusion: 'The reachable set R_living(C, B, T) — configurations reachable from C under exergy budget B over horizon T in which life persists — is the operative object of value-accounting under physical constraint. The "for whom" question gets a structural answer at category level.',
+      predictive: 'Frameworks that treat option space as observer-neutral will produce incoherent verdicts on cases where observer-classes diverge (predator-prey dynamics, structural-vs-individual trade-offs, intergenerational decisions). The observer-relative formulation produces coherent verdicts in the same cases by being explicit about the class.'
+    },
+    layers: {
+      coreClaim: 'Option space depends on whose existence the question is asked from. The structurally honest answer is to make the observer-class explicit — and the principled choice is the class of beings that maintain themselves and persist.',
+      formalDefinition: 'R_living(C, B, T) = the set of configurations reachable from C, given an exergy budget B over horizon T, in which living entities continue to exist and make distinctions. Observer-relativity follows Wolfram\'s Observers Like Us framing — physics already concedes that observed laws are observer-class-relative; this work transports the move to value accounting. Aubin\'s viability theory provides the mathematical anchor: admissible trajectories under non-empty constraint sets, where the constraint is that some major class of life remains viable.',
+      implications: 'The "for whom" question receives a structural answer rather than a utilitarian aggregation. The criterion operates at category level — preserving the capacity for life to exist *as a category* with current functional diversity, not aggregating welfare across individuals. Predator-prey dynamics, structural-vs-individual trade-offs, and intergenerational decisions become coherent: a wolf eating a deer expands wolf R_living and contracts deer R_living to zero, but at category level (Carnivora, Cervidae both persist) the dynamics are option-space-preserving for the system. The criterion is structural, not summed.',
+      openQuestions: 'Operational definition of "living entity" — phylum-level? Functional ecological role? Capacity for distinction-making (which folds back into Distinction Physics)? Open. Whether CE commits to Wolfram\'s full formalism or treats Observers Like Us as guiding analogy is a strategic call: probably analogical for v0.2, formal commitment can come later. Aggregation across simultaneous moves by many agents (the biosphere has many "players"; chess has one) — the structural-criterion-at-category-level handles the typical cases but needs further articulation for edge cases.'
+    },
+    revisedAt: '2026-04-30',
+    linksTo: ['value-option-space', 'option-space-as-chess-moves', 'option-space-measurability', 'viable-objective', 'configuration-not-information']
+  },
+
+  {
     id: 'exergy-not-energy',
     title: 'What Is Actually Spent Is Exergy',
     epistemicStatus: 'established',
