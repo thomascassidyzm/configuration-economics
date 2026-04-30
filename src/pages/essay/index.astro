@@ -45,7 +45,7 @@ function parseMarkdown(text: string): string {
     <nav class="top-nav">
       <a href="/" class="nav-home">Configuration Economics</a>
       <div class="nav-meta">
-        <span class="version">{ESSAY_META.version}</span>
+        <a href="/changelog" class="version-link" title="View changelog">{ESSAY_META.version}</a>
         <span class="build">build {ESSAY_META.build}</span>
         <span class="status">{ESSAY_META.status}</span>
       </div>
@@ -229,6 +229,17 @@ function parseMarkdown(text: string): string {
 
       .version {
         color: var(--accent);
+      }
+
+      .version-link {
+        color: var(--accent);
+        text-decoration: none;
+        border-bottom: 1px dotted rgba(74, 158, 255, 0.3);
+        padding-bottom: 1px;
+      }
+
+      .version-link:hover {
+        border-bottom-style: solid;
       }
 
       .build {

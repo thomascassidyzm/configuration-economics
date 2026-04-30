@@ -1,0 +1,346 @@
+---
+// Changelog: version history of the work itself
+// Living-epistemic-work provenance — what changed, when, and why
+
+import { VERSION_HISTORY } from '../content/version-history';
+import { VERSION, BUILD } from '../lib/version';
+
+function renderInline(text: string): string {
+  // Minimal markdown: backticks → <code>. Escape HTML first.
+  const escaped = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return escaped.replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Changelog — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/essay" class="nav-link">Essay</a>
+        <a href="/explore" class="nav-link">Propositions</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>Changelog</h1>
+        <p class="subtitle">A living epistemic work changes over time. This page lists what changed in each version.</p>
+        <p class="note">Code-level history lives in git. This page is the human-facing summary at the version-grain — substantive moves rather than every commit.</p>
+        <p class="note">The current version is <span class="inline-version">{VERSION}</span>. Earlier versions are not preserved as separate URLs; they live in the git history of <a class="external-link" href="https://github.com/thomascassidyzm/configuration-economics" target="_blank" rel="noopener">the repository</a>.</p>
+      </header>
+
+      <ol class="versions">
+        {VERSION_HISTORY.map((entry) => {
+          const isCurrent = entry.version === VERSION;
+          return (
+            <li class="version" data-current={isCurrent}>
+              <header class="version-header">
+                <div class="version-tags">
+                  <span class="version-number">{entry.version}</span>
+                  {isCurrent && <span class="current-badge">current</span>}
+                  <time class="version-date" datetime={entry.date}>{entry.date}</time>
+                </div>
+                <h2>{entry.title}</h2>
+              </header>
+
+              <p class="version-summary">{entry.summary}</p>
+
+              {entry.changes.added && entry.changes.added.length > 0 && (
+                <section class="change-group">
+                  <h3>Added</h3>
+                  <ul>
+                    {entry.changes.added.map(item => <li set:html={renderInline(item)} />)}
+                  </ul>
+                </section>
+              )}
+
+              {entry.changes.revised && entry.changes.revised.length > 0 && (
+                <section class="change-group">
+                  <h3>Revised</h3>
+                  <ul>
+                    {entry.changes.revised.map(item => <li set:html={renderInline(item)} />)}
+                  </ul>
+                </section>
+              )}
+
+              {entry.changes.structural && entry.changes.structural.length > 0 && (
+                <section class="change-group">
+                  <h3>Structural</h3>
+                  <ul>
+                    {entry.changes.structural.map(item => <li set:html={renderInline(item)} />)}
+                  </ul>
+                </section>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </main>
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.7;
+      }
+
+      .top-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .nav-link {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+
+      .nav-link:hover { color: var(--accent); }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+      }
+
+      .nav-version {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+
+      .nav-build {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 100px 2rem 6rem;
+      }
+
+      .page-header {
+        margin-bottom: 4rem;
+      }
+
+      .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        font-weight: 400;
+        margin-bottom: 0.75rem;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .note {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .inline-version {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        color: var(--accent);
+      }
+
+      .external-link {
+        color: var(--accent);
+        text-decoration: none;
+        border-bottom: 1px dotted rgba(74, 158, 255, 0.4);
+      }
+
+      .external-link:hover { border-bottom-style: solid; }
+
+      .versions {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 4.5rem;
+      }
+
+      .version {
+        position: relative;
+      }
+
+      .version[data-current="true"]::before {
+        content: '';
+        position: absolute;
+        left: -1.5rem;
+        top: 0.4rem;
+        width: 2px;
+        height: 1.5rem;
+        background: var(--accent);
+        border-radius: 1px;
+      }
+
+      .version-header {
+        margin-bottom: 1.25rem;
+      }
+
+      .version-tags {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.5rem;
+      }
+
+      .version-number {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        color: var(--accent);
+        letter-spacing: 0.02em;
+      }
+
+      .current-badge {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        background: rgba(74, 158, 255, 0.1);
+        color: var(--accent);
+        border: 1px solid rgba(74, 158, 255, 0.3);
+      }
+
+      .version-date {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .version h2 {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        line-height: 1.3;
+      }
+
+      .version-summary {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.75;
+      }
+
+      .change-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .change-group:last-child { margin-bottom: 0; }
+
+      .change-group h3 {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 400;
+        margin-bottom: 0.625rem;
+      }
+
+      .change-group ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .change-group li {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.65;
+        padding-left: 1.25rem;
+        position: relative;
+        margin-bottom: 0.625rem;
+      }
+
+      .change-group li:last-child { margin-bottom: 0; }
+
+      .change-group li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.65rem;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--text-muted);
+        opacity: 0.6;
+      }
+
+      .change-group li :global(code) {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        color: var(--accent);
+        background: rgba(74, 158, 255, 0.06);
+        padding: 0.05rem 0.35rem;
+        border-radius: 2px;
+      }
+
+      @media (max-width: 600px) {
+        main { padding: 80px 1.25rem 4rem; }
+        .page-header h1 { font-size: 1.75rem; }
+        .version h2 { font-size: 1.25rem; }
+        .version[data-current="true"]::before { left: -0.875rem; }
+      }
+    </style>
+  </body>
+</html>

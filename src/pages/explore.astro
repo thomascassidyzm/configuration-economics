@@ -38,7 +38,7 @@ const counts = {
       <a href="/" class="nav-home">Configuration Economics</a>
       <div class="nav-right">
         <a href="/essay" class="nav-link">Essay</a>
-        <span class="nav-version">{VERSION}</span>
+        <a href="/changelog" class="nav-version" title="View changelog">{VERSION}</a>
         <span class="nav-build">build {BUILD}</span>
       </div>
     </nav>
@@ -196,6 +196,13 @@ const counts = {
         font-family: var(--font-mono);
         font-size: 0.75rem;
         color: var(--accent);
+        text-decoration: none;
+        border-bottom: 1px dotted rgba(74, 158, 255, 0.3);
+        padding-bottom: 1px;
+      }
+
+      .nav-version:hover {
+        border-bottom-style: solid;
       }
 
       .nav-build {
