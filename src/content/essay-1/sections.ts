@@ -78,25 +78,31 @@ An economy that confuses savings with income will misprice risk, undervalue dura
     id: 'throughput-proxy',
     keyPoints: [
       'In apparent abundance, throughput became an acceptable proxy for value',
-      'More energy, labour, money exchanged implied more prosperity',
-      'Energy surplus masked the flaws in these correlations',
+      'More exergy, labour, money exchanged implied more prosperity',
+      'Exergy surplus masked the flaws in these correlations',
       'Throughput is a cost, not a measure of success',
+      'In a services-heavy economy, configuration-centred analysis matters more, not less',
     ],
     content: `In a world of apparent abundance, **throughput** became an acceptable proxy for value.
 
-More energy consumed implied more work done.
+More exergy consumed implied more work done.
 More labour hours implied more contribution.
 More money exchanged implied more prosperity.
 
-For a time, these correlations held well enough to coordinate large societies. They were never perfect, but the underlying energy surplus masked their flaws.
+For a time, these correlations held well enough to coordinate large societies. They were never perfect, but the underlying exergy surplus masked their flaws.
 
 That masking is now gone.
 
-Throughput is a cost, not a measure of success. It represents energy dissipated and materials transformed—necessary inputs, but not intrinsic goods. When energy savings are plentiful, wasteful configurations can persist unnoticed. When savings decline, the same configurations become destabilising.
+Throughput is a cost, not a measure of success. It represents exergy dissipated and materials transformed—necessary inputs, but not intrinsic goods. When exergy savings are plentiful, wasteful configurations can persist unnoticed. When savings decline, the same configurations become destabilising.
+
+A reasonable objection arises here. Roughly 80% of advanced-economy GDP now sits in services—healthcare, education, finance, retail, software, consulting—sectors that look throughput-light at the point of measurement. If the economy has already shifted toward configuration rather than extraction, has the throughput problem not already begun to resolve itself?
+
+Three considerations matter. First, services are not as throughput-light as their direct accounting suggests. Healthcare depends on pharmaceuticals, imaging equipment, hospital construction, transport. Education depends on buildings, heating, lighting, transport, technology. Finance depends on enormous data centres. Retail depends on logistics infrastructure. Under **consumption-based accounting**, where embodied throughput is attributed to the consuming sector, the services economy carries far more physical weight than its GDP share suggests. Second, even sectors with genuinely low direct throughput remain embedded in throughput-dependent supply chains—the software engineer's laptop, heated home, and food are produced with substantial fossil inputs. Third, and most important: *within* a services economy, configuration matters more, not less. A services sector is by definition a configuration of human time, skill, institutions, and infrastructure. A well-configured healthcare system delivers more option space per unit of physical input than a badly-configured one. The shift toward services increases the weight of configuration-centred analysis; it does not decrease it.
 
 At the same time, the most valuable human activities increasingly involve **configuration rather than throughput**: learning rather than extraction, care rather than replacement, coordination rather than production, reuse rather than disposal, meaning rather than volume.
 
 The failure is not moral. It is categorical. Throughput-based proxies are being asked to do work they were never designed to perform.`,
+    revisedAt: '2026-04-30',
   },
   {
     id: 'configuration-value',
