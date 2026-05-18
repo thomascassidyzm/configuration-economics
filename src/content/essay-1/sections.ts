@@ -150,17 +150,18 @@ There is no guarantee that configuration trends toward goodness. The distinction
       'Many valuable activities do not map to wage labour',
       'The question becomes how to ensure participation, not how to ensure work',
     ],
-    content: `For most of human history, work served two functions simultaneously: it produced necessary goods and services, and it acted as the gate through which individuals accessed resources.
+    content: `For most of human history, work served two functions simultaneously: it allocated access to life-supporting configurations, and it produced those configurations in the first place.
 
-As long as these functions coincided, tying survival to labour appeared natural and efficient.
+As long as these functions coincided, tying survival to labour appeared natural and efficient. The deeper distinction — that allocation was the load-bearing function, and production was the form it took — could be left unmade without practical loss.
 
 That coincidence is breaking.
 
 Automation, computation, and accumulated configuration increasingly allow societies to meet material needs with less human labour. At the same time, many of the most valuable human activities—raising children, caring for others, learning, maintaining social coherence—do not map cleanly onto wage labour or market exchange.
 
-When access to resources remains conditional on "having a job" under these conditions, societies are forced to invent work that satisfies accounting proxies rather than real needs. The result is not productivity but performative activity: effort expended to justify entitlement rather than to expand option space.
+When access to resources remains conditional on "having a job" under these conditions, societies are forced to invent work that satisfies accounting proxies rather than real needs. The result is not productivity but performative activity: effort expended to justify entitlement rather than to expand option space — an allocator continuing to operate after the thing it was allocating has changed shape.
 
 The question, therefore, is no longer how to ensure everyone works, but how to ensure everyone remains a participant in the configuration process.`,
+    revisedAt: '2026-05-18',
   },
   {
     id: 'universal-participation',
@@ -187,18 +188,22 @@ Participation is primary. Labour is instrumental.`,
     keyPoints: [
       'Growth as throughput collides with physical reality',
       'Growth as configuration quality changes the picture',
-      'Objective: maximise durable flourishing per unit of constrained throughput',
+      'Objective: a no-regret criterion over moves — keep open the configurations humans and the wider community of life depend on',
+      'Structural reason: destruction of option space is fast and local; expansion is slow and systemic',
       'Resilience, learning, care, time affluence over speed, accumulation, consumption',
     ],
     content: `When growth is measured primarily as increased throughput, it eventually collides with physical reality. When it is measured as increased configuration quality, the picture changes.
 
-A viable economic objective under constraint is the maximisation of **durable human flourishing per unit of constrained throughput**.
+A viable economic objective under constraint is a no-regret one: **prefer moves that keep open the configurations humans and the wider community of life depend on, across the horizons each depends on; reject moves that asymptotically empty that set**. It is a criterion over moves, not a scalar to maximise — closer to *first do no harm* than to *maximise this number*.
 
-This reframes success away from volume and toward qualities such as resilience rather than speed, learning rather than accumulation, care rather than replacement, time affluence rather than consumption, and option preservation rather than short-term yield.
+It takes this form for a structural reason. The destruction of option space is typically fast and local; the expansion of option space is typically slow and systemic. Under that asymmetry, a fast-local irreversible loss cannot be reliably offset by a slow-systemic uncertain gain, and expected-value reasoning systematically misprices what is at stake. No-regret preservation is not conservatism by temperament; it is the rule that prices the asymmetry correctly.
+
+The reframe shifts success away from volume and toward qualities such as resilience rather than speed, learning rather than accumulation, care rather than replacement, time affluence rather than consumption, and option preservation rather than short-term yield.
 
 Under this framing, many familiar trade-offs resolve themselves. Activities that burn energy savings for transient benefit are revealed as expensive. Activities that increase coherence, capability, and future possibility become central, even when they produce little measurable output.
 
 The economy does not grow or shrink in any absolute sense. It **reorients**.`,
+    revisedAt: '2026-05-18',
   },
   {
     id: 'what-replaces',

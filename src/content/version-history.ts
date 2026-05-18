@@ -25,6 +25,19 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.3.1',
+    date: '2026-05-18',
+    title: 'Essay §5 and §7 integrated with the v0.7 propositions',
+    summary: `Integration pass on the essay. §5 (work-wrong-question) prose now gestures toward labour-as-allocator's structural distinction — allocation as load-bearing, production as its visible form — rather than re-performing the move implicitly. §7 (viable-objective) prose carries a real drift fix: the section was still shipping the pre-v0.2.0 "maximisation of durable human flourishing" framing even after P22 was reformulated to no-regret in v0.2.0. The Alexander system-prompt summary was updated then; the essay's own prose was missed. §7 now ships the no-regret form and names asymmetry-of-option-space-change as the structural reason for it.`,
+    changes: {
+      revised: [
+        'Essay §5 work-wrong-question — opening flipped to put allocation before production; one sentence added naming the allocator-vs-source distinction; "performative activity" sentence layered with the proposition\'s framing ("an allocator continuing to operate after the thing it was allocating has changed shape"). revisedAt: 2026-05-18.',
+        'Essay §7 viable-objective — drift fix replacing "maximisation of durable human flourishing per unit of constrained throughput" with the no-regret form from P22\'s v0.2.0 reframe; new paragraph names asymmetry-of-option-space-change as the structural reason no-regret is operationally tighter than expected-value. Humans foregrounded alongside the wider community of life. keyPoints array updated to match. revisedAt: 2026-05-18.',
+        'Alexander system-prompt §5 summary tightened to mention labour-as-allocator. §7 summary was already current from v0.2.0.',
+      ],
+    },
+  },
+  {
     version: 'v0.3.0',
     date: '2026-05-18',
     title: 'Labour-as-allocator, the asymmetry, and the rule in operation',

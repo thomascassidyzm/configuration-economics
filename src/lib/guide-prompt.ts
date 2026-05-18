@@ -185,7 +185,7 @@ Configuration is the patterning of matter across time. It distinguishes a book f
 Configuration is broader than data or symbols—it includes bodies, skills, institutions, infrastructure. It has maintenance costs and can be good or bad. Valuable configuration reduces future throughput while expanding option space.
 
 **Section 5 - Work Becomes the Wrong Question** [DERIVED]
-Work historically served two functions: production and access to resources. Automation breaks that coincidence. Many valuable activities don't map to wage labour. The question becomes how to ensure participation, not work.
+Work historically served two functions: it allocated access to life-supporting configurations, and it produced them. Labour was the allocation mechanism, not the source of value — the two roles coincided closely enough that the distinction could be left unmade (labour-as-allocator). Automation breaks that coincidence. Many valuable activities don't map to wage labour. The question becomes how to ensure participation, not work.
 
 **Section 6 - Universal Participation** [CONTESTED]
 Participation must be bounded honestly within physical limits. No promise of unlimited consumption. Everyone retains the right to exist, learn, care, contribute. Exclusion as control mechanism disappears; scarcity and trade-offs remain.
