@@ -6,6 +6,11 @@ The drafts/canon wall has been collapsed in editorial practice — substantive c
 
 ## Status (post v0.2.0 release, 2026-04-30)
 
+### Landed in v0.4.0 (2026-05-18)
+
+- ✅ `new-prop-configuration-generates-configuration.md` — `configuration-generates-configuration` now canonical (v0.7 third addition, status `contested`). The expansion-side counterpart to asymmetry. Walker/Cronin load-bearing predecessor, Kauffman conceptual ancestor, Fuller operational case.
+- ✅ `lineage-and-positioning.md` — shipped as `/lineage`. Seven predecessor clusters (cluster 2 sub-split into 2a/2b). Linked from index, /overview, /research-frontier footers.
+
 ### Landed in v0.3.0 (2026-05-18)
 
 - ✅ `new-prop-labour-as-allocator.md` — `labour-as-allocator` now canonical (v0.7 addition in `propositions.ts`, status `contested`). Provides the historical reframing that makes `work-wrong-question` land harder.

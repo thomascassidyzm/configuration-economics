@@ -25,6 +25,28 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.4.0',
+    date: '2026-05-18',
+    title: 'Generative-side proposition + /lineage page',
+    summary: `The expansion-side counterpart to v0.3.0's asymmetry lands as a third v0.7 proposition: configuration-generates-configuration. With it, CE has both faces of the option-space dynamic — fast-local destruction (asymmetry) and slow-systemic compounding expansion (generative). The /lineage page ships alongside, separating the credibility apparatus from the calm essay. Seven predecessor clusters with explicit deltas, and an honest update to how CE relates to Cronin/Walker's Assembly Theory now that the 2023–24 reformulation has closed part of the gap CE had been citing.`,
+    changes: {
+      added: [
+        '`configuration-generates-configuration` [contested] — the expansion-side proposition. Each configured arrangement makes further configurations reachable that were not reachable before; the rate at which new configurations become reachable grows with accumulated configuration. The generative counterpart to asymmetry. Stands on the weaker defensible claim and carries Walker/Cronin\'s stronger time-emergent-from-assembly view without depending on it.',
+        '`/lineage` page — seven predecessor clusters (Physical grounding; Configuration as primitive [sub-split into 2a Configuration space dynamics + 2b Capability accumulation]; Complexity, resilience, and breakdown; Labour, allocation, and what economies actually do; Decision under deep uncertainty; Scoping and growth limits; Foundational meta-theory). Each predecessor paragraph closes with CE\'s specific delta. Includes a "What CE adds" tight list and a note on novelty. Linked from the index, overview, and research-frontier footers.',
+      ],
+      revised: [
+        'Predecessor architecture for CE: Kauffman, Fuller, Walker/Cronin (assembly theory and its 2023–24 reformulation) folded in. James C. Scott folded into the labour-and-allocation cluster on the legibility theme. Taleb dropped — intellectual convergence partial; brand-association cost exceeds lineage benefit for a public-facing page.',
+        'CE\'s relationship with Cronin/Walker updated honestly: the 2023–24 work closes part of the gap CE had been citing about Assembly Theory being backward-only. The framings now overlap more than they diverge; the relationship is collaborative rather than corrective.',
+        'Bucket counts: 1 established / 19 derived / 9 contested / 1 open. 30 propositions total.',
+        'SECTION_PROPOSITIONS updated to surface configuration-generates-configuration in essay sections §4 (configuration-value), §4.5 (configuration-not-information), and §7 (viable-objective).',
+      ],
+      structural: [
+        'Backlinks added from value-option-space, option-space-measurability, option-space-as-chess-moves, and asymmetry-of-option-space-change to configuration-generates-configuration.',
+        '/lineage linked from index.astro, /overview footer, /research-frontier footer.',
+      ],
+    },
+  },
+  {
     version: 'v0.3.2',
     date: '2026-05-18',
     title: 'Cross-links and navigation closed around the v0.7 push',

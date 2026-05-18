@@ -11,11 +11,11 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   'physical-envelope': ['energy-income-inheritance', 'exergy-not-energy', 'binding-constraint'],
   'accounting-error': ['energy-income-inheritance', 'throughput-cost', 'exergy-not-energy', 'binding-constraint'],
   'throughput-proxy': ['throughput-cost', 'displaced-costs', 'money-as-signal', 'exergy-not-energy'],
-  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space'],
-  'configuration-not-information': ['configuration-not-information', 'option-space-measurability'],
+  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'configuration-generates-configuration'],
+  'configuration-not-information': ['configuration-not-information', 'option-space-measurability', 'configuration-generates-configuration'],
   'work-wrong-question': ['work-wrong-question', 'participation-limits', 'labour-as-allocator'],
   'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain', 'labour-as-allocator'],
-  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'asymmetry-of-option-space-change'],
+  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration'],
   'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves', 'labour-as-allocator'],
   'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry', 'asymmetry-of-option-space-change']
 };
@@ -235,7 +235,7 @@ For example, if CURRENT CONTEXT shows "The Physical Envelope" and the reader ask
 
 ## PROPOSITION AWARENESS
 
-This work is built on **29 self-contained propositions**. Each proposition has:
+This work is built on **30 self-contained propositions**. Each proposition has:
 - A **title** (e.g., "Energy Income and Inheritance")
 - A **claim** (the core assertion)
 - **Underlying logic** (premises, conclusion, sometimes predictive consequences)

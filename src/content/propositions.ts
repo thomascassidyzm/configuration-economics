@@ -133,7 +133,7 @@ If value exists anywhere beyond immediate preference, it appears here.`,
       implications: 'This distinguishes value from price, preference, labour, or throughput. Short-term gains can be value-negative if they reduce future configurability.',
       openQuestions: 'How do we measure option space? Over what time horizons? How do we handle trade-offs between different living systems? See option-space-measurability.'
     },
-    linksTo: ['throughput-cost', 'work-wrong-question', 'participation-limits']
+    linksTo: ['throughput-cost', 'work-wrong-question', 'participation-limits', 'configuration-generates-configuration']
   },
 
   {
@@ -678,7 +678,7 @@ What remains open is the global state measure. Until it lands, "option space" at
       openQuestions: 'Candidate global measures (reachable configurations under an exergy budget, Kauffman\'s adjacent possible, Assembly-weighted reachable sets) exist. None has been shown to be economically operational at state level. This — the global state measure — is the central remaining open problem. The move-level measure is no longer open.'
     },
     revisedAt: '2026-05-10',
-    linksTo: ['value-option-space', 'viable-objective', 'configuration-not-information', 'option-space-as-chess-moves']
+    linksTo: ['value-option-space', 'viable-objective', 'configuration-not-information', 'option-space-as-chess-moves', 'configuration-generates-configuration']
   },
 
   {
@@ -850,12 +850,13 @@ This is not new. Dave Snowden has articulated next best move as the central prac
       openQuestions: 'Aggregation across simultaneous moves by many agents (chess has one player; the biosphere has many). The operational definition of "major class of life" — phylum-level, functional ecological role, capacity for distinction-making? Selection of the relevant horizon for any specific decision (default: the longest horizon any major class depends on, but this is contestable). When does a move eliminate a class\'s reachable set vs. merely narrow it — the criterion as currently stated is binary; reality is graded.'
     },
     revisedAt: '2026-04-29',
-    linksTo: ['value-option-space', 'option-space-measurability', 'viable-objective', 'transition-fragility', 'displaced-costs', 'asymmetry-of-option-space-change']
+    linksTo: ['value-option-space', 'option-space-measurability', 'viable-objective', 'transition-fragility', 'displaced-costs', 'asymmetry-of-option-space-change', 'configuration-generates-configuration']
   },
 
   // --- v0.7 additions (May 2026, from session 2026-05-18) ---
   // labour-as-allocator: the historical reframing that makes work-wrong-question land harder.
   // asymmetry-of-option-space-change: the structural justification for P22's no-regret form.
+  // configuration-generates-configuration: the expansion-side companion to asymmetry.
 
   {
     id: 'labour-as-allocator',
@@ -921,7 +922,41 @@ Where this asymmetry holds, expected-value reasoning misprices irreversible loss
       openQuestions: 'The asymmetry is not categorical. Some expansions are fast (industrial revolution, internet adoption, mRNA platform deployment, post-glacial recolonisation under favourable conditions). Some destructions are slow (desertification, salinisation, slow institutional drift). Whether τ_build / τ_break ≫ 1 is general enough to justify the no-regret rule across all viable-objective-relevant domains, or whether it must be argued per case, remains open. The cases where expansion is fast tend to be cases where the substrate (a body of prior knowledge, a connected population, a permissive substrate condition) was already in place — so the apparent fast expansion is the final assembly step of a long build-up, not the build-up itself. This is a candidate resolution but it needs empirical work.'
     },
     revisedAt: '2026-05-18',
-    linksTo: ['value-option-space', 'time-asymmetry', 'prevention-over-repair', 'transition-fragility', 'viable-objective', 'option-space-as-chess-moves']
+    linksTo: ['value-option-space', 'time-asymmetry', 'prevention-over-repair', 'transition-fragility', 'viable-objective', 'option-space-as-chess-moves', 'configuration-generates-configuration']
+  },
+
+  {
+    id: 'configuration-generates-configuration',
+    title: 'Configuration Generates Configuration',
+    epistemicStatus: 'contested',
+    surface: `Each configured arrangement makes further configurations reachable that were not reachable before.
+
+An enzyme makes a reaction accessible that chemistry alone did not provide. A notation makes a proof accessible that the same idea, unwritten, did not. A road makes a settlement accessible that geography alone did not. A standard makes an interoperation accessible that two compatible systems, unstandardised, did not.
+
+Once enough configuration has accumulated, the rate at which new configurations become reachable grows with what is already there. This is not a moral observation. It is a structural one — the same mechanism that makes destruction fast and local, run in reverse, makes expansion slow but compounding. Each addition opens a neighbourhood of further additions that the prior state did not contain.
+
+The compounding is not unlimited and it is not always benign. Configurations that expand option space for one observer can contract it for another. Substrates that took long build-up can be removed faster than they accrued. The asymmetry of rates between expansion and destruction is what makes the slow generative process structurally vulnerable to the fast destructive one.
+
+Where this generativity holds, value is not stored in configurations as a stock; it is produced by configurations as a flow into the adjacent possible.`,
+    logic: {
+      claim: 'Each configured arrangement enables further configurations that were not reachable from the prior state. The rate at which new configurations become reachable grows with accumulated configuration. This is the generative counterpart to the asymmetry of option-space change: destruction is fast and local; expansion is slow, conditional on substrate, and compounding.',
+      premises: [
+        'Configurations are not isolated points in configuration space; each occupies a position from which certain further configurations are reachable and others are not (Kauffman, adjacent possible).',
+        'The set of configurations reachable from a given configuration is larger than the set reachable from a less-configured prior state, for the configurations that constitute relevant substrate (tools, institutions, knowledge, biological complexity, infrastructural and notational scaffolds).',
+        'The cost of assembling new configurations falls as accumulated configuration grows, because new configurations can recruit existing ones as components rather than re-deriving them (Fuller, ephemeralisation; Arthur, combinatorial technology).',
+        'The asymmetry-of-option-space-change proposition holds in reverse: build-up is gradient-following, integrates many small adjustments across many parts of a system, and requires continuous exergy input over its build-time. Where the substrate persists, the build-up compounds.'
+      ],
+      conclusion: 'Option-space expansion is not a property a configuration can incidentally possess; it is the structural consequence of configurations being able to recruit other configurations. The runaway character of expansion — apparent in biological evolution, technological accumulation, language, and mathematics — is the same mechanism observed at scale. It is slow at any single step, compounding across steps, and conditional on the substrate not being removed faster than it accrues.',
+      predictive: 'Domains where the substrate of accumulated configuration is preserved will show compounding expansion of reachable configurations on long timescales (biological diversification under stable conditions, technological capability under maintained scientific and industrial substrate, mathematical and notational depth under preserved transmission). Domains where the substrate is removed — by collapse, extinction, censorship, infrastructural loss — will show that the apparent generative process halts and does not resume on the timescale of the loss. The runaway is conditional, not automatic.'
+    },
+    layers: {
+      coreClaim: 'Each configured arrangement makes new configurations reachable that were not reachable before. The more configuration accumulates, the more new configurations become reachable per step. This is how option space actually expands.',
+      formalDefinition: 'For a configuration C with accumulated structure S(C), the reachable set R_living(C, B, T) under a fixed exergy budget B and horizon T strictly contains R_living(C\', B, T) for any C\' with S(C\') ⊂ S(C), where the configurations in S(C) function as substrate for further assembly. The marginal cost of reaching a new configuration C\'\' from C falls as S(C) grows, because C\'\' can recruit elements of S(C) as components rather than re-deriving them from the unconfigured state. The proposition is the structural counterpart to asymmetry-of-option-space-change: τ_expand at any single step remains long relative to τ_break, but the number of steps available per unit time grows with S(C), so cumulative expansion compounds where the substrate is preserved.',
+      implications: 'Value as defined in value-option-space stops being a static property of configurations and becomes a function of the generative process they participate in. Configurations that preserve and extend substrate are value-positive not only by what they themselves enable but by the further configurations they make reachable. Configurations that consume substrate without replacing it are value-negative on the same axis. The "runaway" of capability that Fuller named ephemeralisation, that Arthur and Beinhocker formalise as combinatorial recursion, that biology exhibits as evolutionary diversification, and that Kauffman names as the adjacent possible — these are not separate phenomena but instances of the same structural mechanism. The proposition also clarifies an asymmetry within the canon: prevention-over-repair, complexity-maintenance, and care-as-configuration are not just defensive postures; they are the conditions under which the generative process continues at all.',
+      openQuestions: 'Whether the rate-of-rate-growth is genuinely structural or is an empirical regularity over specific substrates (biology, post-Enlightenment technology, written mathematics) is open. The strongest articulation available — Walker and Cronin\'s reading of Assembly Theory as a forward arrow, in which the universe\'s trajectory through configuration space is what time is — would make the generativity metaphysical rather than empirical. That move is contested in physics and the proposition does not depend on it. The weaker claim — that configurations enable configurations and the rate grows with accumulation — is defensible without the metaphysics. Whether the proposition adds anything to endogenous-growth theory (Romer) beyond physical grounding is also open; the substantive overlap is real but the framing here is configurational rather than knowledge-as-input-to-production.'
+    },
+    revisedAt: '2026-05-18',
+    linksTo: ['value-option-space', 'asymmetry-of-option-space-change', 'option-space-measurability', 'structural-memory', 'complexity-maintenance', 'care-as-configuration', 'option-space-as-chess-moves']
   }
 ];
 
