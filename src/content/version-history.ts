@@ -25,6 +25,23 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.3.0',
+    date: '2026-05-18',
+    title: 'Labour-as-allocator, the asymmetry, and the rule in operation',
+    summary: `Two propositions promoted that the framework had been gesturing at without naming: labour as allocation mechanism (not source of value) and the structural asymmetry between option-space destruction and expansion. With them, work-wrong-question gains its historical reframing and viable-objective's no-regret form becomes a derived consequence rather than a stance. A new /applications/moves surface lands alongside, showing the local Δω rule operating on six worked cases — fossil-fuel infrastructure, antibiotic stewardship, stratospheric aerosol injection, soil-regenerative subsidies, copyright term extension, biodiversity offsetting — with two ambiguous verdicts to demonstrate the rule's edges.`,
+    changes: {
+      added: [
+        '`labour-as-allocator` — labour was historically the mechanism by which people were allocated access to life-supporting configurations under scarcity; it was never the source of value. The conflation was tolerable while the allocator tracked configuration-contribution closely enough. As the composition of scarcity shifts, the allocator and the value-source come apart. Status: contested. Lineage: Polanyi (commodity fiction), Graeber (Debt, Bullshit Jobs), Sahlins, Daly, Fuller.',
+        '`asymmetry-of-option-space-change` — destruction of option space is typically fast and local; expansion is typically slow and systemic. The asymmetry is structural (gradient-following build vs gradient-releasing breakdown) and explains why no-regret preservation is the operationally tighter rule, not just a conservative temperament. P22 follows from this asymmetry. Status: derived. Lineage: Holling, Walker & Salt, Aubin, Daly; cited Taleb carefully (different frame).',
+      ],
+      structural: [
+        'New page `/applications/moves` — the framework in operation. Worked Δω evaluation on six real moves spanning all four verdicts (degrading / preserving / expanding / ambiguous). Includes a "Where this rule runs out" section naming five concrete failure modes of move-level evaluation. Demonstrates the rule deciding things on cases that bite back, including non-biophysical cases (copyright) and genuinely ambiguous ones (SAI, biodiversity offsetting). Linked from the index page.',
+        'Bucket counts now: 1 established / 19 derived / 8 contested / 1 open. Total 29 propositions.',
+        'Two new propositions added to `SECTION_PROPOSITIONS` (work-wrong-question, universal-participation, viable-objective, what-replaces, inevitability) so Alexander surfaces them where relevant.',
+      ],
+    },
+  },
+  {
     version: 'v0.2.0',
     date: '2026-04-30',
     title: 'Observer-relativity, chess-moves, drafts/canon wall collapsed',

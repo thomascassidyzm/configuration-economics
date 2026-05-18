@@ -1,0 +1,608 @@
+---
+// Applications · Moves: the framework in operation.
+// Worked examples of the local Δω rule on R_living(C, B, T).
+// Each move is analysed against the same template so the reader can verify,
+// case by case, that the framework's central decision procedure has traction
+// on real configuration-changes. Where the rule produces an ambiguous verdict,
+// the analysis shows why — the rule's edges are as informative as its clean
+// verdicts.
+
+import { VERSION, BUILD } from '../../lib/version';
+
+type Verdict = 'degrading' | 'preserving' | 'expanding' | 'ambiguous';
+
+interface Move {
+  id: string;
+  name: string;
+  description: string;
+  preMove: string;
+  postMove: string;
+  irreversibility: string;
+  whoBearsCosts: string;
+  whoBearsBenefits: string;
+  whatWouldChangeAssessment: string;
+  verdict: Verdict;
+  reasoning: string;
+}
+
+const moves: Move[] = [
+  {
+    id: 'fossil-fuel-expansion',
+    name: 'Continued expansion of fossil-fuel extraction infrastructure',
+    description: 'New oil, gas, and coal extraction projects (licensing, pipelines, LNG terminals, refineries) on a scale consistent with current trajectories — the infrastructure commitments made by major producers and importers between roughly 2024 and 2030. The configuration-change is the lock-in of physical and financial capital with multi-decade amortisation horizons.',
+    preMove: 'A biosphere already operating near several planetary boundaries (binding-constraint: atmospheric and oceanic sinks are the close walls, not solar influx). R_living for most major classes of life is bounded by climate stability within roughly the Holocene envelope, on which functional diversity and current ecosystem geometry depend.',
+    postMove: 'Additional cumulative emissions and longer use-lives for the marginal infrastructure. Probability mass shifts toward warming trajectories above the thresholds at which coral, low-altitude polar, montane, and major-river-delta ecosystems lose their current configurations. R_living for those classes contracts toward zero on multi-decade horizons; R_living for most other classes narrows by removing the lower-warming branches of the reachable set.',
+    irreversibility: 'Centuries to millennia for the climatic effects (CO₂ residence time, ice-sheet hysteresis). Decades for the infrastructure-financial lock-in.',
+    whoBearsCosts: 'Most major classes of life, with steepest loss to ecosystems already at the edge of their climatic envelope. Human communities in low-lying coastal and arid-margin regions disproportionately. Future generations who inherit a configuration with permanently narrower R_living (time-asymmetry).',
+    whoBearsBenefits: 'Existing fossil-capital holders, in financial terms, over the lock-in window. Some short-horizon energy-security observer-classes. Nothing at category level for life-persisting observers (observer-relative-option-space).',
+    whatWouldChangeAssessment: 'A demonstrated, scaled atmospheric-sink technology with no net-additional planetary-boundary cost — a substitution for the absorption-side invariant flagged in substitution-limits. Not promises; demonstrated. Or evidence that current emissions trajectories do not in fact narrow R_living for the named ecosystem classes — the IPCC\'s own confidence intervals would have to shift substantially. Neither is currently in evidence.',
+    verdict: 'degrading',
+    reasoning: 'The textbook case for an unambiguous Δω-negative verdict. The move adds configurations to the reachable set (more energy throughput at the financial-board score) while subtracting them at every longer-horizon, larger-class-of-life board it is also being played on. The viable-objective no-regret form rejects moves that asymptotically empty R_living for some major class at some relevant horizon; this move does that for several. The verdict survives observer-relativity: even adopting human-only observer-classes, long-horizon humans lose more than short-horizon humans gain. The rule produces the conventional environmental verdict here — but it produces it by the framework\'s own logic, not by importing one.'
+  },
+  {
+    id: 'antibiotic-stewardship',
+    name: 'Strengthened antibiotic stewardship across human and veterinary use',
+    description: 'Coordinated reduction in non-therapeutic antibiotic use (livestock prophylaxis, mild human prescription overuse), combined with stewardship protocols that preserve last-line antibiotics for genuinely necessary cases. Configuration-change is in the prescribing rules, agricultural practice, and the surveillance infrastructure that monitors resistance.',
+    preMove: 'A current configuration in which several pathogen lineages are accumulating resistance to multiple antibiotic classes at a rate faster than new compounds are reaching clinical use. R_living for the medical-intervention-dependent classes of human life (post-surgical recovery, immunocompromised populations, neonatal medicine) currently includes survival pathways that depend on antibiotic efficacy continuing to exist as a configuration.',
+    postMove: 'Slower drift toward broad-spectrum resistance. Antibiotic efficacy preserved as a usable configuration for longer — possibly long enough for replacement therapies (phages, narrower-spectrum agents) to mature. R_living for the affected human-life classes is preserved that would otherwise contract.',
+    irreversibility: 'Decades for resistance evolution; the lost configurations are not easily restorable once antibiotic classes are exhausted.',
+    whoBearsCosts: 'Livestock producers operating on tight margins where prophylactic antibiotics substitute for housing or husbandry capital. Some short-horizon human patients whose prescriptions are narrowed.',
+    whoBearsBenefits: 'Future patients in all the affected human-life classes. Hospital systems whose capacity to perform routine high-risk procedures continues to exist. Animal populations themselves, at category level, by reducing selection pressure for resistance reservoirs.',
+    whatWouldChangeAssessment: 'A demonstrated, broadly applicable replacement for the antibiotic configuration (mature, regulated phage therapy at clinical scale) that materially reduces dependence on the current antibiotic classes within the decision horizon. This would weaken the case for stewardship, not eliminate it.',
+    verdict: 'preserving',
+    reasoning: 'A configuration whose efficacy depends on bounded use is being protected from a tragedy-of-the-commons collapse. prevention-over-repair does the load-bearing work: the move\'s value is in the configurations it keeps reachable rather than in any new configurations it creates. care-as-configuration directly applies — stewardship is configuration-maintenance, not sentiment. The rule\'s verdict matches the medical-consensus verdict, again by the framework\'s own logic. Worth keeping in the page partly because it shows the rule is not only useful when it disagrees with consensus.'
+  },
+  {
+    id: 'stratospheric-aerosol-injection',
+    name: 'Stratospheric aerosol injection (SAI) at deployment scale',
+    description: 'Sustained release of reflective aerosols (likely sulfate-based) into the stratosphere at a scale sufficient to offset roughly 0.5–1.5 °C of warming, maintained over decades. The configuration-change is the introduction of an ongoing planetary-scale operation whose cessation reverses the cooling effect rapidly.',
+    preMove: 'A biosphere on a warming trajectory whose upper bound depends on emissions decisions made over the same window. R_living for several ecosystem classes contracts as warming proceeds; SAI is being evaluated as a move that could preserve some of that R_living temporarily.',
+    postMove: 'Two things happen at once. Some currently-contracting R_living is held open (coral, polar, montane systems get more time). And a new dependency is introduced — the biosphere now sits inside a configuration that requires continued operation of the SAI programme to remain in its post-move state. Cessation produces termination shock with steep rebound warming. Side effects (regional precipitation pattern changes, ozone interactions, stratospheric chemistry) further narrow R_living for classes whose configurations depend on regional rainfall or stratospheric ozone.',
+    irreversibility: 'The aerosols themselves wash out in years; the warming they mask is centuries-scale; the configuration-dependence — the biosphere now requiring the programme — is open-ended for as long as the underlying CO₂ remains elevated.',
+    whoBearsCosts: 'Regions affected by altered precipitation patterns (monsoon-dependent agriculture in particular). Future generations who inherit the dependency. Observer-classes whose R_living depends on stratospheric chemistry remaining within its current envelope.',
+    whoBearsBenefits: 'Ecosystems whose climatic envelope is preserved during the operation window. Short-to-medium-horizon human populations in regions where the warming-offset matters more than the regional-pattern cost.',
+    whatWouldChangeAssessment: 'Robust regional-pattern modelling showing precipitation effects are smaller than current ensembles suggest. Demonstrated parallel decarbonisation at a rate that converts SAI from "permanent dependency" to "bridging measure". Evidence that termination-shock risk can be governed institutionally over centuries — which is itself a strong claim about coordination-wealth persistence.',
+    verdict: 'ambiguous',
+    reasoning: 'The case that demonstrates the rule\'s edge. The move expands R_living on some boards (climate-sensitive ecosystem persistence) and contracts it on others (regional precipitation, dependency on continued operation across centuries). Crucially the coupling matters — the new configuration is one that asymptotically requires continued maintenance; cessation produces collapse. transition-fragility and stability-not-stasis cut against it: the post-move configuration is structurally less stable than the pre-move one because it depends on perpetual external work. viable-objective\'s no-regret form is almost but not quite triggered — the move does not obviously empty R_living for some major class at some relevant horizon, but it does introduce dependence-relations whose own collapse modes would. The honest output of the rule is that this is not a move the framework either endorses or rejects on local Δω evaluation alone; it requires a judgement about the probability of the dependency being maintained over the relevant horizon, which is a coordination-wealth question rather than a physical-Δω question. Cases like this are why the page exists.'
+  },
+  {
+    id: 'soil-regenerative-subsidies',
+    name: 'Subsidies for measured soil-regenerative agriculture',
+    description: 'Public payments to farmers, conditioned on documented practices (cover-cropping, reduced tillage, integrated grazing rotations, measured soil organic carbon over time) that rebuild topsoil structure and microbial communities on agricultural land. Configuration-change is in incentive structure plus the slow, decade-scale rebuild of the underlying soil substrate.',
+    preMove: 'Agricultural land currently in net-degrading configuration in most of the world\'s major breadbaskets — topsoil loss exceeding regeneration, organic matter declining, increasing dependence on synthetic inputs (substitution-limits applies: topsoil is one of the named bounded invariants). R_living for agriculturally-dependent classes of human life is presently maintained by drawing down a stock that does not replenish on relevant horizons.',
+    postMove: 'Slow rebuild of topsoil structure on enrolled land, with knock-on effects: increased water retention, microbial diversity, carbon sequestration as side-product. R_living expands for classes that depend on soil persistence (most agriculturally-dependent classes), and also for some pollinator and soil-fauna classes whose configurations recover with reduced disturbance.',
+    irreversibility: 'Decades to centuries on the build side (soil organic matter accumulates slowly). The configuration-change itself is reversible — policy can be withdrawn — but the gains, once present, are themselves durable.',
+    whoBearsCosts: 'Public budgets, in fiscal terms. Short-horizon yield in some transition years, partially offset by reduced input costs.',
+    whoBearsBenefits: 'Long-horizon humans dependent on continued agricultural productivity. Soil-fauna and pollinator categories. Watersheds downstream of enrolled land (reduced run-off, sediment, fertiliser export). The atmosphere, modestly, as carbon sink-side bonus.',
+    whatWouldChangeAssessment: 'Demonstration that the practice-bundle does not in fact rebuild soil at the rates claimed in the better field-trial literature. Or that the enrolment cost displaces other interventions with larger Δω (an opportunity-cost argument, not a Δω-on-this-move argument). Neither is currently in evidence at scale.',
+    verdict: 'expanding',
+    reasoning: 'A move that adds configurations to R_living rather than merely preserving what is there. The rebuilt soil substrate is a higher-AI configuration than the depleted one; the practices also expand R_living for the non-agricultural classes whose configurations were being contracted by the prior intensification. prevention-over-repair and care-as-configuration both apply, but the move actually overshoots — it does not only prevent loss, it increases the size of the reachable set. The rule produces an unambiguous verdict here, and the verdict is rare enough (expanding, not just preserving) to be worth showing.'
+  },
+  {
+    id: 'copyright-term-extension',
+    name: 'Extension of copyright term to life + 95 years (or beyond)',
+    description: 'Statutory extension of copyright terms beyond the already-long current durations, retroactively where possible, on the standard maximalist pattern of the past several decades. Configuration-change is in the legal-institutional structure governing which cultural-and-knowledge configurations are reusable, derivable, and remixable.',
+    preMove: 'A cultural-and-knowledge configuration in which works enter the public domain on a delayed but eventual schedule. R_living for cultural-and-coordination observer-classes (coordination-wealth) currently includes the reachable set of derivative, educational, remixed, archived, and translated configurations that depend on public-domain access.',
+    postMove: 'That reachable set contracts. Derivative configurations not made because rights cannot be cleared. Orphan works whose rights-holders cannot be located but whose use is legally exposed. Educational and archival configurations that decay because no party has both the right and the incentive to maintain them. The R_living of the cultural class of life — the configurations that propagate distinction-making across generations — narrows for the duration of the extension and, crucially, for the works that fall out of preservation entirely during it.',
+    irreversibility: 'Decades for the policy itself; permanent for the works lost to non-preservation during the extension window. Historical precedent: substantial volumes of early-20th-century film, recorded music, and printed material are now physically lost because no party had both rights and incentive to preserve them during their long extended terms.',
+    whoBearsCosts: 'Cultural-and-coordination observer-classes broadly. Future generations who inherit a narrower preserved-cultural-substrate. Educators, translators, archivists, derivative creators, and the publics they serve.',
+    whoBearsBenefits: 'Existing rights-holders during the extension window, financially. A small minority of works generate meaningful residual income that far out; the modal effect is non-use.',
+    whatWouldChangeAssessment: 'A demonstrated, robust mechanism by which longer terms increase the rate at which valuable cultural configurations get created or preserved. The empirical economics literature (Heald, Pollock, the Hargreaves review and successors) currently runs the other way; the move would need that body of work to be substantially wrong.',
+    verdict: 'degrading',
+    reasoning: 'The case that demonstrates the rule biting at the coordination-wealth level, not the biophysical level. The mistake of reading Configuration Economics as exclusively about ecosystems falls away here: the framework treats cultural-and-knowledge configurations as part of R_living because they are part of how life-persisting observers maintain themselves and make distinctions (observer-relative-option-space; cultural transmission is configuration-maintenance per care-as-configuration). The move\'s Δω is negative not because it consumes exergy but because it contracts the reachable set of derivable, preservable, recombinable cultural configurations. legibility-truth-tradeoff lurks behind it too — the configuration-loss is invisible in the metrics that drove the extension. Including this case prevents the page from looking like a list of environmental policies.'
+  },
+  {
+    id: 'biodiversity-offsetting',
+    name: 'Biodiversity offsetting as a permitting mechanism for habitat loss',
+    description: 'A regulatory configuration in which a development project that destroys habitat at site A is permitted on condition of creating, restoring, or protecting "equivalent" habitat at site B. Configuration-change is in the licensing rule that makes destruction-with-offset a normal route to permission.',
+    preMove: 'A habitat-and-species configuration in which destruction at site A would, without the rule, either not be permitted or require a more substantial showing. R_living for the affected species and ecological-community classes currently depends on site A\'s specific configuration — soil, hydrology, microbial communities, mycorrhizal networks, age-class structure, embeddedness in the surrounding landscape — much of which is not readily reproducible at site B (substitution-limits; stability-not-stasis applied to ecosystems).',
+    postMove: 'The empirically interesting case. The literature on offset outcomes (zu Ermgassen and collaborators on no-net-loss; Maron and others; UK Defra and Australian state reviews) is consistently worse than the literature on offset designs suggests it should be. Created or restored habitats routinely fail to reach equivalence within the regulatory monitoring horizons; "protection" offsets that prevent loss that would not have happened anyway add no R_living at all (the additionality problem). The post-move R_living, evaluated against the counterfactual of not granting the permit, is on average smaller than the pre-move R_living. Evaluated against the counterfactual of granting the permit with no offset, it is marginally larger. Both counterfactuals are real; which one to take as the comparison is a framework-internal question.',
+    irreversibility: 'Decades to centuries for the destroyed configurations at site A; the offset rule itself is reversible policy. The decision-precedent is institutionally sticky.',
+    whoBearsCosts: 'The species and ecological communities specific to site A, where local extinction or community collapse is rarely fully compensated. Long-horizon ecological-integrity observer-classes. The future ecological-economics community whose evidence base accumulates against the practice while regulators continue to permit it.',
+    whoBearsBenefits: 'The developer at site A, immediately. The regulator, in administrative-legibility terms (the rule makes permit decisions more rule-bound, less discretionary). Some restored sites that genuinely succeed and constitute net additions where they would not otherwise exist.',
+    whatWouldChangeAssessment: 'A monitoring-and-enforcement regime that demonstrably achieves ecological equivalence within tractable horizons, with additionality verified case-by-case rather than presumed. Empirically, this is what the better offset regimes (UK biodiversity net gain at design intent; some Australian state schemes) are trying to be; whether they will be in operation is, as of this writing, contested.',
+    verdict: 'ambiguous',
+    reasoning: 'The rule\'s output here matters: it tells you that a policy designed to be Δω-neutral is, in practice and on the available evidence, Δω-negative more often than not — but the verdict is sensitive to the counterfactual and to scheme design. prevention-over-repair cuts against the move because restoration is more expensive and less reliable than preservation. asymmetry-of-option-space-change cuts against it because the destruction is faster and more reliable than the restoration. legibility-truth-tradeoff cuts against it because "no net loss" is a legible-but-misleading metric that masks the structural mismatch. Yet the move is not unambiguously degrading because some schemes do create real ecological value, and the alternative is not always "no permit" but sometimes "permit without offset." This case shows the rule producing a qualified verdict that depends on empirical questions the rule itself does not answer.'
+  }
+];
+
+const verdictLabel: Record<Verdict, string> = {
+  degrading: 'degrading',
+  preserving: 'preserving',
+  expanding: 'expanding',
+  ambiguous: 'ambiguous',
+};
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Moves — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/overview" class="nav-link">Overview</a>
+        <a href="/essay" class="nav-link">Essay</a>
+        <a href="/explore" class="nav-link">Explore</a>
+        <a href="/research-frontier" class="nav-link">Frontier</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>Moves</h1>
+        <p class="subtitle">The framework, in operation.</p>
+        <p class="note">Worked examples of the local Δω rule on R_living. The page demonstrates the decision procedure; the page is not a policy programme.</p>
+      </header>
+
+      <section class="intro">
+        <p>
+          This page demonstrates that the local Δω rule on R_living(C, B, T) — established in <a href="/explore#option-space-as-chess-moves">option-space-as-chess-moves</a> and licensed by <a href="/explore#option-space-measurability">option-space-measurability</a>'s split between the open global state measure and the operational local move measure — actually decides things.
+        </p>
+        <p>
+          Each move below is analysed against the same template: pre-move and post-move estimates of R_living, an irreversibility horizon, who bears the costs and benefits, what evidence would change the assessment, a directional verdict, and a short paragraph of reasoning. The honest output is sometimes <em>this move's Δω is ambiguous and here is why</em> — the rule's edges are as informative as its clean verdicts. The cases here include two unambiguously degrading moves, one preserving, one expanding, and two ambiguous; one of the degrading verdicts (copyright term extension) lands at the coordination-wealth level rather than the biophysical level.
+        </p>
+        <p>
+          The verdicts are produced by the framework's own logic. Where they match conventional consensus, that is incidental. Where they diverge — or where the rule refuses to deliver a clean verdict — the analysis says so.
+        </p>
+      </section>
+
+      <section class="legend">
+        <span class="legend-label">Verdict palette</span>
+        <span class="verdict verdict-degrading">degrading</span>
+        <span class="verdict verdict-preserving">preserving</span>
+        <span class="verdict verdict-expanding">expanding</span>
+        <span class="verdict verdict-ambiguous">ambiguous</span>
+      </section>
+
+      <section class="moves-list">
+        {moves.map(move => (
+          <article class="move" id={move.id}>
+            <header class="move-head">
+              <h2 class="move-name">{move.name}</h2>
+              <span class={`verdict verdict-${move.verdict}`}>{verdictLabel[move.verdict]}</span>
+            </header>
+
+            <p class="move-description">{move.description}</p>
+
+            <div class="move-grid">
+              <div class="field">
+                <span class="field-label">Pre-move R_living</span>
+                <p>{move.preMove}</p>
+              </div>
+              <div class="field">
+                <span class="field-label">Post-move R_living</span>
+                <p>{move.postMove}</p>
+              </div>
+              <div class="field">
+                <span class="field-label">Irreversibility horizon</span>
+                <p>{move.irreversibility}</p>
+              </div>
+              <div class="field">
+                <span class="field-label">Who bears the costs</span>
+                <p>{move.whoBearsCosts}</p>
+              </div>
+              <div class="field">
+                <span class="field-label">Who bears the benefits</span>
+                <p>{move.whoBearsBenefits}</p>
+              </div>
+              <div class="field">
+                <span class="field-label">What would change the assessment</span>
+                <p>{move.whatWouldChangeAssessment}</p>
+              </div>
+            </div>
+
+            <div class="move-reasoning">
+              <span class="field-label">Reasoning</span>
+              <p>{move.reasoning}</p>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section class="rule-limits">
+        <h2>Where this rule runs out</h2>
+        <p class="limits-intro">
+          Six worked cases is enough to demonstrate the rule working. The page should also be honest about cases where local Δω evaluation does not suffice.
+        </p>
+        <ul class="limits-list">
+          <li>
+            <strong>Competing horizons.</strong> A move that expands R_living at a 50-year horizon and contracts it at a 5,000-year horizon is rejected by viable-objective's no-regret form, but viable-objective itself flags that when no available move avoids long-horizon collapse, the criterion has nothing to say. SAI sits near this edge. The fallback ("minimise the horizon at which collapse becomes asymptotic") is sketched but not operational.
+          </li>
+          <li>
+            <strong>Competing classes of life.</strong> The rule operates at category level — not aggregating individuals, preserving the capacity for life to exist as a category (<a href="/explore#observer-relative-option-space">observer-relative-option-space</a>). Cases where preserving R_living for one major class requires contracting it for another, at category level, are not unambiguously decidable by Δω alone. The honest answer is that this is exactly where the rule pushes the question to the next layer — operationalising "major class of life", which both <a href="/explore#observer-relative-option-space">observer-relative-option-space</a> and <a href="/explore#viable-objective">viable-objective</a> flag as open.
+          </li>
+          <li>
+            <strong>Reversibility coupling.</strong> SAI again. Some moves introduce reversibility-dependence — the post-move configuration is contingent on a maintained operation. The rule treats reversibility as a property of the move; it has less to say about moves that create new dependency structures. <a href="/explore#transition-fragility">transition-fragility</a> gestures at this but it is not formalised at the move level.
+          </li>
+          <li>
+            <strong>The counterfactual non-move has its own Δω.</strong> Strictly, a "move" is a comparison between the post-move R_living and the counterfactual post-non-move R_living, not between post-move and pre-move. The biodiversity-offsetting case made this explicit: the verdict shifts depending on which counterfactual is taken. The rule does not specify the counterfactual; that is a framework-user decision and a place where motivated reasoning can re-enter. This is not unique to Configuration Economics — every counterfactual-dependent decision rule has the same problem — but the rule does not solve it.
+          </li>
+          <li>
+            <strong>Boundary-of-system effects.</strong> Externalities reframe as moves on boards you did not know you were playing on. The rule, applied honestly, requires enumerating those boards. Enumeration is bounded by what the analyst can see (<a href="/explore#legibility-truth-tradeoff">legibility-truth-tradeoff</a>). The rule produces better verdicts than rules that ignore other boards, but it does not produce complete verdicts. It is an improvement, not a closure.
+          </li>
+          <li>
+            <strong>The "move" abstraction itself.</strong> Real configuration-changes are not discrete moves but continuous co-evolutions, made by many agents simultaneously. Treating a policy decision as a "move" is a simplification. For most consequential cases the simplification holds; for some (slow norm shifts, accumulating cultural changes, gradient policy environments), the move-as-discrete-event frame is the wrong unit, and a different mode of analysis — possibly state-comparison via the global ω measure still treated as open (<a href="/explore#option-space-measurability">option-space-measurability</a>) — would be needed.
+          </li>
+        </ul>
+      </section>
+
+      <footer class="page-footer">
+        <p>
+          Return to the <a href="/overview">overview</a>, the full <a href="/essay">essay</a>, the
+          <a href="/explore">explore</a> view, or the <a href="/research-frontier">research frontier</a> for open and contested propositions.
+        </p>
+      </footer>
+    </main>
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+
+        /* Verdict palette — visually distinct from the four epistemic-status colours. */
+        --verdict-degrading: #c97070;
+        --verdict-preserving: #5fa8b2;
+        --verdict-expanding: #b39148;
+        --verdict-ambiguous: #8a8a99;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.7;
+      }
+
+      .top-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .nav-link {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+
+      .nav-link:hover { color: var(--accent); }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+      }
+
+      .nav-version {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+
+      .nav-build {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      main {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 100px 2rem 6rem;
+      }
+
+      .page-header {
+        margin-bottom: 3rem;
+      }
+
+      .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        font-weight: 400;
+        margin-bottom: 0.75rem;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .note {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      .intro {
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .intro p {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+      }
+
+      .intro p:last-child {
+        margin-bottom: 0;
+      }
+
+      .intro a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .intro a:hover {
+        text-decoration: underline;
+      }
+
+      .legend {
+        margin-bottom: 3rem;
+        padding: 1rem 1.25rem;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .legend-label {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-right: 0.25rem;
+      }
+
+      .moves-list {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+      }
+
+      .move {
+        padding-left: 1.5rem;
+        border-left: 2px solid rgba(255,255,255,0.08);
+      }
+
+      .move-head {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.75rem;
+      }
+
+      .move-name {
+        font-family: var(--font-display);
+        font-size: 1.375rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        line-height: 1.3;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .move-description {
+        color: var(--text-primary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+      }
+
+      .move-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .field {
+        padding: 0.75rem 1rem;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 4px;
+      }
+
+      .field-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.4rem;
+      }
+
+      .field p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.65;
+      }
+
+      .move-reasoning {
+        padding: 0.75rem 1rem;
+        background: rgba(74, 158, 255, 0.04);
+        border: 1px solid rgba(74, 158, 255, 0.15);
+        border-left: 2px solid var(--accent);
+        border-radius: 4px;
+      }
+
+      .move-reasoning p {
+        color: var(--text-primary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+      }
+
+      /* Verdict badges — distinct from status badges; same shape, different palette. */
+      .verdict {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.2rem 0.45rem;
+        border-radius: 3px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .verdict-degrading {
+        color: var(--verdict-degrading);
+        border-color: rgba(201, 112, 112, 0.3);
+        background: rgba(201, 112, 112, 0.05);
+      }
+
+      .verdict-preserving {
+        color: var(--verdict-preserving);
+        border-color: rgba(95, 168, 178, 0.3);
+        background: rgba(95, 168, 178, 0.05);
+      }
+
+      .verdict-expanding {
+        color: var(--verdict-expanding);
+        border-color: rgba(179, 145, 72, 0.3);
+        background: rgba(179, 145, 72, 0.05);
+      }
+
+      .verdict-ambiguous {
+        color: var(--verdict-ambiguous);
+        border-color: rgba(138, 138, 153, 0.3);
+        background: rgba(138, 138, 153, 0.05);
+      }
+
+      .rule-limits {
+        margin-top: 4rem;
+        padding-top: 3rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .rule-limits h2 {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+      }
+
+      .limits-intro {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+      }
+
+      .limits-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .limits-list li {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        padding-left: 1.25rem;
+        border-left: 2px solid rgba(255,255,255,0.08);
+      }
+
+      .limits-list strong {
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .limits-list a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .limits-list a:hover {
+        text-decoration: underline;
+      }
+
+      .page-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      .page-footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .page-footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 600px) {
+        main {
+          padding: 80px 1.25rem 4rem;
+        }
+
+        .page-header h1 {
+          font-size: 1.75rem;
+        }
+
+        .move-name {
+          font-size: 1.125rem;
+        }
+
+        .move {
+          padding-left: 1rem;
+        }
+
+        .limits-list li {
+          padding-left: 1rem;
+        }
+      }
+    </style>
+  </body>
+</html>

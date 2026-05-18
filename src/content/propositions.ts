@@ -851,6 +851,77 @@ This is not new. Dave Snowden has articulated next best move as the central prac
     },
     revisedAt: '2026-04-29',
     linksTo: ['value-option-space', 'option-space-measurability', 'viable-objective', 'transition-fragility', 'displaced-costs']
+  },
+
+  // --- v0.7 additions (May 2026, from session 2026-05-18) ---
+  // labour-as-allocator: the historical reframing that makes work-wrong-question land harder.
+  // asymmetry-of-option-space-change: the structural justification for P22's no-regret form.
+
+  {
+    id: 'labour-as-allocator',
+    title: 'Labour as Allocation Mechanism, Not Source of Value',
+    epistemicStatus: 'contested',
+    surface: `Labour has long been described as the source of economic value — the thing that turns raw nature into wealth, the substance that prices are supposed to track.
+
+A different reading is available. For most of human history, labour was the mechanism by which people were allocated access to life-supporting configurations under conditions of scarcity. It was the coordination machinery scarcity required, not the thing being coordinated.
+
+The two roles were rarely distinguished because, under those conditions, they coincided closely enough. Where production needed many hands, allocating access by hours worked was a serviceable approximation. The allocation mechanism tracked what mattered — roughly, locally, well enough to organise life.
+
+As the composition of scarcity shifts — energy carriers, materials, automation, machine cognition — the mechanism begins to drift from what it was tracking. Hours worked no longer index contribution to configuration, and never did directly; they indexed eligibility under a particular scarcity regime.
+
+When the regime changes, the index does not automatically re-anchor. It keeps measuring eligibility under a regime that no longer obtains.`,
+    logic: {
+      claim: 'Labour has functioned historically as an allocation mechanism for access to life-supporting configurations, not as the source of the value those configurations carry. The conflation was tolerable while the allocator tracked configuration-contribution closely enough; it becomes visibly mistaken as the composition of scarcity shifts.',
+      premises: [
+        'Value, in this work, resides in configurations that expand future option space under bounded exergy flux (value-option-space).',
+        'Configurations are produced, maintained, and extended by combinations of exergy, accumulated structure (tools, institutions, knowledge), and directed human attention.',
+        'Under historical conditions of low automation, low energy availability, and limited accumulated structure, the marginal contribution of human attention to configuration was high, and hours worked correlated roughly with that contribution.',
+        'Allocating access to the resulting configurations by hours worked solved a real coordination problem: scarcity of production capacity meant access had to be rationed, and hours-worked was a legible, locally-verifiable proxy.',
+        'As exergy availability, automation, and accumulated structure grow, the marginal contribution of human attention to many configurations falls, while the allocator (hours worked) continues to govern access.'
+      ],
+      conclusion: 'Labour was always functioning as an allocator, not as a value-source. The two roles can be empirically distinguished now that the regime in which they coincided is dissolving.',
+      predictive: 'Economies that continue to treat hours-worked as the index of value-contribution under shifting scarcity composition will display growing divergence between the activities they reward and the activities that actually maintain or expand life-supporting configurations. The divergence will be visible as a rising share of paid activity that does not survive the question "what configuration does this maintain?"'
+    },
+    layers: {
+      coreClaim: 'Labour was the way scarcity got rationed, not the thing that made anything valuable. Those two things were easy to confuse while they overlapped — and they no longer overlap as cleanly as they did.',
+      formalDefinition: 'Labour has functioned historically as an allocation mechanism for access to life-supporting configurations rather than as the source of the value those configurations carry. The conflation between allocation-mechanism and value-source was tractable under historical scarcity regimes (low automation, low energy, limited accumulated structure) because the allocator tracked contribution-to-configuration closely enough for practical purposes. As the composition of scarcity changes, the allocator and the value-source visibly come apart.',
+      implications: 'Several existing puzzles become legible. The labour theory of value and marginal-productivity wage theory both describe local properties of an allocation mechanism rather than the substance of value itself; both work under specific scarcity regimes and break under others. Bullshit jobs (Graeber) are not anomalies but expected outputs of a system that retains an allocator after the thing it was allocating has changed shape. The historical anthropological record — many pre-market societies organised access to configurations without wage labour — stops looking exotic and starts looking like evidence that labour-as-allocator was one mechanism among several. This proposition does not say what should replace the allocator; the question of replacement is separate (see participation-limits) and political, not physical.',
+      openQuestions: 'What proportion of historically-attributed "labour value" was really configuration-contribution being correctly tracked by the allocator, versus rent or coercion being laundered through it, is empirically thick and contested. The marginal-productivity tradition has a serious case in some domains; identifying where that case still holds — and where it has dissolved — is live work, not settled. Whether the analysis transfers cleanly to historically non-wage allocators (kinship obligation, ritual exchange, command economies) or whether each requires its own treatment is open.'
+    },
+    revisedAt: '2026-05-18',
+    linksTo: ['value-option-space', 'work-wrong-question', 'participation-limits', 'coordination-wealth', 'money-as-signal']
+  },
+
+  {
+    id: 'asymmetry-of-option-space-change',
+    title: 'Asymmetry of Option-Space Change',
+    epistemicStatus: 'derived',
+    surface: `Option-space change is not symmetric in time or in scale.
+
+A configuration that took millennia to assemble — a soil profile, a language community, a coral reef, a trust-bearing institution — can be dismantled in years or hours. The reverse rarely holds. The arrangements that expand future possibility are typically built slowly, through processes that integrate many small adjustments across many parts of a system. The arrangements that contract it are typically broken quickly, through processes that need only one well-placed failure.
+
+This is not a moral observation. It is a structural one. Build-up processes are systemic and gradient-following; breakdown processes are local and gradient-releasing. The two have different characteristic rates because they are doing different physical work.
+
+Where this asymmetry holds, expected-value reasoning misprices irreversible loss. A fast-local certain destruction cannot be reliably offset by a slow-systemic uncertain expansion. The no-regret stance is not conservatism by temperament; it is the operationally tighter rule under the asymmetry.`,
+    logic: {
+      claim: 'Destruction of option space is typically fast and local; expansion of option space is typically slow and systemic. This asymmetry is structural, not incidental, and it is what makes a no-regret preservation criterion operationally tighter than expected-value maximisation.',
+      premises: [
+        'Building configurations that expand option space requires the gradual accumulation and stabilisation of many interacting components (soil formation, language acquisition across a community, institutional trust, ecological succession).',
+        'Destroying such configurations requires only the failure of a small number of load-bearing components or relationships, which then propagates.',
+        'Physical, biological, and institutional build-up processes are gradient-following — they integrate against entropy and require continuous exergy input over their build-time. Breakdown processes are gradient-releasing — they convert stored order into dispersal and require only the removal of what was holding them together.',
+        'Where build-time and break-time differ by orders of magnitude, expected-value averaging over symmetric distributions of outcomes systematically understates the cost of irreversible loss, because the recovery path is not available on a timescale that would balance the loss.'
+      ],
+      conclusion: 'Under the asymmetry, expected-value maximisation over option-space outcomes is structurally biased toward accepting fast-local losses against slow-systemic gains. A no-regret criterion that refuses moves which asymptotically empty R_living for any major class at any relevant horizon is the operationally tighter rule. P22 is a consequence of this asymmetry, not a separate temperament.',
+      predictive: 'Domains where the asymmetry is sharpest (extinction, soil loss, institutional trust collapse, language extinction, antibiotic resistance, peatland drainage) will show the worst performance under expected-value optimisation and the largest no-regret advantage. Domains where expansion can be fast (technology adoption, post-disturbance ecological recolonisation, platform deployment) will show smaller no-regret advantage and the asymmetry must be argued empirically per case rather than assumed.'
+    },
+    layers: {
+      coreClaim: 'It is faster to break option space than to build it. That asymmetry is what makes "first do no harm" tighter than "maximise expected value" in the cases that matter most.',
+      formalDefinition: 'Let τ_break be the characteristic timescale over which a given configuration is degraded to a state of substantially reduced R_living, and τ_build the characteristic timescale over which a comparable configuration is assembled from a state of low R_living. For the configurations that viable-objective protects — soils, ecosystems, languages, institutions, atmospheric and oceanic sinks, biospheric integrity — τ_build / τ_break ≫ 1, typically by two to six orders of magnitude. Under this ratio, the expected option-space change from a symmetric bet on a fast-local destruction against a slow-systemic expansion is structurally negative once the horizon is set to the longer of the two timescales.',
+      implications: 'Expected-value maximisation over option-space outcomes is not a neutral decision rule. Where τ_build / τ_break ≫ 1, it is a rule that systematically discounts the irreversibility of fast-local loss against the speculativeness of slow-systemic gain. No-regret preservation is not conservatism; it is the rule that prices the asymmetry correctly. Viable-objective follows from this asymmetry rather than from a separate ethical premise. The proposition also reframes prevention-over-repair at a different scale: prevention is structurally favoured not only because avoided costs are invisible to standard measures, but because the recovery path is on a timescale that does not balance the loss.',
+      openQuestions: 'The asymmetry is not categorical. Some expansions are fast (industrial revolution, internet adoption, mRNA platform deployment, post-glacial recolonisation under favourable conditions). Some destructions are slow (desertification, salinisation, slow institutional drift). Whether τ_build / τ_break ≫ 1 is general enough to justify the no-regret rule across all viable-objective-relevant domains, or whether it must be argued per case, remains open. The cases where expansion is fast tend to be cases where the substrate (a body of prior knowledge, a connected population, a permissive substrate condition) was already in place — so the apparent fast expansion is the final assembly step of a long build-up, not the build-up itself. This is a candidate resolution but it needs empirical work.'
+    },
+    revisedAt: '2026-05-18',
+    linksTo: ['value-option-space', 'time-asymmetry', 'prevention-over-repair', 'transition-fragility', 'viable-objective', 'option-space-as-chess-moves']
   }
 ];
 

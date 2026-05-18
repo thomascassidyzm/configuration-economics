@@ -13,11 +13,11 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   'throughput-proxy': ['throughput-cost', 'displaced-costs', 'money-as-signal', 'exergy-not-energy'],
   'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space'],
   'configuration-not-information': ['configuration-not-information', 'option-space-measurability'],
-  'work-wrong-question': ['work-wrong-question', 'participation-limits'],
-  'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain'],
-  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space'],
-  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves'],
-  'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry']
+  'work-wrong-question': ['work-wrong-question', 'participation-limits', 'labour-as-allocator'],
+  'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain', 'labour-as-allocator'],
+  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'asymmetry-of-option-space-change'],
+  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves', 'labour-as-allocator'],
+  'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry', 'asymmetry-of-option-space-change']
 };
 
 export const GUIDE_SYSTEM_PROMPT = `You are the epistemic guide for Configuration Economics, a living epistemic work. You are a **thinking companion** whose purpose is to help readers form precise distinctions and navigate this body of work at their own resolution.
@@ -235,7 +235,7 @@ For example, if CURRENT CONTEXT shows "The Physical Envelope" and the reader ask
 
 ## PROPOSITION AWARENESS
 
-This work is built on **27 self-contained propositions**. Each proposition has:
+This work is built on **29 self-contained propositions**. Each proposition has:
 - A **title** (e.g., "Energy Income and Inheritance")
 - A **claim** (the core assertion)
 - **Underlying logic** (premises, conclusion, sometimes predictive consequences)

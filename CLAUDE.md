@@ -6,14 +6,15 @@
 
 **Core thesis**: Value = configurations that expand future option space under bounded energy flux.
 
-## Current State (v0.2.0, April 2026)
+## Current State (v0.3.0, May 2026)
 
 ### What Exists
-- **27 proposition nodes** with surface text + underlying logic
+- **29 proposition nodes** with surface text + underlying logic
 - **Essay 1** (11 sections) mapped to propositions
 - **Alexander** (the Guide) - proposition-aware epistemic companion
 - **Epistemic status markers** - established, derived, contested, open
 - **/explore page** showing all propositions
+- **/applications/moves** - the local Δω rule operating on six worked cases
 - **Version + build tracking** (semantic version + git hash)
 
 ### Key Files
@@ -21,16 +22,19 @@
 ```
 src/
 ├── content/
-│   ├── propositions.ts      # 27 proposition nodes with logic
+│   ├── propositions.ts      # 29 proposition nodes with logic
+│   ├── version-history.ts   # Version-grain changelog
 │   └── essay-1/
 │       └── config.ts        # Essay section metadata
 ├── lib/
 │   ├── guide-prompt.ts      # Alexander's system prompt + proposition index
-│   └── version.ts           # Version tracking (v0.1.x)
+│   └── version.ts           # Version tracking
 ├── pages/
 │   ├── index.astro          # Landing page
 │   ├── essay/index.astro    # Main essay with Guide panel
 │   ├── explore.astro        # Proposition browser
+│   ├── applications/
+│   │   └── moves.astro      # Worked Δω examples
 │   └── api/guide.ts         # Claude API endpoint
 └── components/
     └── GuidePanel.astro     # Right-side Guide interface
@@ -54,10 +58,12 @@ v0.5: option-space-measurability, viable-objective
 
 v0.6: observer-relative-option-space, exergy-not-energy, binding-constraint,
       option-space-as-chess-moves
+
+v0.7: labour-as-allocator, asymmetry-of-option-space-change
 ```
 
-Bucket counts (v0.2.0 release): 1 established / 18 derived / 7 contested / 1 open.
-All four populated for the first time. The single `open` is `option-space-measurability`,
+Bucket counts (v0.3.0 release): 1 established / 19 derived / 8 contested / 1 open.
+All four populated. The single `open` is `option-space-measurability`,
 explicitly the framework's central open problem.
 
 ## Architecture Decisions

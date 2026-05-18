@@ -6,6 +6,12 @@ The drafts/canon wall has been collapsed in editorial practice — substantive c
 
 ## Status (post v0.2.0 release, 2026-04-30)
 
+### Landed in v0.3.0 (2026-05-18)
+
+- ✅ `new-prop-labour-as-allocator.md` — `labour-as-allocator` now canonical (v0.7 addition in `propositions.ts`, status `contested`). Provides the historical reframing that makes `work-wrong-question` land harder.
+- ✅ `new-prop-asymmetry-destruction-vs-expansion.md` — `asymmetry-of-option-space-change` now canonical (v0.7 addition, status `derived`). Turns `viable-objective`'s no-regret form from temperament into derived consequence.
+- ✅ `applications-moves-scaffold.md` — shipped as `/applications/moves`. Six worked Δω evaluations spanning all four verdicts; "Where this rule runs out" section names five concrete failure modes of move-level evaluation.
+
 ### Landed in v0.2.0
 
 - ✅ `proposed-propositions.md` — `exergy-not-energy` and `binding-constraint` are now canonical (v0.6 additions in `propositions.ts`).
