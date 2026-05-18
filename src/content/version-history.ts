@@ -25,6 +25,20 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.3.2',
+    date: '2026-05-18',
+    title: 'Cross-links and navigation closed around the v0.7 push',
+    summary: `Mechanical finishing touches on the v0.7 integration. Seven existing propositions gain backlinks to the new v0.7 propositions where the relationship is meaningful in both directions. /overview and /research-frontier now point at /applications/moves alongside the existing route map — the rule's operational surface is now discoverable from both the structural-view modes and the open-boundary mode.`,
+    changes: {
+      structural: [
+        '`work-wrong-question` (P4) and `participation-limits` (P5) → linksTo `labour-as-allocator`. The historical predecessor is now reachable from the propositions it underwrites.',
+        '`prevention-over-repair` (P9), `time-asymmetry` (P11), `transition-fragility` (P19), `viable-objective` (P22), and `option-space-as-chess-moves` (P26) → linksTo `asymmetry-of-option-space-change`. The structural justification is now reachable from each proposition that leans on it. Strongest backlink: P22, where the asymmetry is the missing premise that turns no-regret from temperament into derived consequence.',
+        '/overview footer extended to surface /applications/moves and /research-frontier alongside /essay and /explore.',
+        '/research-frontier gains a paragraph naming /applications/moves as the operational counterpart — "where the framework is least open" set against the frontier as "where it is most".',
+      ],
+    },
+  },
+  {
     version: 'v0.3.1',
     date: '2026-05-18',
     title: 'Essay §5 and §7 integrated with the v0.7 propositions',

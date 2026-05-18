@@ -161,7 +161,7 @@ Under these conditions, societies often respond by inventing activity whose main
       formalDefinition: 'When labour is used as the gatekeeper of participation, misaligned incentives produce performative work.',
       implications: 'Activity is generated to satisfy the access-condition rather than underlying need. The mismatch grows as automation advances.'
     },
-    linksTo: ['value-option-space', 'participation-limits']
+    linksTo: ['value-option-space', 'participation-limits', 'labour-as-allocator']
   },
 
   {
@@ -192,7 +192,7 @@ Scarcity remains. Trade-offs remain. What changes is how they are handled.`,
       openQuestions: 'What non-coercive coordination mechanisms scale without falling back on deprivation is a live research and design question.'
     },
     revisedAt: '2026-04-29',
-    linksTo: ['value-option-space', 'work-wrong-question']
+    linksTo: ['value-option-space', 'work-wrong-question', 'labour-as-allocator']
   },
 
   // --- v0.2 additions ---
@@ -308,7 +308,7 @@ Over time, this is expensive.`,
       formalDefinition: 'Preventive actions generate more value than reactive ones but are systematically undervalued because avoided costs are invisible to standard measures.',
       implications: 'Systems drift toward reactive expenditure even when it is inefficient. The invisible nature of prevention\'s payoff is a measurement problem, not a value problem.'
     },
-    linksTo: ['care-as-configuration', 'throughput-cost']
+    linksTo: ['care-as-configuration', 'throughput-cost', 'asymmetry-of-option-space-change']
   },
 
   {
@@ -366,7 +366,7 @@ Time does not treat all actions equally. Some close doors forever.`,
       formalDefinition: 'Economic effects are time-asymmetric; losses are often irreversible while gains are not.',
       implications: 'Accounting systems that discount or average across time misprice risk, because discounting assumes reversibility that many physical and ecological processes do not provide.'
     },
-    linksTo: ['value-option-space', 'prevention-over-repair']
+    linksTo: ['value-option-space', 'prevention-over-repair', 'asymmetry-of-option-space-change']
   },
 
   {
@@ -583,7 +583,7 @@ This is when accounting honesty matters most.`,
       implications: 'Transitional periods benefit from conservative assumptions because small mistakes compound faster when buffers have thinned. The right tolerances for a steady-state system are wrong for a transitioning one.'
     },
     revisedAt: '2026-04-29',
-    linksTo: ['energy-income-inheritance', 'complexity-maintenance', 'stability-not-stasis']
+    linksTo: ['energy-income-inheritance', 'complexity-maintenance', 'stability-not-stasis', 'asymmetry-of-option-space-change']
   },
 
   {
@@ -714,7 +714,7 @@ Under this framing, the economy does not grow or shrink as a whole. It reorients
       openQuestions: 'The operational definition of "major class of life" — phylum-level, functional ecological role, capacity for distinction-making? Selection of the relevant horizon for any specific decision (default: the longest horizon any major class depends on, but this is contestable). Gradations between elimination and narrowing of R_living. What to do when no available move avoids long-horizon collapse — probably a fallback like "minimise the horizon at which collapse becomes asymptotic."'
     },
     revisedAt: '2026-04-29',
-    linksTo: ['throughput-cost', 'value-option-space', 'energy-income-inheritance', 'option-space-as-chess-moves', 'option-space-measurability']
+    linksTo: ['throughput-cost', 'value-option-space', 'energy-income-inheritance', 'option-space-as-chess-moves', 'option-space-measurability', 'asymmetry-of-option-space-change']
   },
 
   // --- v0.6 additions (April 2026, from physics-rigour review and the
@@ -850,7 +850,7 @@ This is not new. Dave Snowden has articulated next best move as the central prac
       openQuestions: 'Aggregation across simultaneous moves by many agents (chess has one player; the biosphere has many). The operational definition of "major class of life" — phylum-level, functional ecological role, capacity for distinction-making? Selection of the relevant horizon for any specific decision (default: the longest horizon any major class depends on, but this is contestable). When does a move eliminate a class\'s reachable set vs. merely narrow it — the criterion as currently stated is binary; reality is graded.'
     },
     revisedAt: '2026-04-29',
-    linksTo: ['value-option-space', 'option-space-measurability', 'viable-objective', 'transition-fragility', 'displaced-costs']
+    linksTo: ['value-option-space', 'option-space-measurability', 'viable-objective', 'transition-fragility', 'displaced-costs', 'asymmetry-of-option-space-change']
   },
 
   // --- v0.7 additions (May 2026, from session 2026-05-18) ---
