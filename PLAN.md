@@ -13,29 +13,18 @@
 
 ---
 
-## Current State (v0.1.5, Dec 2025)
+## Status (post v0.2.0, 2026-04-30)
 
-### What exists:
-- **22 proposition nodes** with surface text + underlying logic
-- **Essay 1** (11 sections) mapped to propositions
-- **Alexander** - proposition-aware epistemic guide (right panel)
-- **Epistemic status markers** (established, derived, contested, open)
-- **Version + build tracking** (semantic + git hash)
-- **/explore page** showing all propositions
-- **Typing indicator** (blue dots while Alexander thinks)
+PLAN.md is a session log, not the live roadmap. It captured the v0.2 push between 2026-04-23 and 2026-04-29; v0.2.0 then shipped on 2026-04-30. Canonical material has moved:
 
-### What's working:
-- Propositions are self-contained, meaningful in isolation
-- Essay reads well as linear narrative
-- Alexander responds contextually and knows current section
-- Alexander can reference relevant propositions
-- Site feels calm, invitational, legible
+- **Changelog at the version-grain** → `src/content/version-history.ts`
+- **Proposition canon (27 nodes, all four buckets populated)** → `src/content/propositions.ts`
+- **What's still pending** → `drafts/README.md` (currently: counterargument-engagement promotion, lineage-and-positioning promotion)
+- **Project context for fresh sessions** → `CLAUDE.md`
 
-### Known gaps:
-- No way to enter at different levels
-- One open question: coordination mechanisms under constraint
-- Essay and propositions exist in parallel but visible connection is minimal
-- Option space not yet rigorously defined
+The "Proposed Next Steps Phase 1–4" block at the end of this file is pre-review (Dec 2025) and is retained for history; the Round 8 note (line ~205) explicitly marks it superseded.
+
+What the session log below is good for: provenance — *why* a particular shipped move took the shape it did, the 6-critic review that triggered the push, and the round-by-round design decisions that became canon.
 
 ---
 
@@ -337,6 +326,9 @@ Needed:
 - Possibly `/src/pages/nodes/[id].astro` - individual proposition pages (later)
 
 ### Current proposition IDs (for reference):
+
+*Authoritative list lives in `src/content/propositions.ts`. Snapshot post-v0.2.0:*
+
 ```
 v0.1: energy-income-inheritance, throughput-cost, value-option-space,
       work-wrong-question, participation-limits
@@ -348,7 +340,12 @@ v0.3: time-asymmetry, displaced-costs, contextual-scarcity, substitution-limits,
       growth-masks-strain, money-as-signal, coordination-wealth,
       legibility-truth-tradeoff, transition-fragility, ignoring-physics
 
-v0.4: configuration-not-information, viable-objective
+v0.4: configuration-not-information
+
+v0.5: option-space-measurability, viable-objective
+
+v0.6: observer-relative-option-space, exergy-not-energy, binding-constraint,
+      option-space-as-chess-moves
 ```
 
 ---
@@ -380,7 +377,11 @@ This is **forward-looking** complexity (what can be made FROM this), unlike:
 
 ### The Viable Objective (Restated)
 
-> Maximize sustainable future distinction-making potential per unit of constrained energy throughput.
+> *Pre-v0.2.0 framing — superseded.*
+>
+> ~~Maximize sustainable future distinction-making potential per unit of constrained energy throughput.~~
+>
+> The v0.2.0 reframe (2026-04-30) replaces scalar maximisation with no-regret preservation over moves: prefer moves that keep R_living(C, B, T) open for every major class of life and every relevant horizon; reject moves that asymptotically empty it. See `viable-objective` (P22) and `option-space-as-chess-moves` in `propositions.ts`.
 
 ### Connection to Assembly Theory
 

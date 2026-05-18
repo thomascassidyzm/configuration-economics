@@ -653,30 +653,32 @@ Configuration that ignores its physical substrate is not configuration at all. I
     epistemicStatus: 'open',
     surface: `If value is configurations that expand future option space, a practical question follows: how is option space measured?
 
-Backward-looking measures exist. Lee Cronin's Assembly Theory counts the minimum steps required to construct an object, giving a rigorous measure of construction history. Logical depth (Bennett) captures computational history embedded in an arrangement.
+The question splits in two.
 
-What is missing is a forward-looking measure—what the configuration enables next, given bounded energy.
+*Global* option space — a scalar over a configuration capturing how much future possibility a state contains — remains genuinely open. Backward-looking measures exist: Cronin's Assembly Theory counts the minimum steps required to construct an object; Bennett's logical depth captures computational history embedded in an arrangement. Both measure history, not forward potential. Candidate forward-looking formalisations exist — reachable configurations under a bounded exergy budget, Kauffman's adjacent possible, state-space cones in control theory — but none has been shown to be economically operational at the state level.
 
-This is genuinely open. Candidate formalisations exist: reachable configurations under a bounded exergy budget; Kauffman's adjacent possible; state-space cones in the sense of control theory. None has been shown to be economically operational.
+*Local* option space — the differential effect of a move on the reachable set — is tractable. Δω evaluation requires only directional comparison between pre-move and post-move reachable sets, not a global scalar. Mass extinction, monoculture conversion, fossil-fuel lock-in to 4°C are unambiguously option-space-degrading even where global ω cannot be computed. See option-space-as-chess-moves.
 
-Until it is, "option space" functions as a direction for measurement rather than a measurement.`,
+What remains open is the global state measure. Until it lands, "option space" at the state level functions as a direction for measurement rather than a measurement. At the move level, the framework already ships with a usable decision procedure.`,
     logic: {
-      claim: 'Option space currently lacks a rigorous measurement procedure suitable for economic use.',
+      claim: 'Global option space as a state measure currently lacks a rigorous measurement procedure suitable for economic use; local Δω evaluation as a move measure is operational.',
       premises: [
         'Value as defined in this work depends on option space.',
-        'Assembly Theory and related complexity measures are backward-looking, not forward-looking.',
-        'Candidate forward-looking formalisations exist but have not been demonstrated to be economically operational.'
+        'Backward-looking complexity measures (Assembly Index, logical depth) capture construction history, not forward potential.',
+        'Candidate forward-looking state measures exist but have not been demonstrated to be economically operational.',
+        'Local Δω evaluation does not require a global state measure — it requires only directional comparison between pre-move and post-move reachable sets (option-space-as-chess-moves).'
       ],
-      conclusion: 'The measurement of option space is a genuinely open research problem.',
-      predictive: 'Operationalising option space is a prerequisite for applying this framework to concrete allocation or policy questions; until then, its use is diagnostic rather than prescriptive.'
+      conclusion: 'The state-level measurement of option space remains a genuinely open research problem; the move-level measurement is already operational.',
+      predictive: 'Operationalising the state-level measure is a prerequisite for state-comparison applications (ranking configurations, scoring economies). Move-evaluation applications (policy choices, infrastructure commitments, irreversibility detection) do not wait on it.'
     },
     layers: {
-      coreClaim: 'Option space isn\'t measured yet.',
-      formalDefinition: 'Option space currently lacks a rigorous measurement procedure suitable for economic use; existing complexity measures (Assembly Index, logical depth) are backward-looking.',
-      implications: 'The framework is diagnostic now, not prescriptive. It names what should be measured without claiming to have measured it.',
-      openQuestions: 'Candidate formalisations (reachable configurations under an exergy budget, Kauffman\'s adjacent possible, Assembly-weighted reachable sets) exist. None has been shown to be economically operational. This is the central open problem.'
+      coreClaim: 'Option space at the state level isn\'t measured yet. Option space at the move level — directionally — already is.',
+      formalDefinition: 'Global option space as a scalar over configurations lacks a rigorous measurement procedure; existing complexity measures (Assembly Index, logical depth) are backward-looking. Local Δω evaluation on R_living(C, B, T) — the directional comparison between pre-move and post-move reachable sets — is operational, per option-space-as-chess-moves.',
+      implications: 'The framework is prescriptive at the move level (next-best-move evaluation against R_living) and diagnostic at the state level (no scalar to maximise across configurations). State-comparison applications wait on the global measure; move-evaluation applications do not.',
+      openQuestions: 'Candidate global measures (reachable configurations under an exergy budget, Kauffman\'s adjacent possible, Assembly-weighted reachable sets) exist. None has been shown to be economically operational at state level. This — the global state measure — is the central remaining open problem. The move-level measure is no longer open.'
     },
-    linksTo: ['value-option-space', 'viable-objective', 'configuration-not-information']
+    revisedAt: '2026-05-10',
+    linksTo: ['value-option-space', 'viable-objective', 'configuration-not-information', 'option-space-as-chess-moves']
   },
 
   {

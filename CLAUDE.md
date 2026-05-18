@@ -6,10 +6,10 @@
 
 **Core thesis**: Value = configurations that expand future option space under bounded energy flux.
 
-## Current State (v0.1.5, Dec 2025)
+## Current State (v0.2.0, April 2026)
 
 ### What Exists
-- **22 proposition nodes** with surface text + underlying logic
+- **27 proposition nodes** with surface text + underlying logic
 - **Essay 1** (11 sections) mapped to propositions
 - **Alexander** (the Guide) - proposition-aware epistemic companion
 - **Epistemic status markers** - established, derived, contested, open
@@ -21,7 +21,7 @@
 ```
 src/
 ├── content/
-│   ├── propositions.ts      # 22 proposition nodes with logic
+│   ├── propositions.ts      # 27 proposition nodes with logic
 │   └── essay-1/
 │       └── config.ts        # Essay section metadata
 ├── lib/
@@ -48,8 +48,17 @@ v0.3: time-asymmetry, displaced-costs, contextual-scarcity, substitution-limits,
       growth-masks-strain, money-as-signal, coordination-wealth,
       legibility-truth-tradeoff, transition-fragility, ignoring-physics
 
-v0.4: configuration-not-information, viable-objective
+v0.4: configuration-not-information
+
+v0.5: option-space-measurability, viable-objective
+
+v0.6: observer-relative-option-space, exergy-not-energy, binding-constraint,
+      option-space-as-chess-moves
 ```
+
+Bucket counts (v0.2.0 release): 1 established / 18 derived / 7 contested / 1 open.
+All four populated for the first time. The single `open` is `option-space-measurability`,
+explicitly the framework's central open problem.
 
 ## Architecture Decisions
 
@@ -89,10 +98,11 @@ A configuration with high option space enables many stable distinction-patterns 
 - Our need for forward-looking measure (Option Potential)
 
 ### The Viable Objective
-> Maximize durable flourishing per unit of bounded throughput
+> Prefer moves that keep R_living(C, B, T) open for every major class of life and every relevant horizon; reject moves that asymptotically empty it.
 
-Or in distinction terms:
-> Maximize sustainable future distinction-making potential per unit of constrained energy throughput
+A no-regret criterion over moves, not a scalar maximisation over states. Closer to *first do no harm* than *maximise this number*. State-comparison is the static frame (partial order over configurations); move-evaluation is the dynamic frame (Δω over horizons). Both are needed.
+
+Earlier framings as "maximise durable flourishing per unit of bounded throughput" were tighter to read but smuggled in an aggregation rule the criterion does not require. See `viable-objective` (P22) and `option-space-as-chess-moves` for the v0.2.0 reframe.
 
 ## Development
 

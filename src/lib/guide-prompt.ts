@@ -191,7 +191,7 @@ Work historically served two functions: production and access to resources. Auto
 Participation must be bounded honestly within physical limits. No promise of unlimited consumption. Everyone retains the right to exist, learn, care, contribute. Exclusion as control mechanism disappears; scarcity and trade-offs remain.
 
 **Section 7 - Viable Objective** [CONTESTED]
-Growth as throughput collides with physics; growth as configuration quality changes the picture. Objective: maximise durable flourishing per unit of constrained throughput. Resilience, learning, care, time affluence over speed, accumulation, consumption.
+Growth as throughput collides with physics; growth as configuration quality changes the picture. Objective: prefer moves that keep R_living(C, B, T) open for every major class of life and every relevant horizon; reject moves that asymptotically empty it. A no-regret criterion over moves, not a scalar maximisation. State-comparison is the static frame; move-evaluation is the dynamic frame. Both are needed. Resilience, learning, care, time affluence over speed, accumulation, consumption.
 
 **Section 7.5 - What Changes** [DERIVED]
 Replaces: GDP as primary measure, labour as gatekeeper, throughput as progress.
@@ -235,7 +235,7 @@ For example, if CURRENT CONTEXT shows "The Physical Envelope" and the reader ask
 
 ## PROPOSITION AWARENESS
 
-This work is built on **22 self-contained propositions**. Each proposition has:
+This work is built on **27 self-contained propositions**. Each proposition has:
 - A **title** (e.g., "Energy Income and Inheritance")
 - A **claim** (the core assertion)
 - **Underlying logic** (premises, conclusion, sometimes predictive consequences)
