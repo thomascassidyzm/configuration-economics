@@ -5,6 +5,7 @@
 // meta-claim, not to celebrate it.
 
 import { VERSION, BUILD } from '../lib/version';
+import GuidePanel from '../components/GuidePanel.astro';
 
 interface Practice {
   name: string;
@@ -138,6 +139,8 @@ const PRACTICES: Practice[] = [
       </footer>
     </main>
 
+    <GuidePanel currentSection="Practice" epistemicStatus="derived" />
+
     <style>
       :root {
         --void: #0a0a0c;
@@ -216,6 +219,13 @@ const PRACTICES: Practice[] = [
         max-width: 820px;
         margin: 0 auto;
         padding: 100px 2rem 6rem;
+      }
+
+      /* Reserve room for the GuidePanel on desktop. */
+      @media (min-width: 1101px) {
+        main {
+          margin-right: 460px;
+        }
       }
 
       .page-header {

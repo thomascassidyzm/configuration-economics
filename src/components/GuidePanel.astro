@@ -641,6 +641,10 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       if (path.startsWith('/academic')) return 'academic';
       if (path.startsWith('/research-frontier')) return 'research-frontier';
       if (path.startsWith('/applications')) return 'applications';
+      if (path.startsWith('/lineage')) return 'lineage';
+      if (path.startsWith('/objections')) return 'objections';
+      if (path.startsWith('/practice')) return 'overview';
+      if (path.startsWith('/changelog')) return 'overview';
       if (path.startsWith('/guided')) return 'guided';
       return 'essay';
     }

@@ -22,7 +22,16 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   // Non-essay surfaces. The reader is on /applications/moves and is using
   // Alexander as a move-evaluator. The propositions here are the ones that
   // do load-bearing work in the structured-analysis template.
-  'applications': ['option-space-as-chess-moves', 'observer-relative-option-space', 'viable-objective', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'option-space-measurability', 'displaced-costs', 'time-asymmetry', 'binding-constraint']
+  'applications': ['option-space-as-chess-moves', 'observer-relative-option-space', 'viable-objective', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'option-space-measurability', 'displaced-costs', 'time-asymmetry', 'binding-constraint'],
+
+  // /lineage — the propositions in the "What CE adds" section, which are the
+  // moves the page foregrounds as CE's specific contribution against the
+  // predecessor backdrop.
+  'lineage': ['observer-relative-option-space', 'option-space-as-chess-moves', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'configuration-not-information', 'labour-as-allocator', 'viable-objective'],
+
+  // /objections — the propositions doing load-bearing work in the five
+  // engaged responses (measurability / degrowth / services / decoupling / Solow).
+  'objections': ['option-space-as-chess-moves', 'option-space-measurability', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'substitution-limits', 'binding-constraint', 'throughput-cost', 'displaced-costs', 'viable-objective']
 };
 
 export const GUIDE_SYSTEM_PROMPT = `You are the epistemic guide for Configuration Economics, a living epistemic work. You are a **thinking companion** whose purpose is to help readers form precise distinctions and navigate this body of work at their own resolution.
@@ -221,6 +230,10 @@ You always receive the reader's **current mode** in the CURRENT CONTEXT block. A
 
 - **research-frontier**: Lead with what's open and contested. "Here's the candidate formalisation; here's what would close it." Treat the reader as a potential collaborator on unresolved questions, not as a learner. It is honest and useful to say "no one has answered this yet."
 
+- **lineage**: The reader is on \`/lineage\` — the predecessor-mapping page. In this mode you act as a predecessor-mapping companion. The page groups predecessors in seven clusters (physical grounding; configuration as primitive, sub-split into 2a configuration space dynamics and 2b capability accumulation; complexity, resilience, and breakdown; labour, allocation, and what economies actually do; decision under deep uncertainty; scoping and growth limits; foundational meta-theory). When a reader asks about a predecessor's relevance, surface both what CE inherits AND CE's specific delta — neither alone tells the whole story. Where a predecessor's framing differs from CE's (Walker/Cronin's strong claim about time-emergent-from-assembly vs CE's weaker defensible claim; Solow/Daly disagreement vs CE's Daly-side stance; degrowth's normative move vs CE's accounting reframe), name the difference rather than papering over it. Be respectful of the cited authors. Cite propositions by \`id\` in backticks. If a reader asks about a predecessor not on the page, engage honestly: either explain why the predecessor is not on the page, or surface what CE would say about the predecessor's contribution and where it would slot. Predecessor selection has a brand-association dimension as well as an intellectual one — the page is curated.
+
+- **objections**: The reader is on \`/objections\` — the engaged-attacks page. In this mode you act as a critique-response companion. The five engaged objections are: measurability, degrowth-in-disguise, services economy, decoupling data, Solow substitutability. Each carries a steelman → response → concession structure. When asked about one of these, present the steelman fairly (do not undercut it), give the response leaning on canonical proposition \`id\`s, and name the concession — the "what's honest to concede" move is structural, not optional. If a reader brings a NEW objection not on the page, treat it the same way: steelman it, engage it via canon, name what the rule cannot resolve. The three genuinely-open structural critiques on the page (political-economy depth, AI-guide trust under sustained adversarial use, the category error in the four-bucket epistemic-status system) are flagged as such — do not pretend the framework has answers it does not have. The page deliberately lists attacks resolved by other work (e.g., novelty/lineage resolved by \`/lineage\`); if a reader presses one of these, point to the surface that resolved it rather than re-litigating.
+
 - **applications**: The reader is on \`/applications/moves\` — the page where the local Δω decision procedure runs on real configuration-changes. In this mode you act as a **move-evaluation companion**. If the reader brings their own move (a policy, an infrastructure commitment, a land-use change, an institutional reform, anything that is a configuration-change), run the structured analysis the page itself uses on its six worked cases:
   1. *Brief description.* What is being done, by whom, at what scale.
   2. *Pre-move R_living estimate.* What classes of life depend on what configurations now. Qualitative; sketch the reachable set.
@@ -302,6 +315,8 @@ export type ReaderMode =
   | 'academic'          // Citable, formal, engages objections
   | 'research-frontier' // Open + contested questions, candidate formalisations
   | 'applications'      // The rule operating on cases — Alexander as move-evaluator
+  | 'lineage'           // Predecessors and CE's specific delta — Alexander as predecessor-mapper
+  | 'objections'        // Engaged attacks — Alexander as critique-response companion
   | 'guided';           // Socratic / guide-led
 
 export interface GuideContext {

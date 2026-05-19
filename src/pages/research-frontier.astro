@@ -6,6 +6,7 @@
 
 import { PROPOSITIONS, getPropositionsByStatus } from '../content/propositions';
 import { VERSION, BUILD } from '../lib/version';
+import GuidePanel from '../components/GuidePanel.astro';
 
 const openProps = getPropositionsByStatus('open');
 const contestedProps = getPropositionsByStatus('contested');
@@ -133,6 +134,8 @@ function formalDef(prop: typeof PROPOSITIONS[number]): string {
       </footer>
     </main>
 
+    <GuidePanel currentSection="Research Frontier" epistemicStatus="open" />
+
     <style>
       :root {
         --void: #0a0a0c;
@@ -210,6 +213,13 @@ function formalDef(prop: typeof PROPOSITIONS[number]): string {
         max-width: 820px;
         margin: 0 auto;
         padding: 100px 2rem 6rem;
+      }
+
+      /* Reserve room for the GuidePanel on desktop. */
+      @media (min-width: 1101px) {
+        main {
+          margin-right: 460px;
+        }
       }
 
       .page-header {

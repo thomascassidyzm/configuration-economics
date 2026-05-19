@@ -25,6 +25,22 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.7.0',
+    date: '2026-05-19',
+    title: 'Alexander present on every grokkable surface',
+    summary: `Alexander, the guide, is now mounted on every surface where there is grokkable text — not just on /essay and /applications/moves. The mode-adaptive register that has existed since v0.1.5 is now actually reachable everywhere it was designed for: /overview adopts overview register, /explore adopts explore register, /research-frontier adopts research-frontier register, /lineage and /objections gain dedicated registers (predecessor-mapping and critique-response companions), /practice reuses overview. Each surface gives the reader the same calm guide tuned to the resolution that surface is operating at.`,
+    changes: {
+      added: [
+        'Two new ReaderMode values: `lineage` (predecessor-mapping companion — surfaces both inheritance and CE\'s delta, cites by proposition id, names framing differences rather than papering over them) and `objections` (critique-response companion — steelmans the objection fairly, gives the response leaning on canonical proposition ids, names the concession, and flags the three genuinely-open structural critiques rather than pretending they are answered).',
+        'New SECTION_PROPOSITIONS entries for `lineage` (the "What CE adds" set: observer-relative-option-space, option-space-as-chess-moves, asymmetry-of-option-space-change, configuration-generates-configuration, configuration-not-information, labour-as-allocator, viable-objective) and `objections` (the propositions doing load-bearing work in the five engaged responses).',
+        'GuidePanel mounted on /overview, /explore, /research-frontier, /lineage, /objections, /practice. Layout reserves 460px on the right on screens wider than 1100px; below that the panel collapses to a mobile trigger. URL inference routes /lineage→lineage, /objections→objections, /practice and /changelog→overview register.',
+      ],
+      structural: [
+        'The mode-adaptive register architecture from v0.1.5 is now fully realised. Modes that were defined but dormant on most surfaces (overview, explore, research-frontier) are now actually entered when readers land on those pages. The guide is, for the first time, an ambient companion across the work rather than an essay-side feature.',
+      ],
+    },
+  },
+  {
     version: 'v0.6.0',
     date: '2026-05-19',
     title: 'Alexander as move-evaluator on /applications/moves',

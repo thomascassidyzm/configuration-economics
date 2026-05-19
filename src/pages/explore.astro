@@ -4,6 +4,7 @@
 
 import { PROPOSITIONS, getLinkedPropositions, type EpistemicStatus } from '../content/propositions';
 import { VERSION, BUILD } from '../lib/version';
+import GuidePanel from '../components/GuidePanel.astro';
 
 // Read optional status filter from URL (?status=contested etc.)
 const VALID_STATUSES: EpistemicStatus[] = ['established', 'derived', 'contested', 'open'];
@@ -124,6 +125,8 @@ const counts = {
       </div>
     </main>
 
+    <GuidePanel currentSection="Explore" epistemicStatus="contested" />
+
     <style>
       :root {
         --void: #0a0a0c;
@@ -216,6 +219,13 @@ const counts = {
         max-width: 720px;
         margin: 0 auto;
         padding: 100px 2rem 6rem;
+      }
+
+      /* Reserve room for the GuidePanel on desktop. */
+      @media (min-width: 1101px) {
+        main {
+          margin-right: 460px;
+        }
       }
 
       .page-header {

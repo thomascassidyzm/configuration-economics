@@ -7,6 +7,7 @@ import { PROPOSITIONS } from '../content/propositions';
 import { SECTIONS } from '../content/essay-1/config';
 import { SECTION_PROPOSITIONS } from '../lib/guide-prompt';
 import { VERSION, BUILD } from '../lib/version';
+import GuidePanel from '../components/GuidePanel.astro';
 
 function getProp(id: string) {
   return PROPOSITIONS.find(p => p.id === id);
@@ -114,6 +115,8 @@ const crossCutting = PROPOSITIONS.filter(p => !mappedIds.has(p.id));
       </footer>
     </main>
 
+    <GuidePanel currentSection="Overview" epistemicStatus="established" />
+
     <style>
       :root {
         --void: #0a0a0c;
@@ -199,6 +202,14 @@ const crossCutting = PROPOSITIONS.filter(p => !mappedIds.has(p.id));
         max-width: 820px;
         margin: 0 auto;
         padding: 100px 2rem 6rem;
+      }
+
+      /* Reserve room for the GuidePanel on desktop. Panel collapses to a
+         mobile trigger below 1100px. */
+      @media (min-width: 1101px) {
+        main {
+          margin-right: 460px;
+        }
       }
 
       .page-header {

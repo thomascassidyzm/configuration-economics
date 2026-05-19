@@ -6,6 +6,7 @@
 // Each predecessor paragraph closes with CE's specific delta against them.
 
 import { VERSION, BUILD } from '../lib/version';
+import GuidePanel from '../components/GuidePanel.astro';
 ---
 
 <html lang="en">
@@ -17,6 +18,11 @@ import { VERSION, BUILD } from '../lib/version';
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <script is:inline>
+      window.currentMode = 'lineage';
+      window.currentSectionId = 'lineage';
+      window.currentSection = 'Lineage';
+    </script>
   </head>
   <body>
     <nav class="top-nav">
@@ -213,6 +219,8 @@ import { VERSION, BUILD } from '../lib/version';
       </footer>
     </main>
 
+    <GuidePanel currentSection="Lineage" epistemicStatus="established" />
+
     <style>
       :root {
         --void: #0a0a0c;
@@ -290,6 +298,13 @@ import { VERSION, BUILD } from '../lib/version';
         max-width: 820px;
         margin: 0 auto;
         padding: 100px 2rem 6rem;
+      }
+
+      /* Reserve room for the GuidePanel on desktop. */
+      @media (min-width: 1101px) {
+        main {
+          margin-right: 460px;
+        }
       }
 
       .page-header {
