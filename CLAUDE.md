@@ -6,7 +6,7 @@
 
 **Core thesis**: Value = configurations that expand future option space under bounded energy flux.
 
-## Current State (v0.4.0, May 2026)
+## Current State (v0.5.0, May 2026)
 
 ### What Exists
 - **30 proposition nodes** with surface text + underlying logic
@@ -16,6 +16,7 @@
 - **/explore page** showing all propositions
 - **/applications/moves** - the local Δω rule operating on six worked cases
 - **/lineage** - predecessors, debts, and CE's specific delta against each
+- **/objections** - the strongest attacks engaged with steelman + response + concession
 - **Version + build tracking** (semantic version + git hash)
 
 ### Key Files
@@ -35,6 +36,7 @@ src/
 │   ├── essay/index.astro    # Main essay with Guide panel
 │   ├── explore.astro        # Proposition browser
 │   ├── lineage.astro        # Predecessors and CE's specific delta
+│   ├── objections.astro     # Strongest attacks engaged
 │   ├── applications/
 │   │   └── moves.astro      # Worked Δω examples
 │   └── api/guide.ts         # Claude API endpoint

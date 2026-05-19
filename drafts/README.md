@@ -6,6 +6,10 @@ The drafts/canon wall has been collapsed in editorial practice — substantive c
 
 ## Status (post v0.2.0 release, 2026-04-30)
 
+### Landed in v0.5.0 (2026-05-19)
+
+- ✅ `counterargument-engagement.md` — shipped as `/objections`. Five engaged objections (measurability, degrowth-in-disguise, services economy, decoupling data, Solow substitutability) each as steelman → response → concession. Three attacks resolved by other work, five partly resolved, three flagged as genuinely open. Mirrors `/lineage` shape; second credibility surface. Linked from index, /overview, /research-frontier, and /lineage footers.
+
 ### Landed in v0.4.0 (2026-05-18)
 
 - ✅ `new-prop-configuration-generates-configuration.md` — `configuration-generates-configuration` now canonical (v0.7 third addition, status `contested`). The expansion-side counterpart to asymmetry. Walker/Cronin load-bearing predecessor, Kauffman conceptual ancestor, Fuller operational case.
@@ -26,9 +30,7 @@ The drafts/canon wall has been collapsed in editorial practice — substantive c
 
 ### Still pending
 
-- ⏳ `counterargument-engagement.md` — Drafted responses to five adversarial attacks (measurability, degrowth-in-disguise, services economy, decoupling data, Solow substitutability). Steelman + response + concession structure. Proposes an "Objections and Responses" chapter or `/objections` page. ~2 hrs to promote in your voice.
-  - Note: services-economy and decoupling are now partly engaged in essay §2/§3 (per v0.2.0 changelog), so this draft needs a pass to remove what's already landed.
-- ⏳ `lineage-and-positioning.md` — Prior-art map (Soddy, Georgescu-Roegen, Daly, Tainter, Scott, Waring, Cronin, Arthur, Hickel/Jackson) with CE's specific delta over each. Defends against the novelty attack. ~2 hrs to promote (voice rewrite + format choice: essay section vs `/lineage` page vs appendix).
+(None — the v0.5.0 release closed out the long-pending drafts from the April 2026 review. New drafts will be added here as they arise.)
 
 ## Promotion flow (when you do)
 

@@ -25,6 +25,24 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.5.0',
+    date: '2026-05-19',
+    title: '/objections — the second credibility surface',
+    summary: `The long-pending counterargument-engagement draft lands as /objections, pairing structurally with /lineage. Five engaged objections — measurability, degrowth-in-disguise, services economy, decoupling data, Solow substitutability — each as steelman → response → concession. Three attacks recorded as resolved by other work (normatively smuggled propositions, novelty/lineage, solar-flux scale); five recorded as partly resolved (political economy, AI guide trust, AI-symbiotic authorship, living-document instability, category error in epistemic status). Three genuinely open structural critiques named as future work rather than answered weakly.`,
+    changes: {
+      added: [
+        '/objections page — five engaged objections plus resolved-by-other-work and what-remains-open sections. Mirrors /lineage shape with distinct visual treatment for steelman (red left border, italic), concession blocks (blue left border, labelled), and open entries (purple left border, /research-frontier-style). Lineage names openly: the chess-moves frame, observer-relativity, asymmetry, generative dynamics, binding-constraint all carry response load. Every proposition reference by id in backticks; /applications/moves cited as the live demonstration that the rule decides things.',
+      ],
+      revised: [
+        'CE credibility apparatus now complete in v0.5.0: /lineage records inheritance; /objections records defended ground; /applications/moves demonstrates the rule operating on real cases. The three credibility surfaces pair so a reader who finishes the essay can take any route into the apparatus depending on what they want to verify.',
+      ],
+      structural: [
+        '/objections linked from index.astro, /overview footer, /research-frontier footer, /lineage footer. Top-nav of /objections includes /lineage as a sibling credibility surface.',
+        'counterargument-engagement.md draft marked as landed in drafts/README.md.',
+      ],
+    },
+  },
+  {
     version: 'v0.4.1',
     date: '2026-05-19',
     title: 'Essay §4 integrated with configuration-generates-configuration',

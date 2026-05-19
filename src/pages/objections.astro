@@ -1,0 +1,657 @@
+---
+// Objections: the strongest attacks and where this work answers them.
+// The second credibility surface, paired with /lineage.
+// Five engaged objections, each as steelman → response → concession;
+// followed by attacks resolved or partly resolved by other work;
+// then a small set of genuinely open structural critiques the framework
+// owes future work rather than confident responses now.
+
+import { VERSION, BUILD } from '../lib/version';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Objections — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/overview" class="nav-link">Overview</a>
+        <a href="/essay" class="nav-link">Essay</a>
+        <a href="/explore" class="nav-link">Explore</a>
+        <a href="/lineage" class="nav-link">Lineage</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>Objections</h1>
+        <p class="subtitle">The strongest attacks, and where this work answers them.</p>
+        <p class="note">The second credibility surface, paired with <a href="/lineage">/lineage</a>. Where Configuration Economics concedes, it concedes specifically. Where the response runs out, the page says so.</p>
+      </header>
+
+      <section class="intent">
+        <p>
+          The main essay is calm; the citations are quiet. An informed reader, having read it, has a right to ask <em>what are the strongest objections, and how does this work answer them?</em> This page is where that question gets a serious answer.
+        </p>
+        <p>
+          The five objections engaged here are the ones the framework cannot afford to ignore — the ones that would land as fatal openings if unanswered. Other attacks are real but resolved by other work (the <a href="/lineage">lineage page</a>, the proposition-tightening rounds, the v0.2.0 essay updates) and are noted rather than re-litigated. A small set of objections are flagged as genuinely open and named as future work rather than answered with a confident response that does not yet exist.
+        </p>
+        <p class="differs">
+          <strong>How this differs from <a href="/lineage">/lineage</a>.</strong> The lineage page asks <em>who said what already, and what is actually new here?</em> — a structured statement of inheritance. This page asks <em>what are the strongest reasons this might be wrong?</em> — a structured statement of defended ground. The two surfaces are complementary: a reader who finishes the essay can take either route into the credibility apparatus depending on whether their next question is about ancestors or about adversaries.
+        </p>
+      </section>
+
+      <!-- ENGAGED OBJECTION 1: MEASURABILITY -->
+      <section class="objection">
+        <h2 class="obj-title"><span class="obj-num">1</span>Measurability</h2>
+        <blockquote class="steelman">
+          <p>Option space has no unit, no measurement procedure, no error bars. You propose it replaces GDP. Give me the unit.</p>
+        </blockquote>
+
+        <div class="response">
+          <p>The attack assumes the framework requires a global state measure <code>ω(C)</code> — a scalar over configurations that ranks states the way GDP ranks economies. It does not.</p>
+          <p>Two distinct evaluation modes are available, and the attack only lands against one of them.</p>
+          <p><strong>Global <code>ω(C)</code> — state measurement of total option space.</strong> Currently non-computable for all four candidate measures (cardinality, diversity-weighted, Assembly-weighted, compositional). The work concedes this directly in <code>option-space-measurability</code>, which carries epistemic status <code>open</code>. This is the central remaining open problem and the framework says so.</p>
+          <p><strong>Local <code>Δω(move)</code> — gradient evaluation of moves.</strong> This is operational now. Chess engines work this way: not by computing the full game tree but by evaluating whether a move opens or closes the resulting position. Mass extinction events, monoculture conversions, fossil-fuel commitments locking in 4 °C are unambiguously option-space-degrading even when the global <code>ω</code> of the post-state is not computable. The framework ships with a usable decision procedure: evaluate moves by their effect on <code>R_living(C, B, T)</code> — the configurations reachable from the current state, under exergy budget B, over horizon T, in which life-persisting observers continue to exist and make distinctions. Local gradient evaluation is tractable where global value computation is not.</p>
+          <p>This is the canonical content of <code>option-space-as-chess-moves</code>, with the observer-class restriction supplied by <code>observer-relative-option-space</code> and the budget vocabulary supplied by <code>exergy-not-energy</code>. The lineage is named openly on <a href="/lineage">/lineage</a>: Snowden's next-best-move stance, Aubin's viability theory, and Real Options (Dixit &amp; Pindyck) are the operational ancestors; CE's specific delta is the physical grounding and the retained forward-looking measurement aspiration.</p>
+          <p>The rule is not a thought experiment. <a href="/applications/moves">/applications/moves</a> runs the procedure on six worked cases: continued fossil-fuel expansion, antibiotic stewardship, stratospheric aerosol injection at scale, regenerative-agriculture subsidy, copyright term extension, and biodiversity offsetting. Two come out unambiguously degrading, one preserving, one expanding, two ambiguous-with-reasons. The verdicts are produced by the framework's own logic. Where they match conventional consensus, that is incidental. Where they diverge — or where the rule refuses to deliver a clean verdict — the page says so. The point is to demonstrate that the rule decides things; that it has structure even where it does not have a cardinal score.</p>
+          <p class="hostile-critic"><strong>What a hostile critic would still say.</strong> <em>"Local <code>Δω</code> is just qualitative judgement dressed in symbols. You're calling 'this seems bad' a measurement."</em></p>
+          <p>The criterion has structure even where it does not yet have units. <em>A move is option-space-degrading iff it asymptotically eliminates <code>R_living</code> for some major class of life over horizon T.</em> This is binary at the limit, graded in practice, and convergent across observers in the most consequential cases (extinction events, irreversible lock-ins, ecosystem collapse). Convergent inter-observer verdicts on the high-stakes cases is exactly what a useful evaluation procedure provides. It does not have to produce a real-valued cardinal score to be more informative than GDP, and the framework does not claim it does.</p>
+        </div>
+
+        <div class="concession">
+          <span class="concession-label">What's honest to concede</span>
+          <p>The state measure is open and the work says so by giving <code>option-space-measurability</code> the only <code>open</code> status in the entire proposition set. Aggregation across simultaneous moves by many agents (the biosphere has many players; chess has one) is partly handled by the observer-class restriction but needs further articulation for edge cases. The operational definition of "major class of life" — phylum-level, functional ecological role, capacity for distinction-making — is named as open in <code>option-space-as-chess-moves</code> and <code>viable-objective</code>. Gradations between elimination and narrowing of <code>R_living</code> are real; the binary form of the criterion is a deliberate simplification at the limit, not a claim that all real moves are categorical. These are real open questions, not artefacts of the framing.</p>
+        </div>
+      </section>
+
+      <!-- ENGAGED OBJECTION 2: DEGROWTH-IN-DISGUISE -->
+      <section class="objection">
+        <h2 class="obj-title"><span class="obj-num">2</span>Degrowth-in-disguise</h2>
+        <blockquote class="steelman">
+          <p>This is rebranded ecological economics with less humility and no empirical work. It's degrowth in a physics costume.</p>
+        </blockquote>
+
+        <div class="response">
+          <p>No — and the distinction matters.</p>
+          <p><strong>Degrowth's primary move:</strong> reduce aggregate output. Less consumption, less production, less throughput. Usually paired with redistribution and political reorientation.</p>
+          <p><strong>Configuration Economics' primary move:</strong> redefine what counts as value. Throughput is a cost (<code>throughput-cost</code>); configuration quality is the productive content. The question stops being <em>how much</em> and becomes <em>of what and in what arrangement</em>.</p>
+          <p>The two can look similar in consequence — both predict lower throughput in some sectors — but they differ in what they prescribe and why.</p>
+          <p>Under CE, some sectors should <em>grow</em>: ecological restoration, care, learning, research, coordination, cultural production, maintenance. These are configuration-positive (<code>care-as-configuration</code>, <code>complexity-maintenance</code>, <code>prevention-over-repair</code>, <code>configuration-generates-configuration</code>). Under standard degrowth framings these tend to be discussed as beneficiaries of redistributed resources from contracting sectors; under CE they are the primary productive content, full stop.</p>
+          <p>Under CE, markets, trade, innovation, and ambition are preserved and redirected, not constrained. Degrowth literature is more ambivalent about these. Under CE, the argument is descriptive (what follows from physical constraint plus a forward-looking value frame). Degrowth literature is more often normative (what people <em>should</em> want and how society <em>should</em> be arranged). The family resemblance is real. CE positions itself as an accounting reframe, not a political programme, and the reframe has different implications.</p>
+          <p>The structural-asymmetry argument tightens the distinction further. <code>asymmetry-of-option-space-change</code> says that destruction of option space is typically fast and local; expansion is typically slow and systemic. Under that asymmetry, expected-value maximisation over option-space outcomes systematically misprices irreversible loss. No-regret preservation is not conservatism by temperament; it is the operationally tighter rule under the build-vs-break time-scale ratio. CE's central decision rule rests on this structural argument rather than on a prescriptive aggregate-throughput target. Degrowth and CE agree on a wide class of policy verdicts, but they reach them differently and they part ways on the moves where the prescriptive content differs.</p>
+          <p><strong>Where the degrowth literature is right.</strong> Jason Hickel's empirical case against absolute decoupling at the scale and pace required by planetary boundaries is strong work and the framework inherits it openly — essay §2 engages it directly, and <a href="/lineage">/lineage</a> names Hickel under cluster 6. Tim Jackson's <em>Prosperity Without Growth</em> is closer to CE's descriptive mode than most of the literature. Kate Raworth's doughnut is the closest mainstream analogue to CE's bounded-operating-space framing; the difference is that the doughnut is a static target zone and CE's <code>Δω</code> rule is a dynamic move-evaluation procedure.</p>
+        </div>
+
+        <div class="concession">
+          <span class="concession-label">What's honest to concede</span>
+          <p>CE's tone of descriptiveness — <em>this is accounting, not ideology</em> — is itself a political choice, in the sense that choosing to bracket political economy is a political stance. A reader who sees this is not wrong. The honest reply is that CE acknowledges the limits of its own scope and does not claim normative neutrality as such, only disciplinary restraint about what the framework itself entails. The coordination-mechanism question — what institutional arrangements actually implement a no-regret rule under physical constraint — is named as open in the project's roadmap and is not solved here. That is a scope limit, not a hidden ideology.</p>
+        </div>
+      </section>
+
+      <!-- ENGAGED OBJECTION 3: SERVICES ECONOMY -->
+      <section class="objection">
+        <h2 class="obj-title"><span class="obj-num">3</span>The services economy</h2>
+        <blockquote class="steelman">
+          <p>~80% of advanced-economy GDP is services. Those sectors use relatively little throughput. Your critique of throughput-based value is pointing at a problem that's already resolving itself.</p>
+        </blockquote>
+
+        <div class="response">
+          <p>Three moves, the last of which is the one CE uniquely makes.</p>
+          <p><strong>First,</strong> services are not throughput-light at the point that matters. Healthcare depends on pharmaceuticals, imaging equipment, hospital construction, transport. Education depends on buildings, energy for heating and lighting, transport, technology. Finance depends on enormous data centres (collectively in the low single-digit percent of global electricity). Retail depends on logistics infrastructure. The classification <em>as</em> services does not remove the physical substrate; it hides it. Under consumption-based accounting (as opposed to territorial), embodied throughput is attributed to the consuming sector — and under consumption-based accounting, the services economy carries far more physical weight than its headline GDP share suggests. This is the move essay §2 makes directly in its decoupling-literature engagement.</p>
+          <p><strong>Second,</strong> even sectors with genuinely low direct throughput (software, pure consulting) remain embedded in throughput-dependent supply chains. Software engineers use laptops, live in heated houses, eat food produced with substantial fossil inputs. The service's throughput footprint includes the embodied throughput of its workers' lives and the substrate the work runs on. <code>displaced-costs</code> is the canonical version of this argument: costs displaced in space and time still count.</p>
+          <p><strong>Third</strong> — and this is the move CE uniquely makes — <em>within</em> a service economy, configuration matters more, not less. Services are configurations of human time, skill, institutions, and infrastructure. <code>configuration-generates-configuration</code> lands here directly: each well-formed service configuration makes further service configurations reachable (a literate population enables further institutions; a functioning health system enables further specialisation; trusted civic infrastructure enables further coordination). A well-configured healthcare system delivers more option space per unit of physical input than a badly-configured one. The service economy is exactly where CE's framework has most to offer, because throughput-centred analysis is least useful there. Essay §3 makes this argument in landed form: the shift toward services increases the weight of configuration-centred analysis; it does not decrease it.</p>
+          <p>The objection treats the throughput critique as the whole of CE. It is not. The throughput critique is one half of the diagnostic; the configuration argument is the productive half. The services economy is where the productive half does its strongest work.</p>
+        </div>
+
+        <div class="concession">
+          <span class="concession-label">What's honest to concede</span>
+          <p>Earlier framings of <code>throughput-cost</code> were sometimes read as implying that all throughput-based activity is pathological. That is not the claim, and the essay was tightened in v0.2.0 to make the differential relevance of throughput across sectors explicit. A reader who saw the earlier framing and not the revised one would be working with a stronger claim than CE actually makes. The framework's surface-language has not always been careful about scope; the underlying claim has been.</p>
+        </div>
+      </section>
+
+      <!-- ENGAGED OBJECTION 4: DECOUPLING DATA -->
+      <section class="objection">
+        <h2 class="obj-title"><span class="obj-num">4</span>The decoupling data</h2>
+        <blockquote class="steelman">
+          <p>Some advanced economies have grown GDP while per-capita material footprint declined. IEA and OECD data show this. Your "growth slows because savings decline" claim is empirically false, or at least under-specified.</p>
+        </blockquote>
+
+        <div class="response">
+          <p>This requires careful engagement with the empirical literature, and it largely lives in essay §2 rather than here. The page is a brief gloss on what the essay already does.</p>
+          <p>Two distinctions the attack usually elides:</p>
+          <ul>
+            <li><strong>Relative vs absolute decoupling.</strong> Most cited decoupling is relative — GDP grows <em>faster</em> than throughput, but both grow. Absolute decoupling requires GDP to grow while throughput declines. The latter is rarer and context-specific.</li>
+            <li><strong>Territorial vs consumption-based accounting.</strong> Under territorial accounting (where goods are produced), some advanced economies show apparent absolute decoupling. Under consumption-based accounting (where goods are consumed), the decoupling mostly disappears — it turns out to be production offshoring, not actual reduction.</li>
+          </ul>
+          <p>The Hickel–Kallis meta-analysis (2019) and related work conclude that absolute decoupling of GDP from material throughput and CO₂ at the scale and rate required for 2°C targets has no empirical precedent. Where partial absolute decoupling has occurred (some EU territorial CO₂ trends), it has been context-specific, slow, and dependent on offshoring. Extrapolating to global scale at the required rate is unsupported.</p>
+          <p>CE's distinctive claim should be stated carefully. The accurate version, which is what essay §2 now carries:</p>
+          <ul>
+            <li>Aggregate productivity growth has slowed in advanced economies since the 1970s. This is well documented.</li>
+            <li>Multiple candidate explanations exist: declining EROI (Hall, Ayres &amp; Warr), technological exhaustion (Gordon), declining corporate investment, demographic transition, political-economic shifts.</li>
+            <li>CE's distinctive claim is that <em>one</em> major factor is declining energy-return-on-investment as fossil stocks deplete — supported by the EROI literature and consistent with the broader thermodynamic-economics tradition.</li>
+            <li>CE does not claim this is the <em>only</em> factor. Overclaiming here would be dishonest and would invite easy refutation. The essay states this directly in §2.</li>
+          </ul>
+          <p>The decoupling-and-EROI engagement landed in essay §2 in v0.2.0. The page defers to that landed work rather than repeating it. The objection no longer lands cleanly against the current essay; readers who want the engagement should be pointed at §2.</p>
+        </div>
+
+        <div class="concession">
+          <span class="concession-label">What's honest to concede</span>
+          <p>Where absolute decoupling has occurred under specific conditions (some EU CO₂ trends), the framework should not dismiss the finding. The honest position is that partial absolute decoupling is real but bounded, dependent on offshoring in most cited cases, and not at the rate or scale required by planetary boundaries under continued growth. The empirical literature is the right register here; the framework's contribution is the accounting reframe, not new decoupling data.</p>
+        </div>
+      </section>
+
+      <!-- ENGAGED OBJECTION 5: SOLOW SUBSTITUTABILITY -->
+      <section class="objection">
+        <h2 class="obj-title"><span class="obj-num">5</span>The Solow substitutability attack</h2>
+        <blockquote class="steelman">
+          <p>Capital and technology substitute for natural resources. Solow showed this in 1974; Stiglitz formalised it further. Your claim that substitution has limits is true but trivially so — nobody serious claims substitution is unlimited. The interesting question is how much substitution is feasible, and that's empirical.</p>
+        </blockquote>
+
+        <div class="response">
+          <p>This is the strongest mainstream objection and deserves direct engagement. The objection is partly fair: the <em>general</em> claim that substitution has limits is too weak to do work. The objection lands against an older framing of <code>substitution-limits</code> that no longer holds.</p>
+          <p>The current canonical form (revised in v0.2.0 per the Lens 2 audit) is sharper. <code>substitution-limits</code> now reads:</p>
+          <blockquote class="prop-quote">
+            <p>Substitution is empirically bounded by specific physical and ecological invariants that no technology has demonstrated the ability to circumvent.</p>
+          </blockquote>
+          <p>Premises spell out the empirical content. Substitution has succeeded historically for many resources (whale oil → petroleum, horses → engines, timber → steel) where the function depended on a class of physical property rather than on a specific atom or sink. Some functions depend on specific physical invariants: phosphorus cannot be synthesised, only extracted; atmospheric and oceanic sinks for CO₂ have no technological replicate at planetary scale; extinct species cannot be re-created; deep fertile topsoil regenerates over millennia, not decades. Manufactured substitutes for invariant-dependent functions (hydroponic agriculture, direct-air capture, geoengineering) carry their own dependencies on inputs that circle back to the same invariants.</p>
+          <p>The conclusion: relying on substitution for the specific invariants currently binding (phosphorus stocks, atmospheric sink capacity, biodiversity, topsoil, fresh water) is not merely risky but structurally incoherent. The strong-sustainability position (Daly, Hickel) is the defensible default; weak-sustainability claims (Solow, Stiglitz) generalise from a substitution record that does not transfer to invariant-dependent cases. The cornucopian extrapolation is a category error, not just an empirical mistake.</p>
+          <p><code>binding-constraint</code> does adjacent load-bearing work: the operative physical constraints on human economic activity are entropy-dump capacity, specific materials at their extraction-and-regeneration rate, and biosphere integrity — not total energy influx. The Solow tradition was right that energy-as-such is not the binding constraint at planetary scale (Earth receives ~175 PW of solar exergy; humans dissipate ~18 TW). The <code>binding-constraint</code> proposition concedes that point explicitly. What it adds is that the operative constraints lie elsewhere, and that the Solow substitution argument does not generalise from energy carriers (where it has worked) to sinks, specific atoms, and biospheric configurations (where it has not).</p>
+          <p>The Daly–Solow–Stiglitz debate is a live disagreement and CE positions itself recognisably on the Daly side, with the empirical specifics carrying the case rather than a general principle. <code>asymmetry-of-option-space-change</code> tightens the argument further: in the cases where substitution does not work — extinct species, eroded topsoil, depleted phosphorus rock, lost ecosystem functions — the recovery path is on a timescale that does not balance the loss. The asymmetry is what makes the cornucopian bet structurally incoherent, not just risky.</p>
+        </div>
+
+        <div class="concession">
+          <span class="concession-label">What's honest to concede</span>
+          <p>The strong-sustainability case is empirical, not categorical. It remains testable as new technologies arrive. The case is strongest for phosphorus and atmospheric sinks; somewhat softer for individual species (functional redundancy is real) and topsoil (rebuildable but slow). The framework does not claim categorical non-substitutability for everything currently cited as an invariant; it claims that the specific invariants now binding have not been substituted by any demonstrated technology and that the extrapolation from past substitution success to future substitution of these invariants is unsupported. That is a strong claim. It is also a falsifiable one.</p>
+        </div>
+      </section>
+
+      <!-- RESOLVED BY OTHER WORK -->
+      <section class="resolved-section">
+        <h2>What's been resolved by other work</h2>
+        <p class="section-intro">Several attacks from the original adversarial pass are no longer serious objections against the current framework, because the work they were attacking has shifted under them.</p>
+
+        <article class="resolved-entry">
+          <p><strong>Normatively smuggled propositions.</strong> The proposition-tightening rounds landed in v0.2.0–v0.4.0. The propositions now distinguish structural claims from normative ones explicitly in their <code>layers.formalDefinition</code> sections, and the surface text was tightened to remove the normative slide the attack named. Treated as resolved.</p>
+        </article>
+
+        <article class="resolved-entry">
+          <p><strong>Novelty and lineage.</strong> Resolved by <a href="/lineage">/lineage</a> in v0.4.0. The strongest form of the novelty attack — <em>Soddy 1926, Georgescu-Roegen 1971, Daly 1977, Tainter 1988, Holling, Kauffman, Fuller, Hickel — what is new here?</em> — gets a calm answer on that page: observer-relative <code>R_living</code>, local <code>Δω</code> on chess-moves, asymmetry-as-structural-justification, <code>configuration-not-information</code>, <code>labour-as-allocator</code>, and the living-epistemic format. Everything else is inheritance, and the work owes it openly.</p>
+        </article>
+
+        <article class="resolved-entry">
+          <p><strong>Solar-flux scale.</strong> Handled by <code>binding-constraint</code> (canon since v0.6): the operative constraints are sinks, specific materials, and biosphere integrity, not the thermodynamic ceiling. Framing economic constraint as <em>running into the second law</em> is wrong and invites cornucopian dismissal. The honest framing is that the sink wall is close, the material-rate wall is close, the biosphere wall is close — the ceiling is far.</p>
+        </article>
+
+        <h3>Partially resolved</h3>
+
+        <article class="resolved-entry partial">
+          <p><strong>Political economy.</strong> CE deliberately brackets political economy as scope-limited. The framework names coordination-mechanism-under-physical-constraint as an open question in its roadmap and does not claim to resolve it. This is a real scope limit and a reader who sees it is not wrong to note it; it is not a hidden ideology but it is also not a closed question.</p>
+        </article>
+
+        <article class="resolved-entry partial">
+          <p><strong>AI guide trust.</strong> Alexander carries a system prompt that explicitly prohibits making contested claims authoritatively, requires citing propositions by <code>id</code>, and routes substantive questions back to the canonical text. Retrieval-grounding against the proposition set and the essay sections is in place via the section-aware context mechanism. The deeper question — <em>can an AI guide be trusted not to drift under sustained adversarial use?</em> — remains an open structural question for the format.</p>
+        </article>
+
+        <article class="resolved-entry partial">
+          <p><strong>AI-symbiotic authorship.</strong> Acknowledged in <code>CLAUDE.md</code> and visible in the git history via Co-Authored-By trailers on commits that involved AI drafting. The framework's editorial position is that AI was used as drafting and structural-review apparatus with human oversight on all substantive claims; the propositions, essay sections, and decision rules are authored, not generated.</p>
+        </article>
+
+        <article class="resolved-entry partial">
+          <p><strong>Living document is unstable.</strong> Partly addressed by the v0.2.0 editorial stance: a status badge in the nav showing current version and build, <code>revisedAt</code> dates on every proposition that has been touched since initial publication, and a versioned changelog. Full version-pinning URLs remain a future possibility. A reader who wants to cite a stable snapshot can currently cite the version + build pair; URL-level immutability is not yet shipped.</p>
+        </article>
+
+        <article class="resolved-entry partial">
+          <p><strong>Category error in epistemic status.</strong> The four-bucket status system (<code>established / derived / contested / open</code>) does blur some distinctions — physical, empirical, conceptual, and normative are not all the same kind of claim, and a single certainty axis treats them as if they were. This is a real structural critique of the format and is named in <em>what remains genuinely open</em>. A two-dimensional system (certainty × claim-type) is one candidate response; whether it earns its complexity is undecided.</p>
+        </article>
+      </section>
+
+      <!-- WHAT REMAINS GENUINELY OPEN -->
+      <section class="open-section">
+        <h2>What remains genuinely open</h2>
+        <p class="section-intro">A small set of objections are not resolved here, are not partially resolved by landed work, and are not answerable with a confident response that the framework does not in fact have. The honest move is to name them as future work rather than answer them weakly.</p>
+
+        <article class="open-entry">
+          <span class="open-label">Open</span>
+          <h3>Political-economy depth</h3>
+          <p>CE brackets the political economy of transition. The framework's claim is that the accounting reframe is logically prior to the political question — you cannot design coordination mechanisms for <em>configuration-quality preservation under physical constraint</em> until you have named what is being preserved. That is a real claim, but it is not the same as having solved the political question. Coordination mechanisms under constraint may turn out to be the binding bottleneck on whether any of this matters. The framework owes this work and does not yet have it. The most honest version of the response is that political-economy depth is the next research frontier, not the current page.</p>
+        </article>
+
+        <article class="open-entry">
+          <span class="open-label">Open</span>
+          <h3>AI-guide trust under sustained adversarial use</h3>
+          <p>Alexander's system prompt is well-formed and the retrieval grounding is in place. Whether the guide remains trustworthy under sustained adversarial probing — repeated attempts to elicit contested claims as authoritative, jailbreaks against the system prompt, drift through long conversational context — is not something the framework has tested at scale. The pattern is becoming general (proposition-aware AI guides are increasingly common) and the trust question is general with it. CE inherits the open problem; it does not solve it.</p>
+        </article>
+
+        <article class="open-entry">
+          <span class="open-label">Open</span>
+          <h3>The category error in the epistemic-status system</h3>
+          <p>The four-bucket system (<code>established / derived / contested / open</code>) compresses two distinct dimensions: how confident the claim is, and what kind of claim it is. A normative claim and an empirical claim can both be <code>contested</code> for very different reasons; treating them as equivalent in status is a category error. A two-dimensional system (certainty axis × claim-type axis) is one candidate fix. Whether the added complexity earns its keep — whether readers actually navigate the two-axis system better than the one-axis system — is genuinely undecided. The format owes this work too.</p>
+        </article>
+      </section>
+
+      <footer class="page-footer">
+        <p>
+          Return to the <a href="/overview">overview</a>, the full <a href="/essay">essay</a>, the
+          <a href="/explore">explore</a> view with every proposition,
+          <a href="/applications/moves">/applications/moves</a> for the rule operating on cases,
+          <a href="/lineage">/lineage</a> for the predecessors and CE's specific delta,
+          or the <a href="/research-frontier">research frontier</a> for what remains open.
+        </p>
+      </footer>
+    </main>
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+        --open-purple: #a66bd8;
+        --steelman-red: #c97070;
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.7;
+      }
+
+      .top-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .nav-link {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+
+      .nav-link:hover { color: var(--accent); }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+      }
+
+      .nav-version {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+
+      .nav-build {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      main {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 100px 2rem 6rem;
+      }
+
+      .page-header {
+        margin-bottom: 3rem;
+      }
+
+      .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        font-weight: 400;
+        margin-bottom: 0.75rem;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .note {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      .note a,
+      .page-footer a,
+      .intent a,
+      .concession a,
+      .response a,
+      .differs a,
+      .section-intro a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .note a:hover,
+      .page-footer a:hover,
+      .intent a:hover,
+      .response a:hover { text-decoration: underline; }
+
+      .intent {
+        margin-bottom: 3.5rem;
+        padding-bottom: 2.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .intent p {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+      }
+
+      .intent p:last-child { margin-bottom: 0; }
+
+      .differs {
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(255,255,255,0.04);
+      }
+
+      .differs strong {
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .objection {
+        margin-bottom: 4.5rem;
+        padding-bottom: 3rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .objection:last-of-type {
+        border-bottom: none;
+        margin-bottom: 3rem;
+      }
+
+      .obj-title {
+        font-family: var(--font-display);
+        font-size: 1.75rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+      }
+
+      .obj-num {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        color: var(--accent);
+        font-weight: 400;
+      }
+
+      .steelman {
+        margin: 0 0 2rem;
+        padding: 1.25rem 1.5rem;
+        border-left: 3px solid var(--steelman-red);
+        background: rgba(201, 112, 112, 0.05);
+        border-radius: 0 4px 4px 0;
+      }
+
+      .steelman p {
+        color: var(--text-primary);
+        font-style: italic;
+        font-size: 0.9375rem;
+        line-height: 1.7;
+      }
+
+      .response {
+        margin-bottom: 1.75rem;
+      }
+
+      .response p,
+      .response ul {
+        color: var(--text-primary);
+        font-size: 0.9375rem;
+        line-height: 1.75;
+        margin-bottom: 1rem;
+      }
+
+      .response ul {
+        padding-left: 1.5rem;
+        list-style: disc;
+      }
+
+      .response li {
+        margin-bottom: 0.5rem;
+      }
+
+      .response strong {
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .hostile-critic {
+        margin-top: 1.25rem;
+        padding-top: 1rem;
+        border-top: 1px dashed rgba(255,255,255,0.08);
+      }
+
+      .prop-quote {
+        margin: 1rem 0 1.25rem 0.5rem;
+        padding: 0.75rem 1.25rem;
+        border-left: 2px solid var(--accent);
+        background: rgba(74, 158, 255, 0.04);
+        border-radius: 0 4px 4px 0;
+      }
+
+      .prop-quote p {
+        color: var(--text-primary);
+        font-style: italic;
+        font-size: 0.9375rem;
+        line-height: 1.65;
+      }
+
+      .concession {
+        padding: 1rem 1.25rem;
+        background: rgba(74, 158, 255, 0.04);
+        border: 1px solid rgba(74, 158, 255, 0.15);
+        border-left: 2px solid var(--accent);
+        border-radius: 4px;
+      }
+
+      .concession-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.5rem;
+      }
+
+      .concession p {
+        color: var(--text-primary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+      }
+
+      .response code,
+      .concession code,
+      .resolved-entry code,
+      .open-entry code,
+      .intent code,
+      .prop-quote code {
+        font-family: var(--font-mono);
+        font-size: 0.85em;
+        color: var(--accent);
+        background: rgba(74, 158, 255, 0.06);
+        padding: 0.05em 0.35em;
+        border-radius: 3px;
+      }
+
+      .resolved-section,
+      .open-section {
+        margin-top: 2rem;
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .resolved-section h2,
+      .open-section h2 {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+      }
+
+      .resolved-section h3 {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin: 2.5rem 0 1.5rem;
+      }
+
+      .section-intro {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+      }
+
+      .resolved-entry {
+        padding-left: 1.25rem;
+        border-left: 2px solid rgba(255,255,255,0.08);
+        margin-bottom: 1.25rem;
+      }
+
+      .resolved-entry p {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+      }
+
+      .resolved-entry.partial p {
+        color: var(--text-secondary);
+        opacity: 0.92;
+      }
+
+      .resolved-entry strong {
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .open-entry {
+        position: relative;
+        padding: 1.25rem 1.5rem;
+        background: rgba(166, 107, 216, 0.04);
+        border: 1px solid rgba(166, 107, 216, 0.15);
+        border-left: 2px solid var(--open-purple);
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+      }
+
+      .open-entry:last-child {
+        margin-bottom: 0;
+      }
+
+      .open-label {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--open-purple);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.5rem;
+      }
+
+      .open-entry h3 {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+      }
+
+      .open-entry p {
+        color: var(--text-primary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+      }
+
+      .page-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      .page-footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 600px) {
+        main {
+          padding: 80px 1.25rem 4rem;
+        }
+
+        .page-header h1 {
+          font-size: 1.75rem;
+        }
+
+        .obj-title {
+          font-size: 1.375rem;
+        }
+
+        .steelman,
+        .concession,
+        .open-entry {
+          padding: 1rem;
+        }
+
+        .resolved-entry {
+          padding-left: 1rem;
+        }
+      }
+    </style>
+  </body>
+</html>
