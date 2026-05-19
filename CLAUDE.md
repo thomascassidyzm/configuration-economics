@@ -6,15 +6,15 @@
 
 **Core thesis**: Value = configurations that expand future option space under bounded energy flux.
 
-## Current State (v0.5.0, May 2026)
+## Current State (v0.6.0, May 2026)
 
 ### What Exists
 - **30 proposition nodes** with surface text + underlying logic
 - **Essay 1** (11 sections) mapped to propositions
-- **Alexander** (the Guide) - proposition-aware epistemic companion
+- **Alexander** (the Guide) - proposition-aware epistemic companion. As of v0.6.0, also runs as a move-evaluator on /applications/moves with a dedicated register.
 - **Epistemic status markers** - established, derived, contested, open
 - **/explore page** showing all propositions
-- **/applications/moves** - the local Δω rule operating on six worked cases
+- **/applications/moves** - the local Δω rule operating on six worked cases, plus Alexander wielding it on reader-supplied moves
 - **/lineage** - predecessors, debts, and CE's specific delta against each
 - **/objections** - the strongest attacks engaged with steelman + response + concession
 - **Version + build tracking** (semantic version + git hash)

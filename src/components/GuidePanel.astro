@@ -640,6 +640,7 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       if (path.startsWith('/explore')) return 'explore';
       if (path.startsWith('/academic')) return 'academic';
       if (path.startsWith('/research-frontier')) return 'research-frontier';
+      if (path.startsWith('/applications')) return 'applications';
       if (path.startsWith('/guided')) return 'guided';
       return 'essay';
     }

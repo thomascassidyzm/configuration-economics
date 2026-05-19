@@ -25,6 +25,25 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.6.0',
+    date: '2026-05-19',
+    title: 'Alexander as move-evaluator on /applications/moves',
+    summary: `Push 3: the rule becomes an instrument. Alexander is now wired into /applications/moves with a dedicated move-evaluator register. A reader who brings their own move — a policy, an infrastructure commitment, a land-use change, an institutional reform — gets the structured analysis the page's six worked cases use, produced by the framework's own logic. Where the verdict is ambiguous, Alexander says so. Where the move sits near one of the five failure modes in "Where this rule runs out", Alexander names the edge plainly. The credibility apparatus from v0.5.0 backs the verdicts when readers push back: Alexander can defer to /lineage for predecessors and /objections for engaged attacks.`,
+    changes: {
+      added: [
+        'New ReaderMode value: `applications`. Alexander adopts a move-evaluation register when the reader is on /applications/moves. The system prompt names the nine-step structured analysis template (brief description; pre-move R_living; post-move R_living; irreversibility horizon; who bears costs; who bears benefits; what would change the assessment; suggested verdict; reasoning) and instructs Alexander to produce ambiguous verdicts where appropriate rather than forcing certainty.',
+        'New SECTION_PROPOSITIONS entry for `applications` injecting the nine move-evaluation-relevant propositions: `option-space-as-chess-moves`, `observer-relative-option-space`, `viable-objective`, `asymmetry-of-option-space-change`, `configuration-generates-configuration`, `option-space-measurability`, `displaced-costs`, `time-asymmetry`, `binding-constraint`.',
+        'New AVAILABLE SURFACES section in the system prompt listing all eleven discoverable surfaces so Alexander can point readers to the right route when their question is about *where to go next* rather than *what is true*.',
+        '"Bring your own move" CTA on /applications/moves above the verdict legend, inviting readers to engage Alexander in move-evaluation mode.',
+        'GuidePanel mounted on /applications/moves (previously essay-only). Layout adjusted to reserve 460px on the right for the panel on screens wider than 1100px; below that the panel collapses to a mobile trigger.',
+        'URL inference in GuidePanel updated: `/applications/*` paths now route to `applications` mode automatically.',
+      ],
+      structural: [
+        'CE\'s actionability surface gains its instrument. /applications/moves was previously a museum of worked examples; it is now a venue where the rule is wielded. Pairs with the v0.5.0 credibility apparatus — verdicts produced under pressure can defer to /lineage (the predecessors that make the rule defensibly novel) and /objections (the attacks the rule has survived).',
+      ],
+    },
+  },
+  {
     version: 'v0.5.0',
     date: '2026-05-19',
     title: '/objections — the second credibility surface',

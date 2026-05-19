@@ -8,6 +8,7 @@
 // verdicts.
 
 import { VERSION, BUILD } from '../../lib/version';
+import GuidePanel from '../../components/GuidePanel.astro';
 
 type Verdict = 'degrading' | 'preserving' | 'expanding' | 'ambiguous';
 
@@ -123,6 +124,15 @@ const verdictLabel: Record<Verdict, string> = {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <script is:inline>
+      // Wire Alexander into move-evaluator mode on this page. The mode
+      // is also inferred from the URL path, but setting it explicitly
+      // here makes the contract visible. currentSectionId triggers the
+      // proposition injection for SECTION_PROPOSITIONS['applications'].
+      window.currentMode = 'applications';
+      window.currentSectionId = 'applications';
+      window.currentSection = 'Applications · Moves';
+    </script>
   </head>
   <body>
     <nav class="top-nav">
@@ -153,6 +163,13 @@ const verdictLabel: Record<Verdict, string> = {
         </p>
         <p>
           The verdicts are produced by the framework's own logic. Where they match conventional consensus, that is incidental. Where they diverge — or where the rule refuses to deliver a clean verdict — the analysis says so.
+        </p>
+      </section>
+
+      <section class="bring-your-own">
+        <span class="bring-label">Bring your own move</span>
+        <p>
+          The rule is meant to be used, not displayed. Alexander, the guide on the right, is in <em>move-evaluation</em> mode on this page. Describe a configuration-change you are considering — a policy, an infrastructure commitment, a land-use change, an institutional reform — and Alexander will run the same structured analysis the six cases use: pre-move R_living, post-move R_living, irreversibility horizon, costs, benefits, what would change the assessment, verdict, reasoning. Where the verdict is ambiguous, the rule says so honestly. Where the move sits near one of the five failure modes named in <em>Where this rule runs out</em>, the analysis names the edge plainly.
         </p>
       </section>
 
@@ -244,6 +261,8 @@ const verdictLabel: Record<Verdict, string> = {
       </footer>
     </main>
 
+    <GuidePanel currentSection="Applications · Moves" epistemicStatus="contested" />
+
     <style>
       :root {
         --void: #0a0a0c;
@@ -329,6 +348,15 @@ const verdictLabel: Record<Verdict, string> = {
         padding: 100px 2rem 6rem;
       }
 
+      /* Reserve room for the GuidePanel on desktop. Panel is 440px wide and
+         fixed to the right edge of the viewport; below 1100px the panel
+         collapses to a mobile trigger and main can use the full width. */
+      @media (min-width: 1101px) {
+        main {
+          margin-right: 460px;
+        }
+      }
+
       .page-header {
         margin-bottom: 3rem;
       }
@@ -375,6 +403,31 @@ const verdictLabel: Record<Verdict, string> = {
 
       .intro a:hover {
         text-decoration: underline;
+      }
+
+      .bring-your-own {
+        margin-bottom: 3rem;
+        padding: 1.25rem 1.5rem;
+        background: rgba(74, 158, 255, 0.05);
+        border: 1px solid rgba(74, 158, 255, 0.18);
+        border-left: 2px solid var(--accent);
+        border-radius: 4px;
+      }
+
+      .bring-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.5rem;
+      }
+
+      .bring-your-own p {
+        color: var(--text-primary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
       }
 
       .legend {
