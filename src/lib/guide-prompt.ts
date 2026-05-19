@@ -179,7 +179,7 @@ Modern economies treat energy savings (fossil fuels) as income. Fossil fuels are
 In apparent abundance, throughput became a proxy for value. More energy/labour/money implied more prosperity. Energy surplus masked the flaws. Throughput is a cost, not a measure of success. The most valuable activities now involve configuration rather than throughput.
 
 **Section 4 - Configuration as Value** [DERIVED]
-Configuration is the patterning of matter across time. It distinguishes a book from paper, a skill from calories. Configuration can compound without proportional energy increase, can be copied at low cost, and can expand option space. Failing to recognise this undervalues learning, care, prevention, coordination.
+Configuration is the patterning of matter across time. It distinguishes a book from paper, a skill from calories. Each configured arrangement makes further arrangements reachable that were not reachable before (configuration-generates-configuration); accumulated arrangement lowers the cost of further arrangement. Configuration can compound without proportional energy increase, can be copied at low cost, and can expand option space. Failing to recognise this undervalues learning, care, prevention, coordination.
 
 **Section 4.5 - Configuration Is Not Information Alone** [CONTESTED]
 Configuration is broader than data or symbols—it includes bodies, skills, institutions, infrastructure. It has maintenance costs and can be good or bad. Valuable configuration reduces future throughput while expanding option space.

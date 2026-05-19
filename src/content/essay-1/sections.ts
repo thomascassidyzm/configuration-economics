@@ -109,6 +109,7 @@ The failure is not moral. It is categorical. Throughput-based proxies are being 
     keyPoints: [
       'Configuration is the patterning of matter across time',
       'It distinguishes a book from paper, a skill from calories',
+      'Each configured arrangement makes further arrangements reachable; the runaway compounds where substrate is preserved',
       'Configuration can compound without proportional energy increase',
       'Failing to recognise this undervalues learning, care, prevention, coordination',
     ],
@@ -118,13 +119,14 @@ Configuration accumulates.
 
 What distinguishes a book from paper, a skill from calories, a culture from a crowd, is not the amount of matter involved but the **patterning of matter across time**. Configuration is the arrangement of elements such that future actions become easier, richer, or more varied.
 
-Biological evolution is the most familiar example. Over billions of years, the same atoms have been reconfigured into increasingly complex organisms, not by increasing throughput indefinitely, but by refining structures that store, transmit, and reuse information. Culture, language, science, and technology are continuations of this process by other means.
+Biological evolution is the most familiar example. Over billions of years, the same atoms have been reconfigured into increasingly complex organisms, not by increasing throughput indefinitely, but by refining structures that store, transmit, and reuse information. Culture, language, science, and technology are continuations of this process by other means. The underlying mechanism is the same in each case: each configured arrangement makes further arrangements reachable that were not reachable before, and accumulated arrangement lowers the cost of further arrangement.
 
-Configuration differs from throughput in three crucial ways. It can compound without proportional energy increase. It can be copied and transmitted at low marginal cost. And it can expand future option space rather than merely satisfy present demand.
+Configuration differs from throughput in three crucial ways. It can compound without proportional energy increase — the rate at which new configurations become reachable grows with what is already there. It can be copied and transmitted at low marginal cost. And it can expand future option space rather than merely satisfy present demand.
 
 An economy that fails to recognise configuration as a primary source of value will systematically undervalue learning, care, prevention, coordination, and meaning—while overvaluing extraction, churn, and short-lived production.
 
 This is not a moral oversight. It is a measurement failure.`,
+    revisedAt: '2026-05-19',
   },
   {
     id: 'configuration-not-information',

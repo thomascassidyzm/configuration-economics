@@ -25,6 +25,18 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.4.1',
+    date: '2026-05-19',
+    title: 'Essay §4 integrated with configuration-generates-configuration',
+    summary: `Integration pass following the v0.4.0 push. §4 (configuration-value) prose carried the generative-mechanism claim implicitly throughout — "structures that store, transmit, and reuse information"; "compound without proportional energy increase" — without naming the structural move. The integration adds one sentence to the biological-evolution paragraph that names the mechanism (each configured arrangement makes further arrangements reachable; accumulated arrangement lowers the cost of further arrangement), and a clause to the "compound without proportional energy increase" line that surfaces the rate-grows-with-accumulation claim. §4.5 was already tight — the productive/destructive distinction is named in prose; no integration touch needed there.`,
+    changes: {
+      revised: [
+        'Essay §4 configuration-value — added one sentence after the biological-evolution paragraph naming the generative mechanism explicitly. Extended the "compound without proportional energy increase" line with the rate-grows-with-accumulation clause. keyPoints gained a fourth entry on the runaway-when-substrate-preserved point. revisedAt: 2026-05-19.',
+        'Alexander system-prompt §4 summary tightened to mention configuration-generates-configuration and the structural mechanism it names. §4.5 summary already current.',
+      ],
+    },
+  },
+  {
     version: 'v0.4.0',
     date: '2026-05-18',
     title: 'Generative-side proposition + /lineage page',
