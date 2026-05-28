@@ -973,6 +973,27 @@ export function getLinkedPropositions(id: string): Proposition[] {
     .filter((p): p is Proposition => p !== undefined);
 }
 
+// Inbound links: propositions that point AT this one. Links are non-semantic
+// ("links to", not "depends on"), so this returns the connective neighbourhood
+// a reader should check when a premise here is attacked — not a proven
+// dependency. The attack surface surfaces these as "what to check next."
+export function getDependents(id: string): Proposition[] {
+  return PROPOSITIONS.filter(p => p.linksTo.includes(id));
+}
+
+// Both directions, de-duplicated — the full connective neighbourhood of a
+// proposition, used by the attack surface to show what a premise touches.
+export function getNeighbourhood(id: string): Proposition[] {
+  const out = getLinkedPropositions(id);
+  const inb = getDependents(id);
+  const seen = new Set<string>();
+  return [...out, ...inb].filter(p => {
+    if (p.id === id || seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
+}
+
 export function getAllLinks(): { from: string; to: string }[] {
   const links: { from: string; to: string }[] = [];
   PROPOSITIONS.forEach(prop => {

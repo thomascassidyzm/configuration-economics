@@ -6,17 +6,18 @@
 
 **Core thesis**: Value = configurations that expand future option space under bounded energy flux.
 
-## Current State (v0.7.0, May 2026)
+## Current State (v0.8.0, May 2026)
 
 ### What Exists
 - **30 proposition nodes** with surface text + underlying logic
 - **Essay 1** (11 sections) mapped to propositions
-- **Alexander** (the Guide) - proposition-aware epistemic companion. As of v0.7.0, mounted on every grokkable surface (essay, overview, explore, research-frontier, lineage, objections, applications/moves, practice) with mode-adaptive register tuned to each surface's resolution.
+- **Alexander** (the Guide) - proposition-aware epistemic companion. As of v0.7.0, mounted on every grokkable surface (essay, overview, explore, research-frontier, lineage, objections, applications/moves, attack, practice) with mode-adaptive register tuned to each surface's resolution.
 - **Epistemic status markers** - established, derived, contested, open
-- **/explore page** showing all propositions
+- **/explore page** showing all propositions; each premise is individually attackable (⚔ control opens the guide in premise-defense mode)
 - **/applications/moves** - the local Δω rule operating on six worked cases, plus Alexander wielding it on reader-supplied moves
 - **/lineage** - predecessors, debts, and CE's specific delta against each
-- **/objections** - the strongest attacks engaged with steelman + response + concession
+- **/objections** - the strongest whole-framework attacks engaged with steelman + response + concession
+- **/attack** - per-premise stress-testing. Three worked examples (one per epistemic-status tier) as steelman → response → concession → blast-radius (blast-radius chips computed live from the link graph). The third credibility surface; the format's sharpest self-demonstration.
 - **Version + build tracking** (semantic version + git hash)
 
 ### Key Files

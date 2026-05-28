@@ -1,0 +1,661 @@
+---
+// Attack a Premise: the format's sharpest demonstration.
+// A claim is not a monolith — it is an explicit set of premises with an
+// epistemic status and a connective neighbourhood. Any single premise can be
+// targeted on its own. This page shows three worked premise-attacks, one per
+// epistemic-status tier (established / contested / open), so the reader can
+// see that the response calibrates to confidence: an established premise gets
+// a strong defence and a scope-level concession; a contested premise gets
+// genuine give-and-take; an open premise is not defended at all — the honest
+// answer is "this isn't settled; here is the candidate; here is what would
+// close it." The blast-radius chips are computed from the real link graph, so
+// they cannot drift from canon. Live attack buttons hand off to Alexander.
+
+import { VERSION, BUILD } from '../lib/version';
+import { getPropositionById, getNeighbourhood } from '../content/propositions';
+import GuidePanel from '../components/GuidePanel.astro';
+
+// The three worked cases, one per epistemic-status tier. The premise text is
+// pulled from canon by index so it stays in sync with propositions.ts.
+const CASES = [
+  { propId: 'exergy-not-energy', premiseIndex: 0 },
+  { propId: 'value-option-space', premiseIndex: 0 },
+  { propId: 'option-space-measurability', premiseIndex: 2 },
+] as const;
+
+function caseData(propId: string, premiseIndex: number) {
+  const prop = getPropositionById(propId)!;
+  return {
+    prop,
+    premise: prop.logic.premises[premiseIndex],
+    neighbours: getNeighbourhood(propId),
+  };
+}
+
+const exergy = caseData('exergy-not-energy', 0);
+const value = caseData('value-option-space', 0);
+const measure = caseData('option-space-measurability', 2);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Attack a Premise — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <script is:inline>
+      window.currentMode = 'attack';
+      window.currentSection = 'Attack a Premise';
+    </script>
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/explore" class="nav-link">Explore</a>
+        <a href="/objections" class="nav-link">Objections</a>
+        <a href="/lineage" class="nav-link">Lineage</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>Attack a Premise</h1>
+        <p class="subtitle">A claim is not a monolith. Pick it apart at the joint.</p>
+        <p class="note">The format's sharpest demonstration, and the one a printed paper cannot offer.</p>
+      </header>
+
+      <section class="intent">
+        <p>
+          Every proposition in this work is stored as an explicit structure: a claim, the <strong>premises</strong> it rests on, the conclusion that follows, an <strong>epistemic status</strong>, and a set of links to neighbouring propositions. That structure is not decoration. It means a reader does not have to accept or reject a claim whole — they can target a single premise and ask the work to defend exactly that, and only that.
+        </p>
+        <p>
+          When you do, the guide runs the same four steps every time: <em>steelman</em> the strongest version of your attack, <em>respond</em> from the canonical text, <em>concede</em> what the attack legitimately costs, and trace the <em>blast radius</em> — which connected propositions actually lean on the premise you hit, and which would survive without it.
+        </p>
+        <p class="differs">
+          <strong>How this differs from <a href="/objections">/objections</a>.</strong> The objections page engages whole-framework attacks the authors chose in advance. This page hands the reader the scalpel: <em>any</em> premise of <em>any</em> proposition, including ones no one has attacked yet. The three cases below are worked examples — one established premise, one contested, one open — chosen to show the response calibrates to how confident the claim actually is. The defence of an established premise should be strong and its concession small; an open premise should not be defended at all.
+        </p>
+      </section>
+
+      <!-- CASE 1: ESTABLISHED -->
+      <section class="attack-case">
+        <div class="case-head">
+          <span class={`status status-${exergy.prop.epistemicStatus}`}>{exergy.prop.epistemicStatus}</span>
+          <h2><a href={`/explore#${exergy.prop.id}`}>{exergy.prop.title}</a></h2>
+        </div>
+        <p class="case-claim">{exergy.prop.logic.claim}</p>
+
+        <div class="premise-under-attack">
+          <span class="pua-label">Premise under attack</span>
+          <p>{exergy.premise}</p>
+        </div>
+
+        <blockquote class="steelman">
+          <span class="block-label">Steelman</span>
+          <p>"Closed process" is doing all the work and it is the wrong idealisation. The economy is wide open — it runs on a continuous ~175 PW solar throughput. Appealing to conservation in a <em>closed</em> system to describe an <em>open</em> one is a sleight of hand. Energy crosses the boundary constantly, so "energy is conserved, therefore what you spend is exergy" is a definitional trick, not a finding.</p>
+        </blockquote>
+
+        <div class="response">
+          <span class="block-label">Response</span>
+          <p>The first law holds in open systems too — energy crossing a boundary is accounted, not exempted, and nothing in the premise requires the economy itself to be closed. The premise names conservation in <em>any</em> process to fix the currency: because energy is never destroyed, "energy consumption" cannot be what an economy spends. What it spends is the <em>gradient</em> — the distance from equilibrium that can do work. That is exactly the open-system-correct quantity, and it is the whole point of <code>exergy-not-energy</code>: the open solar throughput the attack invokes is itself an exergy flux, not a counterexample to the premise. The attack, pushed to its strongest form, actually restates the proposition.</p>
+        </div>
+
+        <div class="concession">
+          <span class="block-label">What's honest to concede</span>
+          <p>The concession is about <em>scope and operationalisation</em>, not truth. Choosing the accounting boundary is a real modelling decision, and "the economy consumes energy" is a forgivable shorthand that this work itself uses in accessible prose. More substantively: rendering exergy accounting at the resolution of actual economic decisions — sectoral exergy budgets, exergy-LCA — is operationalisable in principle but is not standard practice. That is the proposition's own stated open question. None of it touches the premise's truth; it bounds the premise's reach.</p>
+        </div>
+
+        <div class="blast-radius">
+          <span class="block-label">Blast radius</span>
+          <p>If this premise fell, the damage would be small and contained — which is what <code>established</code> should mean. The propositions linked here lean on exergy as the right currency, not on the conservation premise specifically; they would stand on the physics regardless. Links are non-semantic ("links to", not "depends on") — check each yourself:</p>
+          <div class="neighbours">
+            {exergy.neighbours.map(n => (
+              <a href={`/explore#${n.id}`} class={`neighbour status-border-${n.epistemicStatus}`}>
+                <span class={`status-dot status-dot-${n.epistemicStatus}`}></span>{n.title}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <button
+          class="attack-cta"
+          data-prop={exergy.prop.id}
+          data-prop-title={exergy.prop.title}
+          data-status={exergy.prop.epistemicStatus}
+          data-premise={exergy.premise}
+        >⚔ Attack this premise yourself</button>
+      </section>
+
+      <!-- CASE 2: CONTESTED -->
+      <section class="attack-case">
+        <div class="case-head">
+          <span class={`status status-${value.prop.epistemicStatus}`}>{value.prop.epistemicStatus}</span>
+          <h2><a href={`/explore#${value.prop.id}`}>{value.prop.title}</a></h2>
+        </div>
+        <p class="case-claim">{value.prop.logic.claim}</p>
+
+        <div class="premise-under-attack">
+          <span class="pua-label">Premise under attack</span>
+          <p>{value.premise}</p>
+        </div>
+
+        <blockquote class="steelman">
+          <span class="block-label">Steelman</span>
+          <p>This premise is teleological and it smuggles the conclusion. Life does not "maintain local order <em>to</em> preserve future action possibilities" — that imports purpose into physics. A dissipative structure maintains order because it is downhill in free energy, full stop; "future action possibilities" is a gloss you have added so that the keystone claim, <em>value is option space</em>, falls out of a premise that already contains it. Strip the teleology and the premise says only "ordered systems persist while they persist," which entails nothing about value.</p>
+        </blockquote>
+
+        <div class="response">
+          <span class="block-label">Response</span>
+          <p>The teleological reading is avoidable and the premise survives the structural one. Read it as selection, not intention: systems whose configurations did <em>not</em> keep future states reachable did not persist to be observed, so the living configurations we find are disproportionately those that preserve reachability. No purpose is required — only differential persistence, which is exactly <code>observer-relative-option-space</code>'s move: the relevant slice is the one in which life-persisting observers continue to exist and make distinctions. So the premise is not "ordered systems happen to persist"; it is "the configurations life occupies are biased toward keeping futures open," which is an observation about which structures are still here, not a purpose ascribed to them.</p>
+        </div>
+
+        <div class="concession">
+          <span class="block-label">What's honest to concede</span>
+          <p>The attack lands a real hit, and this is why the proposition is <code>contested</code> rather than <code>derived</code>. The structural reading rescues the premise, but the step from <em>"living configurations preserve reachability"</em> to <em>"therefore value <strong>is</strong> reachability-preservation"</em> is a genuine inference the premise does not force — one could accept the biology and still locate value elsewhere (in preference, in experience, in nothing). The premise earns the keystone its plausibility; it does not prove it. The work marks that gap with the <code>contested</code> status rather than papering over it.</p>
+        </div>
+
+        <div class="blast-radius">
+          <span class="block-label">Blast radius</span>
+          <p>This is the keystone, so the radius is wide. If the premise genuinely failed — if the option-space construal of value collapsed — most of the propositions below would have to reorganise around a different account of value. They do not merely "link to" this one; they inherit its central move. That is what makes this the highest-leverage premise in the work, and why it is worth attacking first. Links are non-semantic — verify the dependence yourself:</p>
+          <div class="neighbours">
+            {value.neighbours.map(n => (
+              <a href={`/explore#${n.id}`} class={`neighbour status-border-${n.epistemicStatus}`}>
+                <span class={`status-dot status-dot-${n.epistemicStatus}`}></span>{n.title}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <button
+          class="attack-cta"
+          data-prop={value.prop.id}
+          data-prop-title={value.prop.title}
+          data-status={value.prop.epistemicStatus}
+          data-premise={value.premise}
+        >⚔ Attack this premise yourself</button>
+      </section>
+
+      <!-- CASE 3: OPEN -->
+      <section class="attack-case">
+        <div class="case-head">
+          <span class={`status status-${measure.prop.epistemicStatus}`}>{measure.prop.epistemicStatus}</span>
+          <h2><a href={`/explore#${measure.prop.id}`}>{measure.prop.title}</a></h2>
+        </div>
+        <p class="case-claim">{measure.prop.logic.claim}</p>
+
+        <div class="premise-under-attack">
+          <span class="pua-label">Premise under attack</span>
+          <p>{measure.premise}</p>
+        </div>
+
+        <blockquote class="steelman">
+          <span class="block-label">Steelman</span>
+          <p>Then the entire value theory is vacuous. You define value as configurations that expand future option space, and here you admit there is no demonstrated way to measure that option space at the level of a state. A quantity you cannot compute cannot rank economies, cannot price a policy, cannot do the one job — replacing GDP — you built it to do. "Candidate measures exist but none is operational" is a confession that the centre of the framework is empty.</p>
+        </blockquote>
+
+        <div class="response">
+          <span class="block-label">Response</span>
+          <p>There is nothing to defend here, and pretending otherwise would be the failure. The premise is true and the work gives this proposition the only <code>open</code> status in the entire set precisely to say so. The honest structure is the split the proposition itself draws: <em>global</em> option space — a scalar over a whole state — is genuinely unmeasured, and the candidate formalisations (reachable configurations under an exergy budget, Kauffman's adjacent possible, Assembly-weighted sets) have not been shown to be economically operational. But <em>local</em> Δω — whether a given move opens or closes the reachable set — is tractable now, which is the content of <code>option-space-as-chess-moves</code>, and it is what <a href="/applications/moves">/applications/moves</a> runs on real cases. So the centre is not empty; it is honest about which half is built. What would close the premise is a demonstrated state-level measure. No one has one. The work says no one has one.</p>
+        </div>
+
+        <div class="concession">
+          <span class="block-label">What's honest to concede</span>
+          <p>Almost everything the attack asks for. State-comparison applications — ranking configurations, scoring whole economies against each other — genuinely wait on the global measure and cannot proceed without it. At the state level, "option space" currently functions as a <em>direction</em> for measurement, not a measurement. The only thing the concession does not grant is the leap from "the state measure is open" to "the framework is vacuous": the move-level procedure is operational and decides consequential cases today. The premise costs the work its state-comparison ambitions, not its decision procedure.</p>
+        </div>
+
+        <div class="blast-radius">
+          <span class="block-label">Blast radius</span>
+          <p>The propositions linked here are the ones that would inherit the limitation — and they already do, by design. <code>value-option-space</code> and <code>viable-objective</code> are both written in their operational, move-level form rather than as state-scoring rules; they survive an unmeasured global ω because they were never staked on it. This is the format working as intended: an open joint declared open, with the load-bearing neighbours pre-hedged against it. Links are non-semantic — check each:</p>
+          <div class="neighbours">
+            {measure.neighbours.map(n => (
+              <a href={`/explore#${n.id}`} class={`neighbour status-border-${n.epistemicStatus}`}>
+                <span class={`status-dot status-dot-${n.epistemicStatus}`}></span>{n.title}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <button
+          class="attack-cta"
+          data-prop={measure.prop.id}
+          data-prop-title={measure.prop.title}
+          data-status={measure.prop.epistemicStatus}
+          data-premise={measure.premise}
+        >⚔ Attack this premise yourself</button>
+      </section>
+
+      <!-- BRING YOUR OWN -->
+      <section class="byo">
+        <h2>Attack any premise in the work</h2>
+        <p>
+          These three are worked examples, not the boundary. Every proposition's premises are individually attackable: open any proposition's logic on <a href="/explore">/explore</a> and each premise carries an <span class="inline-attack">⚔ attack</span> control that hands the guide that exact premise. Or state your own attack to the guide here — name the proposition and the premise, and it will run the same four steps.
+        </p>
+        <p class="byo-note">
+          The guide will not pretend the framework has survived an attack it has not. Where a premise is genuinely weak, it will say the attack is strong. That is the point of building the work this way.
+        </p>
+      </section>
+
+      <footer class="page-footer">
+        <p>
+          Return to the <a href="/overview">overview</a>, the full <a href="/essay">essay</a>, the
+          <a href="/explore">explore</a> view where every premise is attackable,
+          <a href="/applications/moves">/applications/moves</a> for the rule operating on cases,
+          <a href="/objections">/objections</a> for whole-framework attacks engaged,
+          <a href="/lineage">/lineage</a> for the predecessors,
+          or the <a href="/research-frontier">research frontier</a> for what remains open.
+        </p>
+      </footer>
+    </main>
+
+    <GuidePanel currentSection="Attack a Premise" epistemicStatus="contested" />
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+        --steelman-red: #c97070;
+        --amber: #e6a545;
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.7;
+      }
+
+      .top-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .nav-link {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+
+      .nav-link:hover { color: var(--accent); }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+      }
+
+      .nav-version {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+
+      .nav-build {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      main {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 100px 2rem 6rem;
+      }
+
+      @media (min-width: 1101px) {
+        main { margin-right: 460px; }
+      }
+
+      .page-header { margin-bottom: 3rem; }
+
+      .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        font-weight: 400;
+        margin-bottom: 0.75rem;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .note { color: var(--text-muted); font-size: 0.875rem; }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .intent a:hover, .byo a:hover, .page-footer a:hover,
+      .response a:hover, .case-head a:hover { text-decoration: underline; }
+
+      .intent {
+        margin-bottom: 3.5rem;
+        padding-bottom: 2.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .intent p {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.75;
+        margin-bottom: 1rem;
+      }
+
+      .intent p:last-child { margin-bottom: 0; }
+
+      .differs {
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(255,255,255,0.04);
+      }
+
+      .differs strong, .intent strong { color: var(--text-primary); font-weight: 500; }
+
+      /* Worked cases */
+      .attack-case {
+        margin-bottom: 4rem;
+        padding-bottom: 3rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .case-head {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.75rem;
+      }
+
+      .case-head h2 {
+        font-family: var(--font-display);
+        font-size: 1.75rem;
+        font-weight: 500;
+      }
+
+      .case-head h2 a { color: var(--text-primary); }
+
+      .status {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .status-established { color: #4a9eff; border-color: rgba(74,158,255,0.3); background: rgba(74,158,255,0.05); }
+      .status-derived { color: #6abf4a; border-color: rgba(106,191,74,0.3); background: rgba(106,191,74,0.05); }
+      .status-contested { color: #e6a545; border-color: rgba(230,165,69,0.3); background: rgba(230,165,69,0.05); }
+      .status-open { color: #a66bd8; border-color: rgba(166,107,216,0.3); background: rgba(166,107,216,0.05); }
+
+      .case-claim {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .premise-under-attack {
+        padding: 1rem 1.25rem;
+        background: rgba(230, 165, 69, 0.05);
+        border: 1px solid rgba(230, 165, 69, 0.2);
+        border-radius: 4px;
+        margin-bottom: 2rem;
+      }
+
+      .pua-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--amber);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.5rem;
+      }
+
+      .premise-under-attack p {
+        color: var(--text-primary);
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .block-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.5rem;
+      }
+
+      .steelman {
+        margin: 0 0 1.5rem;
+        padding: 1.25rem 1.5rem;
+        border-left: 3px solid var(--steelman-red);
+        background: rgba(201, 112, 112, 0.05);
+        border-radius: 0 4px 4px 0;
+      }
+
+      .steelman .block-label { color: var(--steelman-red); }
+
+      .steelman p {
+        color: var(--text-primary);
+        font-style: italic;
+        font-size: 0.9375rem;
+        line-height: 1.7;
+      }
+
+      .response { margin-bottom: 1.5rem; }
+
+      .response .block-label { color: var(--text-muted); }
+
+      .response p {
+        color: var(--text-primary);
+        font-size: 0.9375rem;
+        line-height: 1.75;
+      }
+
+      .concession {
+        padding: 1rem 1.25rem;
+        background: rgba(74, 158, 255, 0.04);
+        border: 1px solid rgba(74, 158, 255, 0.15);
+        border-left: 2px solid var(--accent);
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+      }
+
+      .concession .block-label { color: var(--accent); }
+
+      .concession p {
+        color: var(--text-primary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+      }
+
+      .blast-radius { margin-bottom: 1.5rem; }
+
+      .blast-radius .block-label { color: var(--text-muted); }
+
+      .blast-radius p {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+      }
+
+      .neighbours {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .neighbour {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        padding: 0.3rem 0.6rem;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-left-width: 2px;
+        border-radius: 4px;
+        transition: all 0.15s ease;
+      }
+
+      .neighbour:hover {
+        color: var(--text-primary);
+        border-color: rgba(255,255,255,0.25);
+        text-decoration: none;
+      }
+
+      .status-border-established { border-left-color: #4a9eff; }
+      .status-border-derived { border-left-color: #6abf4a; }
+      .status-border-contested { border-left-color: #e6a545; }
+      .status-border-open { border-left-color: #a66bd8; }
+
+      .status-dot {
+        width: 7px; height: 7px; border-radius: 50%;
+        display: inline-block;
+      }
+      .status-dot-established { background: #4a9eff; }
+      .status-dot-derived { background: #6abf4a; }
+      .status-dot-contested { background: #e6a545; }
+      .status-dot-open { background: #a66bd8; }
+
+      .attack-cta {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        border: 1px solid rgba(230, 165, 69, 0.4);
+        background: transparent;
+        color: var(--amber);
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .attack-cta:hover {
+        background: rgba(230, 165, 69, 0.1);
+        border-color: var(--amber);
+        color: #fff;
+      }
+
+      /* Bring your own */
+      .byo {
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+      }
+
+      .byo h2 {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+
+      .byo p {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.75;
+        margin-bottom: 1rem;
+      }
+
+      .byo-note { color: var(--text-muted); font-size: 0.875rem; }
+
+      .inline-attack {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--amber);
+        border: 1px solid rgba(230, 165, 69, 0.3);
+        border-radius: 3px;
+        padding: 0.05em 0.4em;
+        white-space: nowrap;
+      }
+
+      .response code, .concession code, .blast-radius code, .intent code {
+        font-family: var(--font-mono);
+        font-size: 0.85em;
+        color: var(--accent);
+        background: rgba(74, 158, 255, 0.06);
+        padding: 0.05em 0.35em;
+        border-radius: 3px;
+      }
+
+      .page-footer {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      @media (max-width: 600px) {
+        main { padding: 80px 1.25rem 4rem; }
+        .page-header h1 { font-size: 1.75rem; }
+        .case-head h2 { font-size: 1.375rem; }
+        .steelman, .concession, .premise-under-attack { padding: 1rem; }
+      }
+    </style>
+
+    <script>
+      // Hand each worked-example CTA to the GuidePanel's attackPremise entry
+      // point, which puts Alexander into premise-defense mode bound to that
+      // premise. We do not auto-send — the reader presses send (or edits to
+      // their own attack), so no billed call fires on click.
+      document.querySelectorAll<HTMLButtonElement>('.attack-cta').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const w = window as any;
+          if (typeof w.attackPremise === 'function') {
+            w.attackPremise(
+              btn.dataset.prop,
+              btn.dataset.premise,
+              btn.dataset.propTitle,
+              btn.dataset.status
+            );
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

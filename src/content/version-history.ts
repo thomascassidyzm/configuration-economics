@@ -25,6 +25,25 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.8.0',
+    date: '2026-05-28',
+    title: 'Attack a premise — the format demonstrates itself',
+    summary: `The format's central claim has been that a claim is not a monolith — it is an explicit set of premises with an epistemic status and a connective neighbourhood, so any single premise can be stress-tested on its own. v0.8.0 makes that claim operable. A new /attack surface lets a reader target one premise and get a four-step response from the guide: steelman the strongest version of the attack, respond from canon, concede what the attack legitimately costs, and trace the blast radius — which connected propositions actually lean on the premise and which survive without it. Three worked examples span the epistemic-status tiers (an established premise, a contested premise, an open premise) to show the response calibrates to confidence: the established premise gets a strong defence and a scope-level concession; the open premise is not defended at all, only located. The same affordance is wired in-place on /explore: open any proposition's logic and each premise carries an attack control. This is the demonstration a printed paper cannot offer — interactive, per-premise falsifiability over the work's own dependency structure.`,
+    changes: {
+      added: [
+        '/attack page — three worked premise-attacks, one per epistemic-status tier. `exergy-not-energy` (established): the attack that the closed-system idealisation is wrong, answered by showing exergy is the open-system-correct currency; concession is about operationalisation, not truth. `value-option-space` (contested): the teleology/circularity attack on the keystone premise, answered structurally via selection rather than intention; concession names the genuine is-to-value gap that the contested status marks. `option-space-measurability` (open): the vacuity attack, not defended — the honest split between the open global measure and the operational local Δω, conceding the state-comparison ambitions while keeping the move-level procedure. Each case carries a steelman → response → concession → blast-radius structure, with blast-radius chips computed live from the link graph so they cannot drift from canon.',
+        'Per-premise attack control on /explore — opening a proposition\'s logic now shows an ⚔ attack affordance on every premise. Clicking hands the guide that exact premise in premise-defense mode.',
+        'New ReaderMode value: `attack`. The guide adopts a premise-defense register bound to the targeted premise, calibrated to its epistemic status: a strong defence and small concession for `established`, genuine give-and-take for `contested`, and "this isn\'t settled — here is the candidate, here is what would close it" for `open`. An `open` premise defended as if established is explicitly named as a failure of the mode.',
+        'New `attackFocus` field on GuideContext (proposition id + premise text). buildPromptWithContext injects an ATTACK FOCUS block naming the targeted claim, its full premise list, its status, and its connective neighbourhood, with an explicit instruction to judge real dependence rather than echo the non-semantic link list.',
+        'New SECTION_PROPOSITIONS entry for `attack` (the three worked-example propositions plus the keystone). New AVAILABLE SURFACES entry for /attack. GuidePanel URL inference routes /attack → attack mode; the panel exposes an `attackPremise()` entry point that pre-fills the input rather than auto-sending, so no billed model call fires on a click.',
+        'New `getDependents` and `getNeighbourhood` helpers in propositions.ts (inbound and combined links) backing the blast-radius computation.',
+      ],
+      structural: [
+        '/attack linked from index.astro, /overview footer, /research-frontier footer, /objections footer, and /lineage footer. It is the third member of the credibility apparatus alongside /lineage (inheritance) and /objections (defended ground): where /objections engages whole-framework attacks chosen in advance, /attack hands the reader the scalpel for any premise of any proposition, including ones no one has attacked yet.',
+      ],
+    },
+  },
+  {
     version: 'v0.7.0',
     date: '2026-05-19',
     title: 'Alexander present on every grokkable surface',

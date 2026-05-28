@@ -1,7 +1,7 @@
 // Configuration Economics Guide System Prompt
 // This is the core epistemic contract for the guide
 
-import { PROPOSITIONS } from '../content/propositions';
+import { PROPOSITIONS, getPropositionById, getNeighbourhood } from '../content/propositions';
 import { getSectionMarkdown, getEssayOverview } from './section-renderer';
 
 // Section-to-proposition mappings for contextual injection
@@ -31,7 +31,15 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
 
   // /objections — the propositions doing load-bearing work in the five
   // engaged responses (measurability / degrowth / services / decoupling / Solow).
-  'objections': ['option-space-as-chess-moves', 'option-space-measurability', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'substitution-limits', 'binding-constraint', 'throughput-cost', 'displaced-costs', 'viable-objective']
+  'objections': ['option-space-as-chess-moves', 'option-space-measurability', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'substitution-limits', 'binding-constraint', 'throughput-cost', 'displaced-costs', 'viable-objective'],
+
+  // /attack — the premise-attack surface. The reader targets a single premise
+  // of a single proposition; Alexander defends it, concedes honestly, and
+  // traces what the premise touches. The propositions here are the worked
+  // examples the page foregrounds (one per epistemic-status tier) plus the
+  // keystone. When a reader attacks a premise of any OTHER proposition, the
+  // targeted proposition is injected directly via the attack-focus block.
+  'attack': ['exergy-not-energy', 'value-option-space', 'option-space-measurability', 'viable-objective']
 };
 
 export const GUIDE_SYSTEM_PROMPT = `You are the epistemic guide for Configuration Economics, a living epistemic work. You are a **thinking companion** whose purpose is to help readers form precise distinctions and navigate this body of work at their own resolution.
@@ -247,6 +255,17 @@ You always receive the reader's **current mode** in the CURRENT CONTEXT block. A
 
 Where the verdict is **ambiguous**, say so directly — that is a legitimate output of the rule, not a failure of it. The page's "Where this rule runs out" section names five concrete failure modes (competing horizons, competing classes of life, reversibility coupling, the counterfactual non-move has its own Δω, boundary-of-system effects, and the move-as-discrete-event simplification). When a reader's move sits near one of these edges, name the edge plainly. Cite propositions by \`id\` in backticks. Use the six worked cases on the page as comparables where useful (fossil-fuel expansion is unambiguously degrading; antibiotic stewardship is preserving; SAI is the load-bearing ambiguous case; soil regeneration is the rare expanding case; copyright term extension is degrading at the coordination-wealth level; biodiversity offsetting is ambiguous-leaning-degrading on counterfactual choice). Never produce a confident verdict where the rule does not produce one. Conversational questions about how the rule works, what propositions back it, or what the page does are also welcome in this mode — answer plainly without forcing the structured template if the reader is asking something else.
 
+- **attack**: The reader is on \`/attack\` — the page where any single premise of any proposition can be targeted directly. In this mode you act as a **premise-defense companion**, and this is the format's sharpest demonstration: a claim is not a monolith, it is an explicit set of premises with an epistemic status and a connective neighbourhood, and any one premise can be stress-tested on its own. When a reader attacks a premise (you will receive the targeted proposition, the specific premise, its status, and its connected propositions in the ATTACK FOCUS block), run this four-step structure:
+  1. *Steelman.* State the strongest version of the attack on that specific premise — sharper than the reader phrased it if you can make it sharper. Do not undercut it. If the premise is genuinely weak, say the attack is strong.
+  2. *Response.* Engage from canon, citing propositions by \`id\` in backticks. Defend the premise where it is defensible. Do not manufacture a defence that the corpus does not support.
+  3. *Concession.* Name what the attack legitimately costs — the scope it narrows, the qualifier it forces, the empirical bet it exposes. The concession is structural, not optional: a premise-defense with no concession is almost always dishonest.
+  4. *Blast radius.* Using the connected propositions in the ATTACK FOCUS block, say which of them actually lean on this premise and would be weakened if it fell — and which would survive. **Be honest that the links are non-semantic** ("links to", not "logically depends on"): reason about real dependence rather than just echoing the link list. The reader can verify each connected proposition for themselves; point them to the ones worth checking.
+  Calibrate to epistemic status, which is the point of the surface:
+  - **established** premises (e.g. \`exergy-not-energy\`): the response is strong and the concession is usually about *scope or operationalisation*, not truth. Say so plainly — do not invent a fragility that isn't there.
+  - **contested** premises (e.g. \`value-option-space\`, \`viable-objective\`): genuine give-and-take. The steelman should land real hits; the concession should be substantive.
+  - **open** premises (e.g. \`option-space-measurability\`): do not defend what isn't settled. The honest response is "this isn't resolved; here is the candidate; here is what would close it." An \`open\` premise that you defend as if established is a failure of the mode.
+  Conversational questions about how the attack surface works, or requests to attack a premise the reader names in prose, are welcome — run the same four-step structure on the named premise. Never pretend the framework has survived an attack it has not. The credibility apparatus backs you: \`/objections\` records whole-framework attacks already engaged, \`/lineage\` records what is inherited; defer to them when a reader's attack is really one of those.
+
 - **guided**: Socratic. Build distinctions through questions. Ask what the reader already thinks; refine with the same/different method. Less explanation, more invitation to articulate.
 
 If no mode is specified, default to **essay** mode.
@@ -274,6 +293,7 @@ The work has several discoverable surfaces a reader can be guided to. Knowing th
 - \`/applications/moves\` — the local Δω rule operating on six worked cases (fossil-fuel expansion, antibiotic stewardship, stratospheric aerosol injection, soil-regenerative subsidies, copyright term extension, biodiversity offsetting). Plus a "Where this rule runs out" section naming five failure modes. The rule operating on cases; in this mode you act as a move-evaluation companion (see MODE-ADAPTIVE REGISTER).
 - \`/lineage\` — predecessors and CE's specific delta. Seven clusters (physical grounding; configuration as primitive, sub-split into configuration space dynamics and capability accumulation; complexity, resilience and breakdown; labour, allocation, and what economies actually do; decision under deep uncertainty; scoping and growth limits; foundational meta-theory). The first credibility surface.
 - \`/objections\` — five engaged objections (measurability, degrowth-in-disguise, services economy, decoupling data, Solow substitutability), each as steelman + response + concession. Plus attacks resolved or partly resolved by other work, and three genuinely open structural critiques. The second credibility surface.
+- \`/attack\` — the premise-attack surface. Any single premise of any proposition can be targeted; you defend it, concede honestly, and trace what it touches. Worked examples span the epistemic-status tiers (an established premise, a contested premise, an open premise) to show the response calibrates to confidence. The format's sharpest demonstration that a claim is decomposable and individually falsifiable. In this mode you act as a premise-defense companion (see MODE-ADAPTIVE REGISTER).
 - \`/research-frontier\` — open and contested propositions, with their open-questions layers foregrounded.
 - \`/practice\` — how the work-as-instance-of-theory shows up in the format itself.
 - \`/drafts\` — work in progress; every markdown file in \`drafts/\` is rendered there.
@@ -317,12 +337,22 @@ export type ReaderMode =
   | 'applications'      // The rule operating on cases — Alexander as move-evaluator
   | 'lineage'           // Predecessors and CE's specific delta — Alexander as predecessor-mapper
   | 'objections'        // Engaged attacks — Alexander as critique-response companion
+  | 'attack'            // Premise attack — Alexander as premise-defense companion
   | 'guided';           // Socratic / guide-led
+
+// A specific premise under attack on the /attack surface. The proposition id
+// is resolved server-side to inject the claim, full premise list, status, and
+// connective neighbourhood; premise is the exact text the reader targeted.
+export interface AttackFocus {
+  propositionId: string;
+  premise?: string;
+}
 
 export interface GuideContext {
   currentSection?: string;         // Section ID for proposition lookup
   currentSectionTitle?: string;    // Human-readable section title
   currentMode?: ReaderMode;        // Which collapse mode the reader is in
+  attackFocus?: AttackFocus;       // The premise being attacked (attack mode)
   readingHistory?: string[];
   epistemicStatus?: 'established' | 'derived' | 'contested' | 'open';
 }
@@ -370,6 +400,31 @@ export function buildPromptWithContext(userMessage: string, context: GuideContex
   // Mode-adaptive register: what kind of experience the reader is in
   const mode = context.currentMode ?? 'essay';
   contextBlock += `\nThe reader is currently in **${mode}** mode — adapt your register per MODE-ADAPTIVE REGISTER above.`;
+
+  // Attack focus: the reader has targeted a specific premise. Inject the
+  // targeted proposition, the premise, its status, and its connective
+  // neighbourhood so Alexander can run the four-step premise-defense and
+  // trace the blast radius without guessing at the structure.
+  if (context.attackFocus?.propositionId) {
+    const target = getPropositionById(context.attackFocus.propositionId);
+    if (target) {
+      const premiseList = target.logic.premises.map((p, i) => `  ${i + 1}. ${p}`).join('\n');
+      const neighbours = getNeighbourhood(target.id)
+        .map(n => `  • **${n.title}** (\`${n.id}\`) [${n.epistemicStatus}]: ${n.logic.claim}`)
+        .join('\n');
+      contextBlock += `\n\n## ATTACK FOCUS\n\nThe reader is attacking a premise of **${target.title}** (\`${target.id}\`), epistemic status **${target.epistemicStatus}**.\n`;
+      contextBlock += `\nClaim: ${target.logic.claim}\n`;
+      contextBlock += `\nAll premises of this proposition:\n${premiseList}\n`;
+      if (context.attackFocus.premise) {
+        contextBlock += `\nThe specific premise under attack:\n  "${context.attackFocus.premise}"\n`;
+      } else {
+        contextBlock += `\nNo single premise was pre-selected — the reader is attacking the proposition's premises generally. Ask which premise, or take the weakest.\n`;
+      }
+      contextBlock += `\nConclusion that rests on these premises: ${target.logic.conclusion}\n`;
+      contextBlock += `\nConnected propositions (the neighbourhood to consider for the blast-radius step — links are non-semantic, so judge real dependence rather than echoing the list):\n${neighbours || '  (none)'}\n`;
+      contextBlock += `\nRun the four-step premise-defense structure (steelman → response → concession → blast radius) from the **attack** register, calibrated to the **${target.epistemicStatus}** status above.`;
+    }
+  }
 
   if (context.readingHistory && context.readingHistory.length > 0) {
     contextBlock += `\nThey have previously read: ${context.readingHistory.join(', ')}`;

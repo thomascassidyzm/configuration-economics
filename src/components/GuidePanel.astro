@@ -643,6 +643,7 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       if (path.startsWith('/applications')) return 'applications';
       if (path.startsWith('/lineage')) return 'lineage';
       if (path.startsWith('/objections')) return 'objections';
+      if (path.startsWith('/attack')) return 'attack';
       if (path.startsWith('/practice')) return 'overview';
       if (path.startsWith('/changelog')) return 'overview';
       if (path.startsWith('/guided')) return 'guided';
@@ -677,11 +678,17 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
         finalMode
       });
 
+      // Attack focus: a specific premise the reader has targeted. Set by
+      // attackPremise() below (or directly by a page). Identifies which
+      // premise is in play; the reader's message supplies the attack angle.
+      const attackFocus = (window as any).attackFocus || null;
+
       return {
         sectionId: finalSectionId,  // Machine-readable ID
         section: finalSection,       // Human-readable title
         status: dynamicStatus || 'established',
-        mode: finalMode
+        mode: finalMode,
+        attackFocus
       };
     }
 
@@ -755,6 +762,34 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
         if (input) input.value = '';
       }
     });
+
+    // Premise-attack entry point. Pages (/attack, /explore) call this when a
+    // reader targets a premise. It puts Alexander into attack mode bound to
+    // that premise, reflects the target in the panel header, opens the panel
+    // on mobile, and pre-fills the input — the reader presses send (or edits
+    // to their own sharper attack). We do NOT auto-send: that would fire a
+    // billed model call on every click.
+    (window as any).attackPremise = function (propositionId: string, premise: string, title: string, status?: string) {
+      (window as any).currentMode = 'attack';
+      (window as any).attackFocus = { propositionId, premise };
+      if (title) (window as any).currentSection = `Attacking: ${title}`;
+      if (status) (window as any).currentStatus = status;
+      updateDisplayedContext();
+
+      // Reveal the conversation area (drop the welcome/suggestions chrome).
+      const welcome = messagesContainer?.querySelector('.guide-welcome');
+      if (welcome) welcome.remove();
+      suggestionsContainer?.classList.add('hidden');
+
+      if (window.innerWidth <= 1100) {
+        panel?.classList.add('mobile-open');
+      }
+      if (input) {
+        const shortPremise = premise.length > 80 ? premise.slice(0, 77) + '…' : premise;
+        input.value = `Attack this premise: "${shortPremise}"`;
+        input.focus();
+      }
+    };
 
     // Follow-up buttons
     function createFollowUpButtons(): HTMLElement {
@@ -849,7 +884,8 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
           currentSection: context.sectionId || context.section,  // Prefer ID for proposition lookup
           currentSectionTitle: context.section,  // Keep title for display context
           currentMode: context.mode,
-          epistemicStatus: context.status
+          epistemicStatus: context.status,
+          ...(context.attackFocus ? { attackFocus: context.attackFocus } : {})
         },
         tier
       };

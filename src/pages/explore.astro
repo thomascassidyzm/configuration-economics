@@ -50,6 +50,7 @@ const counts = {
         <p class="subtitle">Each node is self-contained and meaningful in isolation.</p>
         <p class="note">Logic is present but not foregrounded. Expand to see the underlying structure.</p>
         <p class="note">Each proposition carries an epistemic status: <span class="status status-established inline">established</span> <span class="status status-derived inline">derived</span> <span class="status status-contested inline">contested</span> <span class="status status-open inline">open</span>.</p>
+        <p class="note">Open a proposition's logic and you can <strong>attack any single premise</strong> — the guide will steelman the attack, respond, concede, and trace what the premise touches. See worked examples on <a href="/attack" class="inline-link">/attack</a>.</p>
       </header>
 
       <div class="status-filter" role="group" aria-label="Filter by epistemic status">
@@ -91,9 +92,21 @@ const counts = {
                   </div>
 
                   <div class="premises">
-                    <span class="label">Premises</span>
+                    <span class="label">Premises <span class="premise-hint">— attack any one</span></span>
                     <ol>
-                      {prop.logic.premises.map(p => <li>{p}</li>)}
+                      {prop.logic.premises.map(p => (
+                        <li>
+                          <span class="premise-text">{p}</span>
+                          <button
+                            class="attack-btn"
+                            data-prop={prop.id}
+                            data-prop-title={prop.title}
+                            data-status={prop.epistemicStatus}
+                            data-premise={p}
+                            aria-label="Stress-test this premise with the guide"
+                          >⚔ attack</button>
+                        </li>
+                      ))}
                     </ol>
                   </div>
 
@@ -497,6 +510,67 @@ const counts = {
         margin-bottom: 0.375rem;
       }
 
+      /* Premise attack affordance */
+      .premise-hint {
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--text-muted);
+        opacity: 0.7;
+        font-style: italic;
+      }
+
+      .premises li {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+      }
+
+      .premise-text {
+        flex: 1;
+      }
+
+      .attack-btn {
+        flex-shrink: 0;
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        border: 1px solid rgba(230, 165, 69, 0.25);
+        background: transparent;
+        color: rgba(230, 165, 69, 0.55);
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      }
+
+      .premises li:hover .attack-btn,
+      .attack-btn:focus-visible {
+        opacity: 1;
+      }
+
+      .attack-btn:hover {
+        color: #e6a545;
+        border-color: rgba(230, 165, 69, 0.6);
+        background: rgba(230, 165, 69, 0.08);
+      }
+
+      /* Touch devices have no hover — keep the control visible there */
+      @media (hover: none) {
+        .attack-btn { opacity: 0.7; }
+      }
+
+      .inline-link {
+        color: var(--accent);
+        text-decoration: none;
+        border-bottom: 1px dotted rgba(74, 158, 255, 0.4);
+      }
+
+      .inline-link:hover {
+        border-bottom-style: solid;
+      }
+
       .claim p {
         color: var(--text-primary);
         font-weight: 400;
@@ -593,6 +667,22 @@ const counts = {
         chip.addEventListener('click', () => {
           const filter = chip.dataset.filter || 'all';
           setFilter(filter);
+        });
+      });
+
+      // Premise attack: hand off to the GuidePanel's attackPremise entry point,
+      // which puts Alexander into premise-defense mode bound to this premise.
+      document.querySelectorAll<HTMLButtonElement>('.attack-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const w = window as any;
+          if (typeof w.attackPremise === 'function') {
+            w.attackPremise(
+              btn.dataset.prop,
+              btn.dataset.premise,
+              btn.dataset.propTitle,
+              btn.dataset.status
+            );
+          }
         });
       });
     </script>
