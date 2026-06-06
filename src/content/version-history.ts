@@ -25,6 +25,21 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.10.0',
+    date: '2026-06-07',
+    title: 'Naming the infinite game — Carse enters the canon, and the board becomes a bridge',
+    summary: `The work has described itself from the outside in — on its author's own site — as an invitation to an infinite game in James Carse's sense: the point is not to win or finish it but to keep it going and bring others in. That framing had never entered the work itself. v0.10.0 brings it inside. A new proposition, infinite-game, names what the viable objective has been all along: a finite game is played to win and ends in a win; an infinite game is played to continue the play. The no-regret viable objective is the rule of an infinite game — it admits no winning move, only the refusal of game-ending ones — and option space is that game given a thermodynamic substrate. James Carse joins the lineage beside Aubin and Snowden (who give the method of staying in play) and paired with Buckminster Fuller (the generative means the purpose serves). And /polychess is recut to match: the win and the high-score are gone; the only outcome that means anything is ending the game, and the board now exists to deliver one turn — you try to win, you find you cannot, and you arrive at the game that has no win. The finite game was the bridge; the infinite game is the far side.`,
+    changes: {
+      added: [
+        'infinite-game (contested) — names the framework\'s telos in James Carse\'s terms: the viable objective is the rule of an infinite game (continue the play; make no move that ends it), and option space is that game given a thermodynamic substrate. Brings the work\'s own public framing into the canon; pairs Fuller (means) with Carse (purpose). Inbound from viable-objective, value-option-space, and option-space-as-chess-moves; wired into Alexander on essay 7 and 7.5.',
+        'James P. Carse (Finite and Infinite Games, 1986) added to /lineage cluster 5, beside Aubin and Snowden — they give the method of staying in play, Carse names what staying-in-play is for. CE\'s delta is the thermodynamic substrate.',
+      ],
+      revised: [
+        '/polychess recut from a game-to-win into a bridge to the infinite game: the win-state and the openness high-score removed; the GDP number reframed as the finite player\'s scoreboard whose pursuit ends the game; the experience now turns on discovering the board cannot be won, then hands off to the infinite-game proposition and the Carse framing.',
+      ],
+    },
+  },
+  {
     version: 'v0.9.0',
     date: '2026-06-06',
     title: 'The generative turn — lead with generation; coordination as move-evaluation',

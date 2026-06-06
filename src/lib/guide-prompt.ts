@@ -15,8 +15,8 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   'configuration-not-information': ['configuration-not-information', 'option-space-measurability', 'configuration-generates-configuration'],
   'work-wrong-question': ['work-wrong-question', 'participation-limits', 'labour-as-allocator'],
   'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain', 'labour-as-allocator', 'coordination-as-move-evaluation'],
-  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration'],
-  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves', 'labour-as-allocator', 'coordination-as-move-evaluation'],
+  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'infinite-game'],
+  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves', 'labour-as-allocator', 'coordination-as-move-evaluation', 'infinite-game'],
   'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry', 'asymmetry-of-option-space-change'],
 
   // Non-essay surfaces. The reader is on /applications/moves and is using

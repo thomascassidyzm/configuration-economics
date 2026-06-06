@@ -133,7 +133,7 @@ If value exists anywhere beyond immediate preference, it appears here.`,
       implications: 'This distinguishes value from price, preference, labour, or throughput. Short-term gains can be value-negative if they reduce future configurability.',
       openQuestions: 'How do we measure option space? Over what time horizons? How do we handle trade-offs between different living systems? See option-space-measurability.'
     },
-    linksTo: ['throughput-cost', 'work-wrong-question', 'participation-limits', 'configuration-generates-configuration']
+    linksTo: ['throughput-cost', 'work-wrong-question', 'participation-limits', 'configuration-generates-configuration', 'infinite-game']
   },
 
   {
@@ -714,7 +714,7 @@ Under this framing, the economy does not grow or shrink as a whole. It reorients
       openQuestions: 'The operational definition of "major class of life" — phylum-level, functional ecological role, capacity for distinction-making? Selection of the relevant horizon for any specific decision (default: the longest horizon any major class depends on, but this is contestable). Gradations between elimination and narrowing of R_living. What to do when no available move avoids long-horizon collapse — probably a fallback like "minimise the horizon at which collapse becomes asymptotic."'
     },
     revisedAt: '2026-04-29',
-    linksTo: ['throughput-cost', 'value-option-space', 'energy-income-inheritance', 'option-space-as-chess-moves', 'option-space-measurability', 'asymmetry-of-option-space-change']
+    linksTo: ['throughput-cost', 'value-option-space', 'energy-income-inheritance', 'option-space-as-chess-moves', 'option-space-measurability', 'asymmetry-of-option-space-change', 'infinite-game']
   },
 
   // --- v0.6 additions (April 2026, from physics-rigour review and the
@@ -850,7 +850,7 @@ This is not new. Dave Snowden has articulated next best move as the central prac
       openQuestions: 'Aggregation across simultaneous moves by many agents (chess has one player; the biosphere has many). The operational definition of "major class of life" — phylum-level, functional ecological role, capacity for distinction-making? Selection of the relevant horizon for any specific decision (default: the longest horizon any major class depends on, but this is contestable). When does a move eliminate a class\'s reachable set vs. merely narrow it — the criterion as currently stated is binary; reality is graded.'
     },
     revisedAt: '2026-04-29',
-    linksTo: ['value-option-space', 'option-space-measurability', 'viable-objective', 'transition-fragility', 'displaced-costs', 'asymmetry-of-option-space-change', 'configuration-generates-configuration']
+    linksTo: ['value-option-space', 'option-space-measurability', 'viable-objective', 'transition-fragility', 'displaced-costs', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'infinite-game']
   },
 
   // --- v0.7 additions (May 2026, from session 2026-05-18) ---
@@ -995,6 +995,44 @@ A different shape is available. A market asks for one thing — the price at whi
     },
     revisedAt: '2026-06-06',
     linksTo: ['labour-as-allocator', 'coordination-wealth', 'money-as-signal', 'participation-limits', 'legibility-truth-tradeoff', 'option-space-as-chess-moves', 'displaced-costs', 'viable-objective']
+  },
+
+  // --- v0.10 addition (June 2026) — naming the telos ---
+  // infinite-game: Carse's distinction names what the viable objective has been
+  // all along. The work's own public framing (an invitation to an infinite game)
+  // brought into the canon. Pairs with Fuller (means) in the lineage.
+  {
+    id: 'infinite-game',
+    title: 'The Infinite Game',
+    epistemicStatus: 'contested',
+    surface: `Ask what an economy is *for*, and the usual answers name a finish line: a target rate of growth, a level of output, a steady state to be reached and held. Each treats the economy as a game to be won — played to arrive somewhere and stop.
+
+There is an older distinction that cuts the other way. A finite game is played to win; it ends when someone does. An infinite game is played to continue the play. Its purpose is not to reach a final state but to keep the game going, and to bring others in. The two are not different strategies for the same game. They are different kinds of game.
+
+Read the viable objective again in that light. To prefer moves that keep the reachable set of life-supporting futures open, and to refuse moves that asymptotically close it, is not a finite player's strategy for winning. It is the rule of an infinite game: make no move that ends the play. The point was never to win the economy. The point is to keep it open, and to keep the distinctions coming.
+
+Stated in the terms of this work, option space *is* the infinite game given a physical substrate. R_living is the set of futures in which living systems continue to exist and make distinctions — which is to say, continue to play. To preserve it is to keep the game in play; to empty it is to end the game for some class of player, permanently.
+
+Naming it does real work. It tells you what kind of thing the objective is, so you stop looking for the win that was never there — and it restores the register the diagnostic frame loses: an infinite game is an invitation, not an emergency. The work has said as much from the outside in — an invitation to an infinite game, the point of which is not to win or finish it but to keep it going and bring others in, continuing the work begun by people like Buckminster Fuller. This proposition brings that framing inside. Fuller gives the means — ever more with ever less, in service of all life — and Carse gives the purpose those means serve.`,
+    logic: {
+      claim: 'The framework\'s objective is structurally an infinite game in Carse\'s sense: its purpose is not to reach and hold a winning state but to keep the play — the making of distinctions by living systems — going.',
+      premises: [
+        'A finite game is played to win and ends when someone wins; an infinite game is played to continue the play and has no terminal winning state (Carse, Finite and Infinite Games).',
+        'The viable objective is a no-regret preservation rule: prefer moves that keep R_living open, reject moves that asymptotically empty it (viable-objective).',
+        'A rule that refuses any move which ends the reachable set of continued play, and that names no winning move, is by definition the rule of an infinite game rather than a strategy for winning a finite one.',
+        'R_living — the futures in which living systems continue to exist and make distinctions — is precisely the set whose preservation keeps the play going.'
+      ],
+      conclusion: 'Value-as-option-space is the infinite game given a thermodynamic substrate; the economic task is not to win but to keep the game open and bring others in.',
+      predictive: 'Objectives framed as finite games — a growth target, an output level, a steady state to be reached and held — keep generating terminal-state optimisation and its foreclosures; reframing the objective as keeping the game open shifts evaluation from "have we arrived?" to "is the play still possible, and for whom?"'
+    },
+    layers: {
+      coreClaim: 'The economy is not a game to be won. It is an infinite game in James Carse\'s sense — the point is not to win it or finish it, but to keep it going and bring others in. The viable objective is that game\'s only rule: make no move that ends the play.',
+      formalDefinition: 'Carse\'s distinction: a finite game is played for the purpose of winning and terminates in a win; an infinite game is played for the purpose of continuing the play and has no terminal winning state. The no-regret viable objective — preserve R_living(C, B, T) non-empty for every major class of life over every relevant horizon — is the rule of an infinite game: it admits no winning move, only the refusal of game-ending ones. Option space is that game given a physical substrate: R_living is the set of futures in which living systems continue to make distinctions (continue to play), and to preserve it is to keep the game in play. Lineage: James Carse (Finite and Infinite Games, 1986) for the distinction; Buckminster Fuller for the generative means (ever more with ever less, in service of all life).',
+      implications: 'The framework\'s telos is continuation, not optimisation. Targets that name a finishing line — a growth rate, an output level, a steady state to be reached and held — are finite-game framings, and they generate terminal-state optimisation and the foreclosures that come with it. Reframing the objective as an infinite game changes the question from "how much, by when?" to "is the play still possible, for whom, over what horizon?" It also recovers the affective core the diagnostic register loses: an infinite game is an invitation, not an emergency — the point is to keep it going and bring others in. The /polychess surface is built to make exactly this turn felt: a player chases the finite score, finds the board cannot be won, and arrives at the game that has no win.',
+      openQuestions: 'Whether the identification of the viable objective with Carse\'s infinite game is a derivation or a productive analogy is itself open — Carse\'s vision is philosophical and social, and transporting it to a thermodynamic and ecological frame may carry more or less than the original. The hardest edge is the same one viable-objective flags: an infinite game has no rule for what to do when continuation for one class of player requires ending it for another. Naming the telos does not resolve that; it locates it.'
+    },
+    revisedAt: '2026-06-07',
+    linksTo: ['viable-objective', 'value-option-space', 'option-space-as-chess-moves', 'configuration-generates-configuration', 'asymmetry-of-option-space-change', 'coordination-as-move-evaluation']
   }
 ];
 

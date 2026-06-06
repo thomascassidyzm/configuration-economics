@@ -6,10 +6,10 @@
 
 **Core thesis**: Value = configurations that expand future option space under bounded energy flux.
 
-## Current State (v0.9.0, June 2026)
+## Current State (v0.10.0, June 2026)
 
 ### What Exists
-- **31 proposition nodes** with surface text + underlying logic
+- **32 proposition nodes** with surface text + underlying logic
 - **Essay 1** (11 sections) mapped to propositions
 - **Alexander** (the Guide) - proposition-aware epistemic companion. As of v0.7.0, mounted on every grokkable surface (essay, overview, explore, research-frontier, lineage, objections, applications/moves, attack, practice) with mode-adaptive register tuned to each surface's resolution.
 - **Epistemic status markers** - established, derived, contested, open
@@ -68,9 +68,11 @@ v0.7: labour-as-allocator, asymmetry-of-option-space-change,
       configuration-generates-configuration
 
 v0.9: coordination-as-move-evaluation
+
+v0.10: infinite-game
 ```
 
-Bucket counts (current, v0.9.0): 1 established / 19 derived / 10 contested / 1 open.
+Bucket counts (current, v0.10.0): 1 established / 19 derived / 11 contested / 1 open.
 All four populated. The single `open` is `option-space-measurability`,
 explicitly the framework's central open problem.
 
