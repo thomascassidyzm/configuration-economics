@@ -17,8 +17,10 @@
 
 PLAN.md is a session log, not the live roadmap. It captured the v0.2 push between 2026-04-23 and 2026-04-29; v0.2.0 then shipped on 2026-04-30. Canonical material has moved:
 
+> **2026-06-06:** Canon now holds 30 propositions (1 established / 19 derived / 9 contested / 1 open) as of v0.8.0. The proposition counts quoted in the dated round-logs below are historical provenance, true when written — see `src/content/propositions.ts` for the live count and buckets.
+
 - **Changelog at the version-grain** → `src/content/version-history.ts`
-- **Proposition canon (27 nodes, all four buckets populated)** → `src/content/propositions.ts`
+- **Proposition canon (30 nodes, all four buckets populated)** → `src/content/propositions.ts`
 - **What's still pending** → `drafts/README.md` (currently: counterargument-engagement promotion, lineage-and-positioning promotion)
 - **Project context for fresh sessions** → `CLAUDE.md`
 
@@ -327,7 +329,7 @@ Needed:
 
 ### Current proposition IDs (for reference):
 
-*Authoritative list lives in `src/content/propositions.ts`. Snapshot post-v0.2.0:*
+*Authoritative list lives in `src/content/propositions.ts`. Snapshot post-v0.8.0:*
 
 ```
 v0.1: energy-income-inheritance, throughput-cost, value-option-space,
@@ -346,6 +348,9 @@ v0.5: option-space-measurability, viable-objective
 
 v0.6: observer-relative-option-space, exergy-not-energy, binding-constraint,
       option-space-as-chess-moves
+
+v0.7: labour-as-allocator, asymmetry-of-option-space-change,
+      configuration-generates-configuration
 ```
 
 ---

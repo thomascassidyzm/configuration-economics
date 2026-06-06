@@ -638,7 +638,6 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       if (path.startsWith('/overview')) return 'overview';
       if (path.startsWith('/essay')) return 'essay';
       if (path.startsWith('/explore')) return 'explore';
-      if (path.startsWith('/academic')) return 'academic';
       if (path.startsWith('/research-frontier')) return 'research-frontier';
       if (path.startsWith('/applications')) return 'applications';
       if (path.startsWith('/lineage')) return 'lineage';
@@ -646,7 +645,6 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       if (path.startsWith('/attack')) return 'attack';
       if (path.startsWith('/practice')) return 'overview';
       if (path.startsWith('/changelog')) return 'overview';
-      if (path.startsWith('/guided')) return 'guided';
       return 'essay';
     }
 

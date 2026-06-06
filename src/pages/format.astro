@@ -335,9 +335,7 @@ import Guide from '../components/Guide.astro';
 
     .mode-card[data-mode="overview"] { --card-accent: var(--established); }
     .mode-card[data-mode="essay"] { --card-accent: var(--ink-primary); }
-    .mode-card[data-mode="academic"] { --card-accent: var(--derived); }
     .mode-card[data-mode="explore"] { --card-accent: var(--open); }
-    .mode-card[data-mode="guided"] { --card-accent: var(--contested); }
     .mode-card[data-mode="research"] { --card-accent: var(--open); }
 
     .mode-icon {
@@ -788,7 +786,6 @@ import Guide from '../components/Guide.astro';
         <button class="intent-option" data-route="/overview"><span>What is this?</span></button>
         <button class="intent-option" data-route="/essay"><span>Explain simply</span></button>
         <button class="intent-option" data-route="/explore"><span>Show me the structure</span></button>
-        <button class="intent-option" data-route=""><span>Academic format</span></button>
         <button class="intent-option" data-route="/explore?status=contested"><span>What's contested?</span></button>
       </div>
     </div>
@@ -821,12 +818,6 @@ import Guide from '../components/Guide.astro';
         <div class="mode-icon">¶</div>
         <h3 class="mode-name">Essay</h3>
         <p class="mode-desc">Linear reading. Traditional narrative flow. Start at the beginning and read through to the end.</p>
-      </div>
-
-      <div class="mode-card" data-mode="academic" data-route="">
-        <div class="mode-icon">§</div>
-        <h3 class="mode-name">Academic</h3>
-        <p class="mode-desc">Formal structure. Full citations. Exportable to PDF. The canonical, citable version.</p>
       </div>
 
       <div class="mode-card" data-mode="explore" data-route="/explore">
@@ -1021,9 +1012,8 @@ import Guide from '../components/Guide.astro';
   <Guide />
 
   <script>
-    // Intent buttons and mode cards: route via data-route when wired.
-    // Elements with empty data-route are not yet backed by a real page
-    // (Academic, Guided) — clicking is a no-op until they exist.
+    // Intent buttons and mode cards route via data-route. Every projection
+    // links to a live page; the empty-data-route guard below is defensive only.
     function wireRoute(selector: string) {
       document.querySelectorAll<HTMLElement>(selector).forEach(el => {
         el.addEventListener('click', () => {

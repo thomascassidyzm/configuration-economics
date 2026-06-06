@@ -15,12 +15,14 @@ The work redefines value as: **configurations that increase future option space 
 
 This isn't just content — it's a new publication format featuring:
 
-- **Multiple collapse modes**: Overview, Essay, Academic, Explore, Guided, Research Frontier
-- **Epistemic status visual language**: Established, Derived, Contested, Open
-- **Resolution layers**: Same content at multiple depths
-- **Integrated epistemic guide**: AI companion trained on the corpus
-- **Adversarial transparency**: Critiques published alongside canonical text
-- **Versioned evolution**: Living document with visible history
+- **Multiple collapse modes**: Overview, Essay, Explore, and Research Frontier, chosen from `/format` — the same work entered at the depth the reader wants. The Essay carries an in-page Academic register with citations and formal structure.
+- **Epistemic status visual language**: Established, Derived, Contested, Open — wired to every proposition
+- **Resolution layers**: the same claim at core-claim, formal-definition, implications, and open-questions depth
+- **Integrated epistemic guide (Alexander)**: an AI companion grounded in the corpus, present on every surface — which is why there is no separate "Guided" mode
+- **Adversarial transparency**: critiques published alongside canonical text — `/objections` (whole-framework attacks) and `/attack` (per-premise stress-testing)
+- **Worked application**: `/applications/moves` runs the framework's local Δω rule on real cases
+- **Lineage**: `/lineage` stakes the framework's specific delta against its predecessors
+- **Versioned evolution**: a living document with visible history (`/changelog`) and its in-progress drafts left readable (`/drafts`)
 
 ## Project Structure
 
@@ -28,17 +30,39 @@ This isn't just content — it's a new publication format featuring:
 /
 ├── src/
 │   ├── pages/
-│   │   ├── index.astro           # Entry point
-│   │   ├── concept-dark.astro    # Format exploration (dark)
-│   │   ├── concept-light.astro   # Format exploration (light)
-│   │   └── api/
-│   │       └── guide.ts          # Guide API endpoint
-│   ├── lib/
-│   │   └── guide-prompt.ts       # Guide system prompt
+│   │   ├── index.astro              # Landing / entry point
+│   │   ├── format.astro             # Projection chooser + light/dark toggle
+│   │   ├── overview.astro           # Essay sections with anchored propositions
+│   │   ├── essay/index.astro        # Main essay (incl. Academic register)
+│   │   ├── explore.astro            # Proposition browser + epistemic-status filter
+│   │   ├── research-frontier.astro  # Open & contested propositions
+│   │   ├── lineage.astro            # Predecessors and CE's specific delta
+│   │   ├── objections.astro         # Strongest whole-framework attacks, engaged
+│   │   ├── attack.astro             # Per-premise stress-testing
+│   │   ├── applications/moves.astro # Worked local-Δω evaluations
+│   │   ├── practice.astro           # The work as an instance of its own theory
+│   │   ├── changelog.astro          # Version-grain history
+│   │   ├── drafts/                  # In-progress drafts, rendered read-only
+│   │   ├── concept-dark.astro       # 301 → /format (legacy bookmark redirect)
+│   │   ├── concept-light.astro      # 301 → /format (legacy bookmark redirect)
+│   │   └── api/guide.ts             # Guide (Alexander) API endpoint
 │   ├── content/
-│   │   └── GUIDE_SYSTEM_PROMPT.md
+│   │   ├── propositions.ts          # The proposition canon
+│   │   ├── version-history.ts       # Version-grain changelog data
+│   │   ├── GUIDE_SYSTEM_PROMPT.md   # Alexander's epistemic contract
+│   │   └── essay-1/                 # Essay section metadata + text
+│   ├── lib/
+│   │   ├── guide-prompt.ts          # Alexander's system prompt + proposition index
+│   │   ├── version.ts               # Version tracking
+│   │   ├── section-renderer.ts      # Essay section rendering
+│   │   └── math.ts                  # Option-space formal helpers
 │   └── components/
+│       ├── GuidePanel.astro         # Right-side Guide interface
+│       └── Guide.astro              # Guide mount
+├── drafts/                          # Draft markdown (source for /drafts)
 ├── public/
+├── CLAUDE.md                        # Project context for AI assistants
+├── PLAN.md                          # Session log / provenance
 └── package.json
 ```
 
