@@ -10,7 +10,7 @@ export const ESSAY_META = {
   build: BUILD,
   status: 'Living Draft',
   date: 'April 2026',
-  lastUpdated: '2026-04-30',
+  lastUpdated: '2026-06-06',
 };
 
 export type EpistemicStatus = 'established' | 'derived' | 'contested' | 'open';

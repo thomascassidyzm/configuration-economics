@@ -192,7 +192,7 @@ Scarcity remains. Trade-offs remain. What changes is how they are handled.`,
       openQuestions: 'What non-coercive coordination mechanisms scale without falling back on deprivation is a live research and design question.'
     },
     revisedAt: '2026-04-29',
-    linksTo: ['value-option-space', 'work-wrong-question', 'labour-as-allocator']
+    linksTo: ['value-option-space', 'work-wrong-question', 'labour-as-allocator', 'coordination-as-move-evaluation']
   },
 
   // --- v0.2 additions ---
@@ -528,7 +528,7 @@ Coordination reduces the cost of acting together.`,
       formalDefinition: 'Effective coordination reduces throughput requirements.',
       implications: 'Trust, shared understanding, and well-designed institutions are configuration-positive: they compound over time and do their work with little energy input. Friction from misalignment is where throughput gets spent uselessly.'
     },
-    linksTo: ['structural-memory', 'participation-limits', 'care-as-configuration']
+    linksTo: ['structural-memory', 'participation-limits', 'care-as-configuration', 'coordination-as-move-evaluation']
   },
 
   {
@@ -890,7 +890,7 @@ When the regime changes, the index does not automatically re-anchor. It keeps me
       openQuestions: 'What proportion of historically-attributed "labour value" was really configuration-contribution being correctly tracked by the allocator, versus rent or coercion being laundered through it, is empirically thick and contested. The marginal-productivity tradition has a serious case in some domains; identifying where that case still holds — and where it has dissolved — is live work, not settled. Whether the analysis transfers cleanly to historically non-wage allocators (kinship obligation, ritual exchange, command economies) or whether each requires its own treatment is open.'
     },
     revisedAt: '2026-05-18',
-    linksTo: ['value-option-space', 'work-wrong-question', 'participation-limits', 'coordination-wealth', 'money-as-signal']
+    linksTo: ['value-option-space', 'work-wrong-question', 'participation-limits', 'coordination-wealth', 'money-as-signal', 'coordination-as-move-evaluation']
   },
 
   {
@@ -957,6 +957,44 @@ Where this generativity holds, value is not stored in configurations as a stock;
     },
     revisedAt: '2026-05-18',
     linksTo: ['value-option-space', 'asymmetry-of-option-space-change', 'option-space-measurability', 'structural-memory', 'complexity-maintenance', 'care-as-configuration', 'option-space-as-chess-moves']
+  },
+
+  // --- v0.9 addition (June 2026) — the generative turn ---
+  // coordination-as-move-evaluation: with labour-as-allocator dissolving, this
+  // reframes the framework's central open political question. A direction, not a
+  // mechanism — the mechanism is loaded into openQuestions and stays open.
+  {
+    id: 'coordination-as-move-evaluation',
+    title: 'Coordination Is a Move-Evaluation Problem, Not a Pricing Problem',
+    epistemicStatus: 'contested',
+    surface: `An economy has to do two things at once: decide who gets access to the configurations that support life, and aim collective attention at the work worth doing.
+
+For most of history a single mechanism did both. Labour rationed access — you ate if you worked — and pointed attention, because effort flowed to where it was paid. The two jobs rode on one rail, and while they rode together it was natural to mistake the rail for the thing it carried.
+
+That rail is coming loose. As automation decouples production from labour and the composition of scarcity shifts from things-made to sinks-and-substrate, the mechanism that did both jobs begins to fail at both. The instrument reached for instead — the market price — was only ever doing one of them, and only on one board.
+
+The reflex is to ask how to price the missing costs better. But a better price is still a price: one number, on one board, drifting from what it tracks. The deeper question is what kind of problem coordination is in the first place.
+
+A different shape is available. A market asks for one thing — the price at which the board clears. A game of chess asks something else of every player: is this move better or worse than that one, given the position I can see? No player computes the whole tree; none needs a global valuation; directional, local evaluation is enough to play well. If value is generated move by move, coordinating it may be less like finding a price and more like playing well across many boards at once.`,
+    logic: {
+      claim: 'Coordination in a generative economy is better modelled as distributed, local move-evaluation across multiple boards than as the discovery of a single clearing price.',
+      premises: [
+        'Labour has functioned as the joint mechanism for allocating access and directing attention, and that mechanism is decoupling from production (labour-as-allocator, participation-limits).',
+        'The market price evaluates moves on a single board and drifts from its physical referent absent explicit feedback (money-as-signal, displaced-costs).',
+        'Global option space is not computable, but local Δω — the directional effect of a move on the reachable set — is evaluable (option-space-as-chess-moves, option-space-measurability).',
+        'Trust and shared understanding lower the cost of reading one another\'s moves, which is what makes distributed evaluation affordable (coordination-wealth).'
+      ],
+      conclusion: 'A coordination mechanism adequate to a generative economy must evaluate moves directionally across many boards, decouple basic participation from labour without re-importing deprivation, and keep its signals bound to physical substrate — rather than collapse value into a single clearing price or a single score.',
+      predictive: 'Attempts to repair coordination by improving the price signal alone — better externality pricing, or a single new welfare or sustainability index — will reproduce single-board foreclosure and signal-drift; mechanisms that keep the boards plural and evaluate moves directionally will track the physical state more durably.'
+    },
+    layers: {
+      coreClaim: 'We keep trying to solve coordination as a pricing problem — finding the right number — and it keeps not solving. A generative economy coordinates more the way a chess game is played than the way a market clears: many players evaluating their next move directionally across the boards they can see.',
+      formalDefinition: 'For an economy whose value is generated move by move (configuration-generates-configuration), coordination is the problem of distributed local Δω-evaluation on R_living across multiple observer-relative boards, inside institutions whose role is to widen the set of boards each agent can see (internalising uncounted moves) and to protect the substrate (keeping the reachable set open) — not the problem of discovering a single market-clearing price. Markets are one board within this — fast and useful — not the arbiter.',
+      implications: 'Six constraints follow for any candidate mechanism: aim at Δω, not a single-board score; read many boards without collapsing them into one number; run on local directional signals (the global measure is open); decouple participation from labour without deprivation as the enforcer; keep the signal bound to substrate; refuse the foreclosing move (no-regret). Five comfortable failure modes are ruled out: the single-number trap (a new GDP), the central-planner trap (which inherits the non-computability of global ω), the legibility-decay trap, the deprivation relapse, and one-board recapture. The proposition names the shape an adequate mechanism must take and refuses the false comforts; it does not name the institutions.',
+      openQuestions: 'The institutions themselves are unbuilt and unspecified — this is a direction, not a mechanism. Coordination across many simultaneous players on shared boards is genuinely harder than one engine on one board, and the chess analogy is weakest exactly there. Whether plural, non-collapsed accounts can resist re-collapse into a single price under real institutional pressure is open. What concretely aims attention at the generative-but-invisible work — care, prevention, maintenance, substrate-building — without metering it into decay is the live design problem.'
+    },
+    revisedAt: '2026-06-06',
+    linksTo: ['labour-as-allocator', 'coordination-wealth', 'money-as-signal', 'participation-limits', 'legibility-truth-tradeoff', 'option-space-as-chess-moves', 'displaced-costs', 'viable-objective']
   }
 ];
 

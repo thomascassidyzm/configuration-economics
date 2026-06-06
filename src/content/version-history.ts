@@ -25,6 +25,23 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.9.0',
+    date: '2026-06-06',
+    title: 'The generative turn — lead with generation; coordination as move-evaluation',
+    summary: `For eight versions the work entered through its cost side: throughput is cost, the inheritance is being burned, physics is being ignored. All true — and all a charge sheet, and a charge sheet enrols no one. v0.9.0 re-sequences the work to enter through generation instead. The essay's orientation now opens on the generative claim — value is not stored but made; configuration generates configuration; the economy's task is to keep that generative game open — and lets the familiar cautions arrive as the single failure mode they always were: the engine run down. Nothing is softened and no status marker moves; the optimism is earned from the generative physics, not from promoting a hope to a fact. The same turn surfaces the framework's most conspicuous silence as a proposition rather than a gap. coordination-as-move-evaluation reframes the open question of what coordinates an economy once labour is no longer the allocator — not as the search for a right price, but as distributed local Δω-evaluation across many boards. A direction, drawn with conviction; the mechanism itself is kept open. And /polychess makes the move-rule playable: a reader feels option space open and close rather than being argued into it — the work's answer to "words may not be enough."`,
+    changes: {
+      added: [
+        'coordination-as-move-evaluation (contested) — the reframe of the framework\'s central open political question. Coordination for a generative economy is modelled as distributed, local move-evaluation (Δω) across multiple observer-relative boards, not as the discovery of a single market-clearing price. Six constraints any mechanism must satisfy, and five comfortable failure modes (single-number trap, central-planner trap, legibility-decay, deprivation relapse, one-board recapture), are named; the institutions themselves are left explicitly open. Linked inbound from labour-as-allocator, participation-limits, and coordination-wealth, and into Alexander\'s context on /essay §6–§7.5.',
+      ],
+      revised: [
+        'Essay §0 (Orientation) re-led with the generative reframe ("Keep the Game Open"): value as a flow into the adjacent possible, the economy\'s question restated as "is the engine still running?", and the cost-side propositions repositioned as the engine run down rather than as the headline. The descriptive-not-prescriptive commitment and every epistemic-status marker are preserved.',
+      ],
+      structural: [
+        '/polychess — an interactive teaching surface where a reader plays move-cards across four boards and feels option space open and close, making the local Δω rule and the polychess reframe experiential rather than argued.',
+      ],
+    },
+  },
+  {
     version: 'v0.8.0',
     date: '2026-05-28',
     title: 'Attack a premise — the format demonstrates itself',

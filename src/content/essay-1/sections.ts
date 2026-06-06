@@ -12,21 +12,26 @@ export const SECTIONS: Section[] = [
   {
     id: 'orientation',
     keyPoints: [
-      'Economics traditionally assumes scarce labour, cheap energy, and growth through extraction',
-      'Those assumptions no longer hold simultaneously',
-      'This essay examines what value accounting remains coherent when physics is taken seriously',
-      'Value is proposed as configuration that preserves future option space under bounded energy flux',
+      'Value is not stored but generated: each configuration makes further configurations reachable — a flow into the adjacent possible',
+      'The question worth asking of an economy: is the generative engine still running — are moves keeping options open, or quietly closing the board?',
+      'Economics traditionally assumed scarce labour, cheap energy, throughput-as-value, growth-through-extraction; those no longer hold simultaneously',
+      'Not a political programme: the essay asks what value accounting stays coherent once physics is taken seriously',
+      'Value proposed as configuration that preserves and expands future option space under bounded energy flux — the economy\'s task being to keep that generative game open',
     ],
-    content: `Economics has traditionally asked a simple question: *how should scarce resources be allocated?*
-For most of its history, this question rested on a set of background assumptions that rarely needed to be stated: that human labour was scarce, that energy was cheap, that material throughput correlated with value, and that growth through extraction was both possible and desirable.
+    content: `Value is not a stock you defend. It is a move you make — and the best moves make more moves possible.
 
-Those assumptions no longer hold simultaneously.
+Begin with something physics already shows us. Every arrangement that holds — an enzyme, a written proof, a road, a shared standard, a trusted institution — does more than exist. It makes things reachable that were not reachable before it. The enzyme opens a reaction chemistry alone would not give; the notation opens a proof the same idea, unwritten, could not. *Configuration generates configuration.* Build enough of it, and the rate at which new things become possible begins to climb with what is already there.
 
-Automation has reduced the need for human labour in many domains. Energy systems are approaching hard physical and ecological limits. The costs of complexity maintenance are rising, while the benefits of additional throughput are diminishing. At the same time, many of the activities most central to human flourishing—care, learning, coordination, meaning-making—do not map cleanly onto wage labour or conventional productivity metrics.
+Stated plainly, and rarely stated plainly: value is not stored, it is generated. It is a flow into the adjacent possible. A forest, a language, a craft — none costs much to keep once it exists, yet each is a standing engine for making the future easier to inhabit. If this is right, the question worth asking of an economy is not *how much did it produce*, nor even *how much does it hold*, but: **is the engine still running? Are we making moves that keep more moves available — or moves that quietly close the board?**
 
-This essay does not propose a political programme, a welfare policy, or a new moral doctrine. It does not argue for what people *should* want, nor does it attempt to legislate values. Its purpose is more limited and more fundamental: to examine what kinds of value accounting remain coherent once physical reality is taken seriously.
+This is a change of question, and economics has traditionally asked a different one: *how should scarce resources be allocated?* For most of its history that question rested on assumptions that rarely needed stating — that human labour was scarce, that energy was cheap, that material throughput tracked value, and that growth through extraction was both possible and desirable.
 
-The claim is simple: when the underlying constraints change, the proxies used to coordinate economic life must change with them. This essay explores what follows when value is understood not as throughput or labour, but as **configuration that preserves and expands future option space under bounded energy flux**.`,
+Those assumptions no longer hold simultaneously. Automation has loosened the need for human labour in many domains. Energy and material systems are pressing against hard ecological limits. The cost of maintaining complexity rises while the benefit of additional throughput falls. And many of the activities most central to a life — care, learning, coordination, meaning-making — map poorly onto wage labour or conventional productivity.
+
+This essay does not propose a political programme, a welfare policy, or a moral doctrine. It does not argue for what people *should* want, nor attempt to legislate values. Its purpose is narrower and more fundamental: to examine what kinds of value accounting stay coherent once physical reality is taken seriously — and to follow, without flinching, where that leads.
+
+The throughline is simple. When the underlying constraints change, the proxies used to coordinate economic life must change with them. What follows explores what happens when value is understood not as throughput or labour, but as **configuration that preserves and expands future option space under bounded energy flux** — and treats the economy's task as keeping that generative game open.`,
+    revisedAt: '2026-06-06',
   },
   {
     id: 'physical-envelope',

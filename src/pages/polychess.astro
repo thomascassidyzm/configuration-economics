@@ -1,0 +1,1193 @@
+---
+// Polychess — the experiential centrepiece of the framework.
+//
+// A self-contained interactive toy. Four boards, each a grid of cells standing
+// for the reachable set (option space) of one observer-class. Move-cards drawn
+// from /applications/moves apply a per-board Δω: they light or extinguish cells.
+// Two scores run in tension — a single seductive Board-1 (GDP-like) number that
+// can keep rising as the other boards collapse, and the true state: total
+// reachable cells across the poly-board, with a per-board floor below which a
+// class of life's R_living empties and the game closes on that board.
+//
+// The lesson is felt, not told: chase the Board-1 number and you close the
+// poly-board; play for openness and you keep it alive. Pure Astro + inline
+// vanilla JS + inline CSS — no framework deps, no API, no Guide panel. This is
+// a deliberately legible toy model of a deliberately illegible reality
+// (legibility-truth-tradeoff). It makes the structure felt; it does not
+// simulate or predict. Cell-counts are illustrative, not measurements.
+
+import { VERSION, BUILD } from '../lib/version';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Polychess — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/overview" class="nav-link">Overview</a>
+        <a href="/essay" class="nav-link">Essay</a>
+        <a href="/explore" class="nav-link">Explore</a>
+        <a href="/applications/moves" class="nav-link">Moves</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>Polychess</h1>
+        <p class="subtitle">The same move, played on every board at once.</p>
+        <p class="note">
+          Standard economics keeps score on one board. The moves that win there
+          are often <em>taking</em> moves on boards nobody is counting —
+          uncounted moves on games you didn't know you were also playing.
+          Play, and watch option space open and close.
+        </p>
+      </header>
+
+      <!-- ===== SCOREBOARD ===== -->
+      <section class="scores" aria-label="The two scores in tension">
+        <div class="score-card score-board1">
+          <span class="score-label">Board 1 score</span>
+          <span class="score-value" id="board1-score">0</span>
+          <span class="score-cap">the single GDP-like number — it can keep rising</span>
+        </div>
+        <div class="score-divider" aria-hidden="true">vs</div>
+        <div class="score-card score-poly">
+          <span class="score-label">Option space across the poly-board</span>
+          <span class="score-value" id="poly-score">100<span class="score-unit">/100</span></span>
+          <span class="score-cap" id="poly-cap">total reachable cells — the true state</span>
+        </div>
+      </section>
+
+      <p class="turn-line">
+        <span class="turn-label">Turn</span>
+        <span id="turn-count">0</span>
+        <span class="turn-sep">·</span>
+        <span id="game-state" class="game-state state-open">the game is open on every board</span>
+      </p>
+
+      <!-- ===== BOARDS ===== -->
+      <section class="boards" id="boards" aria-label="Four boards, one per observer-class">
+        <!-- boards injected by script -->
+      </section>
+
+      <!-- ===== DELTA PREVIEW ===== -->
+      <div class="preview" id="preview" hidden>
+        <span class="preview-label">If you play this move</span>
+        <div class="preview-rows" id="preview-rows"></div>
+        <span class="preview-note">directional only — per option-space-as-chess-moves, Δω is a sign, not a magnitude</span>
+      </div>
+
+      <!-- ===== DECK ===== -->
+      <section class="deck-section" aria-label="The move deck">
+        <div class="deck-head">
+          <h2 class="deck-title">The deck</h2>
+          <button id="reset-btn" class="reset-btn" type="button">Reset</button>
+        </div>
+        <p class="deck-hint">
+          Hover a card to preview its Δω on each board. Click to play it.
+          Every card is a real configuration-change drawn from
+          <a href="/applications/moves">the worked moves</a>, plus a few
+          obvious generative ones.
+        </p>
+        <div class="deck" id="deck">
+          <!-- cards injected by script -->
+        </div>
+      </section>
+
+      <!-- ===== MOVE LOG ===== -->
+      <section class="log-section" aria-label="Move log">
+        <h2 class="log-title">Move log</h2>
+        <ol class="log" id="log">
+          <li class="log-empty">No moves yet. The board starts fully open.</li>
+        </ol>
+      </section>
+
+      <!-- ===== END-OF-GAME REFLECTION ===== -->
+      <section class="reflection" id="reflection" hidden>
+        <h2 class="reflection-title" id="reflection-title">What you just felt</h2>
+        <div class="reflection-body" id="reflection-body"></div>
+      </section>
+
+      <!-- ===== HONEST DISCLAIMER ===== -->
+      <section class="disclaimer">
+        <h2 class="disclaimer-title">An honest note on the toy</h2>
+        <p>
+          This is a deliberately <em>legible</em> toy model of a deliberately
+          <em>illegible</em> reality. Its whole job is to make a structure
+          <em>felt</em> — that one physical action registers as a move on several
+          boards at once, scored differently on each, with king-pieces you
+          didn't know you had. It does not simulate, measure, or predict.
+        </p>
+        <p>
+          The cell-counts are illustrative, not measurements. Global option space
+          is not computable — that is precisely why the framework evaluates
+          <em>moves</em> locally and directionally rather than scoring
+          <em>states</em> globally (<a href="/explore#option-space-measurability">option-space-measurability</a>).
+          Crushing real biosphere dynamics into a 6×6 grid is exactly the
+          legibility-for-truth trade the framework warns about
+          (<a href="/explore#legibility-truth-tradeoff">legibility-truth-tradeoff</a>):
+          the grid is legible and therefore lossy. Hold the feeling; discard the
+          numbers.
+        </p>
+        <p class="disclaimer-foot">
+          The real apparatus is the directional rule on R_living, worked on six
+          real cases with their evidence and their ambiguities, at
+          <a href="/applications/moves">/applications/moves</a>. The teaching
+          device behind this page is described in
+          <a href="/drafts/polychess-as-teaching-device">polychess as a teaching device</a>.
+        </p>
+      </section>
+
+      <footer class="page-footer">
+        <p>
+          Return to the <a href="/overview">overview</a>, the full <a href="/essay">essay</a>,
+          the <a href="/explore">explore</a> view with every proposition,
+          <a href="/applications/moves">/applications/moves</a> for the rule operating on real cases,
+          or <a href="/research-frontier">/research-frontier</a> for what the work cannot yet close.
+        </p>
+      </footer>
+    </main>
+
+    <script is:inline>
+      // ====================================================================
+      // POLYCHESS — all logic client-side, no deps.
+      // ====================================================================
+
+      // --- Boards: each an observer-class with a grid of reachable cells. ---
+      // floor = the count below which the class's R_living is "empty" and the
+      // game closes on that board (viable-objective's no-regret: one board
+      // emptied = a class of life's R_living emptied).
+      const BOARD_DEFS = [
+        {
+          id: 'economy',
+          name: 'Economy',
+          glyph: '£',
+          gist: 'the GDP / financial board — the one standard accounting counts',
+          size: 25,        // 5×5
+          cols: 5,
+          floor: 3,
+          isBoard1: true,  // its reachable count drives the seductive Board-1 score
+        },
+        {
+          id: 'biosphere',
+          name: 'Biosphere',
+          glyph: '☁',
+          gist: 'climate stability and the atmospheric / oceanic sinks',
+          size: 25,
+          cols: 5,
+          floor: 4,
+        },
+        {
+          id: 'land',
+          name: 'Land & Soil',
+          glyph: '⬢',
+          gist: 'topsoil, watersheds, species, the living substrate',
+          size: 25,
+          cols: 5,
+          floor: 4,
+        },
+        {
+          id: 'commons',
+          name: 'Commons',
+          glyph: '◈',
+          gist: 'trust, knowledge, culture, the capacity to coordinate',
+          size: 25,
+          cols: 5,
+          floor: 3,
+        },
+      ];
+
+      // --- The deck. Each card carries a per-board delta (cells to light +,
+      // extinguish -). Drawn from /applications/moves plus a few generative
+      // moves so the deck spans degrading / preserving / expanding / ambiguous.
+      // Order of boards in `delta`: [economy, biosphere, land, commons].
+      const DECK = [
+        {
+          id: 'fossil-expansion',
+          name: 'Expand fossil extraction',
+          sourceCase: 'fossil-fuel expansion',
+          blurb: 'New oil, gas and coal infrastructure — multi-decade lock-in.',
+          delta: { economy: +5, biosphere: -7, land: -3, commons: -1 },
+          verdict: 'degrading',
+        },
+        {
+          id: 'copyright-extension',
+          name: 'Extend copyright term',
+          sourceCase: 'copyright extension',
+          blurb: 'Lock culture out of the public domain for another lifetime.',
+          delta: { economy: +3, biosphere: 0, land: 0, commons: -6 },
+          verdict: 'degrading',
+        },
+        {
+          id: 'drain-wetland',
+          name: 'Drain the wetland',
+          sourceCase: 'generative · land-use',
+          blurb: 'Convert peatland to cropland. The number goes up; the sink goes.',
+          delta: { economy: +4, biosphere: -4, land: -5, commons: 0 },
+          verdict: 'degrading',
+        },
+        {
+          id: 'biodiversity-offset',
+          name: 'Permit-with-offset',
+          sourceCase: 'biodiversity offsetting',
+          blurb: 'Destroy habitat at A, promise "equivalent" habitat at B.',
+          delta: { economy: +3, biosphere: -1, land: -2, commons: -1 },
+          verdict: 'ambiguous',
+        },
+        {
+          id: 'sai',
+          name: 'Stratospheric aerosols (SAI)',
+          sourceCase: 'stratospheric aerosol injection',
+          blurb: 'Mask the warming. Buys time on one board; new dependency on others.',
+          delta: { economy: -1, biosphere: +4, land: -2, commons: -3 },
+          verdict: 'ambiguous',
+        },
+        {
+          id: 'antibiotic-stewardship',
+          name: 'Antibiotic stewardship',
+          sourceCase: 'antibiotic stewardship',
+          blurb: 'Protect a shared configuration from tragedy-of-the-commons collapse.',
+          delta: { economy: -1, biosphere: 0, land: +2, commons: +3 },
+          verdict: 'preserving',
+        },
+        {
+          id: 'soil-regen',
+          name: 'Soil-regenerative subsidy',
+          sourceCase: 'soil-regenerative subsidies',
+          blurb: 'Pay to rebuild topsoil. Slow, durable, expands the reachable set.',
+          delta: { economy: -1, biosphere: +2, land: +5, commons: +1 },
+          verdict: 'expanding',
+        },
+        {
+          id: 'restore-commons',
+          name: 'Restore the commons',
+          sourceCase: 'generative · coordination',
+          blurb: 'Open knowledge, rebuild trust, widen who can coordinate.',
+          delta: { economy: +1, biosphere: 0, land: +1, commons: +5 },
+          verdict: 'expanding',
+        },
+        {
+          id: 'care-maintenance',
+          name: 'Care & maintenance',
+          sourceCase: 'generative · care-as-configuration',
+          blurb: 'Keep what works working. No new output; option space held open.',
+          delta: { economy: -1, biosphere: +2, land: +2, commons: +2 },
+          verdict: 'preserving',
+        },
+      ];
+
+      const VERDICT_LABEL = {
+        degrading: 'degrading',
+        preserving: 'preserving',
+        expanding: 'expanding',
+        ambiguous: 'ambiguous',
+      };
+
+      // ---------------------------------------------------------------- state
+      let boards = {};   // id -> { def, lit: [bool], closed: bool }
+      let turn = 0;
+      let board1 = 0;    // the seductive cumulative GDP-like number
+      let logEntries = [];
+      let gameOver = false;
+
+      function freshState() {
+        boards = {};
+        BOARD_DEFS.forEach(def => {
+          boards[def.id] = {
+            def,
+            lit: new Array(def.size).fill(true), // start fully open
+            closed: false,
+          };
+        });
+        turn = 0;
+        board1 = 0;
+        logEntries = [];
+        gameOver = false;
+      }
+
+      function litCount(b) { return b.lit.reduce((n, v) => n + (v ? 1 : 0), 0); }
+      function totalReachable() {
+        return Object.values(boards).reduce((n, b) => n + litCount(b), 0);
+      }
+      function totalCapacity() {
+        return BOARD_DEFS.reduce((n, d) => n + d.size, 0);
+      }
+
+      // ------------------------------------------------------------ rendering
+      function buildBoards() {
+        const host = document.getElementById('boards');
+        host.innerHTML = '';
+        BOARD_DEFS.forEach(def => {
+          const wrap = document.createElement('div');
+          wrap.className = 'board';
+          wrap.dataset.board = def.id;
+
+          const head = document.createElement('div');
+          head.className = 'board-head';
+          head.innerHTML =
+            '<span class="board-glyph">' + def.glyph + '</span>' +
+            '<div class="board-titles">' +
+              '<span class="board-name">' + def.name +
+                (def.isBoard1 ? '<span class="board-1-tag">Board 1</span>' : '') +
+              '</span>' +
+              '<span class="board-gist">' + def.gist + '</span>' +
+            '</div>';
+          wrap.appendChild(head);
+
+          const grid = document.createElement('div');
+          grid.className = 'grid';
+          grid.style.gridTemplateColumns = 'repeat(' + def.cols + ', 1fr)';
+          for (let i = 0; i < def.size; i++) {
+            const cell = document.createElement('span');
+            cell.className = 'cell lit';
+            cell.dataset.board = def.id;
+            cell.dataset.idx = String(i);
+            grid.appendChild(cell);
+          }
+          wrap.appendChild(grid);
+
+          const meter = document.createElement('div');
+          meter.className = 'meter';
+          meter.innerHTML =
+            '<div class="meter-track"><div class="meter-fill" data-fill="' + def.id + '"></div>' +
+              '<div class="meter-floor" style="left:' + (def.floor / def.size * 100) + '%"></div>' +
+            '</div>' +
+            '<div class="meter-readout"><span class="openness" data-openness="' + def.id + '">100%</span>' +
+              '<span class="floor-label">floor ' + def.floor + '</span></div>';
+          wrap.appendChild(meter);
+
+          host.appendChild(wrap);
+        });
+      }
+
+      function paint() {
+        // cells
+        Object.values(boards).forEach(b => {
+          const cells = document.querySelectorAll('.cell[data-board="' + b.def.id + '"]');
+          cells.forEach((cell, i) => {
+            cell.classList.toggle('lit', !!b.lit[i]);
+            cell.classList.toggle('dark', !b.lit[i]);
+          });
+          const wrap = document.querySelector('.board[data-board="' + b.def.id + '"]');
+          if (wrap) wrap.classList.toggle('board-closed', b.closed);
+
+          const count = litCount(b);
+          const pct = Math.round(count / b.def.size * 100);
+          const fill = document.querySelector('[data-fill="' + b.def.id + '"]');
+          if (fill) {
+            fill.style.width = pct + '%';
+            const belowFloor = count <= b.def.floor;
+            fill.classList.toggle('fill-danger', belowFloor && count > 0);
+            fill.classList.toggle('fill-dead', count === 0);
+          }
+          const op = document.querySelector('[data-openness="' + b.def.id + '"]');
+          if (op) {
+            op.textContent = b.closed ? 'closed' : pct + '%';
+            op.classList.toggle('openness-dead', b.closed);
+            op.classList.toggle('openness-danger', !b.closed && count <= b.def.floor);
+          }
+        });
+
+        // scores
+        document.getElementById('board1-score').textContent = board1.toLocaleString();
+        const reach = totalReachable();
+        const cap = totalCapacity();
+        document.getElementById('poly-score').innerHTML =
+          reach + '<span class="score-unit">/' + cap + '</span>';
+
+        const closedBoards = Object.values(boards).filter(b => b.closed);
+        const polyCap = document.getElementById('poly-cap');
+        if (closedBoards.length > 0) {
+          polyCap.textContent = closedBoards.length === 1
+            ? 'a board has closed — a class of life’s R_living is empty'
+            : closedBoards.length + ' boards have closed — option space is collapsing';
+          polyCap.classList.add('cap-alarm');
+        } else {
+          polyCap.textContent = 'total reachable cells — the true state';
+          polyCap.classList.remove('cap-alarm');
+        }
+
+        // turn + game-state line
+        document.getElementById('turn-count').textContent = turn;
+        const stateEl = document.getElementById('game-state');
+        if (gameOver) {
+          stateEl.textContent = 'the game has closed on ' +
+            closedBoards.map(b => b.def.name).join(', ');
+          stateEl.className = 'game-state state-closed';
+        } else if (closedBoards.length === 0) {
+          stateEl.textContent = 'the game is open on every board';
+          stateEl.className = 'game-state state-open';
+        } else {
+          const danger = Object.values(boards).filter(b => !b.closed && litCount(b) <= b.def.floor);
+          stateEl.textContent = danger.length
+            ? 'at the floor: ' + danger.map(b => b.def.name).join(', ')
+            : 'still open — but a board has already gone';
+          stateEl.className = 'game-state state-warn';
+        }
+      }
+
+      // --------------------------------------------------------------- deck UI
+      function buildDeck() {
+        const host = document.getElementById('deck');
+        host.innerHTML = '';
+        DECK.forEach(card => {
+          const el = document.createElement('button');
+          el.type = 'button';
+          el.className = 'card verdict-' + card.verdict;
+          el.dataset.card = card.id;
+
+          const arrows = BOARD_DEFS.map(def => {
+            const d = signedDelta(card, def.id);
+            const dir = d > 0 ? 'up' : d < 0 ? 'down' : 'flat';
+            const sym = d > 0 ? '↑' : d < 0 ? '↓' : '~';
+            return '<span class="mini mini-' + dir + '" title="' + def.name + '">' +
+              '<span class="mini-board">' + def.glyph + '</span>' + sym + '</span>';
+          }).join('');
+
+          el.innerHTML =
+            '<span class="card-top">' +
+              '<span class="card-name">' + card.name + '</span>' +
+              '<span class="card-verdict">' + VERDICT_LABEL[card.verdict] + '</span>' +
+            '</span>' +
+            '<span class="card-blurb">' + card.blurb + '</span>' +
+            '<span class="card-source">from ' + card.sourceCase + '</span>' +
+            '<span class="card-minis">' + arrows + '</span>';
+
+          el.addEventListener('mouseenter', () => showPreview(card));
+          el.addEventListener('focus', () => showPreview(card));
+          el.addEventListener('mouseleave', hidePreview);
+          el.addEventListener('blur', hidePreview);
+          el.addEventListener('click', () => playCard(card));
+          host.appendChild(el);
+        });
+      }
+
+      // Net signed delta for a board.
+      function signedDelta(card, boardId) {
+        return card.delta[boardId] || 0;
+      }
+
+      // ------------------------------------------------------------- preview
+      function showPreview(card) {
+        if (gameOver) return;
+        const host = document.getElementById('preview-rows');
+        host.innerHTML = '';
+        BOARD_DEFS.forEach(def => {
+          const b = boards[def.id];
+          const d = signedDelta(card, def.id);
+          const dir = d > 0 ? 'up' : d < 0 ? 'down' : 'flat';
+          const sym = d > 0 ? '↑ opens' : d < 0 ? '↓ closes' : '~ leaves as is';
+          const row = document.createElement('div');
+          row.className = 'preview-row preview-' + dir + (b.closed ? ' preview-onclosed' : '');
+          row.innerHTML =
+            '<span class="preview-glyph">' + def.glyph + '</span>' +
+            '<span class="preview-name">' + def.name + '</span>' +
+            '<span class="preview-dir">' + (b.closed ? '— already closed' : sym) + '</span>';
+          host.appendChild(row);
+
+          // ghost-highlight cells that would change
+          ghostCells(def.id, d);
+        });
+        document.getElementById('preview').hidden = false;
+      }
+
+      function hidePreview() {
+        if (gameOver) return;
+        document.getElementById('preview').hidden = true;
+        document.querySelectorAll('.cell.ghost-open, .cell.ghost-close')
+          .forEach(c => c.classList.remove('ghost-open', 'ghost-close'));
+      }
+
+      // Mark which cells WOULD flip, so the reader sees the move before committing.
+      function ghostCells(boardId, d) {
+        const b = boards[boardId];
+        if (b.closed || d === 0) return;
+        const cells = document.querySelectorAll('.cell[data-board="' + boardId + '"]');
+        if (d < 0) {
+          // would extinguish the last |d| lit cells
+          let need = -d;
+          for (let i = b.lit.length - 1; i >= 0 && need > 0; i--) {
+            if (b.lit[i]) { cells[i].classList.add('ghost-close'); need--; }
+          }
+        } else {
+          // would light the first d dark cells
+          let need = d;
+          for (let i = 0; i < b.lit.length && need > 0; i++) {
+            if (!b.lit[i]) { cells[i].classList.add('ghost-open'); need--; }
+          }
+        }
+      }
+
+      // ---------------------------------------------------------- play a card
+      function applyDeltaToBoard(boardId, d) {
+        const b = boards[boardId];
+        if (b.closed) return 0;
+        let changed = 0;
+        if (d < 0) {
+          let need = -d;
+          for (let i = b.lit.length - 1; i >= 0 && need > 0; i--) {
+            if (b.lit[i]) { b.lit[i] = false; need--; changed--; }
+          }
+        } else if (d > 0) {
+          let need = d;
+          for (let i = 0; i < b.lit.length && need > 0; i++) {
+            if (!b.lit[i]) { b.lit[i] = true; need--; changed++; }
+          }
+        }
+        return changed;
+      }
+
+      function playCard(card) {
+        if (gameOver) return;
+        turn++;
+
+        // Apply each board's net delta — exactly what the preview promised.
+        BOARD_DEFS.forEach(def => {
+          applyDeltaToBoard(def.id, card.delta[def.id] || 0);
+        });
+
+        // Board-1 score: rises with the Economy board's net delta, scaled up so
+        // it looks seductive even as cells die elsewhere. Only the financial
+        // board feeds it — that is the whole point.
+        const econDelta = signedDelta(card, 'economy');
+        // GDP-like: a positive Economy move pumps the number directly.
+        const pump = Math.max(0, econDelta) * 1200;
+        // Extractive moves (those that take from other boards) ALSO book
+        // activity — destruction shows up as GDP. Count cells removed elsewhere
+        // as throughput booked to Board 1.
+        let throughput = 0;
+        BOARD_DEFS.forEach(def => {
+          if (def.isBoard1) return;
+          const d = signedDelta(card, def.id);
+          if (d < 0) throughput += (-d) * 350; // taking moves register as GDP
+        });
+        board1 += pump + throughput;
+
+        // close boards that hit zero
+        const closedNow = [];
+        Object.values(boards).forEach(b => {
+          if (!b.closed && litCount(b) === 0) {
+            b.closed = true;
+            closedNow.push(b.def.name);
+          }
+        });
+
+        // log
+        const deltaStr = BOARD_DEFS.map(def => {
+          const d = signedDelta(card, def.id);
+          const s = d > 0 ? '+' + d : d < 0 ? String(d) : '0';
+          return def.glyph + s;
+        }).join('  ');
+        logEntries.unshift({
+          turn,
+          name: card.name,
+          verdict: card.verdict,
+          deltaStr,
+          closedNow,
+          reach: totalReachable(),
+          board1,
+        });
+        renderLog();
+
+        hidePreview();
+        paint();
+
+        // end conditions
+        const anyClosed = Object.values(boards).some(b => b.closed);
+        if (anyClosed) {
+          endGame();
+        }
+      }
+
+      // ------------------------------------------------------------ move log
+      function renderLog() {
+        const host = document.getElementById('log');
+        if (logEntries.length === 0) {
+          host.innerHTML = '<li class="log-empty">No moves yet. The board starts fully open.</li>';
+          return;
+        }
+        host.innerHTML = logEntries.map(e => {
+          const closed = e.closedNow.length
+            ? '<span class="log-closed">→ ' + e.closedNow.join(', ') + ' closed</span>'
+            : '';
+          return '<li class="log-item verdict-' + e.verdict + '">' +
+            '<span class="log-turn">' + e.turn + '</span>' +
+            '<span class="log-name">' + e.name + '</span>' +
+            '<span class="log-delta">' + e.deltaStr + '</span>' +
+            '<span class="log-scores">Board 1 ' + e.board1.toLocaleString() +
+              ' · poly ' + e.reach + '</span>' +
+            closed +
+          '</li>';
+        }).join('');
+      }
+
+      // ----------------------------------------------------------- end-game
+      function endGame() {
+        gameOver = true;
+        document.querySelectorAll('.card').forEach(c => c.disabled = true);
+        hidePreview();
+
+        const closedBoards = Object.values(boards).filter(b => b.closed);
+        const reach = totalReachable();
+        const cap = totalCapacity();
+
+        const title = document.getElementById('reflection-title');
+        const body = document.getElementById('reflection-body');
+        title.textContent = 'The game closed on ' +
+          closedBoards.map(b => b.def.name).join(' and ');
+
+        const chasedGDP = board1 >= 6000;
+        const lead = chasedGDP
+          ? 'You pushed the Board 1 score to <strong>' + board1.toLocaleString() +
+            '</strong>. On the one board standard accounting counts, you won. ' +
+            'And in doing so you emptied the reachable set of ' +
+            (closedBoards.length === 1 ? 'a whole class of life' : 'several classes of life') + '.'
+          : 'The Board 1 score reached <strong>' + board1.toLocaleString() +
+            '</strong> — and still a board closed. ' +
+            'Even a modest single-board score can be bought by foreclosing another.';
+
+        body.innerHTML =
+          '<p>' + lead + ' ' +
+            'After ' + turn + ' move' + (turn === 1 ? '' : 's') + ', ' + reach + ' of ' + cap +
+            ' cells remain reachable across the poly-board — but the count is not the point. ' +
+            'A board at zero is a board where a class of life can no longer make distinctions. ' +
+            'No rise in the other boards buys it back.</p>' +
+          '<p>That is the lesson, felt rather than told. ' +
+            'The goal was never to maximise the Board&nbsp;1 number — it was to ' +
+            '<strong>keep the game open</strong>: every board above its floor, for as many turns as possible. ' +
+            'The moves that win on Board&nbsp;1 — fossil expansion, draining the wetland, extending copyright — ' +
+            'are <em>taking</em> moves on boards nobody was counting.</p>' +
+          '<p class="reflection-props">What you felt has names: ' +
+            'externalities are <a href="/explore#option-space-as-chess-moves">uncounted moves on boards you didn’t know you were playing on</a>; ' +
+            'the cost that lands on another board is <a href="/explore#displaced-costs">a displaced cost</a>; ' +
+            'and the rule that refuses any move which empties a board is ' +
+            '<a href="/explore#viable-objective">the viable objective</a> — first do no harm, not maximise this number. ' +
+            'See the rule run on real cases at <a href="/applications/moves">/applications/moves</a>.</p>' +
+          '<p class="reflection-cta"><button id="again-btn" type="button" class="again-btn">Play again</button> ' +
+            '— this time, try to keep every board open. It can be done. It just won’t maximise Board&nbsp;1.</p>';
+
+        const ref = document.getElementById('reflection');
+        ref.hidden = false;
+        ref.classList.add('reflection-in');
+        document.getElementById('again-btn').addEventListener('click', resetGame);
+        ref.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        paint();
+      }
+
+      // ------------------------------------------------------------- reset
+      function resetGame() {
+        freshState();
+        buildBoards();
+        buildDeck();
+        renderLog();
+        const ref = document.getElementById('reflection');
+        ref.hidden = true;
+        ref.classList.remove('reflection-in');
+        document.querySelectorAll('.card').forEach(c => c.disabled = false);
+        paint();
+      }
+
+      // ------------------------------------------------------------- init
+      document.getElementById('reset-btn').addEventListener('click', resetGame);
+      freshState();
+      buildBoards();
+      buildDeck();
+      paint();
+    </script>
+
+    <style>
+      :root {
+        --void: #0a0a0c;
+        --depth-1: #12121a;
+        --depth-2: #1a1a24;
+        --text-primary: #e8e8f0;
+        --text-secondary: #a0a0b8;
+        --text-muted: #606080;
+        --accent: #4a9eff;
+
+        --verdict-degrading: #c97070;
+        --verdict-preserving: #5fa8b2;
+        --verdict-expanding: #b39148;
+        --verdict-ambiguous: #8a8a99;
+
+        --cell-lit: #4f9e6a;       /* reachable — alive */
+        --cell-lit-glow: rgba(79, 158, 106, 0.55);
+        --cell-dark: #1c1c26;      /* foreclosed */
+        --danger: #c97070;
+
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--void);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.7;
+      }
+
+      /* ---------- nav (mirrors research-frontier) ---------- */
+      .top-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 0 2rem;
+        z-index: 100;
+      }
+      .nav-home {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+      .nav-link { font-size: 0.875rem; color: var(--text-secondary); text-decoration: none; }
+      .nav-link:hover { color: var(--accent); }
+      .nav-right { display: flex; align-items: center; gap: 1rem; margin-left: auto; }
+      .nav-version { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); }
+      .nav-build { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); opacity: 0.7; }
+
+      main {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 100px 2rem 6rem;
+      }
+
+      /* ---------- header ---------- */
+      .page-header { margin-bottom: 2.5rem; }
+      .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        font-weight: 400;
+        margin-bottom: 0.75rem;
+      }
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 1.0625rem;
+        font-style: italic;
+        font-family: var(--font-display);
+        margin-bottom: 0.85rem;
+      }
+      .note {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        max-width: 60ch;
+      }
+      .note em, .subtitle em { color: var(--text-primary); font-style: italic; }
+
+      /* ---------- scoreboard ---------- */
+      .scores {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: stretch;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+      .score-card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 1.1rem 1.25rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.07);
+        background: var(--depth-1);
+      }
+      .score-board1 { border-left: 3px solid var(--verdict-degrading); }
+      .score-poly { border-left: 3px solid var(--cell-lit); }
+      .score-label {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+      }
+      .score-value {
+        font-family: var(--font-display);
+        font-size: 2.4rem;
+        line-height: 1.05;
+        font-weight: 500;
+        color: var(--text-primary);
+        font-variant-numeric: tabular-nums;
+      }
+      .score-board1 .score-value { color: var(--verdict-degrading); }
+      .score-poly .score-value { color: var(--cell-lit); }
+      .score-unit { font-size: 1.1rem; color: var(--text-muted); font-family: var(--font-mono); }
+      .score-cap { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+      .score-cap.cap-alarm { color: var(--danger); }
+      .score-divider {
+        align-self: center;
+        font-family: var(--font-display);
+        font-style: italic;
+        color: var(--text-muted);
+        font-size: 1.1rem;
+      }
+
+      /* ---------- turn line ---------- */
+      .turn-line {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .turn-label { text-transform: uppercase; letter-spacing: 0.08em; }
+      .turn-sep { opacity: 0.4; }
+      .game-state { font-family: var(--font-body); font-style: italic; }
+      .state-open { color: var(--cell-lit); }
+      .state-warn { color: var(--verdict-expanding); }
+      .state-closed { color: var(--danger); }
+
+      /* ---------- boards ---------- */
+      .boards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+        margin-bottom: 1.5rem;
+      }
+      .board {
+        background: var(--depth-1);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 10px;
+        padding: 1rem 1.1rem 1.1rem;
+        transition: opacity 0.5s ease, border-color 0.5s ease;
+      }
+      .board-closed {
+        border-color: rgba(201, 112, 112, 0.4);
+        opacity: 0.82;
+      }
+      .board-head { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.85rem; min-height: 2.6rem; }
+      .board-glyph {
+        font-size: 1.1rem;
+        color: var(--accent);
+        line-height: 1.5;
+        flex-shrink: 0;
+      }
+      .board-titles { display: flex; flex-direction: column; gap: 0.1rem; }
+      .board-name {
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .board-1-tag {
+        font-family: var(--font-mono);
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--verdict-degrading);
+        border: 1px solid rgba(201,112,112,0.4);
+        border-radius: 3px;
+        padding: 0.1rem 0.3rem;
+      }
+      .board-gist { font-size: 0.75rem; color: var(--text-muted); line-height: 1.35; }
+
+      .grid {
+        display: grid;
+        gap: 4px;
+        margin-bottom: 0.85rem;
+      }
+      .cell {
+        aspect-ratio: 1 / 1;
+        border-radius: 3px;
+        background: var(--cell-dark);
+        transition: background 0.45s ease, box-shadow 0.45s ease, transform 0.2s ease;
+      }
+      .cell.lit {
+        background: var(--cell-lit);
+        box-shadow: 0 0 6px var(--cell-lit-glow);
+      }
+      .cell.dark {
+        background: var(--cell-dark);
+        box-shadow: none;
+      }
+      .cell.ghost-close {
+        background: var(--verdict-degrading);
+        box-shadow: 0 0 6px rgba(201,112,112,0.6);
+        transform: scale(0.86);
+      }
+      .cell.ghost-open {
+        background: rgba(79,158,106,0.45);
+        box-shadow: 0 0 6px rgba(79,158,106,0.4);
+        transform: scale(0.86);
+        outline: 1px dashed rgba(79,158,106,0.7);
+      }
+
+      /* meter */
+      .meter { display: flex; flex-direction: column; gap: 0.3rem; }
+      .meter-track {
+        position: relative;
+        height: 5px;
+        border-radius: 3px;
+        background: rgba(255,255,255,0.07);
+        overflow: visible;
+      }
+      .meter-fill {
+        height: 100%;
+        border-radius: 3px;
+        background: var(--cell-lit);
+        transition: width 0.5s ease, background 0.5s ease;
+      }
+      .meter-fill.fill-danger { background: var(--verdict-expanding); }
+      .meter-fill.fill-dead { background: var(--danger); }
+      .meter-floor {
+        position: absolute;
+        top: -2px; bottom: -2px;
+        width: 1px;
+        background: rgba(201,112,112,0.7);
+      }
+      .meter-readout {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        color: var(--text-muted);
+      }
+      .openness { color: var(--cell-lit); }
+      .openness-danger { color: var(--verdict-expanding); }
+      .openness-dead { color: var(--danger); }
+      .floor-label { opacity: 0.7; }
+
+      /* ---------- preview ---------- */
+      .preview {
+        background: var(--depth-2);
+        border: 1px solid rgba(74,158,255,0.18);
+        border-radius: 8px;
+        padding: 0.9rem 1.1rem;
+        margin-bottom: 1.5rem;
+      }
+      .preview-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+        margin-bottom: 0.6rem;
+      }
+      .preview-rows { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.4rem 1.5rem; }
+      .preview-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+      .preview-glyph { color: var(--accent); width: 1.1rem; text-align: center; }
+      .preview-name { color: var(--text-secondary); min-width: 6.5rem; }
+      .preview-dir { font-family: var(--font-mono); font-size: 0.78rem; }
+      .preview-up .preview-dir { color: var(--cell-lit); }
+      .preview-down .preview-dir { color: var(--verdict-degrading); }
+      .preview-flat .preview-dir { color: var(--verdict-ambiguous); }
+      .preview-onclosed .preview-dir { color: var(--text-muted); font-style: italic; }
+      .preview-note { display: block; margin-top: 0.65rem; font-size: 0.74rem; color: var(--text-muted); font-style: italic; }
+
+      /* ---------- deck ---------- */
+      .deck-section { margin-bottom: 2.5rem; }
+      .deck-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem; }
+      .deck-title {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+      .reset-btn, .again-btn {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-secondary);
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 4px;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
+        transition: color 0.2s, border-color 0.2s;
+      }
+      .reset-btn:hover, .again-btn:hover { color: var(--accent); border-color: var(--accent); }
+      .deck-hint { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.25rem; max-width: 62ch; }
+      .deck-hint a, .deck-section a { color: var(--accent); text-decoration: none; }
+      .deck-hint a:hover { text-decoration: underline; }
+
+      .deck {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 0.85rem;
+      }
+      .card {
+        text-align: left;
+        font-family: var(--font-body);
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 0.85rem 0.95rem 0.9rem;
+        background: var(--depth-1);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-left: 3px solid var(--verdict-ambiguous);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+      }
+      .card:hover:not(:disabled) {
+        transform: translateY(-2px);
+        background: var(--depth-2);
+      }
+      .card:disabled { opacity: 0.4; cursor: default; }
+      .card.verdict-degrading { border-left-color: var(--verdict-degrading); }
+      .card.verdict-preserving { border-left-color: var(--verdict-preserving); }
+      .card.verdict-expanding { border-left-color: var(--verdict-expanding); }
+      .card.verdict-ambiguous { border-left-color: var(--verdict-ambiguous); }
+
+      .card-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+      .card-name { font-size: 0.95rem; font-weight: 500; color: var(--text-primary); line-height: 1.25; }
+      .card-verdict {
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .verdict-degrading .card-verdict { color: var(--verdict-degrading); }
+      .verdict-preserving .card-verdict { color: var(--verdict-preserving); }
+      .verdict-expanding .card-verdict { color: var(--verdict-expanding); }
+      .verdict-ambiguous .card-verdict { color: var(--verdict-ambiguous); }
+      .card-blurb { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; }
+      .card-source { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); }
+
+      .card-minis { display: flex; gap: 0.4rem; margin-top: 0.2rem; flex-wrap: wrap; }
+      .mini {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.15rem;
+        padding: 0.1rem 0.3rem;
+        border-radius: 3px;
+        background: rgba(255,255,255,0.04);
+      }
+      .mini-board { opacity: 0.65; font-size: 0.62rem; }
+      .mini-up { color: var(--cell-lit); }
+      .mini-down { color: var(--verdict-degrading); }
+      .mini-flat { color: var(--verdict-ambiguous); }
+
+      /* ---------- move log ---------- */
+      .log-section { margin-bottom: 3rem; }
+      .log-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 500; margin-bottom: 1rem; }
+      .log { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+      .log-empty { color: var(--text-muted); font-size: 0.875rem; font-style: italic; }
+      .log-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        font-size: 0.82rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 5px;
+        background: var(--depth-1);
+        border-left: 2px solid var(--verdict-ambiguous);
+      }
+      .log-item.verdict-degrading { border-left-color: var(--verdict-degrading); }
+      .log-item.verdict-preserving { border-left-color: var(--verdict-preserving); }
+      .log-item.verdict-expanding { border-left-color: var(--verdict-expanding); }
+      .log-item.verdict-ambiguous { border-left-color: var(--verdict-ambiguous); }
+      .log-turn { font-family: var(--font-mono); color: var(--text-muted); width: 1.5rem; }
+      .log-name { color: var(--text-primary); font-weight: 500; min-width: 10rem; }
+      .log-delta { font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-secondary); letter-spacing: 0.02em; }
+      .log-scores { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); margin-left: auto; }
+      .log-closed { font-family: var(--font-mono); font-size: 0.72rem; color: var(--danger); flex-basis: 100%; }
+
+      /* ---------- reflection ---------- */
+      .reflection {
+        background: var(--depth-1);
+        border: 1px solid rgba(74,158,255,0.2);
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      .reflection.reflection-in {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+      .reflection-title {
+        font-family: var(--font-display);
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        color: var(--danger);
+      }
+      .reflection-body p { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.7; }
+      .reflection-body strong { color: var(--text-primary); }
+      .reflection-body a { color: var(--accent); text-decoration: none; }
+      .reflection-body a:hover { text-decoration: underline; }
+      .reflection-props { border-left: 2px solid var(--accent); padding-left: 1rem; }
+      .reflection-cta { margin-top: 1.5rem; }
+
+      /* ---------- disclaimer ---------- */
+      .disclaimer {
+        border-top: 1px solid rgba(255,255,255,0.06);
+        padding-top: 2rem;
+        margin-bottom: 3rem;
+      }
+      .disclaimer-title {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+      }
+      .disclaimer p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.7; max-width: 68ch; }
+      .disclaimer em { color: var(--text-secondary); font-style: italic; }
+      .disclaimer a { color: var(--accent); text-decoration: none; }
+      .disclaimer a:hover { text-decoration: underline; }
+      .disclaimer-foot { font-style: italic; }
+
+      /* ---------- footer ---------- */
+      .page-footer {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+      .page-footer a { color: var(--accent); text-decoration: none; }
+      .page-footer a:hover { text-decoration: underline; }
+
+      /* ---------- responsive ---------- */
+      @media (max-width: 760px) {
+        .boards { grid-template-columns: 1fr; }
+        .preview-rows { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 600px) {
+        main { padding: 80px 1.25rem 4rem; }
+        .page-header h1 { font-size: 1.75rem; }
+        .scores { grid-template-columns: 1fr; }
+        .score-divider { display: none; }
+        .score-value { font-size: 2rem; }
+        .deck { grid-template-columns: 1fr; }
+        .log-scores { margin-left: 0; flex-basis: 100%; }
+      }
+    </style>
+  </body>
+</html>
