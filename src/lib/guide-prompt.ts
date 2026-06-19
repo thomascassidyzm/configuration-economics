@@ -8,16 +8,23 @@ import { getSectionMarkdown, getEssayOverview } from './section-renderer';
 // Keys match section IDs from essay-1/config.ts
 export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   'orientation': [],  // General framing
-  'physical-envelope': ['energy-income-inheritance', 'exergy-not-energy', 'binding-constraint'],
+  'physical-envelope': ['energy-income-inheritance', 'exergy-not-energy', 'binding-constraint', 'pattern-intelligence-constraint'],
   'accounting-error': ['energy-income-inheritance', 'throughput-cost', 'exergy-not-energy', 'binding-constraint'],
   'throughput-proxy': ['throughput-cost', 'displaced-costs', 'money-as-signal', 'exergy-not-energy'],
-  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'configuration-generates-configuration'],
+  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'configuration-generates-configuration', 'held-value-not-reachable', 'pattern-intelligence-constraint'],
   'configuration-not-information': ['configuration-not-information', 'option-space-measurability', 'configuration-generates-configuration'],
   'work-wrong-question': ['work-wrong-question', 'participation-limits', 'labour-as-allocator'],
-  'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain', 'labour-as-allocator', 'coordination-as-move-evaluation'],
-  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'infinite-game'],
-  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves', 'labour-as-allocator', 'coordination-as-move-evaluation', 'infinite-game'],
+  'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain', 'labour-as-allocator', 'coordination-as-move-evaluation', 'coordination-bounds-reachability'],
+  'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'infinite-game', 'pattern-intelligence-constraint'],
+  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves', 'labour-as-allocator', 'coordination-as-move-evaluation', 'infinite-game', 'coordination-bounds-reachability', 'held-value-not-reachable'],
   'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry', 'asymmetry-of-option-space-change'],
+
+  // /explore — proposition-by-proposition browsing. The reader can reach any
+  // node, but Alexander is loaded with the live forming edge (the newest,
+  // least-settled claims) plus their nearest anchors, so a question about the
+  // frozen-value / pattern-intelligence layer lands with real context rather
+  // than general knowledge.
+  'explore': ['held-value-not-reachable', 'coordination-bounds-reachability', 'pattern-intelligence-constraint', 'value-option-space', 'binding-constraint', 'coordination-wealth', 'configuration-generates-configuration'],
 
   // Non-essay surfaces. The reader is on /applications/moves and is using
   // Alexander as a move-evaluator. The propositions here are the ones that
