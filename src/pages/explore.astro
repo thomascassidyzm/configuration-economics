@@ -5,9 +5,10 @@
 import { PROPOSITIONS, getLinkedPropositions, type EpistemicStatus } from '../content/propositions';
 import { VERSION, BUILD } from '../lib/version';
 import GuidePanel from '../components/GuidePanel.astro';
+import StatusRibbon from '../components/StatusRibbon.astro';
 
 // Read optional status filter from URL (?status=contested etc.)
-const VALID_STATUSES: EpistemicStatus[] = ['established', 'derived', 'contested', 'open'];
+const VALID_STATUSES: EpistemicStatus[] = ['forming', 'established', 'derived', 'contested', 'open'];
 const statusParam = Astro.url.searchParams.get('status');
 const initialFilter: EpistemicStatus | 'all' =
   statusParam && VALID_STATUSES.includes(statusParam as EpistemicStatus)
@@ -17,6 +18,7 @@ const initialFilter: EpistemicStatus | 'all' =
 // Counts per status for filter chip labels
 const counts = {
   all: PROPOSITIONS.length,
+  forming: PROPOSITIONS.filter(p => p.epistemicStatus === 'forming').length,
   established: PROPOSITIONS.filter(p => p.epistemicStatus === 'established').length,
   derived: PROPOSITIONS.filter(p => p.epistemicStatus === 'derived').length,
   contested: PROPOSITIONS.filter(p => p.epistemicStatus === 'contested').length,
@@ -39,6 +41,7 @@ const counts = {
       <a href="/" class="nav-home">Configuration Economics</a>
       <div class="nav-right">
         <a href="/essay" class="nav-link">Essay</a>
+        <a href="/motion" class="nav-link" title="Watch the canon migrate along the settledness spine">Motion</a>
         <a href="/changelog" class="nav-version" title="View changelog">{VERSION}</a>
         <span class="nav-build">build {BUILD}</span>
       </div>
@@ -49,13 +52,14 @@ const counts = {
         <h1>Propositions</h1>
         <p class="subtitle">Each node is self-contained and meaningful in isolation.</p>
         <p class="note">Logic is present but not foregrounded. Expand to see the underlying structure.</p>
-        <p class="note">Each proposition carries an epistemic status: <span class="status status-established inline">established</span> <span class="status status-derived inline">derived</span> <span class="status status-contested inline">contested</span> <span class="status status-open inline">open</span>.</p>
+        <p class="note">Each proposition carries an epistemic status: <span class="status status-forming inline">forming</span> <span class="status status-established inline">established</span> <span class="status status-derived inline">derived</span> <span class="status status-contested inline">contested</span> <span class="status status-open inline">open</span>. <span class="status status-forming inline">forming</span> is the entry rung — published and live, not yet load-bearing. There is no backstage: a node enters here and climbs in public.</p>
         <p class="note">Open a proposition's logic and you can <strong>attack any single premise</strong> — the guide will steelman the attack, respond, concede, and trace what the premise touches. See worked examples on <a href="/attack" class="inline-link">/attack</a>.</p>
       </header>
 
       <div class="status-filter" role="group" aria-label="Filter by epistemic status">
         <span class="filter-label">Show:</span>
         <button class="filter-chip" data-filter="all" aria-pressed={initialFilter === 'all'}>All <span class="count">({counts.all})</span></button>
+        <button class="filter-chip status-forming" data-filter="forming" aria-pressed={initialFilter === 'forming'}>Forming <span class="count">({counts.forming})</span></button>
         <button class="filter-chip status-established" data-filter="established" aria-pressed={initialFilter === 'established'}>Established <span class="count">({counts.established})</span></button>
         <button class="filter-chip status-derived" data-filter="derived" aria-pressed={initialFilter === 'derived'}>Derived <span class="count">({counts.derived})</span></button>
         <button class="filter-chip status-contested" data-filter="contested" aria-pressed={initialFilter === 'contested'}>Contested <span class="count">({counts.contested})</span></button>
@@ -76,6 +80,8 @@ const counts = {
                   )}
                 </div>
               </div>
+
+              <StatusRibbon prop={prop} />
 
               <div class="surface">
                 {prop.surface.split('\n\n').map(para => (
@@ -324,6 +330,12 @@ const counts = {
         margin: 0 0.25rem;
       }
 
+      .status-forming {
+        color: #3fb8c4;
+        border-color: rgba(63, 184, 196, 0.3);
+        background: rgba(63, 184, 196, 0.05);
+      }
+
       .status-established {
         color: #4a9eff;
         border-color: rgba(74, 158, 255, 0.3);
@@ -393,6 +405,12 @@ const counts = {
         color: var(--text-primary);
       }
 
+      .filter-chip.status-forming[aria-pressed="true"] {
+        background: rgba(63, 184, 196, 0.1);
+        border-color: rgba(63, 184, 196, 0.5);
+        color: #3fb8c4;
+      }
+
       .filter-chip.status-established[aria-pressed="true"] {
         background: rgba(74, 158, 255, 0.1);
         border-color: rgba(74, 158, 255, 0.5);
@@ -423,6 +441,7 @@ const counts = {
       }
 
       /* Filter mechanism: hide non-matching propositions via data-attributes */
+      .propositions[data-filter="forming"] .proposition:not([data-status="forming"]),
       .propositions[data-filter="established"] .proposition:not([data-status="established"]),
       .propositions[data-filter="derived"] .proposition:not([data-status="derived"]),
       .propositions[data-filter="contested"] .proposition:not([data-status="contested"]),

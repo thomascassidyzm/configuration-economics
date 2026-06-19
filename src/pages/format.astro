@@ -44,6 +44,7 @@ import Guide from '../components/Guide.astro';
       --contested: #b85c1a;        /* Warm amber */
       --open: #6b4c9a;             /* Muted purple */
       --derived: #1a7a5c;          /* Forest green */
+      --forming: #1a7a8a;          /* Teal — the entry rung */
 
       /* Accent */
       --accent: #2563a8;
@@ -386,6 +387,7 @@ import Guide from '../components/Guide.astro';
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
+    .epistemic-item[data-status="forming"] { --item-color: var(--forming); }
     .epistemic-item[data-status="established"] { --item-color: var(--established); }
     .epistemic-item[data-status="derived"] { --item-color: var(--derived); }
     .epistemic-item[data-status="contested"] { --item-color: var(--contested); }
@@ -845,6 +847,17 @@ import Guide from '../components/Guide.astro';
     </header>
 
     <div class="epistemic-grid">
+      <div class="epistemic-item" data-status="forming">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span class="status-label">Forming</span>
+        </div>
+        <div class="epistemic-content">
+          <h4>The entry rung — published, live, not yet load-bearing</h4>
+          <p>Thinking that has entered the work in public but has not yet settled. There is no backstage and no "draft": a node enters here and climbs the spine where you can watch it.</p>
+        </div>
+      </div>
+
       <div class="epistemic-item" data-status="established">
         <div class="status-indicator">
           <div class="status-dot"></div>

@@ -25,6 +25,24 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.11.0',
+    date: '2026-06-18',
+    title: 'The draft wall comes down for good — forming enters the spine, and the climb becomes watchable',
+    summary: `A Living Epistemic Work cannot keep a backstage. v0.2.0 collapsed the draft/canon queue in editorial practice but left the word "draft" — and a /drafts surface — standing, which kept smuggling the dead binary back in: draft implies not-yet-real, will-be-replaced. This version retires the notion entirely. The settledness spine gains an entry rung, forming — thinking that is published and live but not yet load-bearing — so a node no longer has to arrive already-settled; it can enter at the bottom and climb in public. Status stops being a fixed label and becomes a path: every proposition now carries a trajectory, and the climb is rendered as a ribbon on /explore and as a dedicated surface, /motion, where the whole canon's migration is laid along the version axis. The histories are backfilled honestly from the version-grain record — and they show, plainly, that almost every legacy node entered straight at derived or contested, because the old regime thought claims through behind the wall before letting them appear. That flatness is not hidden; it is the evidence for the reform. This is the format applying its own thesis to itself: the work asks economies to thaw frozen value back into the reachable set, and here it does the same to its own backstage.`,
+    changes: {
+      added: [
+        'forming — a new entry rung on the EpistemicStatus spine. Published and live, not yet load-bearing. A node enters here and migrates up in public; there is no draft, no pre-canon queue. Rendered on /explore (filter chip, legend, badge) and /format (epistemic grid).',
+        'Status trajectories — every proposition now carries a statusHistory (version + rung per step), backfilled for all existing nodes in src/content/status-history.ts from the version-grain record. getStatusHistory / hasClimbed helpers; inline node history takes precedence over the backfill so going-forward climbs are recorded as they happen, not reconstructed.',
+        'StatusRibbon component — the per-node face of the climb on /explore: a compact trail showing when each proposition entered and at what rung, the live rung emphasised, genuine migrations (viable-objective, substitution-limits) drawn with connectors.',
+        '/motion — the canon laid along the version axis. Every entry and migration in order, the nodes that have actually changed rung called out, and a live "forming now" edge. The surface where the format shows its own evolution on the same spine as its claims.',
+        'Three nodes enter at forming — the first real climbers on the new spine. held-value-not-reachable (frozen capital: held value that is not reaching anything is mispriced as wealth — the idle car, the once-a-year drill). coordination-bounds-reachability (frozen capability: the reachable set has a coordination/enclosure edge independent of the physical one — physically-buildable configurations held apart by who owns and is paid for what; the unbuilt best phone, the unmade orphan-disease cure, the billionaire who cannot buy what coordination would have produced). pattern-intelligence-constraint (the keystone: the possibility space yields to action × pattern-intelligence — action is energy × time, Distinction Physics\' S = ∫E dt; pattern-intelligence is the search for the least-action path that nature selects for free but the not-yet-built must have found for it; difficulty is action-magnitude, not a category, and only physical invariants wall off the possibility space; AI read as the largest available amplifier of the reachable set, not a throughput multiplier — and, by the asymmetry, the largest available hazard depending on aim). All three sit at forming by design: the line between frozen, unbuilt, and enclosed-because-funding is the real undone work.',
+      ],
+      structural: [
+        'The notion of "drafts" is being retired: the spine now carries live thinking at forming, so there is no role left for a pre-canon queue. Provenance belongs in git and in this history; live thinking belongs on the spine or on /research-frontier. The /drafts surface is on its way out as its remaining live material is rehomed. The format is itself a living epistemic work — changing it as the work demands is not drift but fidelity.',
+      ],
+    },
+  },
+  {
     version: 'v0.10.0',
     date: '2026-06-07',
     title: 'Naming the infinite game — Carse enters the canon, and the board becomes a bridge',

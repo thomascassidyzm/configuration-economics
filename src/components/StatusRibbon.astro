@@ -1,0 +1,104 @@
+---
+// StatusRibbon — the visible climb on a single proposition.
+//
+// Renders the node's settledness trajectory as a compact horizontal path:
+// each rung it has reached, tagged with the version it entered there, the live
+// rung emphasised. A single-entry history reads as "entered at X in vN"; a
+// multi-step history shows the migration with connectors. This is the per-node
+// face of "nothing is hidden; a node climbs in public".
+import type { Proposition } from '../content/propositions';
+import { getStatusHistory } from '../content/status-history';
+
+interface Props {
+  prop: Proposition;
+}
+
+const { prop } = Astro.props;
+const steps = getStatusHistory(prop);
+const climbed = new Set(steps.map(s => s.status)).size > 1;
+---
+
+<div class={`status-ribbon${climbed ? ' has-climbed' : ''}`} aria-label="Settledness trajectory">
+  <span class="ribbon-label">{climbed ? 'climbed' : 'since'}</span>
+  <ol class="ribbon-track">
+    {steps.map((step, i) => (
+      <li class={`ribbon-step status-${step.status}`} data-current={i === steps.length - 1}>
+        {i > 0 && <span class="ribbon-arrow" aria-hidden="true">→</span>}
+        <span class="ribbon-version">{step.version}</span>
+        <span class="ribbon-rung">{step.status}</span>
+        {step.note && <span class="ribbon-note" title={step.note}>·</span>}
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .status-ribbon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.65rem;
+  }
+
+  .ribbon-label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted, #888);
+    opacity: 0.7;
+  }
+
+  .has-climbed .ribbon-label {
+    color: #3fb8c4;
+    opacity: 0.9;
+  }
+
+  .ribbon-track {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ribbon-step {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    opacity: 0.55;
+  }
+
+  .ribbon-step[data-current="true"] {
+    opacity: 1;
+  }
+
+  .ribbon-arrow {
+    color: var(--text-muted, #888);
+    margin-right: 0.15rem;
+    opacity: 0.6;
+  }
+
+  .ribbon-version {
+    color: var(--text-muted, #888);
+  }
+
+  .ribbon-rung {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Rung colours mirror the status badges. */
+  .ribbon-step.status-forming .ribbon-rung { color: #3fb8c4; }
+  .ribbon-step.status-established .ribbon-rung { color: #4a9eff; }
+  .ribbon-step.status-derived .ribbon-rung { color: #6abf4a; }
+  .ribbon-step.status-contested .ribbon-rung { color: #e6a545; }
+  .ribbon-step.status-open .ribbon-rung { color: #a66bd8; }
+
+  .ribbon-note {
+    color: var(--text-muted, #888);
+    cursor: help;
+  }
+</style>

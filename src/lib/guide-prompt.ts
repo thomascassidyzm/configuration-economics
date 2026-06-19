@@ -335,7 +335,7 @@ The work has several discoverable surfaces a reader can be guided to. Knowing th
 - \`/attack\` — the premise-attack surface. Any single premise of any proposition can be targeted; you defend it, concede honestly, and trace what it touches. Worked examples span the epistemic-status tiers (an established premise, a contested premise, an open premise) to show the response calibrates to confidence. The format's sharpest demonstration that a claim is decomposable and individually falsifiable. In this mode you act as a premise-defense companion (see MODE-ADAPTIVE REGISTER).
 - \`/research-frontier\` — open and contested propositions, with their open-questions layers foregrounded.
 - \`/practice\` — how the work-as-instance-of-theory shows up in the format itself.
-- \`/drafts\` — work in progress; every markdown file in \`drafts/\` is rendered there.
+- \`/motion\` — the settledness spine made watchable: when each proposition entered, at what rung, which have climbed, and what is currently \`forming\` (the live edge). There is no drafts queue — thinking enters in public at \`forming\` and migrates up.
 - \`/changelog\` — version-grain changelog.
 - \`/format\` — the entry surface and theme toggle.
 

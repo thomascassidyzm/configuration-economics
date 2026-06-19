@@ -1,0 +1,259 @@
+---
+// /motion — the climb made watchable.
+//
+// A Living Epistemic Work has no backstage and no finished state. Every
+// proposition enters in public and migrates along the settledness spine. This
+// surface shows the whole canon's migration along the version axis: when each
+// node entered, at what rung, and which nodes have actually climbed.
+//
+// It is also where the *format* shows its own evolution — the same treatment
+// the work asks of its claims, turned on the work itself.
+import { PROPOSITIONS } from '../content/propositions';
+import { getStatusHistory, hasClimbed } from '../content/status-history';
+import { VERSION_HISTORY } from '../content/version-history';
+import { VERSION, BUILD } from '../lib/version';
+
+// Map version → date for axis labelling.
+const versionDate: Record<string, string> = {};
+for (const v of VERSION_HISTORY) versionDate[v.version] = v.date;
+
+// Collect every (proposition, step) event, tagged as an entry or a migration.
+interface MotionEvent {
+  propId: string;
+  title: string;
+  version: string;
+  status: string;
+  kind: 'entry' | 'migration';
+  note?: string;
+}
+const events: MotionEvent[] = [];
+for (const prop of PROPOSITIONS) {
+  const steps = getStatusHistory(prop);
+  steps.forEach((step, i) => {
+    events.push({
+      propId: prop.id,
+      title: prop.title,
+      version: step.version,
+      status: step.status,
+      kind: i === 0 ? 'entry' : 'migration',
+      note: step.note,
+    });
+  });
+}
+
+// Group by version, ordered oldest → newest by date (unknown dates sort last).
+const versions = Array.from(new Set(events.map(e => e.version)));
+versions.sort((a, b) => (versionDate[a] ?? '9999').localeCompare(versionDate[b] ?? '9999'));
+
+const byVersion = versions.map(v => ({
+  version: v,
+  date: versionDate[v] ?? null,
+  events: events.filter(e => e.version === v),
+}));
+
+const climbed = PROPOSITIONS.filter(hasClimbed);
+const formingNow = PROPOSITIONS.filter(p => p.epistemicStatus === 'forming');
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Motion — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg: #0e0f12;
+        --text-primary: #e8e6e1;
+        --text-secondary: #b4b2ad;
+        --text-muted: #76746f;
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Sora', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text-primary);
+        font-family: var(--font-body);
+        font-weight: 300;
+        line-height: 1.7;
+      }
+      .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+      .nav-home { color: var(--text-primary); text-decoration: none; font-family: var(--font-mono); font-size: 0.85rem; }
+      .nav-right { display: flex; gap: 1rem; align-items: baseline; font-family: var(--font-mono); font-size: 0.75rem; }
+      .nav-right a { color: var(--text-secondary); text-decoration: none; }
+      .nav-build { color: var(--text-muted); }
+      main { max-width: 860px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+      h1 { font-family: var(--font-display); font-weight: 500; font-size: 2.6rem; margin: 0 0 0.5rem; }
+      .subtitle { color: var(--text-secondary); font-size: 1.05rem; margin: 0 0 1.5rem; }
+      .lede { color: var(--text-secondary); border-left: 2px solid rgba(63,184,196,0.4); padding-left: 1.2rem; margin: 0 0 3rem; }
+      .lede strong { color: var(--text-primary); font-weight: 400; }
+
+      .section-label {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin: 3rem 0 1.25rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+
+      /* Timeline */
+      .axis { position: relative; padding-left: 1.5rem; }
+      .axis::before {
+        content: '';
+        position: absolute;
+        left: 4px; top: 0.4rem; bottom: 0.4rem;
+        width: 1px;
+        background: linear-gradient(to bottom, rgba(63,184,196,0.5), rgba(255,255,255,0.08));
+      }
+      .version-band { position: relative; margin-bottom: 2.25rem; }
+      .version-band::before {
+        content: '';
+        position: absolute;
+        left: -1.5rem; top: 0.5rem;
+        width: 9px; height: 9px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 1.5px solid rgba(63,184,196,0.6);
+      }
+      .version-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.75rem; }
+      .version-tag { font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-primary); }
+      .version-date { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); }
+
+      .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .chip {
+        display: inline-flex; align-items: baseline; gap: 0.4rem;
+        font-size: 0.8rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 4px;
+        border: 1px solid currentColor;
+        background: rgba(255,255,255,0.02);
+        text-decoration: none;
+      }
+      .chip .chip-title { color: var(--text-secondary); }
+      .chip .chip-rung {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .chip.migration { border-style: dashed; }
+      .chip.migration .chip-arrow { font-family: var(--font-mono); font-size: 0.7rem; opacity: 0.7; }
+
+      .chip.status-forming { color: #3fb8c4; }
+      .chip.status-established { color: #4a9eff; }
+      .chip.status-derived { color: #6abf4a; }
+      .chip.status-contested { color: #e6a545; }
+      .chip.status-open { color: #a66bd8; }
+
+      .note-line { color: var(--text-muted); font-size: 0.78rem; margin: 0.4rem 0 0; font-style: italic; }
+
+      .callout {
+        border: 1px solid rgba(63,184,196,0.25);
+        background: rgba(63,184,196,0.04);
+        border-radius: 6px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .callout p { margin: 0 0 0.75rem; color: var(--text-secondary); }
+      .callout p:last-child { margin-bottom: 0; }
+      .callout .climb-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+
+      .legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; font-family: var(--font-mono); font-size: 0.7rem; }
+      .legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+      .swatch { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+      a.chip:hover { background: rgba(255,255,255,0.05); }
+    </style>
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/explore">Propositions</a>
+        <a href="/changelog">{VERSION}</a>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <h1>Motion</h1>
+      <p class="subtitle">The canon does not arrive finished. Watch it move.</p>
+      <p class="lede">A Living Epistemic Work has no backstage and no final state. Every proposition enters in public and migrates along the settledness spine — <span class="status-forming" style="color:#3fb8c4">forming</span> at the entry, climbing as it earns ground. This is the whole canon laid along the version axis: when each node entered, at what rung, and which have genuinely climbed. <strong>The format itself is on this spine too — the draft wall came down here, in public, the same way.</strong></p>
+
+      <div class="legend">
+        <span><i class="swatch" style="background:#3fb8c4"></i>forming</span>
+        <span><i class="swatch" style="background:#4a9eff"></i>established</span>
+        <span><i class="swatch" style="background:#6abf4a"></i>derived</span>
+        <span><i class="swatch" style="background:#e6a545"></i>contested</span>
+        <span><i class="swatch" style="background:#a66bd8"></i>open</span>
+      </div>
+
+      {climbed.length > 0 && (
+        <div class="callout">
+          <p><strong>Nodes that have actually changed rung.</strong> Most of the canon entered already-settled — published under the older regime that thought a claim through before letting it appear. These are the ones whose settledness has visibly moved since:</p>
+          <div class="climb-list">
+            {climbed.map(p => {
+              const steps = getStatusHistory(p);
+              const last = steps[steps.length - 1];
+              return (
+                <a class={`chip status-${last.status}`} href={`/explore#${p.id}`}>
+                  <span class="chip-title">{p.title}</span>
+                  <span class="chip-rung">{steps.map(s => s.status).join(' → ')}</span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {formingNow.length > 0 && (
+        <div class="callout">
+          <p><strong>Forming now — the live edge.</strong> These entered at the bottom of the spine and are climbing for real, not in reconstruction. This is where the work is thinking out loud:</p>
+          <div class="climb-list">
+            {formingNow.map(p => (
+              <a class="chip status-forming" href={`/explore#${p.id}`}>
+                <span class="chip-title">{p.title}</span>
+                <span class="chip-rung">forming</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div class="section-label">The version axis — every entry and migration</div>
+      <div class="axis">
+        {byVersion.map(band => (
+          <div class="version-band">
+            <div class="version-head">
+              <span class="version-tag">{band.version}</span>
+              {band.date && <span class="version-date">{band.date}</span>}
+            </div>
+            <div class="chips">
+              {band.events.map(e => (
+                <a class={`chip status-${e.status} ${e.kind}`} href={`/explore#${e.propId}`} title={e.note ?? ''}>
+                  {e.kind === 'migration' && <span class="chip-arrow">→</span>}
+                  <span class="chip-title">{e.title}</span>
+                  <span class="chip-rung">{e.status}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
+  </body>
+</html>

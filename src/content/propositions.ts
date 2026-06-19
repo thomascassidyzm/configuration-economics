@@ -1,7 +1,20 @@
 // Proposition Nodes v0.4
 // Self-contained, meaningful in isolation, connected by simple links
 
-export type EpistemicStatus = 'established' | 'derived' | 'contested' | 'open';
+// The settledness spine. `forming` is the entry rung — thinking that is
+// published and live but not yet load-bearing. There is no backstage and no
+// "draft": a node enters at `forming` and migrates up the spine in public.
+export type EpistemicStatus = 'forming' | 'established' | 'derived' | 'contested' | 'open';
+
+// A single step in a proposition's settledness climb: the version at which it
+// entered the given status. The last entry's status is the live one and must
+// equal `epistemicStatus`. This is what makes the migration watchable — a node
+// is not a fixed label but a path the reader can follow.
+export interface StatusStep {
+  version: string;       // e.g. 'v0.11.0'
+  status: EpistemicStatus;
+  note?: string;         // optional one-line reason the status changed
+}
 
 // Resolution layers for progressive disclosure — matches the concept-page spec.
 // Each proposition can optionally carry four depths of formulation, letting
@@ -17,8 +30,16 @@ export interface Proposition {
   id: string;
   title: string;
 
-  // Epistemic status per the work's format: grounded, derived, contested, or open
+  // The live status — the last rung the node has reached on the settledness
+  // spine. Denormalised from statusHistory (= its final entry) so every
+  // existing renderer keeps working; keep the two in sync.
   epistemicStatus: EpistemicStatus;
+
+  // The visible climb. Optional during rollout — renderers fall back to the
+  // single epistemicStatus when absent. When present, the last entry's status
+  // must equal epistemicStatus. A node that has only ever been `forming` has a
+  // one-entry history; a node that has migrated shows every step it took.
+  statusHistory?: StatusStep[];
 
   // Surface text: observational, invitational, non-didactic
   surface: string;
@@ -1033,6 +1054,106 @@ Naming it does real work. It tells you what kind of thing the objective is, so y
     },
     revisedAt: '2026-06-07',
     linksTo: ['viable-objective', 'value-option-space', 'option-space-as-chess-moves', 'configuration-generates-configuration', 'asymmetry-of-option-space-change', 'coordination-as-move-evaluation']
+  },
+  {
+    id: 'held-value-not-reachable',
+    title: 'Held Value Is Not Reachable Value',
+    epistemicStatus: 'forming',
+    surface: `This one is still taking shape, and it should be read that way.
+
+The work already says value lives in what is reachable, not in what is stored. There seems to be a corollary that has not been stated: value that is *held* but is not reaching anything is, in option-space terms, closer to dead than to stored. It sits on the books as wealth while doing little for the reachable set.
+
+Two things that look unrelated may be the same thing. Money hoarded — kept precisely so it is not exchanged — converts the live optionality money is good for into a static claim. A privately owned car stores a great deal of material value in one configuration that is idle for most of its life. On paper both are wealth. In option-space terms both are capital frozen out of reach for as long as they stay that way.
+
+If that holds, the demurrage intuition — money that decays if hoarded — was never really about money or about fairness. It would be one case of a more general thing: configurations that lock value out of reach are mispriced as wealth.
+
+What stops this being glib is that not all holding is dead. A seed bank, a reserve, savings against a shock, slack in a system — these are held and not reaching, and they are plainly valuable, because they widen the reachable set against future contingency. So the claim is not "storage is waste." The real work, still undone, is drawing the line cleanly between value held as live contingency and value frozen with no contingent return.`,
+    logic: {
+      claim: 'Held value and reachable value come apart: capital locked into a configuration that contributes nothing to the reachable set is, in option-space terms, mispriced as wealth.',
+      premises: [
+        'Value is reachability — the size and quality of the set of futures a configuration keeps open (value-option-space).',
+        'Some held assets actively widen the reachable set against contingency (reserves, buffers, slack); others lock value into a static configuration with no contingent return (a hoard, an asset idle most of its life).',
+        'The optionality that makes the second kind look like wealth is largely notional — most of the value is not, at any given time, reaching anything.'
+      ],
+      conclusion: 'A configuration that holds value out of reach should be counted closer to dead than to stored; the live buffer and the dead hoard are different objects that current accounting treats alike.',
+      predictive: 'Where this line can be drawn and priced, frozen capital (idle owned assets, hoarded claims) should show up as option-space-negative relative to the same value put into circulation or held as genuine contingency — and arrangements that thaw it (sharing, demurrage, mutual credit) should read as expanding the reachable set, not merely redistributing it.'
+    },
+    statusHistory: [
+      { version: 'v0.11.0', status: 'forming', note: 'first articulation — moved onto the spine from working notes, voice still settling' }
+    ],
+    revisedAt: '2026-06-19',
+    linksTo: ['value-option-space', 'money-as-signal', 'throughput-cost', 'displaced-costs']
+  },
+  {
+    id: 'coordination-bounds-reachability',
+    title: 'The Reachable Set Is Bounded by Coordination, Not Only Physics',
+    epistemicStatus: 'forming',
+    surface: `This one is still forming, and is offered as a first articulation rather than a settled claim.
+
+The work has mostly drawn the edge of the reachable set with physics: what an exergy budget, a material stock, or a biospheric sink will allow. There seems to be a second edge, drawn by something else. Some configurations are physically buildable right now — every component exists, every step is known — and they still cannot be reached. Not because nature forbids them, but because the pieces are held apart by who owns what, who is paid for what, and which institutions will or will not combine.
+
+Three cases point the same way. The best possible phone is not buildable, because the strongest pieces sit inside Apple, Google, Samsung, Qualcomm and others who will not pool the rights to assemble them into one device. A cure for a disease that affects a few hundred people goes unmade, not because the biology is harder, but because the configuration is unprofitable to assemble. And the sharp case: a billionaire with that disease cannot buy the cure, because no amount of willingness to pay reaches a configuration that better coordination between hospitals, labs, and researchers would have produced but did not. The money is real and the demand is total; the assembled know-how simply does not exist to be bought.
+
+That last case is the one that does the work. It says the boundary is not always scarcity of means. Unlimited means can sit on one side of a configuration that is physically permitted and still out of reach — held there by coordination and enclosure, not by physics. If that holds, market efficiency fails from the inside: the price system cannot clear a trade for a thing that has never been assembled, however much someone would pay.
+
+What stops this being a complaint about monopoly is that the same enclosures often exist to *fund* the assembling. Patents and profits are how the know-how got created in the first place. So the claim is not "enclosure is theft." The undone work is drawing the line between enclosure that funds the building of capability and enclosure that only freezes capability already built.`,
+    logic: {
+      claim: 'The reachable set of configurations is bounded by coordination and enclosure as well as by physics: some physically-buildable configurations are held out of reach by incentives, intellectual property, and institutional arrangement, not by any material or thermodynamic limit.',
+      premises: [
+        'Reachability defines value in this work (value-option-space); the reachable set is bounded by an exergy budget, material stocks, and biospheric sinks (binding-constraint).',
+        'A configuration can be fully physically permitted — every component built, every assembly step known — and still not be assembled, because the components are owned, priced, or institutionally held by parties who will not combine them.',
+        'Coordination is itself a form of wealth that lowers the cost of acting together (coordination-wealth); its absence is therefore a binding constraint on what can be reached, distinct from the physical constraints.',
+        'Willingness to pay can only clear a trade for a configuration that exists or that some party is assembling; it cannot reach a configuration that has never been coordinated into being, however large the willingness.'
+      ],
+      conclusion: 'The boundary of the reachable set has a coordination-and-enclosure edge that is independent of the physical edge. Configurations inside the physical frontier but outside the coordination frontier are held out of reach by institutional arrangement, and unlimited means cannot necessarily reach them — which locates a failure of market efficiency inside the price system rather than outside it.',
+      predictive: 'Where the coordination/enclosure edge binds, pooling the held pieces (patent pools, open standards, public or philanthropic assembly of unprofitable capability, mission-directed coordination) should make physically-buildable configurations suddenly reachable with no change in the physical budget — the gain appears as newly reachable configurations, not as new throughput. Conversely, removing the enclosure that was funding the creation of the know-how should, in the cases where it was load-bearing, shrink the rate at which new capability is built.'
+    },
+    statusHistory: [
+      { version: 'v0.11.0', status: 'forming', note: 'first articulation — the coordination/enclosure edge of the reachable set, distinct from the physical edge; voice still settling' }
+    ],
+    revisedAt: '2026-06-19',
+    linksTo: ['value-option-space', 'coordination-wealth', 'binding-constraint', 'coordination-as-move-evaluation', 'held-value-not-reachable', 'configuration-generates-configuration', 'displaced-costs']
+  },
+  {
+    id: 'pattern-intelligence-constraint',
+    title: 'The Possibility Space Yields to Action × Pattern-Intelligence',
+    epistemicStatus: 'forming',
+    surface: `This is still forming, and it is the load-bearing one — so read it with the most care and the least credence.
+
+Start from the question of what actually bounds the reachable. The work has already moved the wall off energy: Earth receives solar exergy at ~175 PW and civilisation dissipates ~18 TW, so the thermodynamic ceiling is distant (binding-constraint). Atoms are abundant too. What is scarce is knowing which arrangement of available atoms would expand the reachable set, and being able to assemble and coordinate it.
+
+Distinction Physics gives this a precise spine. Every change of configuration is a trajectory through a space of distinctions, and its cost is the action S = ∫E dt — energy integrated over time, the same quantity classical mechanics calls action (DP, Module 4). A desired configuration is reachable when some feasible trajectory of bounded action reaches it. So the cost of reaching anything is action — energy × time — and "this problem is hard" turns out to mean only "this trajectory requires a great deal of action." Hardness is a magnitude, not a category. Nothing a configuration's difficulty alone can do puts it outside the possibility space.
+
+What does put a configuration outside it is a physical invariant — a wall physics forbids crossing at any action (a conservation law, the entropy floor, an irreversibility on the relevant horizon). Those are the only true walls, and binding-constraint already names them. Everything else we call hard, scarce, unprofitable, or unreachable is a question of how much action a goal needs, whether anyone can find a low-action path to it, and whether anyone mounts the action at all.
+
+Here is where intelligence enters, in DP's own terms. In physics, nature selects the least-action path for free — δS = 0 is a law of motion. But among configurations that do not yet exist, nothing selects it automatically; the low-action path has to be searched for. That search is what pattern-intelligence is: the faculty that approximates the least-action trajectory to a desired configuration — doing deliberately what nature does for nothing. It does not repeal the action cost; it finds the short way through, so the same goal costs far less action than blind search would.
+
+So the framing, offered as direction rather than a settled law: the possibility space yields to action × pattern-intelligence. Action (energy × time) is the fuel; pattern-intelligence is what spends it on the right path instead of wandering — DP's "excess action" is exactly the wandering intelligence removes. Read this way, a step-change in pattern-intelligence — machine pattern-intelligence at scale — is potentially the largest lever we have ever had on the reachable set: tools that improve thinking that build the next tools, each round finding lower-action paths the last could not (configuration-generates-configuration, run forward and faster).
+
+Two edges keep this honest, and they belong inside the claim, not after it.
+
+First, it relaxes the search, assembly, and coordination constraints — not the physical ones. The sinks, the specific materials, the biosphere, entropy itself stay exactly where binding-constraint put them, and pattern-intelligence aimed at throughput presses harder against them, not softer. The lever is real; the floor is unchanged.
+
+Second, the asymmetry cuts both ways. A bigger lever moves the world faster in whichever direction it points, and option-space destruction is fast and local while expansion is slow and systemic (asymmetry-of-option-space-change). Pattern-intelligence aimed at a configuration that is itself shrinking the reachable set accelerates foreclosure. By default — unaimed, or aimed at yield under a price that cannot see the sink — that is the cheaper direction. So this is better called the greatest available amplifier than the greatest lever: it makes the question of aim (coordination-as-move-evaluation) and of objective (viable-objective) more urgent, not less. In the terms of infinite-game, it is a far more powerful way to either keep the game open or end it.
+
+That is also why money is not the thing. Money is neither action nor pattern-intelligence; it is a claim on them, and it converts to mounted action only where coordination and incentive carry it there. For a configuration that is unprofitable to assemble or whose pieces are held apart, the claim never converts — which is why unlimited willingness-to-pay can sit beside a physically-permitted cure whose low-action path no one ever traverses. The path is not forbidden and may not even be especially long; it is simply never taken.`,
+    logic: {
+      claim: 'The reachable set of configurations yields to action and pattern-intelligence: action (energy × time, DP\'s S = ∫E dt) is the cost of any trajectory through configuration space, and pattern-intelligence is the faculty that approximates the least-action path to a desired configuration. Since energy influx is not binding and atoms are abundant, the active levers on what is reachable are pattern-intelligence and coordination, not energy or matter — bounded only by the physical invariants.',
+      premises: [
+        'Value is reachability — the set of life-supporting futures a configuration keeps open (value-option-space).',
+        'Every change of configuration is a trajectory through a distinction space whose cost is the action S = ∫E dt (energy integrated over time), feasible only within a bounded action budget (Distinction Physics, Module 4; binding-constraint supplies the budget — solar exergy is not the limiting term).',
+        'A configuration\'s difficulty is the magnitude of action its trajectory requires, not a separate kind of barrier: only a physical invariant places a configuration outside the possibility space at any action (binding-constraint).',
+        'In physics the least-action path is selected automatically (δS = 0); among not-yet-existing configurations nothing selects it, so it must be searched for — and that search is pattern-intelligence, which lowers the action a given goal requires rather than removing the cost.',
+        'Pattern-intelligence is itself a configuration that recruits prior configurations, so the reachable set grows with accumulated pattern-intelligence (configuration-generates-configuration); machine pattern-intelligence at scale is a step-change in that capacity, applicable recursively.'
+      ],
+      conclusion: 'The active levers on reachable value are pattern-intelligence and coordination, not energy or matter. A step-change in pattern-intelligence is the largest available amplifier of the reachable set — including the thawing of frozen capability, where the low-action path exists but is never traversed for want of coordination. It preserves binding-constraint rather than overturning it: the physical invariants remain the only walls, and aimed at throughput the lever presses on them harder. And because option-space change is asymmetric, the same amplifier aimed at a contracting configuration accelerates foreclosure — so its value is conditional on aim, raising the stakes on move-evaluation and the viable objective.',
+      predictive: 'Domains where a step-change in pattern-intelligence is applied to search, assembly, and coordination (materials and molecule design, logistics, matching dispersed expertise) should expand the reachable set far faster than energy or raw-material trends predict; domains gated by genuine physical invariants (sink capacity, biosphere integrity, irreversible loss) should not yield at the same rate, and may foreclose faster where the same intelligence is pointed at throughput. The two signatures are empirically distinguishable.'
+    },
+    statusHistory: [
+      { version: 'v0.11.0', status: 'forming', note: 'first articulation of the keystone — possibility space yields to action × pattern-intelligence, grounded in DP\'s least-action functional S = ∫E dt; "amplifier not lever" and the physical-invariant floor carried in-node; line still settling' }
+    ],
+    revisedAt: '2026-06-19',
+    linksTo: ['value-option-space', 'binding-constraint', 'configuration-generates-configuration', 'exergy-not-energy', 'contextual-scarcity', 'asymmetry-of-option-space-change', 'coordination-as-move-evaluation', 'viable-objective', 'infinite-game', 'held-value-not-reachable', 'coordination-bounds-reachability']
   }
 ];
 
