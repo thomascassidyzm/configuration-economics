@@ -6,13 +6,16 @@
 
 **Core thesis**: Value = configurations that expand future option space under bounded energy flux.
 
-## Current State (v0.10.0, June 2026)
+## Current State (v0.11.0, June 2026)
+
+> As of v0.11.0 the notion of "drafts" is retired: there is no backstage. New thinking enters on the settledness spine at `forming` (published, live, not yet load-bearing) and climbs in public. Status is now a *trajectory* — each node carries a `statusHistory` — and the climb is watchable on `/motion`.
 
 ### What Exists
-- **32 proposition nodes** with surface text + underlying logic
+- **Proposition nodes** with surface text + underlying logic — live count and buckets are in `propositions.ts` (don't hard-code them here; see "Proposition roster" below)
 - **Essay 1** (11 sections) mapped to propositions
 - **Alexander** (the Guide) - proposition-aware epistemic companion. As of v0.7.0, mounted on every grokkable surface (essay, overview, explore, research-frontier, lineage, objections, applications/moves, attack, practice) with mode-adaptive register tuned to each surface's resolution.
-- **Epistemic status markers** - established, derived, contested, open
+- **Epistemic status markers** - forming, established, derived, contested, open
+- **/motion** - the settledness spine made watchable: when each node entered, at what rung, which have climbed, and the live `forming` edge
 - **/explore page** showing all propositions; each premise is individually attackable (⚔ control opens the guide in premise-defense mode)
 - **/applications/moves** - the local Δω rule operating on six worked cases, plus Alexander wielding it on reader-supplied moves
 - **/lineage** - predecessors, debts, and CE's specific delta against each
@@ -25,7 +28,8 @@
 ```
 src/
 ├── content/
-│   ├── propositions.ts      # 30 proposition nodes with logic
+│   ├── propositions.ts      # proposition nodes with logic + epistemicStatus (source of truth)
+│   ├── status-history.ts    # per-node statusHistory backfill + getStatusHistory/hasClimbed
 │   ├── version-history.ts   # Version-grain changelog
 │   └── essay-1/
 │       └── config.ts        # Essay section metadata
@@ -45,36 +49,18 @@ src/
     └── GuidePanel.astro     # Right-side Guide interface
 ```
 
-### Proposition IDs
-```
-v0.1: energy-income-inheritance, throughput-cost, value-option-space,
-      work-wrong-question, participation-limits
+### Proposition roster & provenance
 
-v0.2: structural-memory, complexity-maintenance, care-as-configuration,
-      prevention-over-repair, stability-not-stasis
+Deliberately **not** duplicated here — a hand-maintained roster and bucket-count
+line drift on every release and are a maintenance pain. The source of truth:
 
-v0.3: time-asymmetry, displaced-costs, contextual-scarcity, substitution-limits,
-      growth-masks-strain, money-as-signal, coordination-wealth,
-      legibility-truth-tradeoff, transition-fragility, ignoring-physics
+- **The roster + each node's epistemic status** → `src/content/propositions.ts`.
+- **Each node's per-version climb** → its `statusHistory` (in `propositions.ts`,
+  backfilled in `src/content/status-history.ts`).
+- **What changed per version** → `src/content/version-history.ts`.
+- **Live bucket counts** → read `propositions.ts`, or the status filter on `/explore`.
 
-v0.4: configuration-not-information
-
-v0.5: option-space-measurability, viable-objective
-
-v0.6: observer-relative-option-space, exergy-not-energy, binding-constraint,
-      option-space-as-chess-moves
-
-v0.7: labour-as-allocator, asymmetry-of-option-space-change,
-      configuration-generates-configuration
-
-v0.9: coordination-as-move-evaluation
-
-v0.10: infinite-game
-```
-
-Bucket counts (current, v0.10.0): 1 established / 19 derived / 11 contested / 1 open.
-All four populated. The single `open` is `option-space-measurability`,
-explicitly the framework's central open problem.
+Snapshot at v0.11.0 (will drift — verify against `propositions.ts`, don't trust this line): 35 nodes across five rungs — `forming` / `established` / `derived` / `contested` / `open`. The sole `open` node is `option-space-measurability`, the framework's central open problem. `forming` is the entry rung for new thinking (the first three: `held-value-not-reachable`, `coordination-bounds-reachability`, `pattern-intelligence-constraint`).
 
 ## Architecture Decisions
 
@@ -90,11 +76,14 @@ explicitly the framework's central open problem.
 - Should reference propositions naturally when relevant, not constantly
 - Uses "CONTEXT AWARENESS" section to understand "this section" queries
 
-### Epistemic Status
+### Epistemic Status (the settledness spine)
+- **Forming**: The entry rung. Published and live, not yet load-bearing — new thinking enters here and climbs in public. There is no "draft" backstage.
 - **Established**: Grounded in physics, widely accepted
 - **Derived**: Follows logically from established claims
 - **Contested**: Reasonable disagreement exists
 - **Open**: Genuinely unresolved question
+
+Status is a *trajectory*, not a fixed label: each node carries a `statusHistory` recording the version it entered each rung, rendered as a ribbon on `/explore` and along the version axis on `/motion`.
 
 ## Theoretical Foundation
 
@@ -143,7 +132,7 @@ Deployed on Vercel - auto-deploys from main branch.
 - **Phase 1**: Alexander Integration ✓ (v0.1.5)
 - **Phase 2**: Reader Orientation (How to read this page, essay→proposition links)
 - **Phase 3**: Entry Points (question-based navigation)
-- **Phase 4**: Adversarial Testing (agents attack propositions)
+- **Phase 4**: Adversarial Testing (agents attack propositions) ✓ — `/objections` + `/attack` surfaces; and per-node, the adversarial pass now ships *in-surface* with each forming node (claim beside its sharpest objection)
 
 ## Related Projects
 
