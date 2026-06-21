@@ -1,0 +1,108 @@
+---
+// /open/[slug] — render a working document live.
+//
+// The work in the open: applications, evaluations, the method, the register.
+// NOT a backstage queue (that was retired with the drafts) — this is the
+// thinking itself, published as it happens, settledness on its face.
+import { marked } from 'marked';
+import { VERSION, BUILD } from '../../lib/version';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  // Friendly titles (kept inside getStaticPaths — Astro scopes it separately).
+  const TITLES: Record<string, string> = {
+    'NOTES-six-hat-method': 'The Six-Hat evaluation method',
+    'NOTES-dna-economy-ogwen': 'Application — the Ogwen DNA-economy cell',
+    'NOTES-ogwen-six-hats': 'Evaluation — the Ogwen six-hat run',
+    'NOTES-explanation-layer': 'Direction — the explanation layer',
+    'BACKLOG': 'Register — things to have a pop at',
+  };
+  const mods = import.meta.glob('../../content/open/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+  return Object.entries(mods).map(([path, content]) => {
+    const slug = path.split('/').pop()!.replace(/\.md$/, '');
+    const h1 = content.match(/^#\s+(.+)$/m);
+    const title = TITLES[slug] ?? (h1 ? h1[1].trim() : slug);
+    const body = content.replace(/^#\s+.+$/m, '').trim();
+    const html = marked.parse(body, { async: false }) as string;
+    return { params: { slug }, props: { title, html, slug } };
+  });
+}
+
+const { title, html, slug } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title} — Open — Configuration Economics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/open" class="nav-link">All open work</a>
+        <a href="/explore" class="nav-link">Propositions</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+    <main>
+      <header class="page-header">
+        <div class="header-meta"><span class="status-badge">OPEN · WORKING</span><span class="filename">{slug}.md</span></div>
+        <h1>{title}</h1>
+      </header>
+      <aside class="open-banner">
+        <p><strong>The work in the open.</strong> This is live working material — an application, an evaluation, the method, or the register — published as it happens rather than after it settles. It is not a backstage queue; it is the thinking itself, with its uncertainty on its face. See <a href="/open">all open work</a> or <a href="/practice">/practice</a>.</p>
+      </aside>
+      <article class="open-content" set:html={html} />
+      <footer class="page-footer"><p>Back to <a href="/open">open work</a>, or the <a href="/explore">propositions</a>.</p></footer>
+    </main>
+    <style is:global>
+      :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#606080; --accent:#4a9eff; --status-open:#3fb8c4; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace; }
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { font-family:var(--font-body); background:var(--void); color:var(--text-primary); min-height:100vh; line-height:1.7; }
+      .top-nav { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,12,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:2rem; padding:0 2rem; z-index:100; }
+      .nav-home { font-family:var(--font-display); font-size:1.125rem; color:var(--text-primary); text-decoration:none; }
+      .nav-link { font-size:0.875rem; color:var(--text-secondary); text-decoration:none; }
+      .nav-link:hover { color:var(--accent); }
+      .nav-right { display:flex; align-items:center; gap:1rem; margin-left:auto; flex-wrap:wrap; }
+      .nav-version { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent); }
+      .nav-build { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); opacity:0.7; }
+      main { max-width:820px; margin:0 auto; padding:100px 2rem 6rem; }
+      .page-header { margin-bottom:2rem; }
+      .header-meta { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; }
+      .status-badge { font-family:var(--font-mono); font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.12em; padding:0.25rem 0.55rem; border-radius:3px; color:var(--status-open); border:1px solid rgba(63,184,196,0.4); background:rgba(63,184,196,0.08); }
+      .filename { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); }
+      .page-header h1 { font-family:var(--font-display); font-size:2.25rem; font-weight:400; line-height:1.25; }
+      .open-banner { margin-bottom:3rem; padding:1rem 1.25rem; background:rgba(63,184,196,0.05); border:1px solid rgba(63,184,196,0.2); border-left:2px solid var(--status-open); border-radius:4px; }
+      .open-banner p { color:var(--text-secondary); font-size:0.875rem; line-height:1.65; }
+      .open-banner strong { color:var(--text-primary); font-weight:500; }
+      .open-banner a, .page-footer a { color:var(--accent); text-decoration:none; }
+      .open-content { color:var(--text-secondary); font-size:0.9375rem; line-height:1.75; }
+      .open-content h1,.open-content h2,.open-content h3,.open-content h4 { font-family:var(--font-display); font-weight:500; color:var(--text-primary); line-height:1.3; }
+      .open-content h2 { font-size:1.625rem; margin:3rem 0 1.25rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+      .open-content h3 { font-size:1.25rem; margin:2.25rem 0 1rem; }
+      .open-content h4 { font-size:1.0625rem; margin:1.75rem 0 0.75rem; }
+      .open-content p { margin-bottom:1.125rem; }
+      .open-content em { color:var(--text-primary); font-style:italic; }
+      .open-content strong { color:var(--text-primary); font-weight:500; }
+      .open-content a { color:var(--accent); text-decoration:none; }
+      .open-content ul,.open-content ol { margin:0 0 1.25rem 1.5rem; padding-left:0.5rem; }
+      .open-content li { margin-bottom:0.5rem; }
+      .open-content blockquote { margin:1.5rem 0; padding:0.75rem 1.25rem; background:rgba(255,255,255,0.02); border-left:2px solid var(--accent); color:var(--text-secondary); font-style:italic; }
+      .open-content code { font-family:var(--font-mono); font-size:0.8125rem; background:rgba(255,255,255,0.06); padding:0.15em 0.4em; border-radius:3px; color:var(--text-primary); }
+      .open-content hr { margin:3rem 0; border:none; border-top:1px solid rgba(255,255,255,0.08); }
+      .open-content table { margin:1.5rem 0; width:100%; border-collapse:collapse; font-size:0.875rem; }
+      .open-content th,.open-content td { padding:0.6rem 0.85rem; text-align:left; border-bottom:1px solid rgba(255,255,255,0.06); vertical-align:top; }
+      .open-content th { font-family:var(--font-mono); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); font-weight:500; }
+      .page-footer { margin-top:5rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.06); color:var(--text-muted); font-size:0.875rem; }
+      @media (max-width:600px){ main{padding:80px 1.25rem 4rem;} .page-header h1{font-size:1.75rem;} .open-content h2{font-size:1.375rem;} }
+    </style>
+  </body>
+</html>

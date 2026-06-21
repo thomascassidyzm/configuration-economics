@@ -16,7 +16,7 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   'work-wrong-question': ['work-wrong-question', 'participation-limits', 'labour-as-allocator'],
   'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain', 'labour-as-allocator', 'coordination-as-move-evaluation', 'coordination-bounds-reachability'],
   'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'infinite-game', 'pattern-intelligence-constraint'],
-  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves', 'labour-as-allocator', 'coordination-as-move-evaluation', 'infinite-game', 'coordination-bounds-reachability', 'held-value-not-reachable'],
+  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves', 'labour-as-allocator', 'coordination-as-move-evaluation', 'infinite-game', 'coordination-bounds-reachability', 'held-value-not-reachable', 'route-around-the-chokepoint'],
   'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry', 'asymmetry-of-option-space-change'],
 
   // /explore — proposition-by-proposition browsing. The reader can reach any
@@ -24,7 +24,7 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   // least-settled claims) plus their nearest anchors, so a question about the
   // frozen-value / pattern-intelligence layer lands with real context rather
   // than general knowledge.
-  'explore': ['held-value-not-reachable', 'coordination-bounds-reachability', 'pattern-intelligence-constraint', 'value-option-space', 'binding-constraint', 'coordination-wealth', 'configuration-generates-configuration'],
+  'explore': ['held-value-not-reachable', 'coordination-bounds-reachability', 'pattern-intelligence-constraint', 'route-around-the-chokepoint', 'value-option-space', 'binding-constraint', 'coordination-wealth', 'configuration-generates-configuration'],
 
   // Non-essay surfaces. The reader is on /applications/moves and is using
   // Alexander as a move-evaluator. The propositions here are the ones that

@@ -1160,6 +1160,41 @@ The sharpest objection, shipped with this claim: that every general-purpose tech
     ],
     revisedAt: '2026-06-19',
     linksTo: ['value-option-space', 'binding-constraint', 'configuration-generates-configuration', 'exergy-not-energy', 'contextual-scarcity', 'asymmetry-of-option-space-change', 'coordination-as-move-evaluation', 'viable-objective', 'infinite-game', 'held-value-not-reachable', 'coordination-bounds-reachability']
+  },
+  {
+    id: 'route-around-the-chokepoint',
+    title: 'Route Around the Control Chokepoint — and Own It Together',
+    epistemicStatus: 'forming',
+    surface: `This one is still forming, and it is worth saying where it came from: it generalised out of a single worked case (a north-Wales valley evaluated against this framework), which is how the work is meant to grow — an application throwing off a principle.
+
+The case kept hitting a wall, and the wall was not physics. The energy was there, the demand was there, the configuration was buildable. What stopped it was the regulated grid: the connection queue, the licensing boundary that turns a shared network into a regulated utility, the powers held far above the locality. That is coordination-bounds-reachability wearing infrastructure: a configuration fenced not by atoms but by who controls the wire and the rules.
+
+The general shape: the binding boundary on a reachable configuration is often a control chokepoint — a centralised point where access is permissioned — not a physical limit. And a chokepoint has a double nature worth naming. The grid is the one place where electrical power and political power are the same object: centralised generation feeds centralised wires feeds centralised permission feeds centralised control. So distributing the physical thing distributes the political thing with it. To route around the chokepoint is not only an engineering move; it is a redistribution of control.
+
+The move the case pointed at: architect at the largest scale that still stays below the boundary, so the centralised system becomes optional — a buffer, not the spine. For energy that means generating, storing and using behind the meter, at building and cluster scale, where no queue and no licence reach.
+
+Two things keep this honest and belong inside the claim. First, you buy autonomy with redundancy. The reason shared grids exist is diversity: separate peaks need less total storage than the sum of self-sufficient units. Drop below the boundary and each unit over-provisions for its own worst case. So the rule is the largest unit that stays below the boundary, not the smallest possible one — a privately-owned cluster recovers most of the pooling a public grid would have given, without crossing into it. Second, the boundary re-enters at the point of exchange: the moment you sell the thing across the boundary to others, you can trip the regulation you routed around. The value-capture has to be built so it is not, in the regulated sense, supply.
+
+And the gate that decides whether this brings greater life to all or only to some: it has to be owned collectively. Routed around individually, decentralisation is just the comfortable seceding to private abundance, leaving everyone who cannot afford the kit stranded on a thinning shared system whose fixed costs they now carry alone. Owned together, the same hardware becomes greater life to all. The hardware decentralises; the ownership must not.
+
+The sharpest objection, shipped with this claim: that routing around shared infrastructure is, historically, exactly how the comfortable secede — gated communities, private security, private schools — and calling it collective only fixes it inside the cell, not between cells. A rich valley can island itself; a poor one cannot, and a county of self-sufficient wealthy cells beside stranded poor ones is not greater life to all, it is the death spiral moved up a level. The honest answer is that collective ownership passes the gate within a cell but does not by itself supply the inter-cell redistribution a centralised, universal-service system was also doing; the principle routes around the control chokepoint without yet saying what replaces the solidarity the chokepoint also carried. A second edge: regulatory boundaries move — push enough value below a boundary and it tends to follow you down to recapture it — so routing-around may work at small scale and self-defeat at scale. Both are why this sits at forming: it names a real and powerful move and does not yet close the equity and scale questions it opens.`,
+    logic: {
+      claim: 'The binding boundary on a reachable configuration is often a control chokepoint — a centralised, permissioned point of access (regulatory or ownership), not a physical limit; the option-space-opening move is to architect at the largest scale that stays below the chokepoint, owned collectively, so the centralised system becomes optional rather than load-bearing.',
+      premises: [
+        'Many physically-buildable configurations are held out of reach by coordination and enclosure rather than by physics (coordination-bounds-reachability); in infrastructure this enclosure takes the form of a centralised access point that must grant permission.',
+        'A centralised distribution system co-locates physical capacity and political control: whoever controls the shared conduit controls access, so the conduit is at once an energy (or information, or finance) channel and a control channel.',
+        'Generating, storing and consuming below the regulatory/ownership boundary (behind the meter, on private wires) escapes the permission layer and makes the centralised system a buffer rather than the spine.',
+        'Shared systems exist largely for diversity-pooling, so routing below the boundary trades a permission-cost for an over-provisioning-cost; a collectively-owned cluster recovers most of the pooling without crossing the boundary.',
+        'Whether routing-around brings greater life to all or only to some turns on ownership: individual routing strands those who cannot afford to leave on a death-spiralling shared system (displaced-costs); collective ownership avoids this (viable-objective).'
+      ],
+      conclusion: 'Where the binding constraint is a control chokepoint, the move is to distribute generation/storage/use to the largest scale that stays below the chokepoint and to own it collectively — which redistributes control along with the physical capacity, and passes the no-regret gate only when the ownership is collective.',
+      predictive: 'Where a centralised conduit is the binding constraint, building-and-cluster-scale provision below the regulatory boundary should make locally-feasible configurations suddenly reachable with no change in the physical budget and no permission from the centre — while the same move made individually rather than collectively should show up as exported cost (rising fixed charges, worsening service) on those left on the shared system.'
+    },
+    statusHistory: [
+      { version: 'v0.11.0', status: 'forming', note: 'first articulation — generalised from a worked application (the Ogwen DNA-economy evaluation); the control-chokepoint corollary of coordination-bounds-reachability; voice still settling' }
+    ],
+    revisedAt: '2026-06-21',
+    linksTo: ['coordination-bounds-reachability', 'binding-constraint', 'pattern-intelligence-constraint', 'value-option-space', 'coordination-wealth', 'viable-objective', 'displaced-costs', 'coordination-as-move-evaluation']
   }
 ];
 
