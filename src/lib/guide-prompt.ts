@@ -24,7 +24,7 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   // least-settled claims) plus their nearest anchors, so a question about the
   // frozen-value / pattern-intelligence layer lands with real context rather
   // than general knowledge.
-  'explore': ['held-value-not-reachable', 'coordination-bounds-reachability', 'pattern-intelligence-constraint', 'route-around-the-chokepoint', 'value-option-space', 'binding-constraint', 'coordination-wealth', 'configuration-generates-configuration'],
+  'explore': ['held-value-not-reachable', 'coordination-bounds-reachability', 'pattern-intelligence-constraint', 'route-around-the-chokepoint', 'cleanliness-and-scale', 'value-option-space', 'binding-constraint', 'coordination-wealth', 'configuration-generates-configuration'],
 
   // Non-essay surfaces. The reader is on /applications/moves and is using
   // Alexander as a move-evaluator. The propositions here are the ones that
@@ -38,7 +38,7 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
 
   // /objections — the propositions doing load-bearing work in the five
   // engaged responses (measurability / degrowth / services / decoupling / Solow).
-  'objections': ['option-space-as-chess-moves', 'option-space-measurability', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'substitution-limits', 'binding-constraint', 'throughput-cost', 'displaced-costs', 'viable-objective'],
+  'objections': ['option-space-as-chess-moves', 'option-space-measurability', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'substitution-limits', 'binding-constraint', 'throughput-cost', 'displaced-costs', 'viable-objective', 'cleanliness-and-scale'],
 
   // /attack — the premise-attack surface. The reader targets a single premise
   // of a single proposition; Alexander defends it, concedes honestly, and

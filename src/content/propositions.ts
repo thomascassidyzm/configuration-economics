@@ -1195,6 +1195,40 @@ The sharpest objection, shipped with this claim: that routing around shared infr
     ],
     revisedAt: '2026-06-21',
     linksTo: ['coordination-bounds-reachability', 'binding-constraint', 'pattern-intelligence-constraint', 'value-option-space', 'coordination-wealth', 'viable-objective', 'displaced-costs', 'coordination-as-move-evaluation']
+  },
+  {
+    id: 'cleanliness-and-scale',
+    title: 'Cleanliness and Scale Trade Off When Value Flows From Harm',
+    epistemicStatus: 'forming',
+    surface: `This one is still forming, and it generalised out of a worked evaluation — a six-hat run on whether a UK law firm could take the Saudi football money on these principles — which is how the work grows: an application throwing off a principle.
+
+The setup is general. A large flow of value comes from a source tied to credible harm, and you are tempted to take some of it ethically — to do the clean version, raise a floor, build a good institution, and tell yourself the good work justifies the proximity to the money.
+
+Here is the counterintuitive core. When the money is buying legitimacy, your legitimacy is the product. The credibility you build doing the clean work does not stay attached to the clean work; your name is fungible, and that name then sits on the thing that harms. So sincerity can launder more efficiently than cynicism: a visibly principled actor is a better reputational asset for the harm than a cynical one, precisely because more credible. The cleaner you are, the better the cover you supply.
+
+It follows that cleanliness and scale are inversely correlated. The large money is indivisible from the laundering, because presence is indivisible — the seat at the lucrative table is bought by doing the thing that harms. A genuinely clean configuration does exist, but it is small and adversarial: you make your money by resisting the harm rather than receiving its coin — acting for the harmed party, for the financier who can impose a floor, for the union, in a forum the harm-doer cannot police. You profit by swimming across the current, not riding it. And the tell that you have crossed back over is the word significant: the moment a clean role has to be significant to be worth it, it is reaching for the harm-doer's shilling.
+
+Two things keep this honest. First, less to none is a gate, not a sum: a real benefit to some does not net off the cover you manufacture for harm to many, so you cannot offset one against the other. Second, even the adversarial clean position is rarely perfectly clean — you may have reached it on credibility the wider market gave you — so it is floor-raise with a residual cover cost, a difference of degree, not a halo.
+
+The operational line, the part worth carrying to any loaded domain: four tests separate floor-raising from laundering. Counterparty — is your client the harmed party, or a non-sovereign actor imposing the floor, and never the harm-doer. Forum — does the remedy attach where the harm-doer cannot police it. Brand-spend — does your name, when spoken, subtract legitimacy from the harm rather than supply it. Indivisibility — because presence is indivisible, it is a fork, not a portfolio you can balance: you cannot serve both sides and call the good half your defence.
+
+The sharpest objection, shipped with this claim: that it perversely tells good actors to abandon the field to bad ones — if sincerity launders more, the ethical actor should withdraw and leave the harm-doer to the cynic, which makes the world worse, not better; and everyone, even the worst client, is entitled to representation. The honest answer is that the claim does not say withdraw from the domain — it says move to the other side of it (act for the harmed, the financier, the union), which keeps a principled actor engaged exactly where they raise a floor; the conflation it refuses is between leaving the harm-doer and leaving the field. But the concession is real: in some domains there is no adversarial perch, and there the principle does counsel exit — and whether that helps, or merely leaves the cynics unopposed, is genuinely unresolved. That, and the fact that the line between subtracting and supplying legitimacy is a judgment rather than a measurement, is why this sits at forming.`,
+    logic: {
+      claim: 'Where a large flow of value comes from a source tied to credible harm, the amount you can take and the cleanliness of taking it are inversely correlated — because when the money is buying legitimacy, your own legitimacy is the product, so sincere involvement launders more efficiently than cynical involvement; the genuinely clean configuration exists but is small and adversarial (profiting by resisting the harm, not receiving its coin).',
+      premises: [
+        'The viable objective is no-regret and less-to-none is a gate, not a sum: a benefit to some protected class does not offset a harm manufactured for others (viable-objective, displaced-costs).',
+        'When a harm-doer spends to buy legitimacy, the legitimacy a credible third party confers is itself the thing being bought; a credible actor therefore supplies more cover than a cynical one, in proportion to their credibility.',
+        'Presence and brand are indivisible and fungible: the reputation built doing clean work attaches to the actor\'s name, which then sits on the harmful activity that bought the actor its seat, so the clean work cannot be ring-fenced from the cover it supplies.',
+        'Real leverage to impose a floor is held not by anyone the harm-doer can route around, but by non-sovereign parties it must satisfy (the harmed party in an unpoliced forum, the financier, the union) — so the clean role is adversarial and forgoes the harm-doer\'s fees (route-around-the-chokepoint, coordination-bounds-reachability).'
+      ],
+      conclusion: 'In any domain where value is tied to credible harm, a clean positive-sum configuration exists but cannot be both significant and clean; the operational line between floor-raising and laundering is four tests — counterparty (client is the harmed or a non-sovereign floor-imposer, never the harm-doer), forum (remedy where the harm-doer cannot police it), brand-spend (your name subtracts rather than supplies legitimacy), and indivisibility (a fork, not a balanced portfolio).',
+      predictive: 'Actors who take the harm-doer\'s coin while pointing to clean side-work as justification should, on inspection, supply net legitimacy-cover that scales with their credibility; actors who relocate to the adversarial side (harmed party, financier, union, in an unpoliced forum) should generate smaller fees but pass all four tests — and the appearance of the word "significant" attached to a clean role predicts the line has been crossed back toward laundering.'
+    },
+    statusHistory: [
+      { version: 'v0.11.0', status: 'forming', note: 'first articulation — generalised from the Saudi-football-legal six-hat run (an application throwing off a principle); the cleanliness-vs-scale tradeoff, sincerity-as-laundering, and the four-test line; voice still settling' }
+    ],
+    revisedAt: '2026-06-22',
+    linksTo: ['viable-objective', 'displaced-costs', 'value-option-space', 'route-around-the-chokepoint', 'coordination-bounds-reachability', 'asymmetry-of-option-space-change']
   }
 ];
 
