@@ -6,6 +6,7 @@
 // thinking itself, published as it happens, settledness on its face.
 import { marked } from 'marked';
 import { VERSION, BUILD } from '../../lib/version';
+import GuidePanel from '../../components/GuidePanel.astro';
 
 export const prerender = true;
 
@@ -71,6 +72,7 @@ const { title, html, slug } = Astro.props;
       <article class="open-content" set:html={html} />
       <footer class="page-footer"><p>Back to <a href="/open">open work</a>, or the <a href="/explore">propositions</a>.</p></footer>
     </main>
+    <GuidePanel currentSection={`Open · ${title}`} />
     <style is:global>
       :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#606080; --accent:#4a9eff; --status-open:#3fb8c4; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace; }
       * { margin:0; padding:0; box-sizing:border-box; }
@@ -83,6 +85,7 @@ const { title, html, slug } = Astro.props;
       .nav-version { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent); }
       .nav-build { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); opacity:0.7; }
       main { max-width:820px; margin:0 auto; padding:100px 2rem 6rem; }
+      @media (min-width:1101px) { main { margin-right:460px; } }
       .page-header { margin-bottom:2rem; }
       .header-meta { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; }
       .status-badge { font-family:var(--font-mono); font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.12em; padding:0.25rem 0.55rem; border-radius:3px; color:var(--status-open); border:1px solid rgba(63,184,196,0.4); background:rgba(63,184,196,0.08); }
