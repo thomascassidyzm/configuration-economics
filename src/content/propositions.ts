@@ -1089,8 +1089,8 @@ The sharpest objection, shipped with this claim: that thawing a frozen asset onl
   {
     id: 'coordination-bounds-reachability',
     title: 'The Reachable Set Is Bounded by Coordination, Not Only Physics',
-    epistemicStatus: 'forming',
-    surface: `This one is still forming, and is offered as a first articulation rather than a settled claim.
+    epistemicStatus: 'established',
+    surface: `This entered as forming and has since climbed: the coordination/enclosure edge has held across several worked applications, and the work now leans on it.
 
 The work has mostly drawn the edge of the reachable set with physics: what an exergy budget, a material stock, or a biospheric sink will allow. There seems to be a second edge, drawn by something else. Some configurations are physically buildable right now — every component exists, every step is known — and they still cannot be reached. Not because nature forbids them, but because the pieces are held apart by who owns what, who is paid for what, and which institutions will or will not combine.
 
@@ -1100,7 +1100,7 @@ That last case is the one that does the work. It says the boundary is not always
 
 What stops this being a complaint about monopoly is that the same enclosures often exist to fund the assembling. Patents and profits are how the know-how got created in the first place. So the claim is not "enclosure is theft." The undone work is drawing the line between enclosure that funds the building of capability and enclosure that only freezes capability already built.
 
-The sharpest objection, shipped with this claim: that the unreachable cure is not news but a textbook fixed-cost problem — markets are already known to under-provide any good whose assembly cost exceeds a single buyer's willingness to pay times the number of people it would serve. The honest answer is that this may be a re-description of the public-goods account in configuration vocabulary rather than an addition to it; whether the coordination edge names something the fixed-cost story misses is itself unsettled. What the configuration framing does add is the diagnosis — that the boundary is reachability, not means — and the prediction that pooling the held pieces makes physically-buildable configurations reachable with no change in the physical budget. Whether that is more than the textbook case is open, which is why it sits at forming.`,
+The sharpest objection, shipped with this claim: that the unreachable cure is not news but a textbook fixed-cost problem — markets are already known to under-provide any good whose assembly cost exceeds a single buyer's willingness to pay times the number of people it would serve. The honest answer is that this may be a re-description of the public-goods account in configuration vocabulary rather than an addition to it; whether the coordination edge names something the fixed-cost story misses is the live frontier. What the configuration framing adds — and what has held across the worked cases — is the diagnosis that the boundary is reachability, not means, and the prediction that pooling the held pieces makes physically-buildable configurations reachable with no change in the physical budget. That the boundary has a coordination edge at all is now load-bearing; whether that edge is strictly more than the textbook public-goods case is the part still being settled.`,
     logic: {
       claim: 'The reachable set of configurations is bounded by coordination and enclosure as well as by physics: some physically-buildable configurations are held out of reach by incentives, intellectual property, and institutional arrangement, not by any material or thermodynamic limit.',
       premises: [
@@ -1113,9 +1113,10 @@ The sharpest objection, shipped with this claim: that the unreachable cure is no
       predictive: 'Where the coordination/enclosure edge binds, pooling the held pieces (patent pools, open standards, public or philanthropic assembly of unprofitable capability, mission-directed coordination) should make physically-buildable configurations suddenly reachable with no change in the physical budget — the gain appears as newly reachable configurations, not as new throughput. Conversely, removing the enclosure that was funding the creation of the know-how should, in the cases where it was load-bearing, shrink the rate at which new capability is built.'
     },
     statusHistory: [
-      { version: 'v0.11.0', status: 'forming', note: 'first articulation — the coordination/enclosure edge of the reachable set, distinct from the physical edge; voice still settling' }
+      { version: 'v0.11.0', status: 'forming', note: 'first articulation — the coordination/enclosure edge of the reachable set, distinct from the physical edge; voice still settling' },
+      { version: 'v0.11.1', status: 'established', note: 'climbs from forming — the coordination/enclosure edge has held across multiple worked applications (Ogwen DNA-economy, route-around-the-chokepoint); the reachable set being bounded by coordination as well as physics is now load-bearing for downstream nodes' }
     ],
-    revisedAt: '2026-06-19',
+    revisedAt: '2026-06-29',
     linksTo: ['value-option-space', 'coordination-wealth', 'binding-constraint', 'coordination-as-move-evaluation', 'held-value-not-reachable', 'configuration-generates-configuration', 'displaced-costs']
   },
   {
