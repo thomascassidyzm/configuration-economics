@@ -33,7 +33,9 @@ A living register of candidate work: spheres to run the lens on, artefacts to co
 - `coordination-bounds-reachability` (frozen capability) — live.
 - `pattern-intelligence-constraint` (keystone: action × pattern-intelligence) — live.
 - `route-around-the-chokepoint` (the control-chokepoint move) — drafted this session; ship + wire Alexander.
-- _(more as they emerge from worked applications — the explanation layer feeding the canon.)_
+- **From the ratchet-cell run (2026-07-02, all captured in `NOTES-four-candidates-and-the-capture-rule.md`, each with its objection):** `bridge-catchment` (the bridge test's true form: who does it reach, what carries the rest); `institutions-precipitate` (durable commons crystallise out of trades, not founding acts); `find-the-waitlist` (a lens instruction: queues = the adoption experiment already run); `the-closing-window` (the general political residue is a race, not a wall — minimise the permission surface).
+- **Candidates from the same week's notes:** `re-establishment-ledger` (candidate handle on `option-space-measurability`); the observer-architecture frame (specification delegates, continuity doesn't).
+- _(capture rule now explicit: threshold for capture is existence, not merit — the spine's climb does the selecting. More as they emerge from worked applications.)_
 
 ## Method / openness
 
