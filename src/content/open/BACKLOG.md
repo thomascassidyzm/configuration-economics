@@ -13,7 +13,7 @@ A living register of candidate work: spheres to run the lens on, artefacts to co
 
 ## Artefacts to conceive (Fuller / viable-objective brief)
 
-- **Building-and-cluster microgrid template** — the concrete form of `route-around-the-chokepoint`: generate/store/use below the regulated boundary, collectively owned.
+- **Building-and-cluster microgrid template** — DRAFTED as the first definite treatment (`NOTES-ratchet-cell.md`, 2026-07-02): the nine-rung no-faith ladder, bridge-gated by three adversaries (passes-with-conditions). Next: discharge the five gate conditions; Ogwen roof + cylinder surveys; the hydro's monthly meter data.
 - **A local currency / mutual-credit design** — value-capture that pays local human time without tripping electricity-supply regulation.
 - **A community-land-trust + retrofit-fund vehicle** — the tenure lever (Ogwen Green LEAP 5): hypothecate second-home council-tax premium; buy the frontages the loop needs.
 - **A repair / tool commons** — frozen-capital thaw (the Face-1 examples, made real).
