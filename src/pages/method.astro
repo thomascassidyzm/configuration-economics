@@ -1,50 +1,43 @@
 ---
-// /open — the work in the open. Index of live working material: applications,
-// evaluations, the method, the register. Published as it happens.
-import { VERSION, BUILD } from '../../lib/version';
-import GuidePanel from '../../components/GuidePanel.astro';
+// /method — the Six-Hat evaluation method as a first-class, navigable surface.
+//
+// Distinct from the generic /open register: this page renders the method
+// itself (NOTES-six-hat-method.md) and then curates every run, treatment, and
+// sibling method that exists in src/content/open/ into one navigable list.
+import { marked } from 'marked';
+import { VERSION, BUILD } from '../lib/version';
+import GuidePanel from '../components/GuidePanel.astro';
 
-const META: { slug: string; title: string; kind: string; blurb: string }[] = [
-  { slug: 'NOTES-six-hat-method', title: 'The Six-Hat evaluation method', kind: 'Method',
-    blurb: 'How proposals and artefacts are conceived and tested — the de Bono sequence run by an agent swarm, the fitness function, and the two seats (Red gut, final Blue verdict) kept human. The verdict is shown working, not handed down.' },
-  { slug: 'NOTES-dna-economy-ogwen', title: 'The Ogwen DNA-economy cell', kind: 'Application',
-    blurb: 'The lens pointed at one bounded sphere (Bethesda, Gwynedd): what is frozen, what is reachable, the sequenced loops that upregulate each turn, and the walls flagged in red.' },
+const modules = import.meta.glob('../content/open/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const bySlug: Record<string, string> = {};
+for (const [path, content] of Object.entries(modules)) {
+  const slug = path.split('/').pop()!.replace(/\.md$/, '');
+  bySlug[slug] = content;
+}
+
+const methodContent = bySlug['NOTES-six-hat-method'];
+const methodBody = methodContent.replace(/^#\s+.+$/m, '').trim();
+const methodHtml = marked.parse(methodBody, { async: false }) as string;
+
+const RUNS: { slug: string; title: string; kind: string; blurb: string }[] = [
   { slug: 'NOTES-ogwen-six-hats', title: 'The Ogwen six-hat run', kind: 'Evaluation',
     blurb: 'The first full Six-Thinking-Hats evaluation, published in full: White corrects, Yellow makes the case, Black finds the fracture, Green leaps. The two human seats left open.' },
-  { slug: 'NOTES-ssi-currency-surface', title: 'SSi as the local-currency surface', kind: 'Proposal',
-    blurb: 'Could SaySomethingin become the delivery + ledger + legitimacy surface for a local credit/currency — funding the language-preservation Δω the market won’t price? The proposal, written as input to its evaluation.' },
   { slug: 'NOTES-ssi-six-hats', title: 'The SSi six-hat run — a strong failure', kind: 'Evaluation',
     blurb: 'The second run, and the first to come back decisively critical — of the author’s own company. Published unedited, because a Living Epistemic Work cannot cherry-pick. A strong failure: certain doors closed, for now. Now we’re learning.' },
-  { slug: 'NOTES-uk-legal-saudi-football', title: 'A UK legal company and the Saudi football money', kind: 'Proposal',
-    blurb: 'A deliberately hard, ethically loaded scenario: can a UK law firm benefit significantly from the Saudi football capital on CE principles — greater life to all, less to none — or does every role reduce to sportswashing-enablement? The proposal, written as input to its evaluation.' },
   { slug: 'NOTES-saudi-legal-six-hats', title: 'The Saudi-legal six-hat run', kind: 'Evaluation',
     blurb: 'The method in the hardest domain yet — and its best work. It refused both the feel-good yes and the reflexive no: a clean positive-sum configuration exists, but cleanliness and scale are inversely correlated. The honest answer points at the exit, not the entrance.' },
-  { slug: 'NOTES-autonomous-fleet-frozen-cars', title: 'Autonomous fleets and the frozen value in cars', kind: 'Proposal',
-    blurb: 'The worked application of held-value-not-reachable: the 95%-idle private car is the textbook frozen asset; a shared autonomous fleet is the thaw. A practical, technically-ready test of the canon against reality.' },
   { slug: 'NOTES-autonomous-fleet-six-hats', title: 'The autonomous-fleet six-hat run', kind: 'Evaluation',
     blurb: 'The canon stress-tested. The frozen value is real — but the thaw and the re-freeze are the same motion: on the default configuration it re-freezes behind a private toll-gate. A greater-life-to-all version exists, won or lost at the per-city operating permit, racing a closing clock.' },
   { slug: 'NOTES-iterative-search-method', title: 'The iterative search-based loop', kind: 'Method',
     blurb: 'The six-hat method made iterative: search, not optimisation. Re-level → expand → find walls → classify each as frame-artefact or physical-invariant → loop, never settling for a compromise. The agents do the search; the human breaks the box. The method as a meta-tool.' },
   { slug: 'NOTES-iterative-search-mobility', title: 'The search loop re-levels the car problem', kind: 'Run',
     blurb: 'First outing. Fed the car run’s residual trade-offs, the loop re-leveled "cars" up to "access", dissolved four trade-offs onto a member-owned mutual pool, hit two genuine physical floors, and handed back exactly one box-stuck point: the enclosure-timing race.' },
-  { slug: 'NOTES-explanation-layer', title: 'The explanation layer', kind: 'Direction',
-    blurb: 'The stake-in-the-ground for the constructive arm: frozen value vs reachable value, the altitude move, and what a generative explanation layer would be.' },
-  { slug: 'NOTES-recursive-fitness-and-bridge-test', title: 'The fitness function for the process — and the bridge test', kind: 'Direction',
-    blurb: 'The return to the recursive self-improvement problem with a candidate answer: at every decision, prefer the move that expands reachable configurations — applied to the method itself. And Fuller’s bridge test: stop looking for the will to force the better configuration through; look for the configuration that doesn’t need forcing.' },
-  { slug: 'NOTES-re-establishment-ledger', title: 'The re-establishment ledger', kind: 'Direction',
-    blurb: 'A candidate accounting unit for the canon’s one open node: the cost of re-establishing the configurations we are re-configuring, priced by the best demonstrated path. A lower-bound, local proxy — with its infinities carried as refusals, not laundered into payable line items. Scaffold name; forming.' },
-  { slug: 'NOTES-second-commodity', title: 'The second commodity — mobility on the energy cell’s rails', kind: 'Treatment',
-    blurb: 'The second definite treatment, and the diligence upgrade the mobility work was owed: evidence contradicted the prior run’s political lever, precipitation turns out to require rails (the cells compound), and the gate split the design — passing the eight-rung ladder while failing the AV-bargaining headline. Passes-with-conditions, printed in full.' },
-  { slug: 'NOTES-four-candidates-and-the-capture-rule', title: 'Four candidates from the ratchet-cell run — and the capture rule', kind: 'Direction',
-    blurb: 'The capture rule: the threshold for capture is existence, not merit — merit is decided by the climb, in public (the work has no canon; it has a spine with an entry ramp). Then the four candidates, each with its sharpest objection: the bridge has a catchment; institutions precipitate; find the waitlist; the closing window.' },
   { slug: 'NOTES-ratchet-cell', title: 'The ratchet cell — the local-energy configuration', kind: 'Treatment',
     blurb: 'The first definite treatment: a nine-rung no-faith ladder from one household to a valley mutual — every rung individually rational, the cell a by-product, Bethesda entering mid-climb as the worked instance. Bridge-gated by three adversaries: passes-with-conditions, verdict printed in-surface.' },
+  { slug: 'NOTES-second-commodity', title: 'The second commodity — mobility on the energy cell’s rails', kind: 'Treatment',
+    blurb: 'The second definite treatment, and the diligence upgrade the mobility work was owed: evidence contradicted the prior run’s political lever, precipitation turns out to require rails (the cells compound), and the gate split the design — passing the eight-rung ladder while failing the AV-bargaining headline. Passes-with-conditions, printed in full.' },
   { slug: 'NOTES-forest-school-walton', title: 'The stowaway curriculum — forest school as the medium (Walton-on-Thames)', kind: 'Treatment',
     blurb: 'The third definite treatment, brought in from the field: forest delivery of the non-tested-but-mandatory curriculum routes around the SATs constraint entirely — literacy stows away as content, never timetable; one willing teacher per school; permission surface near zero. The evidence fleet was refused at the permissions wall, so the verdict is the gate’s weakest form — passes-on-paper — with the degradation printed, condition zero being the live re-run. The domain’s clock runs backwards: a window that opens (the 2028 curriculum reset), not one that closes.' },
-  { slug: 'NOTES-observer-architecture', title: 'The observer architecture of the world computer', kind: 'Direction',
-    blurb: 'Why the augmented-intelligence project has the seats it has: a bounded-but-persistent human attractor, a broad-but-ephemeral amplifier, and memory as the coupling. Specification delegates; continuity doesn’t. Option space as the Ruliad’s OLU-accessible shadow. Scaffold name; forming.' },
-  { slug: 'BACKLOG', title: 'Things to have a pop at', kind: 'Register',
-    blurb: 'The living list: spheres to run the lens on, artefacts to conceive, intellectual lines to close, forming nodes to grow.' },
 ];
 ---
 
@@ -53,7 +46,7 @@ const META: { slug: string; title: string; kind: string; blurb: string }[] = [
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
-    <title>Open — Configuration Economics</title>
+    <title>Method — Configuration Economics</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -73,11 +66,23 @@ const META: { slug: string; title: string; kind: string; blurb: string }[] = [
       h1 { font-family:var(--font-display); font-weight:500; font-size:2.6rem; margin:0 0 0.5rem; }
       .lede { color:var(--text-secondary); border-left:2px solid rgba(63,184,196,0.4); padding-left:1.2rem; margin:0 0 3rem; }
       .lede strong { color:var(--text-primary); font-weight:400; }
+      .section-label { font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); margin:3.5rem 0 1.25rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+      .method-content { color:var(--text-secondary); font-size:0.9375rem; line-height:1.75; }
+      .method-content h2 { font-family:var(--font-display); font-weight:500; color:var(--text-primary); font-size:1.625rem; margin:2.5rem 0 1.25rem; line-height:1.3; }
+      .method-content p { margin-bottom:1.125rem; }
+      .method-content em { color:var(--text-primary); font-style:italic; }
+      .method-content strong { color:var(--text-primary); font-weight:500; }
+      .method-content a { color:var(--accent); text-decoration:none; }
+      .method-content ul,.method-content ol { margin:0 0 1.25rem 1.5rem; padding-left:0.5rem; }
+      .method-content li { margin-bottom:0.5rem; }
+      .method-content code { font-family:var(--font-mono); font-size:0.8125rem; background:rgba(255,255,255,0.06); padding:0.15em 0.4em; border-radius:3px; color:var(--text-primary); }
       .doc { display:block; text-decoration:none; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:1.25rem 1.4rem; margin-bottom:1rem; transition:border-color 0.15s,background 0.15s; }
       .doc:hover { border-color:rgba(63,184,196,0.4); background:rgba(63,184,196,0.03); }
       .doc-kind { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--status-open); }
       .doc-title { font-family:var(--font-display); font-size:1.4rem; color:var(--text-primary); margin:0.2rem 0 0.4rem; }
       .doc-blurb { color:var(--text-secondary); font-size:0.9rem; margin:0; }
+      .page-footer { margin-top:5rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.06); color:var(--text-muted); font-size:0.875rem; }
+      .page-footer a { color:var(--accent); text-decoration:none; }
     </style>
   </head>
   <body>
@@ -87,21 +92,28 @@ const META: { slug: string; title: string; kind: string; blurb: string }[] = [
         <a href="/method" class="nav-link">Method</a>
         <a href="/explore" class="nav-link">Propositions</a>
         <a href="/motion" class="nav-link">Motion</a>
+        <a href="/open" class="nav-link">Open</a>
         <span class="nav-version">{VERSION}</span>
         <span class="nav-build">build {BUILD}</span>
       </div>
     </nav>
     <main>
-      <h1>Open</h1>
-      <p class="lede">The work in the open. <strong>Applications, evaluations, the method, and the register — published as they happen, not after they settle.</strong> A Living Epistemic Work keeps no backstage: the propositions climb in public on <a href="/motion" style="color:var(--accent)">/motion</a>, and the working that produces them lives here, uncertainty on its face.</p>
-      {META.map(d => (
+      <h1>Method</h1>
+      <p class="lede">How proposals and artefacts are conceived and tested here. <strong>The de Bono hat sequence, run by an agent swarm, gated by a fitness function, with two seats kept irreducibly human — the Red gut check and the final Blue verdict.</strong> The apparatus is as transparent as the claims it evaluates.</p>
+
+      <article class="method-content" set:html={methodHtml} />
+
+      <div class="section-label">Every run and treatment</div>
+      {RUNS.map(d => (
         <a class="doc" href={`/open/${d.slug}`}>
           <span class="doc-kind">{d.kind}</span>
           <div class="doc-title">{d.title}</div>
           <p class="doc-blurb">{d.blurb}</p>
         </a>
       ))}
+
+      <footer class="page-footer"><p>See the full working register at <a href="/open">/open</a>, or the propositions themselves at <a href="/explore">/explore</a>.</p></footer>
     </main>
-    <GuidePanel currentSection="Open" />
+    <GuidePanel currentSection="Method" />
   </body>
 </html>
