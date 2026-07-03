@@ -1230,6 +1230,166 @@ The sharpest objection, shipped with this claim: that it perversely tells good a
     ],
     revisedAt: '2026-06-22',
     linksTo: ['viable-objective', 'displaced-costs', 'value-option-space', 'route-around-the-chokepoint', 'coordination-bounds-reachability', 'asymmetry-of-option-space-change']
+  },
+
+  // --- v0.12 additions (July 2026) — the register reconciled ---
+  // The /open register and the spine had diverged: four candidates captured
+  // from the ratchet-cell run (2026-07-02) plus one structural insight from
+  // the tail of the second-commodity run had lived in src/content/open/ but
+  // not here. Per the capture rule, promotion is a climb event: each node
+  // below is synthesised from all three gated runs (ratchet cell, second
+  // commodity, forest school), not just its original capture, and ships
+  // in-surface with its sharpest adversary.
+  {
+    id: 'bridge-catchment',
+    title: 'The Bridge Has a Catchment',
+    epistemicStatus: 'forming',
+    surface: `This one is still forming, and it came out of a gate being used in anger rather than out of theory. The working notes carry a design gate called the bridge test: a proposed configuration fails if reaching it requires a campaign, a founding meeting, or a heroic act of collective will — every step must be individually rational for its adopter on day-one terms. The test went into its first adversarial run as a binary, pass or fail, and came out as something else.
+
+What the run found, on a worked local-energy design, was a gradient wearing a binary's clothes. The design was bridge-clean for its median adopter, coordination-light on the later rungs (paid, budgeted, never volunteered), and honestly false for the fuel-poverty cohort — the people who need it most were exactly the ones the individually-rational ladder could not reach. That is not a pass and not a fail. It is the test discovering its true form: a bridge has a catchment. The real questions are who the bridge reaches and what carries the rest — with the remainder priced (a ring-fenced surplus, funded outreach), not moralised.
+
+Two further runs sharpened it. A mobility design passed as a cost-saving buying club for its median member while failing as the median rural car-replacement its headline claimed — the catchment framing splitting one design into the claim its evidence carries and the claim it does not. And a schooling design forced the hardest edge into the open: whether you may redraw the adopter unit. Its ladder starts with one willing teacher per school rather than the median teacher, which looks like gerrymandering the catchment until the discipline is stated: the adopter unit is whoever must act for the value to arrive — and if one self-selected actor genuinely suffices to start, the unit is honestly one actor, with the median test re-applying at every later rung rather than disappearing.
+
+The catchment's far edge keeps producing the same shape. Fuel-poor households in the energy run; schools in special measures in the schooling run — in each case the cohort most in need of the configuration is the one least able to take an individually-rational step toward it, because need and slack are inversely distributed. A catchment finding is therefore also an equity finding, and the design task at the edge is widening who the bridge reaches — moral-circle expansion read as option-space growth in the inclusion domain.
+
+The sharpest objection, shipped with this claim: gradient-ising the test risks dissolving it — every design passes for someone, so a catchment reading could make the gate unfailable, and the adopter-unit move hands a motivated designer a second dial to turn. The honest answer is a discipline carried inside the claim: a design whose median adopter needs forcing still fails, full stop; the catchment refinement applies only past that bar; and a redrawn unit is legitimate only where the smaller unit genuinely suffices to start the value arriving. Across three runs the framing has discriminated each time rather than excused — but three runs is three runs, and the remainder at the catchment's edge has so far been priced only on paper. That is why this sits at forming.`,
+    logic: {
+      claim: 'A bridge — a configuration reachable by steps that are each individually rational for their adopter, requiring no act of collective will — has a catchment: the population it actually reaches. Pass/fail at the median adopter remains the gate; past that bar the design questions are who the bridge reaches and what carries the remainder, priced rather than moralised.',
+      premises: [
+        'Whether a configuration is reachable is observer-relative: the same ladder of steps is individually rational from one starting position and impossible from another (observer-relative-option-space, coordination-bounds-reachability).',
+        'Adoption capacity and need are unevenly distributed, and often inversely: the cohorts with the least slack — capital, time, institutional headroom — are the least able to take even an individually-rational step (participation-limits, displaced-costs).',
+        'A gate that answers only pass/fail at the median discards the information adversarial testing actually produces: which cohorts the design reaches, which it does not, and what carrying the remainder would cost.',
+        'An unpriced remainder does not disappear; it is displaced onto the excluded cohort or onto moral exhortation, both of which the no-regret criterion counts (viable-objective, displaced-costs).'
+      ],
+      conclusion: 'The bridge test\'s true output is a catchment map, not a verdict: fail any design whose median adopter needs forcing; past that bar, name the catchment\'s edges, price what carries the remainder, and treat widening the catchment as the design frontier.',
+      predictive: 'Applied adversarially, the catchment framing should keep discriminating rather than excusing — some designs failing at the median outright, others passing with a named, priced remainder — and designs that leave their remainder unpriced should see the excluded cohort resurface later as a political contest rather than a design parameter.'
+    },
+    statusHistory: [
+      { version: 'v0.12.0', status: 'forming', note: 'captured 2026-07-02 in the /open register (ratchet-cell run) per the capture rule; refined by the second-commodity run (the gate splitting one design down the middle) and the forest-school run (the adopter-unit discipline, the need/slack inversion at the edge); promoted to the spine at v0.12.0' }
+    ],
+    revisedAt: '2026-07-03',
+    linksTo: ['observer-relative-option-space', 'coordination-bounds-reachability', 'participation-limits', 'displaced-costs', 'viable-objective', 'route-around-the-chokepoint', 'find-the-waitlist']
+  },
+  {
+    id: 'institutions-precipitate',
+    title: 'Institutions Precipitate Out of Trades',
+    epistemicStatus: 'forming',
+    surface: `This one is still forming, and it generalised out of the first worked energy treatment — an application throwing off a principle, which is how the work grows. In that design the institution arrives late: a Community Benefit Society materialises on the fourth rung of a nine-rung ladder, as the wrapper the accumulated trades legally require — governance after value, ownership as the residue of trades already flowing. The candidate generalisation: durable commons crystallise out of trades; they are not erected ahead of them.
+
+The constitutional-moment-first pattern — write the constitution, hold the founding meeting, then go looking for the value — front-loads exactly the founding coordination that kills designs at the door, which may be why so many designed commons die at the founding meeting. The worked case's own history is the existence proof read backwards: the entity that exists arrived when the money made it necessary.
+
+Two further runs did to this claim what forming is for. The mobility run found that pure precipitation can be blocked: in standalone shared transport the fare layer legally cannot hold a reserve, so somewhere the institution must quasi-found — unless there is a substrate. Where a cell already exists (a membership roll, a billing rail, a paid originator, a society already registered), the second commodity's institution really does arrive as a constitutional amendment forced by the accountant. So the claim gains its condition: precipitation requires rails, or a domain where nothing legally forces a wrapper at all. The first commodity pays the founding cost; later ones inherit it (the-cell-compounds).
+
+The schooling run then delivered a genuine non-energy instance, and a warning. UK forest school itself precipitated: practice first (a single college trip to Denmark in 1993, then sessions), a training market crystallising out of the practice, and the national association arriving nineteen years later as paperwork catching up with an existing practitioner community. No founding act, no rails, no legal forcing — which shows unforced precipitation is possible, and also slow, optional, and thin, because nothing pressed it into being. And the wrinkle worth its own sentence: the precipitate can occlude. Once crystallised, that association acquired an identity interest and now guards its definition against the widest use of the practice it grew from. Institutions precipitate; then the precipitate has interests.
+
+The sharpest objection, shipped with this claim: survivorship and scope. Some institutions plausibly do need founding acts — standards bodies, defence pacts, anything whose first unit of value requires the whole — and Ostrom's field cases include real constitutional moments that worked. The counterexample hunt, honestly run, found one in-domain: the national curriculum (1988) is a pure founding act that succeeded, consistent with the scope condition precisely because a national standard is the kind of thing whose first unit of value requires the whole. So the claim is domain-bounded and says so: true where value accretes in individually-rational increments, silent where it does not — and drawing the line between those domains is the undone work. That, plus the fact that every instance so far comes from three runs of one method, is why it sits at forming.`,
+    logic: {
+      claim: 'Where value accretes in individually-rational increments, durable institutions crystallise out of the accumulated trades — arriving late, as the wrapper the trades require — rather than being successfully erected ahead of the value by a founding act.',
+      premises: [
+        'A founding act front-loads coordination: it demands collective belief and simultaneous commitment before any value flows, which is the most expensive form of coordination a design can require (coordination-wealth, coordination-bounds-reachability).',
+        'Trades that are individually rational on day-one terms accumulate without anyone believing in the whole; the accumulation itself then generates requirements — a reserve to hold, contracts to sign, liability to house — that only an institutional wrapper can satisfy.',
+        'An institution that arrives as the cheapest compliance move for value already flowing inherits demonstrated demand and working trust; one erected ahead of value must manufacture both at the founding meeting (configuration-generates-configuration).',
+        'The observed instances point one way across three domains: a Community Benefit Society materialising when a share raise legally required it; a mobility wrapper arriving only where an existing cell\'s rails carry the trades, and blocked into quasi-founding where they do not; a national practice association forming nineteen years after the practice it wraps.'
+      ],
+      conclusion: 'Governance follows value; ownership is a residue of trades. Design commons so the institution precipitates — and expect a scope boundary: where the first unit of value requires the whole (standards, pacts), a founding act is not a pathology but the only available move.',
+      predictive: 'Commons designed constitutional-moment-first should show high mortality at or near the founding event; commons whose wrapper arrives as forced paperwork should survive at higher rates. Where precipitation is legally unforced it should run slower and thinner — and once formed, precipitates should tend to acquire identity interests that resist the widest use of what they wrap.'
+    },
+    statusHistory: [
+      { version: 'v0.12.0', status: 'forming', note: 'captured 2026-07-02 in the /open register (ratchet-cell run); refined by the second-commodity run (precipitation requires rails; first commodities pay the founding cost) and the forest-school run (unforced precipitation is possible but thin; the precipitate can occlude; the in-domain counterexample honestly logged); promoted to the spine at v0.12.0' }
+    ],
+    revisedAt: '2026-07-03',
+    linksTo: ['coordination-wealth', 'coordination-bounds-reachability', 'configuration-generates-configuration', 'the-cell-compounds', 'route-around-the-chokepoint', 'bridge-catchment']
+  },
+  {
+    id: 'find-the-waitlist',
+    title: 'Find the Waitlist',
+    epistemicStatus: 'forming',
+    surface: `This one is still forming, and it is different in kind from most of the canon: it is a lens instruction — a standing rule for where an evaluation should look first — rather than a claim about how economies work. It earns a place on the spine because whether the instruction reliably finds what it claims to find is itself an empirical claim, and one worth stress-testing in public.
+
+The instruction: before computing anything, scan the domain for waitlists. A closed club with a queue is the signature in the wild of a configuration whose adoption experiment has already been run — demand that pre-aggregated with no campaign, blocked only by supply. In the worked energy case, a local-energy club sat closed with a waitlist, and the queue was doing two jobs at once: announcing that the bridge exists (people join on day-one terms without being persuaded) and pointing precisely at the binding constraint (generation, not persuasion). Queues, oversubscription, closed lists — cheaper than any analysis, because the evidence is behavioural and pre-existing.
+
+The lens has now been run against three domains, and its most instructive results were not confirmations. In shared mobility it returned empty-handed: no waitlist signature anywhere, no drift toward demand-side mutualisation despite hundreds of thousands of car-club members. An empty result is the lens working, not failing — it says that domain's bridge, if it exists, has not yet been half-built by anyone, which correctly predicted that design work there would have to start much further back.
+
+In schooling the queue was real and enormous but wore no waitlist's clothes: teachers paying out of their own pockets for planning-relief subscriptions, schools buying scheme after scheme — unsubsidised, unexhorted spending on making mandated content deliverable in the time available. A true positive for the generalised lens (a queue for better means to mandated ends), with a precision finding attached: the queue is for the function, not for any particular instance of it. Teachers queueing at the photocopier are not queueing for wellies. A bridge that enters through any door other than the queue's own function will stand unused beside a visible queue — so the lens must identify what the queue is for at the level the queuers experience it.
+
+The sharpest objection, shipped with this claim: waitlists lie. Scarcity marketing manufactures queues; a queue at a subsidised price measures mispricing, not a bridge; and a queue for a positional good measures rivalry, not the spontaneous adoption of a better configuration. The discipline that answers it is part of the instruction — the signature counts only where the queue is unsubsidised, unexhorted, and for a non-positional good — but the false-positive catalogue that would make that discipline load-bearing is three entries old. That is why this sits at forming.`,
+    logic: {
+      claim: 'Before analysing whether a proposed configuration can be adopted, scan the domain for queues — waitlists, oversubscription, closed lists, unprompted spending on the function the configuration would serve. An unsubsidised, unexhorted queue for a non-positional good is behavioural evidence that the adoption experiment has already run, and it points at the binding constraint.',
+      premises: [
+        'A queue that formed without campaign or subsidy is revealed demand at the queuers\' own prices, on day-one terms — evidence of a different kind from any forecast or survey (money-as-signal).',
+        'A standing queue means demand is not the binding constraint; whatever blocks the queue from clearing is — so the queue localises the constraint for free (binding-constraint).',
+        'Queues are also generated by mispricing, manufactured scarcity, and positional rivalry; only the unsubsidised, unexhorted, non-positional queue carries the signature.',
+        'Demand queues at the level of the function the queuers experience (planning relief, cheaper kilowatt-hours), not at the level of the instrument a designer prefers — so the signature licenses entry only through the queue\'s own door.'
+      ],
+      conclusion: 'The lens is a cheap, behavioural first move: find the queue, read what it is for at the queuers\' own level of description, and let its presence, absence, or falseness set where design work starts — pre-aggregated demand, a bridge nobody has half-built, or no signal at all.',
+      predictive: 'Domains with a genuine waitlist signature should yield designs that scale without persuasion once supply is unblocked; domains where the lens returns empty should punish adoption-assuming designs; and catalogued false positives (subsidy queues, marketing queues, positional queues) should fail exactly the three-part discipline rather than needing case-by-case judgment.'
+    },
+    statusHistory: [
+      { version: 'v0.12.0', status: 'forming', note: 'captured 2026-07-02 in the /open register (ratchet-cell run: the waitlisted energy club); run twice since — an honest empty result in shared mobility (second-commodity run) and a function-level generalisation with a precision finding in schooling (forest-school run: the queue is for the function, not the instance); promoted to the spine at v0.12.0' }
+    ],
+    revisedAt: '2026-07-03',
+    linksTo: ['money-as-signal', 'binding-constraint', 'bridge-catchment', 'coordination-bounds-reachability', 'contextual-scarcity']
+  },
+  {
+    id: 'the-closing-window',
+    title: 'The Political Residue Is a Clock',
+    epistemicStatus: 'contested',
+    surface: `This node entered as forming under the name it still carries — the closing window — and has since climbed once, on its own stated condition, to contested. Part of what the climb taught is in the name it outgrew.
+
+Put a designed configuration through an adversarial gate and dissolve every wall you can. Across the first two full runs, the residue that survived every dissolution had the same shape: not a wall but a clock. The energy design bottomed out on whether a revocable licensing exemption would stay open long enough for cells to become undeniable; the mobility design bottomed out on whether a commons could accrete before an aggregator enclosed the field. The candidate form, as first captured: the irreducible political residue of a route-around design is a race between spontaneous accretion and boundary-redrawing.
+
+The corresponding doctrine is to minimise the permission surface: every step small, self-assessed, individually rational, with no event at which anyone can say no. The route-around beats the chokepoint not by argument but by having no single point of refusal and a faster clock — and the control case is instructive: remove a legal boundary but add a licensing queue, and the chokepoint relocates rather than disappears. The mobility run added a measured width (a window of roughly three to four years, read from fleet sizes and cost-parity forecasts) and a second strategy class: where the race cannot be won, concede it — push every load-bearing part of the design below the contested layer, so that the enclosure, when it comes, captures a layer that was never load-bearing.
+
+The claim's own climb condition, stated at capture, was that a third domain's residue is — or is not — a race. The third run answered: it is not. In primary schooling nobody is racing to enclose the asset; instead the domain has a scheduled opening — a national curriculum reset on a known date, when every scheme of work in the country goes stale simultaneously and, for one re-planning season, a new entrant competes against incumbents on equal footing rather than against sunk adoption. The residue was still a clock; it ran backwards. That result reshaped the claim from a law about races into a small typology of clocks — the race (win it), the revocable exemption (move while it is open), the scheduled opening (have the artefact ready the day it opens) — and it is the reshaped claim, not the original, that climbed.
+
+The sharpest objection, shipped with this claim: the doctrine could licence recklessness. Move fast before the rules arrive is also the extractive playbook, and a claim that cannot tell a commons routing around rent from a predator routing around protection is a hazard, not a tool. The line that answers it: routing around rent is not routing around protection, and a design that minimises its permission surface to escape accountability rather than gatekeeping fails the no-regret gate regardless of its clock. The line has operated twice in-run — the energy design refuses to route around heat-network authorisation (protection) while routing around supply-licensing gatekeeping (rent); the mobility design treats the financial-regulation perimeter as a wall to satisfy, never to evade. But it remains a judgment rather than a measurement, and where a boundary carries rent and protection at once the claim does not yet say what to do. That unresolved line is the disagreement the contested rung marks.`,
+    logic: {
+      claim: 'The irreducible political residue of a permission-minimising design is temporal, not spatial — a clock, not a wall: a race against boundary-redrawing, a revocable exemption, or a scheduled opening. The doctrine is to minimise the permission surface and sequence to the domain\'s clock, gated by the line that routing around rent is never licence to route around protection.',
+      premises: [
+        'Adversarial runs across three domains each dissolved every wall but one, and the surviving residue was temporal in every case: an enclosure race (mobility), a revocable exemption window (energy), a scheduled opening (schooling).',
+        'A permission surface is a set of events at which someone can say no; each such event is a chokepoint, and boundary-redrawing is the chokepoint\'s counter-move to a route-around (route-around-the-chokepoint, coordination-bounds-reachability).',
+        'Option-space loss is fast and enclosure is quick to formalise, while spontaneous accretion is slow — so wherever both are running, the contest is decided by relative speed, not by argument (asymmetry-of-option-space-change, time-asymmetry).',
+        'Some regulatory boundaries carry protection (liability floors, safety perimeters) and some carry rent (gatekeeping); a design that escapes accountability by the same move that escapes gatekeeping fails the no-regret criterion whatever its clock says (viable-objective).'
+      ],
+      conclusion: 'Political walls should be read as clocks and typed before they are fought: won if a race, outlasted if a revocable window, met on the day if a scheduled opening — with every step small, self-assessed, and individually rational, and the rent/protection line applied at each boundary crossed.',
+      predictive: 'Route-around designs that beat their domain\'s clock should face boundary-redrawing that arrives too late to matter; designs that ignore the clock should be enclosed or expire mid-ladder however sound their physics; and further domains\' residues should keep sorting into the three clock types — a genuinely atemporal political residue would cut against the claim.'
+    },
+    statusHistory: [
+      { version: 'v0.12.0', status: 'forming', note: 'captured 2026-07-02 in the /open register (ratchet-cell run) as "the closing window" — the race form, two data points, the doctrine of the minimal permission surface; measured width (~3–4 years) and the concede-the-race strategy added by the second-commodity run; promoted to the spine at v0.12.0 per the capture rule' },
+      { version: 'v0.12.0', status: 'contested', note: 'climbs on its own stated condition — a third domain residue delivered (forest-school run): not a race but a window that opens on a known date (the ~2028 curriculum reset), reshaping the claim from race to clock-typology; the rent/protection line stated at capture and applied twice in-run, but still a judgment rather than a measurement — which is the disagreement contested marks' }
+    ],
+    revisedAt: '2026-07-03',
+    linksTo: ['route-around-the-chokepoint', 'coordination-bounds-reachability', 'asymmetry-of-option-space-change', 'time-asymmetry', 'viable-objective', 'institutions-precipitate', 'transition-fragility']
+  },
+  {
+    id: 'the-cell-compounds',
+    title: 'The Cell Is the Unit That Compounds',
+    epistemicStatus: 'forming',
+    surface: `This one is still forming, and it surfaced at the tail of a run rather than at the head of one: the second worked treatment ended on a structural insight neither treatment had been looking for, and the third confirmed its shape from the outside. The insight: the cell is the unit that compounds, not the commodity.
+
+The first worked treatment built a local energy configuration and read it as an instance — one domain's design, gated and shipped. The second treatment, on mobility, discovered it had been something else all along: a rail. Where an energy cell already exists — a membership roll, a half-hourly billing rail, a paid originator, a registered society — a second commodity does not found anything. It enters as one more metered line on an existing bill, and its institution arrives as a constitutional amendment forced by the accountant. The founding cost — origination, incorporation, the slow accumulation of member trust, the billing plumbing — is paid once, by the first commodity; every later commodity inherits it at marginal cost. Energy was not the first treatment; it was the first rail.
+
+Read in the work's own terms, this is configuration-generates-configuration wearing an institution: each configured arrangement makes further arrangements reachable that were not reachable before, and the cell is the institutional configuration whose reachable set grows with every commodity it carries. It also re-prices the design question. If cells compound, the valuable thing to build is never this commodity's scheme; it is the substrate that makes the next commodity's scheme nearly free — and the choice of first commodity is really the choice of who pays the founding cost.
+
+The third treatment, in schooling, confirmed the shape by inversion. Its design works precisely by loading new cargo onto rails the school already runs — an existing timetable block, an existing enrichment invoice re-priced to buy mandated coverage, standing parental consent, the risk-assessment template already in use — and the one place the design has nothing is the one place with no rail to inherit: spread between schools, where its sharpest unanswered objection lives. Where rails exist the ladder climbs; where they end, it stalls. That is the compounding claim read from its negative.
+
+The sharpest objection, shipped with this claim: one rail so far. Exactly one live cell-shape has been observed carrying — on paper — a second commodity, and that second commodity has not yet traded, so the compounding claim rests on a design document, not a ledger. Sharper still: a cell with a single commodity is indistinguishable from a project. Projects are common and mostly die; if the compound step never fires, cell was just a flattering name for one. The claim's falsifier is therefore clean: it earns its next rung when a second commodity actually settles on a first commodity's rails somewhere — and if, after a fair run of attempts, second commodities keep quasi-founding beside available rails instead of inheriting them, the claim is wrong and the cell was a project after all. That is why this sits at forming.`,
+    logic: {
+      claim: 'The compounding unit of a bottom-up economy is the cell — the accumulated substrate of membership, billing, governance and trust — not any commodity it carries: the first commodity pays the founding cost once, and each later commodity inherits the rails at marginal cost.',
+      premises: [
+        'Configured arrangement lowers the cost of further arrangement; capability accumulates on what is already built (configuration-generates-configuration, structural-memory).',
+        'The expensive part of a commons is not the commodity but the coordination substrate — origination, incorporation, member trust, a billing rail — which is coordination wealth in built form and, once built, reusable (coordination-wealth).',
+        'Institutions crystallise out of trades where rails exist to carry them, and are blocked into quasi-founding where rails are absent (institutions-precipitate) — observed one way in each direction: a second commodity entering an existing energy cell as a line on the bill, versus standalone mobility unable to precipitate at all.',
+        'A substrate that lowers the entry cost of each next commodity turns a linear sequence of projects into a compounding series: the same trades that justify the first commodity leave behind the capacity that makes the second nearly free.'
+      ],
+      conclusion: 'Design and evaluate at the cell grain, not the commodity grain: the first commodity is chosen as much for the rails it leaves behind as for its own return, and a domain\'s reachable set is set by the cells standing in it, not by the schemes proposed for it.',
+      predictive: 'Second commodities should reach viability markedly faster and cheaper on existing cells than as standalone foundings in the same domain; communities holding a working cell should accrete unrelated functions at a rate communities without one do not; and if observed second commodities keep quasi-founding beside available rails, the claim fails.'
+    },
+    statusHistory: [
+      { version: 'v0.12.0', status: 'forming', note: 'captured at v0.12.0 from the tail of the second-commodity run (2026-07-02: the cell is the unit that compounds; energy was the first rail, not the first treatment), confirmed by inversion in the forest-school run (the ladder climbs exactly as far as the rails it can inherit); flagged as the run pair\'s biggest uncaptured insight — enters the spine directly per the capture rule' }
+    ],
+    revisedAt: '2026-07-03',
+    linksTo: ['configuration-generates-configuration', 'coordination-wealth', 'structural-memory', 'institutions-precipitate', 'route-around-the-chokepoint']
   }
 ];
 

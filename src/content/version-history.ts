@@ -25,6 +25,39 @@ export interface VersionEntry {
 
 export const VERSION_HISTORY: VersionEntry[] = [
   {
+    version: 'v0.12.0',
+    date: '2026-07-03',
+    title: 'The register reconciled — five nodes climb onto the spine, and one climbs on it',
+    summary: `The capture rule (published live 2026-07-02) says the threshold for capture is existence, not merit — merit is decided by the climb, in public — and that promotion into the canon roster is a climb event, not a capture event. By this version the /open register and the spine had diverged: four candidates from the ratchet-cell run, plus one structural insight surfaced at the tail of the second-commodity run, had lived and been refined across three gated treatments (ratchet cell, second commodity, forest school) without appearing in propositions.ts. This version reconciles the registers. Each node enters synthesised from all three runs, not just its original capture, and each ships in-surface with its sharpest adversary, per house style. And the spine records its first same-version climb: the-closing-window entered at forming and climbed to contested inside this release, because its own stated climb condition — a third domain's residue is (or is not) a race — fired on the "(or is not)" branch: the forest-school domain's residue is a window that opens on a known date (~2028 curriculum reset), which reshaped the claim from a law about races into a typology of clocks. The reshaped claim, not the original, is what climbed; the rent/protection line it is gated by remains a judgment rather than a measurement, which is exactly the disagreement the contested rung marks.`,
+    changes: {
+      added: [
+        'bridge-catchment (forming) — the bridge test\'s first adversarial run turned its binary into a gradient: a bridge has a catchment, and the real questions are who the bridge reaches and what carries the rest, priced not moralised. Carries the median-bar discipline (a design whose median adopter needs forcing still fails, full stop), the adopter-unit rule from the forest-school run (the unit is whoever must act for the value to arrive), and the need/slack inversion at the catchment\'s edge (fuel poverty; schools in special measures). Ships with its adversary: gradient-ising the test risks making the gate unfailable.',
+        'institutions-precipitate (forming) — durable commons crystallise out of trades rather than being erected ahead of them: governance after value, ownership as residue. Refined across all three runs: precipitation requires rails (second-commodity — a fare layer that cannot hold a reserve must quasi-found); unforced precipitation is possible but slow and thin, and the precipitate can occlude (forest-school — the association that now guards its definition against the widest catchment). Ships with its adversary: survivorship and scope, with the in-domain counterexample (the 1988 national curriculum, a founding act that worked) honestly logged.',
+        'find-the-waitlist (forming) — a lens instruction on the spine: scan for queues before computing anything, because an unsubsidised, unexhorted queue for a non-positional good means the adoption experiment has already run and points at the binding constraint. Three runs in: one true positive (the waitlisted energy club), one honest empty result (shared mobility), one function-level generalisation with a precision finding (schooling: the queue is for the function, not the instance — teachers queueing at the photocopier are not queueing for wellies). Ships with its adversary: waitlists lie.',
+        'the-closing-window (forming → contested, both inside this version) — the political residue of a permission-minimising design is a clock, not a wall. Entered as the race form (two data points, the minimal-permission-surface doctrine); the second-commodity run added a measured width (~3–4 years) and the concede-the-race strategy; the forest-school run delivered the stated climb condition on its negative branch — a scheduled opening, not a race — reshaping the claim into a typology of clocks (race / revocable exemption / scheduled opening). Ships with its adversary: the recklessness licence, answered by the rent/protection line, which remains a judgment — the disagreement contested marks.',
+        'the-cell-compounds (forming) — the cell is the unit that compounds, not the commodity: the first commodity pays the founding cost once (origination, incorporation, trust, the billing rail) and every later commodity inherits it at marginal cost. Energy was not the first treatment; it was the first rail. Confirmed by inversion in the forest-school run: the ladder climbs exactly as far as the rails it can inherit, and stalls where they end. Ships with its adversary: one rail so far — a cell with a single commodity is indistinguishable from a project.',
+      ],
+      revised: [
+        'Alexander wired to all five nodes: the /explore forming-edge context extended, and each node surfaced in the essay sections it bears on (bridge-catchment on universal-participation; institutions-precipitate and the-cell-compounds on what-replaces; the-cell-compounds on configuration-value; find-the-waitlist on throughput-proxy; the-closing-window on inevitability).',
+        'The proposition count in Alexander\'s prompt is now computed from the roster (PROPOSITIONS.length) instead of hand-maintained — it had drifted to "30" against a roster of 37, and would have drifted again with this release\'s 42.',
+      ],
+      structural: [
+        'v0.11.1 backfilled into this history: it had bumped version.ts (the coordination-bounds-reachability climb) without a version-history entry, which also left /motion\'s date-sorted version axis unable to place it.',
+      ],
+    },
+  },
+  {
+    version: 'v0.11.1',
+    date: '2026-06-29',
+    title: 'First climb on the live spine — coordination-bounds-reachability reaches established',
+    summary: `The first real climb under the v0.11.0 regime: coordination-bounds-reachability, one of the three nodes that entered at forming when the draft wall came down, migrates to established. The coordination/enclosure edge of the reachable set held across multiple worked applications (the Ogwen DNA-economy evaluation; route-around-the-chokepoint, which is its infrastructure corollary) and became load-bearing for downstream nodes — which is what the climb records. Entered in this history retrospectively at v0.12.0; the climb itself was recorded inline in the node\'s statusHistory when it happened.`,
+    changes: {
+      revised: [
+        'coordination-bounds-reachability climbs forming → established: the reachable set being bounded by coordination and enclosure as well as physics is now load-bearing (route-around-the-chokepoint and cleanliness-and-scale both stand on it); its surface rewritten from the entered-as-forming register to the has-since-climbed register.',
+      ],
+    },
+  },
+  {
     version: 'v0.11.0',
     date: '2026-06-18',
     title: 'The draft wall comes down for good — forming enters the spine, and the climb becomes watchable',

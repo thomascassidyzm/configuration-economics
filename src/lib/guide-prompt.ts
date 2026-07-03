@@ -10,21 +10,21 @@ export const SECTION_PROPOSITIONS: Record<string, string[]> = {
   'orientation': [],  // General framing
   'physical-envelope': ['energy-income-inheritance', 'exergy-not-energy', 'binding-constraint', 'pattern-intelligence-constraint'],
   'accounting-error': ['energy-income-inheritance', 'throughput-cost', 'exergy-not-energy', 'binding-constraint'],
-  'throughput-proxy': ['throughput-cost', 'displaced-costs', 'money-as-signal', 'exergy-not-energy'],
-  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'configuration-generates-configuration', 'held-value-not-reachable', 'pattern-intelligence-constraint'],
+  'throughput-proxy': ['throughput-cost', 'displaced-costs', 'money-as-signal', 'exergy-not-energy', 'find-the-waitlist'],
+  'configuration-value': ['value-option-space', 'structural-memory', 'care-as-configuration', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'configuration-generates-configuration', 'held-value-not-reachable', 'pattern-intelligence-constraint', 'the-cell-compounds'],
   'configuration-not-information': ['configuration-not-information', 'option-space-measurability', 'configuration-generates-configuration'],
   'work-wrong-question': ['work-wrong-question', 'participation-limits', 'labour-as-allocator'],
-  'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain', 'labour-as-allocator', 'coordination-as-move-evaluation', 'coordination-bounds-reachability'],
+  'universal-participation': ['participation-limits', 'coordination-wealth', 'growth-masks-strain', 'labour-as-allocator', 'coordination-as-move-evaluation', 'coordination-bounds-reachability', 'bridge-catchment'],
   'viable-objective': ['viable-objective', 'value-option-space', 'option-space-measurability', 'option-space-as-chess-moves', 'observer-relative-option-space', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'infinite-game', 'pattern-intelligence-constraint'],
-  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves', 'labour-as-allocator', 'coordination-as-move-evaluation', 'infinite-game', 'coordination-bounds-reachability', 'held-value-not-reachable', 'route-around-the-chokepoint'],
-  'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry', 'asymmetry-of-option-space-change'],
+  'what-replaces': ['throughput-cost', 'coordination-wealth', 'stability-not-stasis', 'option-space-as-chess-moves', 'labour-as-allocator', 'coordination-as-move-evaluation', 'infinite-game', 'coordination-bounds-reachability', 'held-value-not-reachable', 'route-around-the-chokepoint', 'institutions-precipitate', 'the-cell-compounds'],
+  'inevitability': ['ignoring-physics', 'transition-fragility', 'time-asymmetry', 'asymmetry-of-option-space-change', 'the-closing-window'],
 
   // /explore — proposition-by-proposition browsing. The reader can reach any
   // node, but Alexander is loaded with the live forming edge (the newest,
   // least-settled claims) plus their nearest anchors, so a question about the
   // frozen-value / pattern-intelligence layer lands with real context rather
   // than general knowledge.
-  'explore': ['held-value-not-reachable', 'coordination-bounds-reachability', 'pattern-intelligence-constraint', 'route-around-the-chokepoint', 'cleanliness-and-scale', 'value-option-space', 'binding-constraint', 'coordination-wealth', 'configuration-generates-configuration'],
+  'explore': ['held-value-not-reachable', 'coordination-bounds-reachability', 'pattern-intelligence-constraint', 'route-around-the-chokepoint', 'cleanliness-and-scale', 'bridge-catchment', 'institutions-precipitate', 'find-the-waitlist', 'the-closing-window', 'the-cell-compounds', 'value-option-space', 'binding-constraint', 'coordination-wealth', 'configuration-generates-configuration'],
 
   // Non-essay surfaces. The reader is on /applications/moves and is using
   // Alexander as a move-evaluator. The propositions here are the ones that
@@ -350,7 +350,7 @@ Point readers to surfaces by route when their question is about what's there rat
 
 ## PROPOSITION AWARENESS
 
-This work is built on **30 self-contained propositions**. Each proposition has:
+This work is built on **${PROPOSITIONS.length} self-contained propositions**. Each proposition has:
 - A **title** (e.g., "Energy Income and Inheritance")
 - A **claim** (the core assertion)
 - **Underlying logic** (premises, conclusion, sometimes predictive consequences)
