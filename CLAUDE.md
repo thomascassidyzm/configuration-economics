@@ -6,9 +6,11 @@
 
 **Core thesis**: Value = configurations that expand future option space under bounded energy flux.
 
-## Current State (v0.11.0, June 2026)
+## Current State (July 2026)
 
 > As of v0.11.0 the notion of "drafts" is retired: there is no backstage. New thinking enters on the settledness spine at `forming` (published, live, not yet load-bearing) and climbs in public. Status is now a *trajectory* — each node carries a `statusHistory` — and the climb is watchable on `/motion`.
+
+> **The live edge is now `/open`** (`src/content/open/`). This is where forming nodes get made, not just watched: a Six-Hat evaluation method, an iterative-search lens, and a growing set of worked treatments (spheres run through the lens end to end — the ratchet cell, the second commodity, the stowaway curriculum, and earlier evaluations). The register of in-flight work — spheres to run, artefacts to conceive, intellectual lines to close, forming nodes tracked as they move — lives in `src/content/open/BACKLOG.md`. Don't hand-maintain a count of documents here; read the directory (`ls src/content/open/`) or the backlog for current state.
 
 ### What Exists
 - **Proposition nodes** with surface text + underlying logic — live count and buckets are in `propositions.ts` (don't hard-code them here; see "Proposition roster" below)
@@ -21,6 +23,8 @@
 - **/lineage** - predecessors, debts, and CE's specific delta against each
 - **/objections** - the strongest whole-framework attacks engaged with steelman + response + concession
 - **/attack** - per-premise stress-testing. Three worked examples (one per epistemic-status tier) as steelman → response → concession → blast-radius (blast-radius chips computed live from the link graph). The third credibility surface; the format's sharpest self-demonstration.
+- **/open** - the work in the open: applications, evaluations, the method, and the register, published as they happen. Index at `src/pages/open/index.astro`, individual documents rendered from `src/content/open/*.md` via `src/pages/open/[slug].astro`. See `src/content/open/BACKLOG.md` for the live register and `NOTES-six-hat-method.md` for the evaluation method itself.
+- **/method** - the Six-Hat evaluation method surfaced as its own navigable page: the method plus links to every run and treatment it has produced.
 - **Version + build tracking** (semantic version + git hash)
 
 ### Key Files
@@ -130,9 +134,10 @@ Deployed on Vercel - auto-deploys from main branch.
 ## Roadmap (see PLAN.md)
 
 - **Phase 1**: Alexander Integration ✓ (v0.1.5)
-- **Phase 2**: Reader Orientation (How to read this page, essay→proposition links)
-- **Phase 3**: Entry Points (question-based navigation)
-- **Phase 4**: Adversarial Testing (agents attack propositions) ✓ — `/objections` + `/attack` surfaces; and per-node, the adversarial pass now ships *in-surface* with each forming node (claim beside its sharpest objection)
+- **Phase 2**: Reader Orientation ✓ — `/open` explains itself in-surface (the open-work banner on every document), and `/method` orients a reader to how the work gets made
+- **Phase 3**: Entry Points (question-based navigation) — still open
+- **Phase 4**: Adversarial Testing (agents attack propositions) ✓ — `/objections` + `/attack` surfaces; per-node, the adversarial pass ships *in-surface* with each forming node; and the Six-Hat method (`/method`) is the adversarial pass run on candidate moves *before* they become propositions at all
+- **Current push**: growing the `/open` register — running the Six-Hat method and the iterative-search lens across more spheres, closing the intellectual lines that let `forming` nodes climb. See `src/content/open/BACKLOG.md`, not this file, for the live list.
 
 ## Related Projects
 

@@ -20,9 +20,10 @@ PLAN.md is a session log, not the live roadmap. It captured the v0.2 push betwee
 > **2026-06-06:** Canon now holds 30 propositions (1 established / 19 derived / 9 contested / 1 open) as of v0.8.0. The proposition counts quoted in the dated round-logs below are historical provenance, true when written — see `src/content/propositions.ts` for the live count and buckets.
 
 - **Changelog at the version-grain** → `src/content/version-history.ts`
-- **Proposition canon (30 nodes, all four buckets populated)** → `src/content/propositions.ts`
+- **Proposition canon** → `src/content/propositions.ts`
 - **What's still pending** → `drafts/README.md` (currently: counterargument-engagement promotion, lineage-and-positioning promotion)
 - **Project context for fresh sessions** → `CLAUDE.md`
+- **The live edge (as of July 2026)** → `/open` (`src/content/open/`), register at `src/content/open/BACKLOG.md`
 
 The "Proposed Next Steps Phase 1–4" block at the end of this file is pre-review (Dec 2025) and is retained for history; the Round 8 note (line ~205) explicitly marks it superseded.
 
@@ -407,9 +408,10 @@ The framework doesn't need external grounding from Assembly Theory - Distinction
 
 ## Notes for Future Sessions
 
-- This document is the reference for where we are and where we're going
-- Phase 1 (Alexander integration) is complete
-- Next: Phase 2 (Reader Orientation) or theoretical deepening
+- **This whole file is a session log, not the live roadmap** — see the "Status" note near the top. For where the project actually is, read `CLAUDE.md` and `src/content/open/BACKLOG.md`.
+- Phase 1 (Alexander integration) and Phase 2 (Reader Orientation) are both complete. Phase 4 (Adversarial Testing) shipped as `/objections`, `/attack`, and — its sharpest form — the Six-Hat method now running in `/open`/`/method` on candidate moves before they ever become propositions.
+- **The live edge as of July 2026 is `/open`** (`src/content/open/`): the Six-Hat evaluation method, an iterative-search lens, and worked treatments (spheres run through the lens end to end). `src/content/open/BACKLOG.md` is the live register of in-flight work — read it, don't duplicate it here.
+- Phase 3 (Entry Points / question-based navigation) is the one part of the original roadmap still genuinely open.
 - The goal is depth and coherence, not breadth
 - Restraint is a feature
 - Distinction Physics V7 Module 0 is relevant reading (`/Users/tomcassidy/Distinction_Project/`)
