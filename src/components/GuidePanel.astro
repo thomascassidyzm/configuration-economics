@@ -575,7 +575,10 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
     const STORAGE_KEY = 'guide-conversation';
     let conversationHistory: HistoryEntry[] = [];
     let isLoading = false;
-    type Tier = 'haiku' | 'sonnet' | 'opus';
+    // Which tier answered. The client never picks a model — it sends the
+    // intent (escalate: true) and the server decides. This type only labels
+    // what came back.
+    type Tier = 'base' | 'deep';
 
     // Restore previous conversation if exists
     try {
@@ -814,44 +817,36 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       return container;
     }
 
-    // Tier-escalation buttons under each Alexander response. 'haiku' shows
-    // both Sonnet and Opus; 'sonnet' shows only Opus; 'opus' shows nothing
-    // (already at top tier).
+    // The Deeper button under each Alexander response. One escalation level
+    // exists, because the server's ceiling is one step above the base tier;
+    // once the deep tier has answered there is nothing further to offer, so no
+    // button is drawn.
     function appendDeeperActions(messageEl: HTMLElement, currentTier: Tier) {
-      if (currentTier === 'opus') return;
+      if (currentTier === 'deep') return;
       const actions = document.createElement('div');
       actions.className = 'deeper-actions';
 
-      if (currentTier === 'haiku') {
-        const sonnetBtn = document.createElement('button');
-        sonnetBtn.className = 'deeper-btn';
-        sonnetBtn.textContent = '↗ Deeper';
-        sonnetBtn.title = 'Reanswer with Sonnet 4.6';
-        sonnetBtn.addEventListener('click', () => escalate('sonnet'));
-        actions.appendChild(sonnetBtn);
-      }
-
-      const opusBtn = document.createElement('button');
-      opusBtn.className = 'deeper-btn';
-      opusBtn.textContent = '↗↗ Deeper still';
-      opusBtn.title = 'Reanswer with Opus 4.7';
-      opusBtn.addEventListener('click', () => escalate('opus'));
-      actions.appendChild(opusBtn);
+      const deeperBtn = document.createElement('button');
+      deeperBtn.className = 'deeper-btn';
+      deeperBtn.textContent = '↗ Deeper';
+      deeperBtn.title = 'Re-answer with a stronger model';
+      deeperBtn.addEventListener('click', () => escalate());
+      actions.appendChild(deeperBtn);
 
       messageEl.appendChild(actions);
     }
 
-    async function escalate(tier: Tier) {
+    async function escalate() {
       if (isLoading) return;
       const divider = document.createElement('div');
       divider.className = 'tier-divider';
-      divider.textContent = tier === 'sonnet' ? '⤵ Deeper (Sonnet 4.6)' : '⤵ Deeper still (Opus 4.7)';
+      divider.textContent = '⤵ Deeper';
       messagesContainer?.appendChild(divider);
-      await sendMessage('Could you go deeper on that?', tier, true);
+      await sendMessage('Could you go deeper on that?', true, true);
     }
 
     // Send message
-    async function sendMessage(message: string, tier: Tier = 'haiku', hideUserBubble: boolean = false) {
+    async function sendMessage(message: string, escalateRequest: boolean = false, hideUserBubble: boolean = false) {
       if (isLoading) return;
       isLoading = true;
 
@@ -887,7 +882,9 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
           epistemicStatus: context.status,
           ...(context.attackFocus ? { attackFocus: context.attackFocus } : {})
         },
-        tier
+        // Intent, not a model. The server maps this to a tier and enforces the
+        // ceiling; nothing the client sends can name a model.
+        escalate: escalateRequest
       };
 
       try {
@@ -906,7 +903,7 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
         const followUps = createFollowUpButtons();
         typingEl.appendChild(followUps);
 
-        const respondedTier: Tier = (data.tier as Tier) || tier;
+        const respondedTier: Tier = data.tier === 'deep' ? 'deep' : 'base';
         appendDeeperActions(typingEl, respondedTier);
 
         scrollToElement(typingEl);
