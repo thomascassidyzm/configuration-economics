@@ -9,29 +9,124 @@ interface ChatMessage {
   content: string;
 }
 
-type ModelTier = 'haiku' | 'sonnet' | 'opus';
+const MODEL = 'claude-haiku-4-5-20251001';
 
-const MODEL_BY_TIER: Record<ModelTier, string> = {
-  haiku: 'claude-haiku-4-5-20251001',
-  sonnet: 'claude-sonnet-4-6',
-  opus: 'claude-opus-4-7',
-};
+const MAX_MESSAGE_LENGTH = 4000;
+const MAX_HISTORY_TURNS = 20;
+const MAX_BODY_BYTES = 50 * 1024;
+
+// Sliding-window rate limit, keyed on client IP. Module-level Map is fine for
+// a single serverless instance; entries are pruned on every request so it
+// cannot grow unbounded.
+const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 15;
+const requestLog = new Map<string, number[]>();
+
+function getClientIp(request: Request): string {
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  if (forwardedFor) {
+    return forwardedFor.split(',')[0].trim();
+  }
+  return 'unknown';
+}
+
+function checkRateLimit(ip: string): { allowed: boolean; retryAfterSeconds: number } {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW_MS;
+
+  for (const [key, timestamps] of requestLog) {
+    const kept = timestamps.filter((t) => t > windowStart);
+    if (kept.length === 0) {
+      requestLog.delete(key);
+    } else {
+      requestLog.set(key, kept);
+    }
+  }
+
+  const timestamps = requestLog.get(ip) ?? [];
+  if (timestamps.length >= RATE_LIMIT_MAX_REQUESTS) {
+    const oldest = Math.min(...timestamps);
+    const retryAfterSeconds = Math.ceil((oldest + RATE_LIMIT_WINDOW_MS - now) / 1000);
+    return { allowed: false, retryAfterSeconds };
+  }
+
+  timestamps.push(now);
+  requestLog.set(ip, timestamps);
+  return { allowed: true, retryAfterSeconds: 0 };
+}
+
+function isSameOrigin(request: Request): boolean {
+  const origin = request.headers.get('origin');
+  if (!origin) {
+    // Same-origin requests don't always carry an Origin header (e.g. plain
+    // GET-style navigations); absence alone isn't evidence of cross-origin
+    // abuse, so we don't reject on it. Cross-origin fetch() POSTs do send it.
+    return true;
+  }
+  try {
+    const originHost = new URL(origin).host;
+    const requestHost = new URL(request.url).host;
+    return originHost === requestHost;
+  } catch {
+    return false;
+  }
+}
 
 interface GuideRequest {
   message: string;
   history?: ChatMessage[];
   context?: GuideContext;
-  tier?: ModelTier;
 }
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const body: GuideRequest = await request.json();
-    const { message, history = [], context = {}, tier } = body;
+    if (!isSameOrigin(request)) {
+      return new Response(JSON.stringify({ error: 'Forbidden' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const clientIp = getClientIp(request);
+    const rateLimit = checkRateLimit(clientIp);
+    if (!rateLimit.allowed) {
+      return new Response(JSON.stringify({ error: 'Too many requests' }), {
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json',
+          'Retry-After': String(rateLimit.retryAfterSeconds),
+        },
+      });
+    }
+
+    const rawBody = await request.text();
+    if (rawBody.length > MAX_BODY_BYTES) {
+      return new Response(JSON.stringify({ error: 'Request too large' }), {
+        status: 413,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const body: GuideRequest = JSON.parse(rawBody);
+    const { message, history = [], context = {} } = body;
 
     if (!message) {
       return new Response(JSON.stringify({ error: 'Message is required' }), {
         status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    if (message.length > MAX_MESSAGE_LENGTH) {
+      return new Response(JSON.stringify({ error: 'Message too long' }), {
+        status: 413,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    if (!Array.isArray(history) || history.length > MAX_HISTORY_TURNS) {
+      return new Response(JSON.stringify({ error: 'History too long' }), {
+        status: 413,
         headers: { 'Content-Type': 'application/json' },
       });
     }
@@ -43,9 +138,6 @@ export const POST: APIRoute = async ({ request }) => {
         headers: { 'Content-Type': 'application/json' },
       });
     }
-
-    const selectedTier: ModelTier = tier && tier in MODEL_BY_TIER ? tier : 'haiku';
-    const selectedModel = MODEL_BY_TIER[selectedTier];
 
     const systemPrompt = buildPromptWithContext(message, context);
 
@@ -68,7 +160,7 @@ export const POST: APIRoute = async ({ request }) => {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: selectedModel,
+        model: MODEL,
         max_tokens: 2048,
         system: systemPrompt,
         messages,
@@ -97,7 +189,6 @@ export const POST: APIRoute = async ({ request }) => {
       // conversation history so subsequent turns send the model real LaTeX,
       // not opaque placeholder tokens.
       rawMessage: assistantMessage,
-      tier: selectedTier,
       context: context,
     }), {
       status: 200,
