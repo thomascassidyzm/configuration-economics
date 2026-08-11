@@ -80,6 +80,29 @@ function checkRateLimit(
   return { allowed: true, retryAfterSeconds: 0 };
 }
 
+// The set of hostnames that count as "this site" for the same-origin check.
+//
+// `new URL(request.url).host` is NOT the public hostname behind Vercel's proxy —
+// the serverless invocation sees an internal host, so comparing Origin against it
+// rejected every real browser request with a 403 while curl (which sends no
+// Origin) sailed through. The public hostname arrives in the forwarding headers
+// instead. Neither `x-forwarded-host` nor `host` is reachable from page JS —
+// browsers set Host themselves and refuse `x-forwarded-host` as a forbidden
+// header, and Vercel's edge overwrites both — so trusting them here does not
+// widen the guard: a genuine cross-site caller still fails on its own Origin.
+function allowedHosts(request: Request): string[] {
+  const hosts = [
+    request.headers.get('x-forwarded-host'),
+    request.headers.get('host'),
+  ];
+  try {
+    hosts.push(new URL(request.url).host);
+  } catch {
+    // request.url unparseable; the forwarding headers still carry the answer.
+  }
+  return hosts.filter((h): h is string => Boolean(h)).map((h) => h.toLowerCase());
+}
+
 function isSameOrigin(request: Request): boolean {
   const origin = request.headers.get('origin');
   if (!origin) {
@@ -89,9 +112,8 @@ function isSameOrigin(request: Request): boolean {
     return true;
   }
   try {
-    const originHost = new URL(origin).host;
-    const requestHost = new URL(request.url).host;
-    return originHost === requestHost;
+    const originHost = new URL(origin).host.toLowerCase();
+    return allowedHosts(request).includes(originHost);
   } catch {
     return false;
   }
