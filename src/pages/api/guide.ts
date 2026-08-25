@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { SYSTEM_PROMPT_WITH_INDEX, buildSectionContext } from '../../lib/guide-prompt';
+import { SYSTEM_PROMPT_WITH_INDEX, buildSectionContext, type GuideContext } from '../../lib/guide-prompt';
 import {
   MODEL,
   selectTier,
@@ -218,18 +218,22 @@ export const POST: APIRoute = async ({ request }) => {
     // diverge: an inferred escalation declines quietly to base rather than
     // 429ing a reader who never asked for the dear tier.
     if (decision.tier === 'deep') {
-      const budgetSpent = isRateLimited(
+      // NOTE the shape: this site's helper is checkRateLimit(), returning
+      // { allowed, retryAfterSeconds } — not the boolean isRateLimited() the
+      // other two sites use. Same idea, different signature; do not port the
+      // call blind.
+      const deepLimit = checkRateLimit(
         clientIp,
         escalatedRequestLog,
         ESCALATED_RATE_LIMIT_MAX_REQUESTS,
       );
-      if (budgetSpent) {
+      if (!deepLimit.allowed) {
         if (decision.explicit) {
           return new Response(JSON.stringify({ error: 'Too many deeper requests' }), {
             status: 429,
             headers: {
               'Content-Type': 'application/json',
-              'Retry-After': String(Math.ceil(RATE_LIMIT_WINDOW_MS / 1000)),
+              'Retry-After': String(deepLimit.retryAfterSeconds),
             },
           });
         }
