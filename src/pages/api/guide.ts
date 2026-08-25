@@ -1,5 +1,11 @@
 import type { APIRoute } from 'astro';
-import { buildPromptWithContext, type GuideContext } from '../../lib/guide-prompt';
+import { SYSTEM_PROMPT_WITH_INDEX, buildSectionContext } from '../../lib/guide-prompt';
+import {
+  MODEL,
+  selectTier,
+  buildSystemBlocks,
+  buildUserTurn,
+} from '../../lib/guide-request';
 import { extractAndRenderMath } from '../../lib/math';
 import {
   GUIDE_TOOLS,
@@ -24,14 +30,10 @@ interface ChatMessage {
 // reachable at all. A request that names a model is rejected outright (400)
 // rather than silently downgraded, so the refusal is visible to whoever sent
 // it.
-const MODEL_BASE = 'claude-haiku-4-5-20251001';
-const MODEL_DEEP = 'claude-sonnet-5';
-
-// Ceiling on the escalated tier's output. Sonnet 5 runs adaptive thinking by
-// default and max_tokens caps thinking + text together, so the deep tier needs
-// materially more headroom than the base tier or answers truncate mid-sentence.
-const MAX_TOKENS_BASE = 2048;
-const MAX_TOKENS_DEEP = 8192;
+// Every rung is Sonnet 5; the rungs differ by `effort`, not by model.
+// Caches are model-scoped, so a model switch would throw away the whole
+// cached prefix at exactly the moment the request got expensive, while effort
+// is not part of the cached prefix at all. See guide-request.ts.
 
 const MAX_MESSAGE_LENGTH = 4000;
 const MAX_HISTORY_TURNS = 20;
@@ -184,19 +186,6 @@ export const POST: APIRoute = async ({ request }) => {
     // every other creative value resolve to the base tier.
     const escalate = body.escalate === true;
 
-    if (escalate) {
-      const deepLimit = checkRateLimit(clientIp, escalatedRequestLog, ESCALATED_RATE_LIMIT_MAX_REQUESTS);
-      if (!deepLimit.allowed) {
-        return new Response(JSON.stringify({ error: 'Too many deeper requests' }), {
-          status: 429,
-          headers: {
-            'Content-Type': 'application/json',
-            'Retry-After': String(deepLimit.retryAfterSeconds),
-          },
-        });
-      }
-    }
-
     if (!message) {
       return new Response(JSON.stringify({ error: 'Message is required' }), {
         status: 400,
@@ -218,6 +207,36 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
+    // Which rung this turn earned. Decided here and nowhere else, from the
+    // message and history the client already sends — never from a client-
+    // supplied tier field, which does not exist.
+    let decision = selectTier({ message, history, escalate });
+
+    // Every deep answer spends from the escalated budget, whether the reader
+    // pressed Deeper or the server inferred it — otherwise auto-escalation is
+    // a hole in that budget. But when the budget is gone the two cases
+    // diverge: an inferred escalation declines quietly to base rather than
+    // 429ing a reader who never asked for the dear tier.
+    if (decision.tier === 'deep') {
+      const budgetSpent = isRateLimited(
+        clientIp,
+        escalatedRequestLog,
+        ESCALATED_RATE_LIMIT_MAX_REQUESTS,
+      );
+      if (budgetSpent) {
+        if (decision.explicit) {
+          return new Response(JSON.stringify({ error: 'Too many deeper requests' }), {
+            status: 429,
+            headers: {
+              'Content-Type': 'application/json',
+              'Retry-After': String(Math.ceil(RATE_LIMIT_WINDOW_MS / 1000)),
+            },
+          });
+        }
+        decision = selectTier({ message, history, escalate, escalatedBudgetSpent: true });
+      }
+    }
+
     const apiKey = import.meta.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
       return new Response(JSON.stringify({ error: 'API key not configured' }), {
@@ -226,16 +245,13 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const systemPrompt = escalate
-      ? `${buildPromptWithContext(message, context)}
-
-DEPTH PASS
-The reader has asked for a deeper answer to the exchange above — they have
-already read the shorter one. Do not restate it. Go further: work the argument
-through rather than summarising it, name the load-bearing assumption and what
-would break it, follow the consequence past the first step, and say where the
-claim is genuinely unsettled. Length only where the extra length is doing work.`
-      : buildPromptWithContext(message, context);
+    // The layered, cacheable prompt: global material first with a breakpoint
+    // on it, then the section the reader has open with a second breakpoint,
+    // then nothing — the conversation goes in `messages`, after both.
+    const systemBlocks = buildSystemBlocks({
+      globalPrompt: SYSTEM_PROMPT_WITH_INDEX,
+      sectionContext: buildSectionContext(context),
+    });
 
     const messages = [
       ...history.map((msg) => ({
@@ -244,7 +260,11 @@ claim is genuinely unsettled. Length only where the extra length is doing work.`
       })),
       {
         role: 'user' as const,
-        content: message,
+        // Any tier-specific instruction rides the USER turn, after the last
+        // breakpoint. Appending it to the system prompt — as this endpoint
+        // used to do for the depth pass — changes the prefix and discards the
+        // entire cache at exactly the moment the request got expensive.
+        content: buildUserTurn(message, decision),
       },
     ];
 
@@ -274,6 +294,11 @@ claim is genuinely unsettled. Length only where the extra length is doing work.`
     let toolRounds = 0;
     let toolCharsUsed = 0;
     let data: any;
+    // Accumulated across ALL tool rounds, not just the final call. A question
+    // that made Alexander go and read something costs the rounds it took;
+    // reporting only the last call would under-report the real price of
+    // exactly the questions we most want to price.
+    const totals = { input: 0, cache_write: 0, cache_read: 0, output: 0 };
 
     for (;;) {
       const toolsAllowed = toolRounds < MAX_TOOL_ROUNDS && toolCharsUsed < MAX_TOOL_CHARS_TOTAL;
@@ -286,11 +311,20 @@ claim is genuinely unsettled. Length only where the extra length is doing work.`
           'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify({
-          model: escalate ? MODEL_DEEP : MODEL_BASE,
-          max_tokens: escalate ? MAX_TOKENS_DEEP : MAX_TOKENS_BASE,
-          system: systemPrompt,
+          model: MODEL,
+          max_tokens: decision.maxTokens,
+          // Sonnet 5 defaults to `high` effort when omitted, so silence here
+          // means silently paying for `high` on every trivial question.
+          output_config: { effort: decision.effort },
+          system: systemBlocks,
           messages: conversation,
-          ...(toolsAllowed ? { tools: GUIDE_TOOLS } : {}),
+          // `tools` ALWAYS goes on the wire, byte-identical, every round.
+          // Tools render at position 0 of the prefix — ahead of `system` — so
+          // dropping the array would change byte 0 and invalidate the ENTIRE
+          // cache on the last and most context-heavy call. tool_choice
+          // reaches the same end and preserves the tools+system cache.
+          tools: GUIDE_TOOLS,
+          ...(toolsAllowed ? {} : { tool_choice: { type: 'none' } }),
         }),
       });
 
@@ -304,6 +338,11 @@ claim is genuinely unsettled. Length only where the extra length is doing work.`
       }
 
       data = await response.json();
+      const ru = data?.usage ?? {};
+      totals.input += ru.input_tokens ?? 0;
+      totals.cache_write += ru.cache_creation_input_tokens ?? 0;
+      totals.cache_read += ru.cache_read_input_tokens ?? 0;
+      totals.output += ru.output_tokens ?? 0;
 
       if (!toolsAllowed || data?.stop_reason !== 'tool_use') break;
 
@@ -336,6 +375,15 @@ claim is genuinely unsettled. Length only where the extra length is doing work.`
       conversation.push({ role: 'user', content: toolResults });
     }
 
+    // Cache verification. If cache_read stays at zero across repeated
+    // identical-prefix requests, a silent invalidator has crept into the
+    // prefix and the layering above is doing nothing.
+    console.log(
+      `[guide] model=${MODEL} effort=${decision.effort} reason=${decision.reason} ` +
+        `rounds=${toolRounds} input=${totals.input} cache_write=${totals.cache_write} ` +
+        `cache_read=${totals.cache_read} output=${totals.output}`,
+    );
+
     // Take the first TEXT block, not content[0]: the escalated tier runs with
     // adaptive thinking, so content[0] can be a thinking block.
     const textBlock = Array.isArray(data.content)
@@ -356,7 +404,12 @@ claim is genuinely unsettled. Length only where the extra length is doing work.`
       // Which tier actually served this answer, decided here and nowhere else.
       // The client uses it to label the response and to hide the Deeper button
       // once the deep tier has already answered.
-      tier: escalate ? 'deep' : 'base',
+      tier: decision.tier,
+      // Why this tier. Never taken from the request; always the server's own
+      // decision.
+      tierReason: decision.reason,
+      // Token accounting, returned so the caching is verifiable from outside.
+      usage: { ...totals, rounds: toolRounds },
       // Which site resources Alexander actually went and read to answer this.
       // Diagnostic, not display: it is how you tell "he read the section" from
       // "he talked about the section".

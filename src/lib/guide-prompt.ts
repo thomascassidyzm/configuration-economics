@@ -401,7 +401,36 @@ function getPropositionsForSection(sectionId: string): string {
   return `\n\nRELEVANT PROPOSITIONS:\n${lines.join('\n')}`;
 }
 
+/**
+ * The PER-SECTION layer of the prompt — and nothing else.
+ *
+ * Everything that changes when the reader moves: which section they have open,
+ * its propositions, their mode, any attack focus, the live section text. It is
+ * returned SEPARATELY from SYSTEM_PROMPT_WITH_INDEX so the two can be sent as
+ * distinct cacheable blocks with a `cache_control` breakpoint between them
+ * (see guide-request.ts).
+ *
+ * That separation is the point: glued into one string, one cache entry is
+ * keyed on the section, so every move between sections paid to re-read the
+ * whole guide prompt and index from scratch.
+ */
+export function buildSectionContext(context: GuideContext): string | null {
+  const block = buildContextBlock(context).trim();
+  return block.length > 0 ? block : null;
+}
+
+/**
+ * The old single-string form. Kept for any caller that still wants one string,
+ * but it is NOT the cacheable path — prefer SYSTEM_PROMPT_WITH_INDEX plus
+ * buildSectionContext(), assembled by buildSystemBlocks().
+ */
 export function buildPromptWithContext(userMessage: string, context: GuideContext): string {
+  return SYSTEM_PROMPT_WITH_INDEX + buildContextBlock(context);
+}
+
+export { SYSTEM_PROMPT_WITH_INDEX };
+
+function buildContextBlock(context: GuideContext): string {
   let contextBlock = '\n\n';
 
   if (context.currentSection) {
@@ -477,5 +506,5 @@ export function buildPromptWithContext(userMessage: string, context: GuideContex
   // No essay overview is appended here any more: the generated index in
   // READING THIS SITE ON DEMAND is the map, and it covers more than this
   // section's neighbours ever did.
-  return SYSTEM_PROMPT_WITH_INDEX + contextBlock;
+  return contextBlock;
 }
