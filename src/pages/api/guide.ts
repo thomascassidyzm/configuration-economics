@@ -1,6 +1,14 @@
 import type { APIRoute } from 'astro';
 import { buildPromptWithContext, type GuideContext } from '../../lib/guide-prompt';
 import { extractAndRenderMath } from '../../lib/math';
+import {
+  GUIDE_TOOLS,
+  runGuideTool,
+  truncate,
+  MAX_TOOL_ROUNDS,
+  MAX_TOOL_CHARS_TOTAL,
+  MAX_TOOL_CHARS_PER_RESULT,
+} from '../../lib/guide-tools';
 
 export const prerender = false;
 
@@ -240,31 +248,94 @@ claim is genuinely unsettled. Length only where the extra length is doing work.`
       },
     ];
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: escalate ? MODEL_DEEP : MODEL_BASE,
-        max_tokens: escalate ? MAX_TOKENS_DEEP : MAX_TOKENS_BASE,
-        system: systemPrompt,
-        messages,
-      }),
-    });
+    // ---------------------------------------------------------------------
+    // Bounded tool loop.
+    //
+    // Alexander carries the site's INDEX in his prompt and reads the TEXT on
+    // demand through read_section, so publishing a section and updating the
+    // guide are the same act. The loop is a plain `while` around the same
+    // non-streaming call the endpoint always made — no SSE plumbing.
+    //
+    // It is bounded twice over: at most MAX_TOOL_ROUNDS rounds, and at most
+    // MAX_TOOL_CHARS_TOTAL characters of fetched content per user message.
+    // When either bound is reached the final call is made with no `tools`
+    // array at all, so the model cannot ask again and must answer in text.
+    //
+    // Tool rounds sit INSIDE one already-rate-limited request, so the per-IP
+    // limits above are unchanged. max_tokens caps each call's own output, not
+    // the transcript, so the deep tier's headroom is unaffected by rounds;
+    // tool results are input tokens.
+    //
+    // Resolution is in-process (see guide-tools.ts) — no network hop, no path
+    // or URL ever taken from the model.
+    // ---------------------------------------------------------------------
+    const conversation: unknown[] = [...messages];
+    const readIds: string[] = [];
+    let toolRounds = 0;
+    let toolCharsUsed = 0;
+    let data: any;
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Anthropic API error:', error);
-      return new Response(JSON.stringify({ error: 'Guide unavailable' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
+    for (;;) {
+      const toolsAllowed = toolRounds < MAX_TOOL_ROUNDS && toolCharsUsed < MAX_TOOL_CHARS_TOTAL;
+
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: escalate ? MODEL_DEEP : MODEL_BASE,
+          max_tokens: escalate ? MAX_TOKENS_DEEP : MAX_TOKENS_BASE,
+          system: systemPrompt,
+          messages: conversation,
+          ...(toolsAllowed ? { tools: GUIDE_TOOLS } : {}),
+        }),
       });
+
+      if (!response.ok) {
+        const error = await response.text();
+        console.error('Anthropic API error:', error);
+        return new Response(JSON.stringify({ error: 'Guide unavailable' }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      data = await response.json();
+
+      if (!toolsAllowed || data?.stop_reason !== 'tool_use') break;
+
+      const blocks: any[] = Array.isArray(data.content) ? data.content : [];
+      const toolUses = blocks.filter((b) => b?.type === 'tool_use');
+      if (toolUses.length === 0) break;
+
+      toolRounds += 1;
+      // Push the assistant turn back VERBATIM — thinking blocks and their
+      // signatures must survive intact on the escalated tier.
+      conversation.push({ role: 'assistant', content: blocks });
+
+      const toolResults = toolUses.map((tu) => {
+        const remaining = MAX_TOOL_CHARS_TOTAL - toolCharsUsed;
+        let text: string;
+        if (remaining <= 0) {
+          text =
+            'Reading budget for this question is used up. Answer from what you ' +
+            'have already read, and say plainly if that means you cannot fully ' +
+            'answer.';
+        } else {
+          const result = runGuideTool(tu.name, tu.input);
+          text = truncate(result.text, Math.min(MAX_TOOL_CHARS_PER_RESULT, remaining));
+          toolCharsUsed += text.length;
+          if (result.found && typeof tu.input?.id === 'string') readIds.push(tu.input.id);
+        }
+        return { type: 'tool_result', tool_use_id: tu.id, content: text };
+      });
+
+      conversation.push({ role: 'user', content: toolResults });
     }
 
-    const data = await response.json();
     // Take the first TEXT block, not content[0]: the escalated tier runs with
     // adaptive thinking, so content[0] can be a thinking block.
     const textBlock = Array.isArray(data.content)
@@ -286,6 +357,10 @@ claim is genuinely unsettled. Length only where the extra length is doing work.`
       // The client uses it to label the response and to hide the Deeper button
       // once the deep tier has already answered.
       tier: escalate ? 'deep' : 'base',
+      // Which site resources Alexander actually went and read to answer this.
+      // Diagnostic, not display: it is how you tell "he read the section" from
+      // "he talked about the section".
+      reads: readIds,
       context: context,
     }), {
       status: 200,

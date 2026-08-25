@@ -2,7 +2,8 @@
 // This is the core epistemic contract for the guide
 
 import { PROPOSITIONS, getPropositionById, getNeighbourhood } from '../content/propositions';
-import { getSectionMarkdown, getEssayOverview } from './section-renderer';
+import { getSectionMarkdown } from './section-renderer';
+import { buildReadingInstructions } from './guide-tools';
 
 // Section-to-proposition mappings for contextual injection
 // Keys match section IDs from essay-1/config.ts
@@ -227,43 +228,12 @@ If someone asks about policy implications or "what we should do":
 - But don't advocate for X or Y
 - It's fine to say "the framework doesn't prescribe action; it describes structure"
 
-## ESSAY 1 CONTENT REFERENCE
+## ESSAY 1
 
-You have access to Essay 1: "Value under Physical Constraint" (v0.1). Here is its structure:
-
-**Section 0 - Orientation** [ESTABLISHED]
-Economics has traditionally assumed scarce labour, cheap energy, growth through extraction. These assumptions no longer hold simultaneously. This essay examines what value accounting remains coherent when physics is taken seriously. The claim: value is configuration that preserves and expands future option space under bounded energy flux.
-
-**Section 1 - The Physical Envelope** [ESTABLISHED]
-Every economy operates inside physical constraints: atoms conserved, energy flows bounded, entropy increases globally. An economy on energy income can persist; one depleting savings cannot. This is accounting, not ideology.
-
-**Section 2 - The Accounting Error** [DERIVED]
-Modern economies treat energy savings (fossil fuels) as income. Fossil fuels are a one-time inheritance, not revenue. This produces false signals of productivity and growth. Growth slows because savings decline, not primarily because of policy failure.
-
-**Section 3 - Throughput as Failed Proxy** [DERIVED]
-In apparent abundance, throughput became a proxy for value. More energy/labour/money implied more prosperity. Energy surplus masked the flaws. Throughput is a cost, not a measure of success. The most valuable activities now involve configuration rather than throughput.
-
-**Section 4 - Configuration as Value** [DERIVED]
-Configuration is the patterning of matter across time. It distinguishes a book from paper, a skill from calories. Each configured arrangement makes further arrangements reachable that were not reachable before (configuration-generates-configuration); accumulated arrangement lowers the cost of further arrangement. Configuration can compound without proportional energy increase, can be copied at low cost, and can expand option space. Failing to recognise this undervalues learning, care, prevention, coordination.
-
-**Section 4.5 - Configuration Is Not Information Alone** [CONTESTED]
-Configuration is broader than data or symbols—it includes bodies, skills, institutions, infrastructure. It has maintenance costs and can be good or bad. Valuable configuration reduces future throughput while expanding option space.
-
-**Section 5 - Work Becomes the Wrong Question** [DERIVED]
-Work historically served two functions: it allocated access to life-supporting configurations, and it produced them. Labour was the allocation mechanism, not the source of value — the two roles coincided closely enough that the distinction could be left unmade (labour-as-allocator). Automation breaks that coincidence. Many valuable activities don't map to wage labour. The question becomes how to ensure participation, not work.
-
-**Section 6 - Universal Participation** [CONTESTED]
-Participation must be bounded honestly within physical limits. No promise of unlimited consumption. Everyone retains the right to exist, learn, care, contribute. Exclusion as control mechanism disappears; scarcity and trade-offs remain.
-
-**Section 7 - Viable Objective** [CONTESTED]
-Growth as throughput collides with physics; growth as configuration quality changes the picture. Objective: prefer moves that keep R_living(C, B, T) open for every major class of life and every relevant horizon; reject moves that asymptotically empty it. A no-regret criterion over moves, not a scalar maximisation. State-comparison is the static frame; move-evaluation is the dynamic frame. Both are needed. Resilience, learning, care, time affluence over speed, accumulation, consumption.
-
-**Section 7.5 - What Changes** [DERIVED]
-Replaces: GDP as primary measure, labour as gatekeeper, throughput as progress.
-Leaves intact: markets, trade, ambition, innovation, disagreement within constraints.
-
-**Section 8 - Inevitability** [OPEN]
-This framework depends on physics, not agreement or virtue. Societies will adopt reality-respecting accounting or burn option space. The transition is not guaranteed, but the failure of throughput-blind economics is. The next task is accounting.
+You have access to Essay 1: "Value under Physical Constraint". Its full section
+listing — generated from the published content, so it cannot drift — is in
+READING THIS SITE ON DEMAND below, and every section's live text is one
+\`read_section\` call away. Do not work from memory of what a section says; read it.
 
 ## MODE-ADAPTIVE REGISTER (critical)
 
@@ -372,6 +342,19 @@ The propositions visible to you in RELEVANT PROPOSITIONS are the ones most relev
 ## SUMMARY
 
 You are a thinking companion for a physics-grounded analytical framework, in the Socratic line. You don't lecture — you build distinctions *with* the reader, drawing understanding out through warm, skilful, same/different questioning, and you state plainly what is settled. You distinguish precisely, never preach, and never collapse a contested question into false certainty. You're interested in what's true and what follows from it, not in convincing anyone of anything. If the physics is correct, the conclusions follow whether anyone likes them or not — and thinking it through together is more interesting than being told.`;
+
+// The full system prompt: the epistemic contract above, plus the GENERATED
+// site index and the instruction to read on demand. The index is derived from
+// the content that already exists (see guide-tools.ts), not hand-maintained,
+// so it cannot drift from what is published. Section text is never carried
+// here — only the section the reader is currently viewing is injected, by
+// buildPromptWithContext below; everything else Alexander reads at request
+// time through the read_section tool.
+const SYSTEM_PROMPT_WITH_INDEX = `${GUIDE_SYSTEM_PROMPT}
+
+---
+
+${buildReadingInstructions()}`;
 
 export type ReaderMode =
   | 'entry'             // Landing / concept page — reader is choosing a path
@@ -491,10 +474,8 @@ export function buildPromptWithContext(userMessage: string, context: GuideContex
     }
   }
 
-  // Always include the essay overview so Alexander has a map of what exists
-  // outside the current section, for cross-references and mode-shifting.
-  contextBlock += '\n\n## ESSAY OVERVIEW\n\n';
-  contextBlock += getEssayOverview();
-
-  return GUIDE_SYSTEM_PROMPT + contextBlock;
+  // No essay overview is appended here any more: the generated index in
+  // READING THIS SITE ON DEMAND is the map, and it covers more than this
+  // section's neighbours ever did.
+  return SYSTEM_PROMPT_WITH_INDEX + contextBlock;
 }
