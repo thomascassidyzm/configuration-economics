@@ -9,10 +9,30 @@ W, PH, PAD_L, PAD_R, PAD_T, PAD_B = 760, 250, 62, 18, 40, 46
 
 
 def load(logdir):
-    out = {}
+    """Prefer the .series.json written at run end; fall back to rebuilding the series
+    from the incremental .jsonl so a run killed mid-flight is still plottable."""
+    out, seen = {}, set()
     for f in sorted(pathlib.Path(logdir).glob("*.series.json")):
         d = json.loads(f.read_text())
         out.setdefault(d["meta"]["condition"], {})[d["meta"]["seed"]] = d
+        seen.add(f.name[:-len(".series.json")])
+    for f in sorted(pathlib.Path(logdir).glob("*.jsonl")):
+        if f.stem in seen:
+            continue
+        meta, series = None, []
+        for line in f.open():
+            try:
+                d = json.loads(line)
+            except json.JSONDecodeError:
+                continue                      # a truncated final line from a killed run
+            if d.get("type") == "meta":
+                meta = d
+            elif d.get("type") == "metrics":
+                series.append(d)
+        if meta and series:
+            out.setdefault(meta["condition"], {})[meta["seed"]] = {"meta": meta, "series": series,
+                "cost_usd": None, "partial": True}
+            print(f"note: {f.name} rebuilt from jsonl ({len(series)} ticks, run incomplete)")
     return out
 
 
