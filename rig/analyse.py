@@ -83,3 +83,16 @@ if __name__ == "__main__":
         print(f"{k:22s}" + "".join(f"{mean(by[c],k):12.2f}" for c in "ABC" if c in by))
     print("\nseeds:", {c: [r['seed'] for r in by[c]] for c in by})
     json.dump({c: by[c] for c in by}, open(pathlib.Path(logdir)/"summary.json","w"), indent=1)
+
+def markdown_table(logdir, keys=None):
+    by = summarise(logdir)
+    keys = keys or ["sum_peak","sum_auc","sum_end","min_mean","min_floor","joint_peak","joint_mean",
+                    "artefact_types_end","artefacts_end","co_built_peak","mean_integrity_end",
+                    "builds","maintains","deposits","withdraw_other","dismantle_other",
+                    "held_end","resources_left","decayed","invalid","parse_failures","cost_usd"]
+    cs = [c for c in "ABC" if c in by]
+    out = ["| measure | " + " | ".join(f"{c}" for c in cs) + " |",
+           "|---|" + "---|" * len(cs)]
+    for k in keys:
+        out.append(f"| {k} | " + " | ".join(f"{mean(by[c],k):.2f}" for c in cs) + " |")
+    return "\n".join(out)
