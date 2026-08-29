@@ -16,7 +16,19 @@ from world import CRAFTS, BUILDS, RESOURCES, VISION, cheb
 
 
 def agent_omega(w, ag):
-    caps, joint = 0, 0
+    """Returns (omega, joint_strict, joint_other).
+
+    joint_strict = Tom's JOINT: recipes enabled by a CO-PROVENANCED artefact
+                   (contributor set >= 2 agents). Requires someone to have
+                   maintained another agent's build, so it can only appear once
+                   decay bites.
+    joint_other  = secondary diagnostic, labelled as such in the report: recipes
+                   this agent can only execute because SOMEONE ELSE built the
+                   enabler. Weaker, appears earlier, added so a zero on the strict
+                   measure can be told apart from a world in which no cross-agent
+                   enablement exists at all.
+    """
+    caps, joint, joint_other = 0, 0, 0
     for r in RESOURCES:
         if any(n.kind == r and n.stock > 0 and cheb(ag.x, ag.y, n.x, n.y) <= VISION
                for n in w.nodes):
@@ -33,23 +45,26 @@ def agent_omega(w, ag):
             caps += 1
             if any(len(a.contributors) >= 2 for a in hits):
                 joint += 1
+            if any(a.builder != ag.aid for a in hits):
+                joint_other += 1
     for art, mats in BUILDS.items():
         if all(ag.inv.get(k, 0) >= v for k, v in mats.items()):
             caps += 1
-    return caps, joint
+    return caps, joint, joint_other
 
 
 def snapshot(w):
-    omegas, joints = [], 0
+    omegas, joints, joints_other = [], 0, 0
     for ag in w.agents:
-        o, j = agent_omega(w, ag)
+        o, j, jo = agent_omega(w, ag)
         omegas.append(o)
         joints += j
+        joints_other += jo
     alive = w.artefacts
     return {
         "tick": w.tick,
         "sum": sum(omegas), "min": min(omegas), "max": max(omegas),
-        "mean": sum(omegas) / len(omegas), "joint": joints,
+        "mean": sum(omegas) / len(omegas), "joint": joints, "joint_other": joints_other,
         "omegas": omegas,
         "artefact_types": len({a.kind for a in alive}),
         "artefacts_alive": len(alive),
