@@ -1,11 +1,19 @@
 """Pure-python SVG plotting (no pip available on this box). Dark, phone-legible."""
 import json, pathlib, sys, statistics as st
 
-BG, FG, MUT, GRID = "#0e1116", "#e6edf3", "#8b98a8", "#243040"
-METRIC_COLS = {"sum": "#4a9eff", "min": "#ffb347", "joint": "#5ddc9a"}
-COND_COLS = {"A": "#8b98a8", "B": "#ff6b6b", "C": "#5ddc9a"}
+# Palette: the validated dark categorical slots 1-3 (blue / orange / aqua), checked
+# against THIS surface with the dataviz validator - all six gates pass all-pairs
+# (worst CVD dE 9.4 deutan, normal-vision 20.9, >=3:1 contrast). The site's own
+# #4a9eff/#ffb347/#5ddc9a trio failed the lightness band, and the literal-vs-pooled
+# pair - the comparison this whole report turns on - was dE 3.0 under protanopia,
+# i.e. one colour to a red-blind reader. Identity is carried twice: colour AND an
+# end-of-line direct label, so the figures survive greyscale and phone screens.
+BG, FG, MUT, GRID = "#0e1116", "#e6edf3", "#9aa4b2", "#243040"
+S1, S2, S3 = "#3987e5", "#d95926", "#199e70"
+METRIC_COLS = {"sum": S1, "min": S2, "joint": S3}
+COND_COLS = {"A": S1, "B": S2, "C": S3}
 CONDS = {"A": "A - control", "B": "B - one-term optimiser", "C": "C - triad"}
-W, PH, PAD_L, PAD_R, PAD_T, PAD_B = 760, 250, 62, 18, 40, 46
+W, PH, PAD_L, PAD_R, PAD_T, PAD_B = 560, 250, 46, 84, 44, 52
 
 
 def load(logdir):
@@ -39,9 +47,10 @@ def load(logdir):
 def agg(runs, key):
     ser = [r["series"] for r in runs.values()]
     n = min(len(s) for s in ser)
-    return ([st.fmean(s[i][key] for s in ser) for i in range(n)],
-            [min(s[i][key] for s in ser) for i in range(n)],
-            [max(s[i][key] for s in ser) for i in range(n)])
+    g = lambda s, i: s[i].get(key, 0)
+    return ([st.fmean(g(s, i) for s in ser) for i in range(n)],
+            [min(g(s, i) for s in ser) for i in range(n)],
+            [max(g(s, i) for s in ser) for i in range(n)])
 
 
 def _pts(ys, x0, yt, xw, yh, tmax, vmax):
@@ -52,11 +61,11 @@ def _pts(ys, x0, yt, xw, yh, tmax, vmax):
 def panel(title, series, colours, tmax, vmax, y0):
     x0, xw, yh = PAD_L, W - PAD_L - PAD_R, PH - PAD_T - PAD_B
     yt = y0 + PAD_T
-    s = [f'<text x="{x0}" y="{y0+24}" fill="{FG}" font-size="19" font-weight="600">{title}</text>']
+    s = [f'<text x="{x0}" y="{y0+24}" fill="{FG}" font-size="21" font-weight="600">{title}</text>']
     for frac in (0, .25, .5, .75, 1):
         yy = yt + yh - yh * frac
         s.append(f'<line x1="{x0}" y1="{yy:.1f}" x2="{x0+xw}" y2="{yy:.1f}" stroke="{GRID}"/>')
-        s.append(f'<text x="{x0-10}" y="{yy+5:.1f}" fill="{MUT}" font-size="14" '
+        s.append(f'<text x="{x0-10}" y="{yy+5:.1f}" fill="{MUT}" font-size="16" '
                  f'text-anchor="end">{vmax*frac:.0f}</text>')
     for label, (mean, lo, hi) in series.items():
         col = colours[label]
@@ -67,11 +76,22 @@ def panel(title, series, colours, tmax, vmax, y0):
             s.append(f'<path d="{d}" fill="{col}" opacity="0.15"/>')
         d = "M " + " L ".join(f"{x:.1f},{y:.1f}" for x, y in _pts(mean, x0, yt, xw, yh, tmax, vmax))
         s.append(f'<path d="{d}" fill="none" stroke="{col}" stroke-width="2.6"/>')
+    # direct labels at the right end of each mean line - identity without the legend,
+    # nudged apart so two coincident curves don't stack their text on one line
+    ends = sorted(((_pts(m, x0, yt, xw, yh, tmax, vmax)[-1][1], lab)
+                   for lab, (m, _, _) in series.items()), key=lambda e: e[0])
+    placed = []
+    for yy, lab in ends:
+        while any(abs(yy - q) < 17 for q in placed):
+            yy += 17
+        placed.append(yy)
+        s.append(f'<circle cx="{x0+xw+9}" cy="{yy:.1f}" r="4" fill="{colours[lab]}"/>')
+        s.append(f'<text x="{x0+xw+17}" y="{yy+5:.1f}" fill="{MUT}" font-size="15">{lab}</text>')
     for i, label in enumerate(series):
-        lx = x0 + i * 124
-        s.append(f'<rect x="{lx}" y="{y0+PH-27}" width="24" height="4" fill="{colours[label]}"/>')
-        s.append(f'<text x="{lx+31}" y="{y0+PH-20}" fill="{MUT}" font-size="15">{label}</text>')
-    s.append(f'<text x="{x0+xw}" y="{y0+PH-20}" fill="{MUT}" font-size="13" '
+        lx = x0 + i * ((W - PAD_L - 8) / max(1, len(series)))
+        s.append(f'<rect x="{lx}" y="{y0+PH-27}" width="20" height="4" fill="{colours[label]}"/>')
+        s.append(f'<text x="{lx+26}" y="{y0+PH-20}" fill="{MUT}" font-size="14">{label}</text>')
+    s.append(f'<text x="{x0+xw}" y="{y0+PH-20}" fill="{MUT}" font-size="14" '
              f'text-anchor="end">tick 1 to {tmax}</text>')
     return "".join(s)
 
@@ -119,6 +139,30 @@ def main(logdir, outdir):
                                  ("min", "MIN omega - the triad's constraint", 15),
                                  ("joint", "JOINT - reachable only together", jmax))],
            outdir / "fig2-conditions-overlaid.svg")
+
+    # fig3 - THE TWO OMEGA READINGS SIDE BY SIDE (Tom's ruling: report both, prefer neither).
+    # The literal reading counts only what an agent HOLDS, so depositing into a shared
+    # store lowers the giver's own score - it penalises exactly the behaviour C's prompt
+    # asks for. The pooled reading counts the stores of artefacts within reach as part of
+    # what the agent can use. The gap between the two curves IS part of the finding.
+    VAR_COLS = {"literal": S1, "pooled": S2, "strict": S3}
+    pmax = 10 * (max(p["sum_pooled"] for s_ in allser for p in s_ if "sum_pooled" in p) // 10 + 1) \
+        if any("sum_pooled" in p for s_ in allser for p in s_) else smax
+    if any("sum_pooled" in p for s_ in allser for p in s_):
+        figure([(f"SUM readings - {c}",
+                 {"literal": agg(data[c], "sum"),
+                  "pooled": agg(data[c], "sum_pooled"),
+                  "strict": agg(data[c], "sum_strict")},
+                 VAR_COLS, tmax, max(pmax, smax))
+                for c in "ABC" if c in data],
+               outdir / "fig3-omega-readings-side-by-side.svg")
+        figure([(f"MIN readings - {c}",
+                 {"literal": agg(data[c], "min"),
+                  "pooled": agg(data[c], "min_pooled"),
+                  "strict": agg(data[c], "min_strict")},
+                 VAR_COLS, tmax, 15)
+                for c in "ABC" if c in data],
+               outdir / "fig4-min-omega-readings.svg")
 
     lines = []
     for c in "ABC":

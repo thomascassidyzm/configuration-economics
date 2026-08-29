@@ -3,7 +3,7 @@
 cd "$(dirname "$0")/.."
 echo "=== processes ==="
 ps -o pid,ppid,etime,rss,args -C python3 2>/dev/null | grep -E 'rig/run.py|PID' || echo "NO run.py PROCESSES ALIVE"
-echo "=== claude calls in flight: $(pgrep -fc 'local/share/claude' 2>/dev/null || echo 0) ==="
+echo "=== claude calls in flight: $(pgrep -fc -- '-p --model sonnet' 2>/dev/null || echo 0) ==="
 echo "=== progress ==="
 python3 - <<'PY'
 import json,glob,os,time
