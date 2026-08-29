@@ -13,6 +13,51 @@ NOTOOLS = ["Bash", "Read", "Edit", "Write", "Glob", "Grep", "WebFetch", "WebSear
            "Task", "TodoWrite", "NotebookEdit"]
 
 
+def extract_json(raw):
+    r"""First BALANCED brace span, string-aware; greedy fallback.
+
+    #216 finding 3: a greedy `\{.*\}` spans first-brace to last-brace across the whole
+    reply, so any stray brace in the free-text narrative turns a good answer into a parse
+    failure. Condition C's objective is verbally the most complex, so a greedy extractor
+    could drop actions at a rate that differs BY CONDITION - a confound dressed as a
+    footnote. Balanced scanning removes it; the greedy path is kept as a fallback so
+    nothing that used to parse stops parsing.
+    """
+    for i, ch in enumerate(raw):
+        if ch != "{":
+            continue
+        depth, instr, esc = 0, False, False
+        for j in range(i, len(raw)):
+            c = raw[j]
+            if instr:
+                if esc: esc = False
+                elif c == "\\": esc = True
+                elif c == '"': instr = False
+                continue
+            if c == '"': instr = True
+            elif c == "{": depth += 1
+            elif c == "}":
+                depth -= 1
+                if depth == 0:
+                    try:
+                        d = json.loads(raw[i:j + 1])
+                    except Exception:
+                        break
+                    if isinstance(d, dict) and isinstance(d.get("plan"), list):
+                        return d
+                    break
+        # keep scanning for a later object if this one wasn't the answer
+    m = re.search(r"\{.*\}", raw, re.S)
+    if m:
+        try:
+            d = json.loads(m.group(0))
+            if isinstance(d.get("plan"), list):
+                return d
+        except Exception:
+            pass
+    return None
+
+
 def call_agent(sysprompt, obs, model, effort, tries=2):
     """One agent, one tick. Returns (parsed_or_None, cost, raw, err)."""
     user = ("Current observation:\n" + json.dumps(obs, separators=(",", ":")) +
@@ -29,11 +74,8 @@ def call_agent(sysprompt, obs, model, effort, tries=2):
             env = json.loads(p.stdout)
             cost += float(env.get("total_cost_usd") or 0.0)
             raw = env.get("result", "")
-            m = re.search(r"\{.*\}", raw, re.S)
-            if not m:
-                continue
-            d = json.loads(m.group(0))
-            if isinstance(d.get("plan"), list):
+            d = extract_json(raw)
+            if d is not None:
                 return d, cost, raw, None
         except Exception as e:                       # timeout / bad JSON / CLI failure
             err = f"{type(e).__name__}: {e}"
