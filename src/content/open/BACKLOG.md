@@ -26,6 +26,7 @@ A living register of candidate work: spheres to run the lens on, artefacts to co
 
 - **The deep line** — distinguish *frozen* (built, not reaching) vs *unbuilt* (not assembled) vs *enclosed-because-funding* (the enclosure pays to create it). Shared across `held-value-not-reachable`, `coordination-bounds-reachability`. Drawing it is what lets these climb past `forming`.
 - **The selector / fitness-function specification** — externalise enough of the judgment that the firehose self-filters (the recursive-improvement thread). The Six-Hat method is a partial answer; the irreducibly-human part (truth/frame/aliveness) is the residue.
+  - **The primitive itself now has a home: `docs/canonical/the-selection-primitive.md` (2026-08-30).** It settles where the primitive is stated — one node, two scales (selection over configurations in the world; selection over candidate configurations of the work itself), with the join stated explicitly and awaiting Tom's ruling — and it leaves the *specification* of the selector open, along with the global-vs-local measurement tension and the affirmative-vs-no-regret form.
 - **The inter-cell equity question** — opened by `route-around-the-chokepoint`: what replaces the solidarity / cross-subsidy a centralised universal-service system also carried, once cells route around it? Collective ownership passes the gate *within* a cell, not *between* cells.
 - **Face-1 worked examples** — cars/tools/housing, with verified stats (drafts in `/tmp/frozen-value/`); the next visible build.
 
