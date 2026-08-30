@@ -13,6 +13,8 @@ A living register of candidate work: spheres to run the lens on, artefacts to co
 
 ## Artefacts to conceive (Fuller / viable-objective brief)
 
+- **CE RIG v1 — the world** — DESIGNED on paper (2026-08-30, `NOTES-ce-rig-v1-world-design.md`): a graded stag hunt with a durable ratchet where cooperation is strictly dominant, belief-free, for rounds 1–15 of 20 with no punishment in the action set; possibility space measured as the exact reachable cone (no proxy); razor-blade reproduced with hand-checkable arithmetic; the tail where dominance runs out kept deliberately as the B-vs-C discriminating instrument. Awaiting Tom's rulings on the three forks in its §13 before any implementation.
+
 - **Building-and-cluster microgrid template** — DRAFTED as the first definite treatment (`NOTES-ratchet-cell.md`, 2026-07-02): the nine-rung no-faith ladder, bridge-gated by three adversaries (passes-with-conditions). Next: discharge the five gate conditions; Ogwen roof + cylinder surveys; the hydro's monthly meter data.
 - **A local currency / mutual-credit design** — value-capture that pays local human time without tripping electricity-supply regulation.
 - **A community-land-trust + retrofit-fund vehicle** — the tenure lever (Ogwen Green LEAP 5): hypothecate second-home council-tax premium; buy the frontages the loop needs.
