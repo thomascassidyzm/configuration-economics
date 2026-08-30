@@ -680,6 +680,8 @@ The question splits in two.
 
 *Local* option space — the differential effect of a move on the reachable set — is tractable. Δω evaluation requires only directional comparison between pre-move and post-move reachable sets, not a global scalar. Mass extinction, monoculture conversion, fossil-fuel lock-in to 4°C are unambiguously option-space-degrading even where global ω cannot be computed. See option-space-as-chess-moves.
 
+One family of candidates is already ruled out, and the razor-blade case is what rules it out: letting a child play with razor blades widens the immediate option set and collapses the trajectory's. The instrument that approves it is local in scope (counting only what is reachable within a radius), local in time (counting what is executable at this instant — a reading that does not merely lose precision but can carry the opposite sign, since the frontier stays populated long after the trajectory has closed), and local in term (counting for one entity rather than for the agent, the non-agent, and the relationship between them). The failure is detectable without solving the measurement problem: read the trajectory-long sign triple across those three terms, and a mixed sign — any + alongside any − — marks a verdict that survives only under a flattering aggregation. In the two-agent reading, SUM rising while MIN falls is the same signal. A move that needs a favourable lens has failed. This narrows the candidate space; it does not close it.
+
 What remains open is the global state measure. Until it lands, "option space" at the state level functions as a direction for measurement rather than a measurement. At the move level, the framework already ships with a usable decision procedure.`,
     logic: {
       claim: 'Global option space as a state measure currently lacks a rigorous measurement procedure suitable for economic use; local Δω evaluation as a move measure is operational.',
@@ -687,7 +689,8 @@ What remains open is the global state measure. Until it lands, "option space" at
         'Value as defined in this work depends on option space.',
         'Backward-looking complexity measures (Assembly Index, logical depth) capture construction history, not forward potential.',
         'Candidate forward-looking state measures exist but have not been demonstrated to be economically operational.',
-        'Local Δω evaluation does not require a global state measure — it requires only directional comparison between pre-move and post-move reachable sets (option-space-as-chess-moves).'
+        'Local Δω evaluation does not require a global state measure — it requires only directional comparison between pre-move and post-move reachable sets (option-space-as-chess-moves).',
+        'Candidate measures that are local in scope, local in time, or local in a single term are ruled out by counter-example (the razor-blade case), since their verdicts reverse under a change of lens.'
       ],
       conclusion: 'The state-level measurement of option space remains a genuinely open research problem; the move-level measurement is already operational.',
       predictive: 'Operationalising the state-level measure is a prerequisite for state-comparison applications (ranking configurations, scoring economies). Move-evaluation applications (policy choices, infrastructure commitments, irreversibility detection) do not wait on it.'
@@ -696,7 +699,7 @@ What remains open is the global state measure. Until it lands, "option space" at
       coreClaim: 'Option space at the state level isn\'t measured yet. Option space at the move level — directionally — already is.',
       formalDefinition: 'Global option space as a scalar over configurations lacks a rigorous measurement procedure; existing complexity measures (Assembly Index, logical depth) are backward-looking. Local Δω evaluation on R_living(C, B, T) — the directional comparison between pre-move and post-move reachable sets — is operational, per option-space-as-chess-moves.',
       implications: 'The framework is prescriptive at the move level (next-best-move evaluation against R_living) and diagnostic at the state level (no scalar to maximise across configurations). State-comparison applications wait on the global measure; move-evaluation applications do not.',
-      openQuestions: 'Candidate global measures (reachable configurations under an exergy budget, Kauffman\'s adjacent possible, Assembly-weighted reachable sets) exist. None has been shown to be economically operational at state level. This — the global state measure — is the central remaining open problem. The move-level measure is no longer open.'
+      openQuestions: 'Candidate global measures (reachable configurations under an exergy budget, Kauffman\'s adjacent possible, Assembly-weighted reachable sets) exist. None has been shown to be economically operational at state level. This — the global state measure — is the central remaining open problem. The move-level measure is no longer open. Any candidate must survive the razor-blade case: it must be read over the trajectory, across scope, and for every term of the agent/non-agent/relationship triad, since a measure whose verdict depends on the chosen lens has failed by that fact alone.'
     },
     revisedAt: '2026-05-10',
     linksTo: ['value-option-space', 'viable-objective', 'configuration-not-information', 'option-space-as-chess-moves', 'configuration-generates-configuration']
@@ -851,6 +854,8 @@ Chess engines do not compute the full game tree. They evaluate moves by whether 
 The same operation is available here. Every policy decision, infrastructure commitment, land-use change, institutional reform is a move on the configuration. The question is local: does this move expand or contract the reachable set of life-supporting configurations, over the horizon a class of life depends on?
 
 Mass extinction events, monoculture conversions, fossil-fuel commitments locking in 4°C are unambiguously option-space-degrading even when global option space after the move is non-computable. Local gradient evaluation is tractable where global value computation isn't.
+
+The locality is in the operator, not in the object. Δ is taken one move at a time; ω is not read at an instant, inside a radius, or for a single observer. Every evaluation is scoped to a stated boundary B and a stated horizon T — the reachable set of life-supporting configurations, for a named class of observers, over the horizon that class depends on. Read the object locally instead of the operator and you have a different measure, one that can carry the opposite sign: this is the razor-blade case, and it is why B and T are stated rather than assumed.
 
 This is not new. Dave Snowden has articulated next best move as the central practical primitive in complex domains since Cynefin took its modern form. Aubin's viability theory formalises admissible trajectories under non-empty constraint sets. This work inherits both lineages and adds physical grounding — moves are evaluated over an explicit exergy budget and horizon, restricted to the class of observers that maintain themselves and persist.`,
     logic: {
