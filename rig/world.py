@@ -3,7 +3,7 @@
 Proposal/consequence separation (SwarmWorld, arXiv 2608.26081): agents author plans
 and narratives; nothing in this file reads a narrative.
 """
-import random
+import os, random
 from dataclasses import dataclass, field
 
 RESOURCES = ["fibre", "stone", "ore", "spark"]
@@ -28,12 +28,14 @@ BUILDS = {
 ALL_RECIPES = list(CRAFTS.keys()) + list(BUILDS.keys())   # 11
 OMEGA_MAX = len(RESOURCES) + len(ALL_RECIPES)             # 15
 
-GRID = 10
-VISION = 3          # Chebyshev radius for sight AND for omega-reachability
-DECAY = 2           # integrity lost per artefact per tick
-MAINTAIN_GAIN = 30
-MAINTAIN_COST = {"fibre": 1}
-N_AGENTS = 10
+GRID = int(os.environ.get("RIG_GRID", 10))
+VISION = int(os.environ.get("RIG_VISION", 3))          # Chebyshev radius for sight AND for omega-reachability
+DECAY = int(os.environ.get("RIG_DECAY", 2))            # integrity lost per artefact per tick
+MAINTAIN_GAIN = int(os.environ.get("RIG_MAINTAIN_GAIN", 30))
+MAINTAIN_COST = {"fibre": int(os.environ.get("RIG_MAINTAIN_COST_FIBRE", 1))}
+N_AGENTS = int(os.environ.get("RIG_N_AGENTS", 10))
+RESOURCE_SCALE = float(os.environ.get("RIG_RESOURCE_SCALE", 1.0))  # multiplies node stock range
+NO_DISMANTLE = os.environ.get("RIG_NO_DISMANTLE", "0") == "1"
 DIRS = {"N": (0, -1), "S": (0, 1), "E": (1, 0), "W": (-1, 0)}
 
 
@@ -74,7 +76,7 @@ class World:
                     x, y = self.rng.randrange(GRID), self.rng.randrange(GRID)
                     if not any(n.x == x and n.y == y for n in self.nodes):
                         break
-                self.nodes.append(Node(x, y, kind, self.rng.randint(15, 35)))
+                self.nodes.append(Node(x, y, kind, max(1, round(self.rng.randint(15, 35) * RESOURCE_SCALE))))
         self.artefacts = []
         self.agents = []
         for i in range(N_AGENTS):
@@ -185,6 +187,8 @@ class World:
             return True, f"{kind} {n} {item} ({a.kind} built by {a.builder})"
 
         if kind == "dismantle":
+            if NO_DISMANTLE:
+                return False, "dismantle disabled this run"
             a = self.art_at(ag.x, ag.y)
             if a is None:
                 return False, "no artefact here"
