@@ -8,7 +8,7 @@ _Published live (2026-08-30). Design on paper: a world invented and its properti
 
 These are the founding commitments, carried verbatim, and they are **named, not derived**. Heat death is the founding **frozen selection**: CE does not derive its ought from its ontology, and the system is sound exactly because it says so out loud.
 
-- **Good choices increase the total space of all possibilities** — measured **globally** and **trajectory-long**, never locally. The razor-blade example is the standing counter-case for local measurement (source: Tom's commission; the case does not yet exist as a repo document — noted honestly).
+- **Good choices increase the total space of all possibilities** — measured **globally** and **trajectory-long**, never locally. The razor-blade example is the standing counter-case for local measurement (stated canonically in `NOTES-razor-blade-case.md`).
 - **Heat death is the zero of possibility space.** The axiom and the mechanism are one statement at two scales. In this world, the heat-death state scores exactly zero (§5).
 - **CE is an accounting system for total possibility space.** The rig is a miniature of Buckminster Fuller's **World Computer** — CE's named ancestor: an accounting instrument that makes choices legible against the whole.
 - **The triad** (borrowed from Landry, load-bearing): **agent × non-agent × the relationship between them.** A good decision furthers all three. Every classic ethical failure is a **one-term optimisation**. Nesting is handled by **lenses**, not weighted sums, and **the possibility space must increase for all components through any lens — a move that needs a favourable lens has failed.**
@@ -280,4 +280,4 @@ Considered, because it would be cheaper — rejected, with reasons. v0's non-com
 
 ---
 
-*Grounding, attributed and not re-derived: positive deviance — Jerry and Monique Sternin; asset-based community development — John Kretzmann and John McKnight; the adjacent possible — Stuart Kauffman (§5.3 engages it directly); the World Computer — Buckminster Fuller, CE's named ancestor. The razor-blade counter-case and the Jeremy Vine finding are carried from Tom's commission verbatim in function; neither yet exists as a repo document, which is worth fixing independently of this design.*
+*Grounding, attributed and not re-derived: positive deviance — Jerry and Monique Sternin; asset-based community development — John Kretzmann and John McKnight; the adjacent possible — Stuart Kauffman (§5.3 engages it directly); the World Computer — Buckminster Fuller, CE's named ancestor. The razor-blade counter-case now has a canonical home — `NOTES-razor-blade-case.md`, which states it and which this design cites rather than re-derives. The Jeremy Vine finding is carried from Tom's commission verbatim in function and still does not exist as a repo document, which is worth fixing independently of this design.*
