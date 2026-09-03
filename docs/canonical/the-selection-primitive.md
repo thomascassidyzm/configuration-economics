@@ -26,6 +26,14 @@ The same primitive is named again, in CE's own repo, as the axiom the rig is bui
 
 [ASSEMBLER] The two statements are one statement. "Which configurations get selected" is the operation; "increase the total space of all possibilities" is the criterion the selection runs against; "denominated against heat death" is what makes the criterion non-arbitrary. Nothing here is to be softened into "prioritisation", "decision-making under uncertainty" or "values alignment". Selection is the word.
 
+**The primitive against distinction — the two-primitives ruling.** *[Added 2026-09-03. Status: FORMING, not RULED like the rest of this section — it comes from Tom's 2026-08-19 session as recorded in the estate's mission archive, whose own record ends "Ratification and a canonical DP node still Tom's call."]*
+
+> Desirability is a comparison WITH A DIRECTION. Comparison detects difference; it cannot rank it. **Two primitives: distinction (detects difference) and selection (orders it).** Norms, rights, taste = selections over comparisons, frozen into agreements — justice is collectively frozen selection, beauty individually frozen selection. Estate mapping: **DP is the project of the first primitive; CE is the project of the second** — least action is selection in physics, desire in an organism, taste in Tom. "The scarce thing is the selector" = of the two primitives, distinction is cheap and selection is dear.
+>
+> — `command-surface/rbf/mission-archive.md`, the 2026-08-19 session record (Tom's justice reduction, and its sharpening).
+
+[ASSEMBLER] This is the primitive's relation to distinction in one breath: comparison alone cannot rank — direction is a second thing. It also grounds §5 from the other side: "the scarce thing is the selector" is not only an observation about the work; of the two primitives, distinction is cheap and selection is dear, which is what makes the scarce thing the selector.
+
 ## 2. The denominator, and why it is named rather than derived
 
 > Heat death is the founding **frozen selection**: CE does not derive its ought from its ontology, and the system is sound exactly because it says so out loud.
@@ -105,7 +113,7 @@ Stated rather than smoothed, per the standing rule.
 
 - **The global measure.** `option-space-measurability` is unresolved and is not resolved here. Local Δω is operational; the state-level scalar is not.
 - **Global-and-trajectory-long versus local Δω.** The tension printed in §3 has no ruling. The razor-blade case is the standing counter-case for local measurement and is another worker's document; it is not written here.
-- **The strongest CE specimen is not written down.** Tom's Jeremy Vine account exists nowhere in the estate. It is named here as **awaiting Tom's own account** and is deliberately not reconstructed.
+- **The strongest CE specimen is now written down — with a correction to this bullet's own premise.** *[Updated 2026-09-03; the original read "Tom's Jeremy Vine account exists nowhere in the estate… awaiting Tom's own account".]* The finding now has a canonical node at `docs/canonical/the-jeremy-vine-finding.md`, FORMING — and its primary source turned out to be **Aran Jones's** account, not Tom's: the Talk Bollocks corpus (persisted 2026-08-29, after this node was written) carries Aran telling the story to Tom on 12 December 2020. The node's own §3 is the ledger of what that testimony does and does not support.
 - **The selector has no specification.** `src/content/open/BACKLOG.md` line 28 still names it as an open intellectual line, and this node states the primitive rather than closing it. What is externalisable (the fitness function, the gates, the method) is named; the irreducibly-human residue — truth, frame, aliveness — is named as residue and not analysed.
 - **The affirmative form is not canon.** *"Actively maximize the expansion rate, at every decision, recursively"* (`NOTES-recursive-fitness-and-bridge-test.md`) is stronger than `viable-objective`, which is defensive and no-regret. The canon carries both; nothing rules on which governs when they diverge.
 - **Selection alongside distinction.** `distinction-physics/docs/canonical/scaling-is-the-primitive.md` §8 records the same gap from the other repo: *"Selection as a primitive alongside distinction is stated in conversation and in the trinity summary… there is no separate canonical node for it in this repo."* This node is CE's answer; whether Distinction as Primitive wants its own is Tom's call.
