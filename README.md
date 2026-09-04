@@ -22,7 +22,7 @@ This isn't just content — it's a new publication format featuring:
 - **Adversarial transparency**: critiques published alongside canonical text — `/objections` (whole-framework attacks) and `/attack` (per-premise stress-testing)
 - **Worked application**: `/applications/moves` runs the framework's local Δω rule on real cases
 - **Lineage**: `/lineage` stakes the framework's specific delta against its predecessors
-- **Versioned evolution**: a living document with visible history (`/changelog`) and its in-progress drafts left readable (`/drafts`)
+- **Versioned evolution**: a living document with visible history (`/changelog`) and its settledness spine watchable on `/motion` — new thinking enters at `forming` and climbs in public; there is no separate drafts queue
 
 ## Project Structure
 
@@ -42,7 +42,7 @@ This isn't just content — it's a new publication format featuring:
 │   │   ├── applications/moves.astro # Worked local-Δω evaluations
 │   │   ├── practice.astro           # The work as an instance of its own theory
 │   │   ├── changelog.astro          # Version-grain history
-│   │   ├── drafts/                  # In-progress drafts, rendered read-only
+│   │   ├── motion.astro             # Settledness spine watchable: entry + climb per node
 │   │   ├── concept-dark.astro       # 301 → /format (legacy bookmark redirect)
 │   │   ├── concept-light.astro      # 301 → /format (legacy bookmark redirect)
 │   │   └── api/guide.ts             # Guide (Alexander) API endpoint
@@ -59,7 +59,6 @@ This isn't just content — it's a new publication format featuring:
 │   └── components/
 │       ├── GuidePanel.astro         # Right-side Guide interface
 │       └── Guide.astro              # Guide mount
-├── drafts/                          # Draft markdown (source for /drafts)
 ├── public/
 ├── CLAUDE.md                        # Project context for AI assistants
 ├── PLAN.md                          # Session log / provenance
