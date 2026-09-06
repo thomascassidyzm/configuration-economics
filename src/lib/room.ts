@@ -408,12 +408,26 @@ export function rotationDefects(sessions: RoomSession[]): string[] {
   }
 
   for (const session of sessions) {
+    // A HAT THE ROOM IS STILL WEARING IS NOT A HAT IT LEFT ON. While a
+    // session is running its last stance is open because the room is in it,
+    // and its turns are still arriving — so reporting either as a defect
+    // accuses the room of a fault that is just the present tense. This only
+    // became visible when the page started rendering sessions mid-flight;
+    // before that every session was read after it had closed. A defect that
+    // fires on correct work is worse than no defect.
+    const running = session.state === 'running';
+    const last = session.stances[session.stances.length - 1];
+
     for (const stance of session.stances) {
       if (!parseHatStance(stance.name)) continue;
-      if (stance.turns.length === 0) {
+      // Still WEARING it: the last stance of a running session, still open.
+      // A stance the room closed is finished business whatever the session
+      // state says, so a closed hat with no turns is still a real defect.
+      const inFlight = running && stance === last && stance.open;
+      if (stance.turns.length === 0 && !inFlight) {
         defects.push(`the stance "${stance.name}" was called and no turn was taken under it`);
       }
-      if (stance.open) {
+      if (stance.open && !inFlight) {
         defects.push(`the stance "${stance.name}" was never closed — the room left a hat on`);
       }
     }
@@ -485,6 +499,10 @@ export function panelDefects(session: RoomSession): string[] {
   const byIndex = new Map(session.turns.map(t => [t.index, t]));
   const hats = session.stances.filter(st => parseHatStance(st.name));
 
+  // The hat the room is still in is a round in progress, not a short one.
+  const lastStance = session.stances[session.stances.length - 1];
+  const inFlight = session.state === 'running' && lastStance?.open ? lastStance : null;
+
   hats.forEach((stance, k) => {
     // The announced order, started one place further along for each new hat.
     const expected = panel.map((_, i) => panel[(i + k) % panel.length]);
@@ -492,6 +510,19 @@ export function panelDefects(session: RoomSession): string[] {
       .map(i => byIndex.get(i))
       .filter((t): t is RoomTurn => Boolean(t))
       .map(t => t.model ?? t.speaker);
+
+    // A round still being spoken is judged on what it has done so far: if the
+    // turns taken match the announced order as a PREFIX, there is nothing
+    // wrong yet and saying so would be a false alarm on a live page. If they
+    // have already diverged, that is a real defect and it is reported now
+    // rather than held back until the round happens to end.
+    if (stance === inFlight && spoke.length < expected.length) {
+      const prefix = expected.slice(0, spoke.length);
+      if (spoke.join('|') !== prefix.join('|')) {
+        out.push(`under "${stance.name}", still being spoken, the panel has gone ${spoke.join(', ')} — the announced order for this hat starts ${prefix.join(', ')}`);
+      }
+      return;
+    }
 
     if (spoke.length !== expected.length) {
       out.push(`under "${stance.name}" the panel of ${panel.length} spoke ${spoke.length} times — the panel speaks once each, with no pass and no skip`);

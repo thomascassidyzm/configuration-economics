@@ -342,3 +342,72 @@ describe('the panel takes its turns', () => {
     expect(panelDefects(old)).toEqual([]);
   });
 });
+
+// A session read WHILE IT RUNS is a different thing from a session read after
+// it closed, and the difference is easy to get wrong in exactly one direction:
+// reporting the present tense as a fault. These pin that down, because the
+// page now renders sessions mid-flight and a false defect on a live page is
+// worse than no defect at all.
+describe('a session read while it is still running', () => {
+  const running = (body: string) => parseSession(`---
+id: 9
+title: Live
+state: running
+panel: Opus, Astra, Fable
+---
+${body}`, { n: 0 });
+
+  it('does not accuse the room of leaving on the hat it is still wearing', () => {
+    const s = running(`## Stance · green hat, round one
+
+## Green · 2026-09-06 · model: Opus
+
+A turn.
+`);
+    expect(rotationDefects([s])).toEqual([]);
+  });
+
+  it('does not call a round short while it is still being spoken', () => {
+    const s = running(`## Stance · green hat, round one
+
+## Green · 2026-09-06 · model: Opus
+
+One.
+
+## Green · 2026-09-06 · model: Astra
+
+Two.
+`);
+    expect(panelDefects(s)).toEqual([]);
+  });
+
+  it('still reports an in-flight round that has already left the announced order', () => {
+    const s = running(`## Stance · green hat, round one
+
+## Green · 2026-09-06 · model: Opus
+
+One.
+
+## Green · 2026-09-06 · model: Fable
+
+Out of order.
+`);
+    expect(panelDefects(s)).toEqual([
+      'under "green hat, round one", still being spoken, the panel has gone Opus, Fable — the announced order for this hat starts Opus, Astra',
+    ]);
+  });
+
+  it('still reports a hat the room closed and left empty, and an earlier hat left on', () => {
+    const s = running(`## Stance · white hat, round one
+
+## Stance · green hat, round one
+
+## Green · 2026-09-06 · model: Opus
+
+A turn.
+`);
+    // white was never closed and it is NOT the one being worn — a real defect.
+    expect(rotationDefects([s])).toContain(
+      'the stance "white hat, round one" was never closed — the room left a hat on');
+  });
+});
