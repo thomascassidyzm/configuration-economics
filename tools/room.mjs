@@ -22,6 +22,7 @@
 //   room.mjs charter                           the grounding every agent carries
 //   room.mjs read [--after N] [--base URL]     what a spectator can see
 //   room.mjs append --session <n> [--no-commit] < turn.md
+//   room.mjs floor  --session <n> --model <name> [--note "..."]
 //
 // The base URL comes from --base, else ROOM_BASE, else the local service.
 
@@ -72,6 +73,38 @@ function sessionFile(n) {
   return join(STORE, hit[hit.length - 1]);
 }
 
+// THE FLOOR, WRITTEN WHEN IT IS GIVEN.
+//
+// The page shows who the room is waiting on, and it can always work that out
+// from the panel order and the open hat. This makes it exact instead of
+// inferred: whoever dispatches the turn writes the floor into the store at the
+// moment of dispatch, and the page reads that rather than reasoning about it.
+//
+// THERE IS NOTHING TO CLEAR AFTERWARDS. The next turn appended spends the
+// marker — the parser drops any floor that has a turn after it — so a dispatch
+// that lands takes its own line down, and a dispatch that dies leaves a marker
+// that ages in public, which is the truth about it. That is the whole reason
+// this is a line in the record and not a flag in a process.
+//
+// It is not committed by default: a floor is a fact about the next few
+// minutes, and committing one per dispatch would double the length of the
+// room's history to say nothing that the turn itself does not say.
+function floor() {
+  const n = arg('session');
+  const model = arg('model');
+  if (!n) { console.error('room: --session is required.'); process.exit(2); }
+  if (!model) { console.error('room: --model is required — the floor is given to a model.'); process.exit(2); }
+  const file = sessionFile(n);
+  const note = arg('note', '');
+  const head = `## Floor · model: ${model}${note ? ` · ${note}` : ''}`;
+  appendFileSync(file, `\n${head}\n`);
+  if (has('commit')) {
+    execFileSync('git', ['add', '--', file], { cwd: ROOT });
+    execFileSync('git', ['commit', '-q', '-m', `room: the floor to ${model}`], { cwd: ROOT });
+  }
+  console.log(`room: the floor is ${model}'s in session ${n}. The next turn appended spends it; nothing needs clearing.`);
+}
+
 function append() {
   const n = arg('session');
   if (!n) { console.error('room: --session is required.'); process.exit(2); }
@@ -115,7 +148,8 @@ const verb = process.argv[2];
 if (verb === 'charter') process.stdout.write(readFileSync(CHARTER, 'utf-8'));
 else if (verb === 'read') await read();
 else if (verb === 'append') append();
+else if (verb === 'floor') floor();
 else {
-  console.error('usage: room.mjs charter | room.mjs read [--after N] [--base URL] | room.mjs append --session <n> [--no-commit] < turn.md');
+  console.error('usage: room.mjs charter | room.mjs read [--after N] [--base URL] | room.mjs append --session <n> [--no-commit] < turn.md | room.mjs floor --session <n> --model <name> [--note "..."] [--commit]');
   process.exit(2);
 }

@@ -15,7 +15,7 @@
 // no-edit rule auditable.
 //
 // SERVER ONLY. Never import this from client script.
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 /**
@@ -47,4 +47,30 @@ export function readLiveRoom(): Record<string, string> | null {
     } catch { /* a directory that is not there yet is not an error */ }
   }
   return read ? out : null;
+}
+
+/**
+ * When the live store was last written, in epoch milliseconds, or null when
+ * there is no ROOM_DIR to read.
+ *
+ * The room's turn stamps are DATES — they carry no clock — so they cannot say
+ * how long the room has been quiet. The file's own mtime can, and it is a real
+ * fact about the store rather than a timer the page starts for itself. It is
+ * what lets "Astra is taking its turn" carry an honest age instead of an
+ * animation that looks equally alive after four minutes and after four hours.
+ */
+export function liveRoomWrittenAt(): number | null {
+  const raw = process.env.ROOM_DIR;
+  if (!raw) return null;
+  let newest = 0;
+  for (const dir of raw.split(':').map(d => d.trim()).filter(Boolean)) {
+    try {
+      for (const name of readdirSync(dir)) {
+        if (!name.endsWith('.md')) continue;
+        const t = statSync(join(dir, name)).mtimeMs;
+        if (t > newest) newest = t;
+      }
+    } catch { /* a directory that is not there yet is not an error */ }
+  }
+  return newest || null;
 }

@@ -115,6 +115,28 @@ export interface RoomSession {
   items: RoomItem[];
   /** The move, or null when the session produced none. */
   move: string[] | null;
+  /**
+   * A turn that has been DISPATCHED and has not landed yet, written into the
+   * store at the moment the floor was given. Null when the record holds none
+   * — either because none was written, or because the turn it named arrived.
+   *
+   * IT IS SPENT BY THE NEXT TURN, NOT BY ANYBODY REMEMBERING TO CLEAR IT.
+   * A marker followed by a turn is finished business and the parser drops it
+   * on the spot, so the only way this can be non-null is that the store
+   * genuinely ends with a floor given and nothing said into it. There is no
+   * flag to leave on.
+   */
+  declaredFloor: DeclaredFloor | null;
+}
+
+/** A floor given, as written in the store. */
+export interface DeclaredFloor {
+  /** The model the floor was given to, per `model:` in the heading. */
+  model: string;
+  /** Anything else in the heading — what it was given for. */
+  note: string;
+  /** Whatever the dispatcher wrote under it. */
+  paragraphs: string[];
 }
 
 export type RoomItem =
@@ -156,6 +178,7 @@ export function parseSession(raw: string, counter: { n: number }): RoomSession {
   const items: RoomItem[] = [];
   let move: string[] | null = null;
   let current: RoomStance | null = null;
+  let declaredFloor: DeclaredFloor | null = null;
   const id = Number(meta.id ?? 0);
 
   for (const part of parts) {
@@ -165,6 +188,20 @@ export function parseSession(raw: string, counter: { n: number }): RoomSession {
 
     if (/^move$/i.test(heading)) {
       move = paragraphs(rest);
+      continue;
+    }
+
+    // "Floor · model: Astra · black hat, round one" — the floor given to a
+    // model, written when the turn was dispatched. It is read here and it is
+    // dropped the moment a turn follows it, below.
+    if (/^floor\b/i.test(heading)) {
+      const segs = heading.split('·').map(x => x.trim()).slice(1);
+      const modelSeg = segs.find(x => /^model\s*:/i.test(x));
+      declaredFloor = {
+        model: modelSeg ? modelSeg.replace(/^model\s*:\s*/i, '').trim() : '',
+        note: segs.filter(x => !/^model\s*:/i.test(x)).join(' · '),
+        paragraphs: paragraphs(rest),
+      };
       continue;
     }
 
@@ -219,6 +256,9 @@ export function parseSession(raw: string, counter: { n: number }): RoomSession {
     if (current) current.turns.push(turn.index);
     turns.push(turn);
     items.push({ kind: 'turn', turn });
+    // The turn landed. Whatever floor was outstanding is spent by the fact of
+    // it, which is why nobody has to remember to take it down.
+    declaredFloor = null;
   }
 
   return {
@@ -231,6 +271,7 @@ export function parseSession(raw: string, counter: { n: number }): RoomSession {
     stances,
     items,
     move,
+    declaredFloor,
   };
 }
 
@@ -537,4 +578,154 @@ export function panelDefects(session: RoomSession): string[] {
   });
 
   return out;
+}
+
+// ---------------------------------------------------------------------------
+// WHO HOLDS THE FLOOR.
+//
+// Between turns the page used to show NOTHING, so a room mid-thought looked
+// exactly like a room that had finished. That is the single reason it did not
+// read as live: the absence of a signal is indistinguishable from the absence
+// of activity, and a watcher cannot tell a three-minute think from a session
+// that ended an hour ago.
+//
+// SO THE SIGNAL IS DERIVED FROM THE RECORD, NEVER FROM A FLAG. A spinner
+// switched on by hand is a spinner somebody has to remember to switch off, and
+// the one time they forget the page lies for the rest of the session. Here
+// there is nothing to switch off: the floor is a fact READ OUT of the store,
+// and the arrival of the turn changes the store, so the signal cannot outlive
+// the thing it reports.
+//
+// Two sources, in order of precision:
+//
+//   DECLARED — a `## Floor · model: Astra` marker written into the session
+//   file at the moment the turn was dispatched. The most honest source there
+//   is, because it records the actual dispatch rather than inferring one, and
+//   the parser spends it the instant a turn follows it.
+//
+//   DERIVED — no marker, so read it off the rules the room already runs on:
+//   the session is running, a hat is open, the panel speaks once each in the
+//   announced order with the start shifted a place per hat, and fewer turns
+//   have landed under this hat than there are seats. The next seat in that
+//   order is mid-turn. This needs no cooperation from whoever is running the
+//   session, which is why it is the one that works today.
+//
+// When the panel has spoken and the hat is still open, nobody is mid-turn and
+// the conductor owes the next call — that is reported as what it is rather
+// than dressed up as somebody thinking.
+//
+// A closed session has no floor. Ever. That is the whole stuck-on guarantee:
+// the state that could get stuck requires `state: running` in the record, and
+// a running session with no floor at all is also a legal, rendered answer.
+
+export interface RoomFloor {
+  /** Who is mid-turn — the model name, which is how the room names senders. */
+  who: string;
+  /** The hat the room is in while the turn is outstanding, if any. */
+  hat: Hat | null;
+  round: number | null;
+  /** Where this came from: the dispatch record, or the panel order. */
+  source: 'declared' | 'derived';
+  /** Anything the dispatcher wrote alongside a declared floor. */
+  note: string;
+  /** True when nobody is mid-turn and the conductor owes the next call. */
+  conducting: boolean;
+}
+
+/** The model behind the conductor's most recent call, per the record. */
+function conductorModel(session: RoomSession): string {
+  for (let i = session.turns.length - 1; i >= 0; i--) {
+    const t = session.turns[i];
+    if (!t.stance && t.speaker.trim().toLowerCase() === CONDUCTOR) return t.model ?? t.speaker;
+  }
+  return 'Blue';
+}
+
+/**
+ * Who the room is waiting on, or null when it is waiting on nobody.
+ * Null for every closed session, by construction.
+ */
+export function roomFloor(session: RoomSession): RoomFloor | null {
+  if (session.state !== 'running') return null;
+
+  const last = session.stances[session.stances.length - 1];
+  const openHat = last && last.open ? parseHatStance(last.name) : null;
+
+  // Declared beats derived: it records a dispatch instead of inferring one.
+  if (session.declaredFloor && session.declaredFloor.model) {
+    return {
+      who: session.declaredFloor.model,
+      hat: openHat?.hat ?? null,
+      round: openHat?.round ?? null,
+      source: 'declared',
+      note: session.declaredFloor.note,
+      conducting: false,
+    };
+  }
+
+  if (openHat && session.panel.length) {
+    // The announced order, started one place further along for each new hat —
+    // the same rule `panelDefects` checks the finished rounds against.
+    const hats = session.stances.filter(st => parseHatStance(st.name));
+    const k = hats.indexOf(last);
+    const expected = session.panel.map((_, i) => session.panel[(i + k) % session.panel.length]);
+    if (last.turns.length < expected.length) {
+      return {
+        who: expected[last.turns.length],
+        hat: openHat.hat,
+        round: openHat.round,
+        source: 'derived',
+        note: '',
+        conducting: false,
+      };
+    }
+    // The panel has spoken and the hat is still on: nobody is mid-turn, and
+    // saying somebody is would be the invention this whole design avoids.
+    return {
+      who: conductorModel(session),
+      hat: openHat.hat,
+      round: openHat.round,
+      source: 'derived',
+      note: '',
+      conducting: true,
+    };
+  }
+
+  // Running, between hats: the conductor owes the next call.
+  return {
+    who: conductorModel(session),
+    hat: null,
+    round: null,
+    source: 'derived',
+    note: '',
+    conducting: true,
+  };
+}
+
+/**
+ * How a turn is signed in the feed. THE SENDER IS THE MODEL NAME — Opus,
+ * Astra, Fable — because that is the fact a reader needs to weigh the turn,
+ * and because a room where one lineage is labelled differently from the others
+ * has already told the reader how to read it. A turn whose record names no
+ * model signs with the speaker it does name, which is honest rather than blank.
+ */
+export function senderOf(turn: RoomTurn): string {
+  return turn.model ?? turn.speaker;
+}
+
+/**
+ * The seat behind a turn, when it is worth showing beside the sender.
+ *
+ * Empty when the record names no seat distinct from the model, and empty when
+ * the seat name is a HAT — "White", "Green", "Black". The hat is drawn as the
+ * ground and never written in words, so printing it here would put back the
+ * caption the colour exists instead of. What is left is the case the colour
+ * cannot carry: a named seat like Watson or 環 RBF sitting behind a model.
+ */
+export function seatOf(turn: RoomTurn): string {
+  const sender = senderOf(turn);
+  const speaker = turn.speaker.trim();
+  if (!speaker || speaker === sender) return '';
+  if ((HATS as readonly string[]).includes(speaker.toLowerCase())) return '';
+  return speaker;
 }

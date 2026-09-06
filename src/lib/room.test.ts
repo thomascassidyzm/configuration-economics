@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseSession, parseHatStance, hatRotation, rotationDefects, conductorCadence, panelDefects } from './room';
+import { parseSession, parseHatStance, hatRotation, rotationDefects, conductorCadence, panelDefects, roomFloor, senderOf, seatOf } from './room';
 
 // The model name belongs to the TURN, as of that turn's stamp — never to a
 // participant as a standing label. These are the tests for that: a name is
@@ -409,5 +409,97 @@ A turn.
     // white was never closed and it is NOT the one being worn — a real defect.
     expect(rotationDefects([s])).toContain(
       'the stance "white hat, round one" was never closed — the room left a hat on');
+  });
+});
+
+describe('who holds the floor', () => {
+  const head = (state: string) => `---\nid: 9\ntitle: T\nopened: 2026-09-06\nstate: ${state}\npanel: Opus, Astra, Fable\n---\n\n`;
+  const parse = (raw: string) => parseSession(raw, { n: 0 });
+
+  it('reads a declared floor out of the store', () => {
+    const s = parse(head('running')
+      + '## Stance · white hat, round one — called by Blue\n\nOnly report.\n\n'
+      + '## White · 2026-09-06 · model: Opus\n\nA figure.\n\n'
+      + '## Floor · model: Astra · white hat, round one\n');
+    expect(s.declaredFloor?.model).toBe('Astra');
+    const f = roomFloor(s)!;
+    expect(f.who).toBe('Astra');
+    expect(f.source).toBe('declared');
+    expect(f.hat).toBe('white');
+    expect(f.conducting).toBe(false);
+  });
+
+  it('spends the declared floor on the next turn, with nothing to clear', () => {
+    const s = parse(head('running')
+      + '## Stance · white hat, round one — called by Blue\n\nOnly report.\n\n'
+      + '## White · 2026-09-06 · model: Opus\n\nA figure.\n\n'
+      + '## Floor · model: Astra\n\n'
+      + '## White · 2026-09-06 · model: Astra\n\nAnother figure.\n');
+    expect(s.declaredFloor).toBeNull();
+    // Falls back to the derived reading: two of three have spoken.
+    const f = roomFloor(s)!;
+    expect(f.who).toBe('Fable');
+    expect(f.source).toBe('derived');
+  });
+
+  it('derives the floor from the panel order and the open hat', () => {
+    const s = parse(head('running')
+      + '## Stance · white hat, round one — called by Blue\n\nOnly report.\n\n'
+      + '## White · 2026-09-06 · model: Opus\n\nA figure.\n');
+    const f = roomFloor(s)!;
+    expect(f).toMatchObject({ who: 'Astra', hat: 'white', round: 1, source: 'derived', conducting: false });
+  });
+
+  it('shifts the start a place for each new hat', () => {
+    const s = parse(head('running')
+      + '## Stance · white hat, round one — called by Blue\n\nR.\n\n'
+      + '## White · 2026-09-06 · model: Opus\n\nа.\n\n'
+      + '## White · 2026-09-06 · model: Astra\n\nb.\n\n'
+      + '## White · 2026-09-06 · model: Fable\n\nc.\n\n'
+      + '## Stance ends · white hat, round one\n\nDone.\n\n'
+      + '## Stance · green hat, round one — called by Blue\n\nOnly generate.\n');
+    // Second hat, so the announced order starts a place along: Astra first.
+    expect(roomFloor(s)!.who).toBe('Astra');
+  });
+
+  it('says the conductor owes the call once the panel has spoken', () => {
+    const s = parse(head('running')
+      + '## Blue · 2026-09-06 · model: Fable\n\nWhite first.\n\n'
+      + '## Stance · white hat, round one — called by Blue\n\nR.\n\n'
+      + '## White · 2026-09-06 · model: Opus\n\na.\n\n'
+      + '## White · 2026-09-06 · model: Astra\n\nb.\n\n'
+      + '## White · 2026-09-06 · model: Fable\n\nc.\n');
+    const f = roomFloor(s)!;
+    expect(f.conducting).toBe(true);
+    expect(f.who).toBe('Fable'); // the model behind the conductor's last call
+  });
+
+  it('gives a closed session no floor at all — the stuck-on guarantee', () => {
+    const s = parse(head('closed')
+      + '## Stance · white hat, round one — called by Blue\n\nR.\n\n'
+      + '## White · 2026-09-06 · model: Opus\n\na.\n\n'
+      + '## Floor · model: Astra\n');
+    expect(s.declaredFloor?.model).toBe('Astra');
+    expect(roomFloor(s)).toBeNull();
+  });
+});
+
+describe('how a turn is signed', () => {
+  const t = (speaker: string, model: string | null) =>
+    parseSession(`---\nid: 9\ntitle: T\nopened: x\nstate: closed\n---\n\n## ${speaker} · 2026-09-06${model ? ` · model: ${model}` : ''}\n\nx.\n`, { n: 0 }).turns[0];
+
+  it('signs with the model, and keeps a named seat beside it', () => {
+    expect(senderOf(t('Watson', 'Opus'))).toBe('Opus');
+    expect(seatOf(t('Watson', 'Opus'))).toBe('Watson');
+  });
+
+  it('never writes the hat in words — that is what the drawn ground is for', () => {
+    expect(senderOf(t('Black', 'Fable'))).toBe('Fable');
+    expect(seatOf(t('Black', 'Fable'))).toBe('');
+  });
+
+  it('falls back to the speaker when the record names no model', () => {
+    expect(senderOf(t('Tom', null))).toBe('Tom');
+    expect(seatOf(t('Tom', null))).toBe('');
   });
 });
