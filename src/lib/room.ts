@@ -251,12 +251,28 @@ export function loadRoom(files: Record<string, string>): RoomSession[] {
 // The refusal lives in the prompt of the turn, not in this file; what lives
 // here is the audit that says whether the room kept to it.
 //
-// NO MODEL OWNS A HAT. A model pinned to black becomes a personality; a model
-// that had to argue the opposite last round cannot hide behind temperament.
-// It is also the cheapest way to see a model's blind spot: it shows up as the
-// same move under every hat. `rotationDefects` is the check that the rotation
-// actually rotated, and it is deliberately a report rather than a throw — the
-// room publishes its own defects rather than refusing to render them.
+// EVERY AGENT WEARS THE SAME HAT AT THE SAME TIME. This is de Bono's actual
+// rule and it replaces the opposed-hats arrangement session 002 ran. The
+// reason is a fact about the participants rather than a preference: models are
+// trained in a way that rewards winning an exchange, so hats held in
+// opposition at the same moment produce a scrap over terminology that READS
+// like rigour and is not. When the whole room is in one hat, the only thing
+// left to push against is the material.
+//
+// THE ADVERSARIAL PRESSURE COMES FROM THE SEQUENCE, NOT FROM OPPOSITION
+// INSIDE A ROUND. The room builds under green and then TURNS and wears black
+// at what it just built — its own turns included. Nobody is assigned the
+// objection; the room objects to itself, later. So a stance covers MANY turns
+// from many models, which is what a stance always was, and calling WHEN to
+// turn is the whole experimental design. That call belongs to blue.
+//
+// There is therefore no per-model hat assignment and no rotation to enforce:
+// the old "no model owns a hat" check is gone, because under this rule no
+// model is given one in the first place. `hatRotation` still reads back who
+// spoke under which hat, because that is a fact about the record worth having.
+// `rotationDefects` keeps only the checks that still mean something, and it is
+// deliberately a report rather than a throw — the room publishes its own
+// defects rather than refusing to render them.
 //
 // THE CONDUCTOR CALLS ONE HAT AT A TIME, LIVE. Blue is not a scheduler and the
 // hat order is NOT a rota. Blue reads the state of the room and calls the next
@@ -333,21 +349,24 @@ export function hatRotation(sessions: RoomSession[]): HatWearing[] {
 }
 
 /**
- * What the rotation got wrong, in plain sentences a reader can check against
- * the record. Empty means the rotation held.
+ * What the record got wrong about its own hats, in plain sentences a reader
+ * can check against it. Empty means the bookkeeping held.
  *
- * Four defects, and only four, because a check nobody can verify by eye is a
- * check nobody trusts: a model wearing the same hat in consecutive rounds
- * (the rotation did not rotate), a hat turn that records no model (the
- * rotation is unreadable at that point), a hat stance covering no turn at all
- * (a hat was called and nobody wore it), and a hat stance the room never
- * closed.
+ * Three defects, and only three, because a check nobody can verify by eye is a
+ * check nobody trusts: a hat turn that records no model (the record is
+ * unreadable at that point), a hat stance covering no turn at all (a hat was
+ * called and nobody wore it), and a hat stance the room never closed.
  *
- * The last one was added after session 002 published with two hats left open,
- * which the record's own bookkeeping did not notice and an outside read did.
- * A hat is a refusal with a timer on it, and a refusal nobody ends is not a
- * refusal — so an unclosed hat is a defect of the room, and the room says so
- * on its own page rather than quietly parsing around it.
+ * The unclosed-hat check was added after session 002 published with two hats
+ * left open, which the record's own bookkeeping did not notice and an outside
+ * read did. A hat is a refusal with a timer on it, and a refusal nobody ends
+ * is not a refusal.
+ *
+ * A FOURTH CHECK USED TO LIVE HERE AND HAS BEEN REMOVED: that no model wore
+ * the same hat in consecutive rounds. It enforced an arrangement that is no
+ * longer the design. The whole room wears one hat at a time, so there is no
+ * per-model assignment to rotate, and a check that enforces a superseded rule
+ * is worse than no check — it fails work that is correct.
  */
 export function rotationDefects(sessions: RoomSession[]): string[] {
   const defects: string[] = [];
@@ -355,19 +374,6 @@ export function rotationDefects(sessions: RoomSession[]): string[] {
 
   for (const w of worn) {
     if (!w.model) defects.push(`the ${w.hat} hat turn by ${w.speaker} records no model, so the rotation cannot be read there`);
-  }
-
-  // Same model, same hat, in the round immediately after the last one it wore
-  // it in. Two rounds apart is rotation working, not a defect.
-  const last = new Map<string, number>();
-  for (const w of worn) {
-    if (!w.model || w.round === null) continue;
-    const key = `${w.model}:${w.hat}`;
-    const prev = last.get(key);
-    if (prev !== undefined && w.round === prev + 1) {
-      defects.push(`${w.model} wore the ${w.hat} hat in round ${prev} and again in round ${w.round} — no model owns a hat`);
-    }
-    last.set(key, w.round);
   }
 
   for (const session of sessions) {

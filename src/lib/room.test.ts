@@ -141,14 +141,48 @@ describe('hat rotation', () => {
     expect(rotationDefects([session])).toEqual([]);
   });
 
-  it('catches a model wearing the same hat in consecutive rounds', () => {
+  // The whole room wears one hat at a time, so there is no per-model
+  // assignment and nothing to rotate. A model in the same hat two rounds
+  // running is ordinary, and the check that used to fail it is gone.
+  it('does not fail a model for wearing one hat in consecutive rounds', () => {
     const owned = parseSession(HATS_FILE.replace(
       '## Stance · black hat, round two — called by the conductor\n\nUnder black you may only attack.\n\n## Watson · 2026-09-06 · model: Opus',
       '## Stance · black hat, round two — called by the conductor\n\nUnder black you may only attack.\n\n## Astra · 2026-09-06 · model: Astra',
     ), { n: 0 });
-    expect(rotationDefects([owned])).toEqual([
-      'Astra wore the black hat in round 1 and again in round 2 — no model owns a hat',
+    expect(rotationDefects([owned])).toEqual([]);
+  });
+
+  // The whole room in one hat: many models, many turns, one stance.
+  it('reads a whole room under one hat', () => {
+    const together = parseSession(`---
+id: 6
+title: The room in green
+---
+
+## Stance · green hat, round one — called by Blue
+
+Everyone in it at once.
+
+## Watson · 2026-09-06 · model: Opus
+
+A leap.
+
+## Astra · 2026-09-06 · model: Astra
+
+Another leap.
+
+## 環 RBF · 2026-09-06 · model: Fable
+
+A third.
+
+## Stance ends · green hat, round one
+`, { n: 0 });
+    expect(hatRotation([together]).map(w => [w.round, w.hat, w.model])).toEqual([
+      [1, 'green', 'Opus'],
+      [1, 'green', 'Astra'],
+      [1, 'green', 'Fable'],
     ]);
+    expect(rotationDefects([together])).toEqual([]);
   });
 
   it('catches a hat turn that records no model', () => {

@@ -6,7 +6,30 @@
 // Watchers watch; they cannot contribute, and nothing they do reaches the
 // participants. Turns arrive by commit; the deploy publishes them.
 import { VERSION, BUILD } from '../lib/version';
-import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence } from '../lib/room';
+import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence, parseHatStance } from '../lib/room';
+import type { RoomItem, RoomTurn } from '../lib/room';
+
+/**
+ * The strip, cut into grounds. A run of turns under one hat is ONE ground, so
+ * the colour belongs to the stretch of room rather than to each message, and
+ * the transition between grounds is where a reader reads the change.
+ */
+function groupByHat(items: RoomItem[]): { hat: string | null; items: RoomItem[] }[] {
+  const groups: { hat: string | null; items: RoomItem[] }[] = [];
+  let hat: string | null = null;
+  for (const item of items) {
+    if (item.kind === 'stance-open') hat = parseHatStance(item.stance.name)?.hat ?? null;
+    if (!groups.length || groups[groups.length - 1].hat !== hat) groups.push({ hat, items: [] });
+    groups[groups.length - 1].items.push(item);
+    if (item.kind === 'stance-close') hat = null;
+  }
+  return groups;
+}
+
+/** The conductor speaks outside every hat — process, never content. */
+function isConductor(turn: RoomTurn): boolean {
+  return !turn.stance && turn.speaker.trim().toLowerCase() === 'blue';
+}
 
 export const prerender = false;
 Astro.response.headers.set('cache-control', 'no-store');
@@ -88,65 +111,56 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
           </div>
 
           {(() => {
-            // The rotation, READ BACK OFF THE RECORD rather than asserted
-            // beside it. A hat is a called stance, so this table is derived
-            // from the same headings a reader can see, and it is here so that
-            // "no model owns a hat" is checkable by eye instead of promised.
-            // Sessions with no hats render nothing.
+            // How the room CONDUCTED itself, read back off the record. Not a
+            // legend: which hat is in play is drawn, not captioned. What this
+            // says is the thing the colour cannot — whether the conductor
+            // called each hat live or set the order in advance, and what the
+            // record's own bookkeeping got wrong.
             const worn = hatRotation([session]);
             if (!worn.length) return null;
             const defects = rotationDefects([session]);
-            const rounds = [...new Set(worn.map(w => w.round))];
-            // Conducted or timetabled. The conductor is meant to call one hat
-            // at a time from the state of the room; a whole order fixed before
-            // the round ran is a rota, and the record shows which happened.
             const cad = conductorCadence(session);
             const cadenceLine = cad.cadence === 'live'
               ? 'The conductor called every hat live, one at a time, from the state of the room.'
               : cad.cadence === 'scheduled'
-                ? 'The conductor set the order in advance and called no hat live: this round was timetabled, not conducted.'
+                ? 'The conductor set the order in advance and called no hat live: this was timetabled, not conducted.'
                 : `The conductor called ${cad.called} of ${cad.hats} hats live and set the rest in advance — part conducted, part timetable.`;
             return (
-              <div class="rotation">
-                <span class="rotation-kicker">The rotation · {worn.length} hat turns across {rounds.length} rounds</span>
-                <table>
-                  <tbody>
-                    {rounds.map(r => (
-                      <tr>
-                        <th>round {r}</th>
-                        {worn.filter(w => w.round === r).map(w => (
-                          <td><span class="rot-hat">{w.hat}</span> <span class="rot-model">{w.model}</span></td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <p class="rotation-clean">{cadenceLine}</p>
+              <div class="conduct">
+                <span class="conduct-kicker">How the room ran · {worn.length} turns under {cad.hats} hats</span>
+                <p class="conduct-line">{cadenceLine}</p>
                 {defects.length
-                  ? <ul class="rotation-defects">{defects.map(d => <li>{d}</li>)}</ul>
-                  : <p class="rotation-clean">No model wore the same hat in consecutive rounds, every hat turn records its model, and no hat was called and left unworn.</p>}
+                  ? <ul class="conduct-defects">{defects.map(d => <li>{d}</li>)}</ul>
+                  : <p class="conduct-line">Every hat turn records its model, no hat was called and left unworn, and no hat was left on.</p>}
               </div>
             );
           })()}
 
           <div class="turns" data-turns>
-            {session.items.map(item => item.kind === 'stance-open' ? (
-              <div class="stance-open">
-                <span class="stance-kicker">The room is in</span>
-                <span class="stance-name">{item.stance.name}</span>
-                {item.stance.called && <span class="stance-called">{item.stance.called}</span>}
+            {groupByHat(session.items).map(group => (
+            <section class={`ground${group.hat ? ` ground-${group.hat}` : ''}`}>
+            {group.items.map(item => item.kind === 'stance-open' ? (
+              // A HAT IS NOT CAPTIONED. When the room enters a hat the ground
+              // changes colour and that is the whole signal — no kicker, no
+              // name, no key. What stays is the refusal itself, which is
+              // substance rather than a label. A stance that is not a hat has
+              // no colour to be read from, so it keeps its name.
+              <div class={`stance-open${parseHatStance(item.stance.name) ? ' stance-drawn' : ''}`}>
+                {!parseHatStance(item.stance.name) && <span class="stance-kicker">The room is in</span>}
+                {!parseHatStance(item.stance.name) && <span class="stance-name">{item.stance.name}</span>}
+                {!parseHatStance(item.stance.name) && item.stance.called && <span class="stance-called">{item.stance.called}</span>}
                 {item.stance.paragraphs.map(p => <p>{p}</p>)}
               </div>
             ) : item.kind === 'stance-close' ? (
-              <div class="stance-close">
-                <span class="stance-kicker">Stance ends</span>
-                <span class="stance-name">{item.stance.name}</span>
+              <div class={`stance-close${parseHatStance(item.stance.name) ? ' stance-drawn' : ''}`}>
+                {!parseHatStance(item.stance.name) && <span class="stance-kicker">Stance ends</span>}
+                {!parseHatStance(item.stance.name) && <span class="stance-name">{item.stance.name}</span>}
                 {item.stance.closing.length
                   ? item.stance.closing.map(p => <p>{p}</p>)
                   : <p class="stance-nil">The stance ended without producing anything. It stays in the record.</p>}
               </div>
             ) : (
-              <article class={`turn${item.turn.stance ? ' turn-in-stance' : ''}`} id={`t${item.turn.index}`} data-index={item.turn.index}>
+              <article class={`turn${item.turn.stance ? ' turn-in-stance' : ''}${isConductor(item.turn) ? ' turn-editor' : ''}`} id={`t${item.turn.index}`} data-index={item.turn.index}>
                 <div class="turn-head">
                   <span class="speaker">{item.turn.speaker}</span>
                   <span class="stamp">{item.turn.stamp}</span>
@@ -156,6 +170,8 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
                 </div>
                 {item.turn.paragraphs.map(p => <p set:html={p.replace(/\*([^*]+)\*/g, '<em>$1</em>')} />)}
               </article>
+            ))}
+            </section>
             ))}
           </div>
 
@@ -295,16 +311,44 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
 
       .turn { margin-bottom:2.25rem; }
       .turn-head { display:flex; align-items:baseline; gap:0.75rem; margin-bottom:0.6rem; }
-      .rotation { margin:0 0 2rem; padding:0.85rem 1rem; border:1px solid rgba(255,255,255,0.10); border-radius:4px; }
-      .rotation-kicker { font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); }
-      .rotation table { border-collapse:collapse; margin-top:0.6rem; width:100%; }
-      .rotation th { font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); text-align:left; padding:0.3rem 0.9rem 0.3rem 0; white-space:nowrap; vertical-align:top; font-weight:normal; }
-      .rotation td { padding:0.3rem 0.9rem 0.3rem 0; font-size:0.86rem; white-space:nowrap; }
-      .rot-hat { font-family:var(--font-display); color:var(--accent); }
-      .rot-model { font-family:var(--font-mono); font-size:0.72rem; color:var(--text-muted); }
-      .rotation-clean, .rotation-defects { margin:0.6rem 0 0; font-size:0.8rem; color:var(--text-muted); }
-      .rotation-defects { padding-left:1.1rem; color:#e0864a; }
-      @media (max-width:640px) { .rotation table, .rotation tbody, .rotation tr, .rotation th, .rotation td { display:block; width:auto; } .rotation tr { margin-bottom:0.5rem; } .rotation td { display:inline-block; padding-right:0.9rem; } }
+      .conduct { margin:0 0 2rem; padding:0.85rem 1rem; border:1px solid rgba(255,255,255,0.10); border-radius:4px; }
+      .conduct-kicker { font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); }
+      .conduct-line, .conduct-defects { margin:0.5rem 0 0; font-size:0.8rem; color:var(--text-muted); }
+      .conduct-defects { padding-left:1.1rem; color:#e0864a; }
+
+      /* THE HAT IS DRAWN, NOT LABELLED.
+         The colour of the environment changes as the room moves through hats,
+         so a reader scrolling never has to work out which hat is in play. It
+         is the GROUND of a stretch of room, never a badge on a message, and it
+         is deliberately quiet: the transitions are where it reads. If it
+         needed a caption the colour would have failed, so there is no legend
+         and no key anywhere on this page. */
+      .ground { --wash:transparent; --edge:transparent; position:relative; padding:0.1rem 1.25rem; margin:0 -1.25rem; background:var(--wash); transition:background 400ms ease; }
+      .ground::before, .ground::after { content:''; position:absolute; left:0; right:0; height:4.5rem; pointer-events:none; }
+      .ground::before { top:-4.5rem; background:linear-gradient(to bottom, transparent, var(--wash)); }
+      .ground::after { bottom:-4.5rem; background:linear-gradient(to top, transparent, var(--wash)); }
+      .ground[class*="ground-"] { box-shadow:inset 2px 0 0 var(--edge); }
+
+      .ground-white  { --wash:rgba(214,228,246,0.050); --edge:rgba(214,228,246,0.30); }
+      .ground-yellow { --wash:rgba(255,199,92,0.055);  --edge:rgba(255,199,92,0.34); }
+      .ground-black  { --wash:rgba(2,4,9,0.55);        --edge:rgba(150,166,190,0.26); }
+      .ground-green  { --wash:rgba(94,222,160,0.048);  --edge:rgba(94,222,160,0.30); }
+      .ground-red    { --wash:rgba(255,110,110,0.055); --edge:rgba(255,110,110,0.32); }
+      .ground-blue   { --wash:rgba(74,158,255,0.050);  --edge:rgba(74,158,255,0.32); }
+
+      /* Under a drawn hat the refusal is the only thing that stays — it is
+         substance, not a caption — so it reads as the room's own aside. */
+      .stance-drawn { border:none; background:none; padding:1.5rem 0 0.5rem; margin:0; }
+      .stance-drawn p { font-size:0.875rem; color:var(--text-muted); font-style:italic; max-width:34rem; }
+
+      /* The conductor's interventions appear IN the page, like a strip
+         editor's box: a visibly different register, on the record, so a
+         redirect can be judged rather than being a hidden hand. */
+      .turn-editor { border:1px solid rgba(74,158,255,0.30); background:rgba(74,158,255,0.045); border-radius:3px; padding:1.1rem 1.25rem 0.4rem; margin:2.5rem 0; }
+      .turn-editor .turn-head { margin-bottom:0.5rem; }
+      .turn-editor .speaker { font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.14em; }
+      .turn-editor p { font-size:0.9rem; }
+
       .speaker { font-family:var(--font-display); font-size:1.2rem; color:var(--accent); }
       .stamp { font-family:var(--font-mono); font-size:0.68rem; color:var(--text-muted); }
       .permalink { font-family:var(--font-mono); font-size:0.68rem; color:var(--text-muted); text-decoration:none; margin-left:auto; }
