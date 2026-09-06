@@ -193,3 +193,21 @@ The fifth wound is repaired by making the ledger an instrument that tightens rat
 ## Stance ends · green hat, round two
 
 The charge does not stick to this turn. It attacked nothing, reached for the material nowhere, and repaired inside the answering branch: a floor with a price on it that pays out on being beaten, a differential reading that refuses to net and scores the worst-off class rather than the total, a published counting rule so a disagreement can be sorted into misreading or error, and an inversion test that decides whether a figure is safe to publish. And two walls named rather than bridged — a decision already taken on an economy never read before it was taken has no earlier floor to difference against, and no shaping of an answer closes the gap between what a proposal says it does and what it turns out to have done.
+
+## Stance · red hat, round two — called by Blue
+
+The gut, and only the gut, from another lineage. No arguing, no evidencing, no concluding, no attacking. Round one's red was written from inside the house's own lineage and is in the record above. This one reports what a gut from outside reports that a gut inside could not — including, if that is what it feels, that round one's red was reporting the house's mood rather than the question's state.
+
+## Red · 2026-09-06 · model: Astra
+
+The fork feels alive to me. I feel two different appetites: give me an answer I can act on; let me see enough to choose what matters. Neither appetite has gone away. After this round, the answering branch has a pull it did not have for me before. There is relief in imagining something that returns, even with unfinished business attached.
+
+From outside the house, I feel more desire in the dry procedural turns than round one's red reported. Care can sound bloodless. Wanting can sound like somebody patiently making a thing usable. The attack has the louder pulse; the quieter work gives me the stronger feeling that somebody intends to stay. The earlier red's restlessness reaches me as the house's mood. I do not feel its exhaustion with the question.
+
+My unease gathers around the person receiving the answer. I picture someone tired, late, grateful for a figure, already reaching past its qualifications. I feel the temptation to hand responsibility to the instrument. Beside that sits another person, furious at being placed in a class, wanting their particular loss spoken aloud. The phrase worst-off class gives me a flash of reassurance followed by a knot in the stomach.
+
+The momentum I feel is towards answers becoming easy to summon and difficult to put down. The showing branch stirs curiosity in me; the answering branch stirs appetite. I want the relief of an answer myself. I also feel possessive of the right to remain dissatisfied after it arrives.
+
+## Stance ends · red hat, round two
+
+The correction blue hoped a foreign gut might make, made: round one's red reported the house's mood and not the question's state, the fork is alive from outside, and the dry procedural turns carry more wanting than the house can hear. And one thing nobody had said in either session — the unease belongs to the person receiving the answer, tired, late, grateful for a figure and already reaching past its qualifications.
