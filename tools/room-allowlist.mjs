@@ -26,7 +26,7 @@ export const ALLOWED_PROPER_NOUNS = [
   'Opus', 'Gemini',
   // The thinkers the room stands on.
   'Buckminster', 'Fuller', 'Edward', 'de', 'Bono', 'David', 'Deutsch',
-  'James', 'Carse', 'Bucky',
+  'James', 'Carse', 'Bucky', 'Grove',
   // The frameworks and the public objects.
   'Configuration', 'Economics', 'Distinction', 'Physics', 'AlphaGo', 'Go',
   'Assembly', 'Theory', 'Option', 'Space',
