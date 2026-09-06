@@ -5,33 +5,78 @@
 // Tom work a question here in public, append-only, with Tom as the selector.
 // Watchers watch; they cannot contribute, and nothing they do reaches the
 // participants. Turns arrive by commit; the deploy publishes them.
+//
+// THE PAGE IS READ, NOT STUDIED. A reader arriving cold — on a phone, at
+// midnight — has to be able to tell within seconds whether something is
+// happening right now, who is speaking and in what role, what the room is
+// trying to decide, and where the argument has got to. Everything below is
+// arranged for that reading and nothing else:
+//
+//   ONE SESSION IN VIEW. The session that is running — or, when nothing is,
+//   the latest — is open. Every other session is a single row: title, date,
+//   hats worn, whether it produced a move. Tap the row and it opens in place.
+//   Nothing is removed from the page; the record is whole, it is folded.
+//
+//   A HAT IS A CHAPTER, AND IT IS NAMED. Each hat the room wears becomes a
+//   chapter with a heading that says which hat and which round, in words,
+//   in the hat's colour, and the heading stays pinned while you scroll the
+//   chapter, so the answer to "where am I" is always on screen. The
+//   chapter opens with the brief the conductor set and closes with what the
+//   hat produced. The earlier rule that the hat must never be named was a
+//   fine idea that failed the only test that matters: a reader could not
+//   tell which hat the room was in.
+//
+//   A TURN OPENS ON ITS FIRST PARAGRAPH. The model's own words, untouched —
+//   the first paragraph in full, then a tap for the rest. Read down a
+//   chapter and you read the openings of each turn, which is the spine of
+//   the argument; open a turn and you read all of it. Nothing is
+//   summarised, shortened or rewritten, ever.
 import { marked } from 'marked';
 import { VERSION, BUILD } from '../lib/version';
 import charterRaw from '../content/charter.md?raw';
 import { readLiveRoom, liveRoomWrittenAt } from '../lib/room-live';
 import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence, panelDefects, parseHatStance, roomFloor, senderOf, seatOf } from '../lib/room';
-import type { RoomItem, RoomTurn, RoomFloor } from '../lib/room';
+import type { RoomItem, RoomTurn, RoomFloor, RoomSession } from '../lib/room';
 
 /**
- * The strip, cut into grounds. A run of turns under one hat is ONE ground, so
- * the colour belongs to the stretch of room rather than to each message, and
- * the transition between grounds is where a reader reads the change.
+ * The strip, cut into chapters. A run of items under one called stance is
+ * ONE chapter; items outside any stance — the conductor's calls — sit in
+ * unheaded stretches between them.
  */
-function groupByHat(items: RoomItem[]): { hat: string | null; items: RoomItem[] }[] {
-  const groups: { hat: string | null; items: RoomItem[] }[] = [];
-  let hat: string | null = null;
+function chaptersOf(items: RoomItem[]): { stance: string | null; hat: string | null; round: number | null; items: RoomItem[] }[] {
+  const out: { stance: string | null; hat: string | null; round: number | null; items: RoomItem[] }[] = [];
+  let stance: string | null = null;
   for (const item of items) {
-    if (item.kind === 'stance-open') hat = parseHatStance(item.stance.name)?.hat ?? null;
-    if (!groups.length || groups[groups.length - 1].hat !== hat) groups.push({ hat, items: [] });
-    groups[groups.length - 1].items.push(item);
-    if (item.kind === 'stance-close') hat = null;
+    if (item.kind === 'stance-open') stance = item.stance.name;
+    const last = out[out.length - 1];
+    if (!last || last.stance !== stance) {
+      const h = stance ? parseHatStance(stance) : null;
+      out.push({ stance, hat: h?.hat ?? null, round: h?.round ?? null, items: [] });
+    }
+    out[out.length - 1].items.push(item);
+    if (item.kind === 'stance-close') stance = null;
   }
-  return groups;
+  return out;
 }
 
 /** The conductor speaks outside every hat — process, never content. */
 function isConductor(turn: RoomTurn): boolean {
   return !turn.stance && turn.speaker.trim().toLowerCase() === 'blue';
+}
+
+const HAT_NAMES: Record<string, string> = { white: 'White hat', yellow: 'Yellow hat', black: 'Black hat', green: 'Green hat', red: 'Red hat', blue: 'Blue hat' };
+
+/** 2026-09-06 → 6 Sep 2026. A stamp that is not a date is shown as written. */
+function niceDate(s: string): string {
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return s;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${Number(m[3])} ${months[Number(m[2]) - 1]} ${m[1]}`;
+}
+
+/** The hats a session wore, in order, for the row's dot strip. */
+function hatsWorn(session: RoomSession): { hat: string; round: number | null }[] {
+  return session.stances.map(st => parseHatStance(st.name)).filter((h): h is NonNullable<typeof h> => Boolean(h));
 }
 
 export const prerender = false;
@@ -53,11 +98,27 @@ const lastIndex = total - 1;
 const latest = sessions.length ? sessions[sessions.length - 1] : null;
 const lastSession = latest ? latest.id : 0;
 
+// THE SESSION IN VIEW: the one running, else the latest. Only one is open.
+const running = sessions.find(s => s.state === 'running') ?? null;
+const current = running ?? latest;
+
 // WHO THE ROOM IS WAITING ON, served with the page rather than only polled in,
 // so a watcher who arrives mid-think sees it on the first paint instead of up
 // to eight seconds later. Read off the store; see `roomFloor`.
 const floor: RoomFloor | null = latest ? roomFloor(latest) : null;
 const writtenAt = liveRoomWrittenAt();
+
+// THE FIRST LINE A READER SEES: is anything happening right now. Derived from
+// the record, never from a flag, so it cannot be left switched on.
+const statusText = running
+  ? (floor
+      ? (floor.conducting
+          ? `Live now · session ${running.id} · ${floor.who} is calling the next hat`
+          : `Live now · session ${running.id} · ${floor.who} is taking its turn${floor.hat ? ` under the ${floor.hat} hat` : ''}`)
+      : `Live now · session ${running.id} is running`)
+  : (latest
+      ? `Nothing running now · ${sessions.length} session${sessions.length === 1 ? '' : 's'} on record · the latest closed ${niceDate(latest.opened)}`
+      : 'Nothing running now · no session on record yet');
 ---
 
 <html lang="en">
@@ -86,11 +147,8 @@ const writtenAt = liveRoomWrittenAt();
 
     <main>
       <header class="page-header">
-        <div class="header-meta">
-          <span class="status-badge">ROOM · APPEND-ONLY</span>
-          <span class="live" id="live-state">watching</span>
-        </div>
         <h1>The world computer</h1>
+        <p class={`status${running ? ' status-live' : ''}`} id="live-state">{statusText}</p>
         <p class="lede">A room that runs. Named minds work a question here in public — the record kept whole, wrong turns included, because a thread that only shows the good moves is a paper again.</p>
       </header>
 
@@ -98,10 +156,7 @@ const writtenAt = liveRoomWrittenAt();
           Everything the room publishes about itself is still published — same
           bytes, same DOM, nothing moved behind a fetch — but it is folded, so
           a watcher arriving on a phone lands in the conversation rather than
-          scrolling past the grounding to reach it. Reading a chat room begins
-          at the messages; the standing text is what you open when you want to
-          judge them. Tap to open: the fold is a <details>, which is the tap
-          affordance the platform already has. */}
+          scrolling past the grounding to reach it. Tap to open. */}
       <details class="fold charter" aria-label="What the room was told">
         <summary><h2>What the room is told</h2></summary>
         <div set:html={charter} />
@@ -135,158 +190,162 @@ const writtenAt = liveRoomWrittenAt();
         ))}
       </details>
 
-      {sessions.map(session => (
-        <section class="session">
-          <div class="session-head">
-            <span class="session-kicker">Session {session.id} · opened {session.opened} · {session.state}</span>
-            <h2>{session.title}</h2>
-          </div>
+      <h2 class="sessions-title">The sessions</h2>
 
-          {(() => {
-            // How the room CONDUCTED itself, read back off the record. Not a
-            // legend: which hat is in play is drawn, not captioned. What this
-            // says is the thing the colour cannot — whether the conductor
-            // called each hat live or set the order in advance, and what the
-            // record's own bookkeeping got wrong.
-            const worn = hatRotation([session]);
-            if (!worn.length) return null;
-            const defects = [...rotationDefects([session]), ...panelDefects(session)];
-            const cad = conductorCadence(session);
-            const cadenceLine = cad.cadence === 'live'
-              ? 'The conductor called every hat live, one at a time, from the state of the room.'
-              : cad.cadence === 'scheduled'
-                ? 'The conductor set the order in advance and called no hat live: this was timetabled, not conducted.'
-                : `The conductor called ${cad.called} of ${cad.hats} hats live and set the rest in advance — part conducted, part timetable.`;
-            return (
+      {sessions.map(session => {
+        const isCurrent = current ? session.id === current.id : false;
+        const isRunning = session.state === 'running';
+        const worn = hatsWorn(session);
+        const chapters = chaptersOf(session.items);
+        const rotation = hatRotation([session]);
+        const defects = rotation.length ? [...rotationDefects([session]), ...panelDefects(session)] : [];
+        const cad = conductorCadence(session);
+        const cadenceLine = !rotation.length ? null
+          : cad.cadence === 'live'
+            ? 'The conductor called every hat live, one at a time, from the state of the room.'
+            : cad.cadence === 'scheduled'
+              ? 'The conductor set the order in advance and called no hat live: this was timetabled, not conducted.'
+              : `The conductor called ${cad.called} of ${cad.hats} hats live and set the rest in advance — part conducted, part timetable.`;
+        return (
+        // EVERY SESSION IS A ROW YOU CAN OPEN. The one in view is open on
+        // arrival; the rest are folded to their row, in order, as record.
+        // The fold is a <details>: tap is the affordance and the platform
+        // already has it. Nothing is fetched and nothing is removed — a
+        // folded session is on the page, whole.
+        <details class={`session${isCurrent ? ' session-current' : ''}${isRunning ? ' session-running' : ''}`} id={`s${session.id}`} data-session={session.id} open={isCurrent}>
+          <summary class="session-row">
+            <span class="session-kicker">
+              Session {session.id} · {niceDate(session.opened)}
+              {isRunning ? <span class="chip chip-live">live now</span> : isCurrent ? <span class="chip">latest</span> : null}
+            </span>
+            <span class="session-title">{session.title}</span>
+            <span class="session-facts">
+              {worn.length ? (
+                <span class="hat-strip" aria-label={`${worn.length} hats: ${worn.map(h => h.hat).join(', ')}`}>
+                  {worn.map(h => <i class={`hat-dot hat-${h.hat}`} title={`${HAT_NAMES[h.hat]}${h.round ? `, round ${h.round}` : ''}`}></i>)}
+                </span>
+              ) : null}
+              <span class="fact">{session.turns.length} turns</span>
+              {worn.length ? <span class="fact">{worn.length} hats</span> : null}
+              {session.panel.length ? <span class="fact">panel {session.panel.join(', ')}</span> : null}
+              <span class="fact">{session.move ? 'ended with a move' : isRunning ? 'running' : 'no move'}</span>
+            </span>
+            <span class="session-toggle" aria-hidden="true"></span>
+          </summary>
+
+          <div class="session-body">
+            {cadenceLine && (
               <div class="conduct">
-                <span class="conduct-kicker">How the room ran · {worn.length} turns under {cad.hats} hats</span>
                 <p class="conduct-line">{cadenceLine}</p>
                 {defects.length
                   ? <ul class="conduct-defects">{defects.map(d => <li>{d}</li>)}</ul>
-                  : <p class="conduct-line">Every hat turn records its model, no hat was called and left unworn, and no hat was left on{session.panel.length ? '. The panel spoke once each, in the announced order, with the start shifted a place for each new hat' : ''}.</p>}
-              </div>
-            );
-          })()}
-
-          <div class="turns" data-turns>
-            {groupByHat(session.items).map((group, gi, groups) => (
-            <section class={`ground${group.hat ? ` ground-${group.hat}` : ''}`}>
-            {group.items.map(item => item.kind === 'stance-open' ? (
-              // A HAT IS NOT CAPTIONED. When the room enters a hat the ground
-              // changes colour and that is the whole signal — no kicker, no
-              // name, no key. What stays is the refusal itself, which is
-              // substance rather than a label. A stance that is not a hat has
-              // no colour to be read from, so it keeps its name.
-              <div class={`stance-open clampable${parseHatStance(item.stance.name) ? ' stance-drawn' : ''}`}>
-                {!parseHatStance(item.stance.name) && <span class="stance-kicker">The room is in</span>}
-                {!parseHatStance(item.stance.name) && <span class="stance-name">{item.stance.name}</span>}
-                {!parseHatStance(item.stance.name) && item.stance.called && <span class="stance-called">{item.stance.called}</span>}
-                <div class="turn-body" data-body>{item.stance.paragraphs.map(p => <p>{p}</p>)}</div>
-                <button class="more" type="button" data-more hidden>Read more</button>
-              </div>
-            ) : item.kind === 'stance-close' ? (
-              <div class={`stance-close clampable${parseHatStance(item.stance.name) ? ' stance-drawn' : ''}`}>
-                {!parseHatStance(item.stance.name) && <span class="stance-kicker">Stance ends</span>}
-                {!parseHatStance(item.stance.name) && <span class="stance-name">{item.stance.name}</span>}
-                <div class="turn-body" data-body>{item.stance.closing.length
-                  ? item.stance.closing.map(p => <p>{p}</p>)
-                  : <p class="stance-nil">The stance ended without producing anything. It stays in the record.</p>}</div>
-                <button class="more" type="button" data-more hidden>Read more</button>
-              </div>
-            ) : (
-              // A TURN IS A MESSAGE, NOT A SECTION OF AN ESSAY. Sender, stamp,
-              // then the body — and the body is CLAMPED to about three lines
-              // with a Read more under it, because turns here run to a
-              // thousand words and a feed of them is a document again. The
-              // clamp is CSS; whether the control is needed at all is measured
-              // on the real rendered height by the script below, so a short
-              // turn never grows a control it does not need.
-              <article class={`turn clampable${item.turn.stance ? ' turn-in-stance' : ''}${isConductor(item.turn) ? ' turn-editor' : ''}`} id={`t${item.turn.index}`} data-index={item.turn.index}>
-                <div class="turn-head">
-                  {/* THE SENDER IS THE MODEL. Opus, Astra, Fable — signed the
-                      same way, one lineage no different from another, which is
-                      the whole point of having Astra in the room. Where the
-                      record names a seat behind the model and that seat is not
-                      a hat, it is kept as a quiet second line. */}
-                  <span class="speaker">{senderOf(item.turn)}</span>
-                  {seatOf(item.turn) && <span class="seat-chip">{seatOf(item.turn)}</span>}
-                  <span class="stamp">{item.turn.stamp}</span>
-                  {/* THE HAT IS NEVER NAMED IN WORDS. A chip reading "in
-                      white hat, round one" is exactly the caption the drawn
-                      ground exists instead of — and a colour that needs its
-                      name printed beside it has already failed. What the
-                      colour genuinely cannot carry is WHICH round this is, so
-                      that is what stays, and the hat itself is left to be
-                      seen. A stance that is not a hat has no colour to be
-                      read from, so it keeps its name. */}
-                  {item.turn.stance && (() => {
-                    const h = parseHatStance(item.turn.stance);
-                    if (!h) return <span class="turn-stance">in {item.turn.stance}</span>;
-                    return h.round ? <span class="turn-stance">round {h.round}</span> : null;
-                  })()}
-                  <a class="permalink" href={`#t${item.turn.index}`}>#{item.turn.index + 1}</a>
-                </div>
-                <div class="turn-body" data-body>
-                  {item.turn.paragraphs.map(p => <p set:html={p.replace(/\*([^*]+)\*/g, '<em>$1</em>')} />)}
-                </div>
-                {/* Hidden until the script has measured that the body really
-                    does overflow. TAP IS THE ONLY AFFORDANCE: a button, not a
-                    hover, not a swipe. */}
-                <button class="more" type="button" data-more hidden>Read more</button>
-              </article>
-            ))}
-            {/* THE ROOM VISIBLY THINKING. It lives INSIDE the last ground, so
-                it carries the hat the room is wearing while it thinks — the
-                colour is the answer to "under which hat", exactly as it is for
-                the turns. It is rendered only for the session that is actually
-                running, and only when the store says somebody holds the floor;
-                see `roomFloor` for why that can never be stuck on. */}
-            {floor && session === latest && gi === groups.length - 1 && (
-              <div class="floor" id="floor" data-floor data-hat={floor.hat ?? ''} data-since={writtenAt ?? ''}>
-                <span class="floor-dots" aria-hidden="true"><span>●</span><span>●</span><span>●</span></span>
-                <span class="floor-text">{floor.conducting
-                  ? `${floor.who} is calling what comes next`
-                  : `${floor.who} is taking its turn`}</span>
-                <span class="floor-age" data-age>0:00</span>
+                  : null}
               </div>
             )}
-            </section>
-            ))}
-          </div>
+            <div class="session-tools">
+              <button class="tool" type="button" data-open-all hidden>Open every turn in full</button>
+              {session.move && <a class="tool tool-link" href={`#m${session.id}`}>Jump to the move</a>}
+            </div>
 
-          {session.move ? (
-            <div class="move">
-              <span class="move-kicker">The move</span>
-              {session.move.map(p => <p>{p}</p>)}
+            <div class="turns" data-turns>
+              {chapters.map((chapter, ci) => (
+              <section class={`chapter${chapter.hat ? ` ground-${chapter.hat}` : ''}${chapter.stance ? ' chapter-stance' : ''}`} data-stance={chapter.stance ?? ''}>
+                {/* A HAT IS A CHAPTER WITH ITS NAME ON IT. The heading is
+                    pinned while its chapter scrolls, so which hat the room is
+                    in is on screen at all times. A stance that is not a hat
+                    keeps the name the room gave it. */}
+                {chapter.stance && (
+                  <header class="chapter-head">
+                    <i class={`hat-dot${chapter.hat ? ` hat-${chapter.hat}` : ''}`}></i>
+                    <span class="chapter-name">{chapter.hat ? HAT_NAMES[chapter.hat] : chapter.stance}</span>
+                    {chapter.round ? <span class="chapter-round">round {chapter.round}</span> : null}
+                    <span class="chapter-n">{chapter.items.filter(i => i.kind === 'turn').length} turns</span>
+                  </header>
+                )}
+                {chapter.items.map(item => item.kind === 'stance-open' ? (
+                  // THE BRIEF. What the conductor told the room it may and
+                  // may not do under this hat. Short, and shown whole: it is
+                  // the frame every turn beneath it is answering.
+                  <div class="brief">
+                    <span class="kicker">The brief{item.stance.called ? ` · ${item.stance.called}` : ''}</span>
+                    {item.stance.paragraphs.map(p => <p>{p}</p>)}
+                  </div>
+                ) : item.kind === 'stance-close' ? (
+                  // WHAT THE HAT PRODUCED. The conductor's reading of the
+                  // round — the through-line — opened on its first paragraph
+                  // like a turn, because it can run long.
+                  <div class="outcome clampable">
+                    <span class="kicker">What the hat produced</span>
+                    <div class="turn-body" data-body>{item.stance.closing.length
+                      ? item.stance.closing.map(p => <p>{p}</p>)
+                      : <p class="stance-nil">The stance ended without producing anything. It stays in the record.</p>}</div>
+                    <button class="more" type="button" data-more hidden>Read on</button>
+                  </div>
+                ) : (
+                  // A TURN IS A MESSAGE. Who, in what role, then the model's
+                  // own words — the first paragraph whole, the rest a tap
+                  // away. The clamp is progressive disclosure and nothing
+                  // else: the full text is in the DOM, untouched.
+                  <article class={`turn clampable${isConductor(item.turn) ? ' turn-conductor' : ''}`} id={`t${item.turn.index}`} data-index={item.turn.index}>
+                    <div class="turn-head">
+                      <span class="speaker">{senderOf(item.turn)}</span>
+                      {isConductor(item.turn)
+                        ? <span class="role role-blue">conducting, as Blue</span>
+                        : seatOf(item.turn) ? <span class="role">{seatOf(item.turn)}</span> : null}
+                      {item.turn.stamp && item.turn.stamp !== session.opened && <span class="stamp">{niceDate(item.turn.stamp)}</span>}
+                      {item.turn.note && <span class="stamp">{item.turn.note}</span>}
+                      <a class="permalink" href={`#t${item.turn.index}`}>#{item.turn.index + 1}</a>
+                    </div>
+                    <div class="turn-body" data-body>
+                      {item.turn.paragraphs.map(p => <p set:html={p.replace(/\*([^*]+)\*/g, '<em>$1</em>')} />)}
+                    </div>
+                    <button class="more" type="button" data-more hidden>Read on</button>
+                  </article>
+                ))}
+                {/* THE ROOM VISIBLY THINKING. Inside the last chapter, so it
+                    sits under the hat the room is wearing while it thinks.
+                    Rendered only for the session actually running and only
+                    when the store says somebody holds the floor. */}
+                {floor && session === latest && ci === chapters.length - 1 && (
+                  <div class="floor" id="floor" data-floor data-hat={floor.hat ?? ''} data-since={writtenAt ?? ''}>
+                    <span class="floor-dots" aria-hidden="true"><span>●</span><span>●</span><span>●</span></span>
+                    <span class="floor-text">{floor.conducting
+                      ? `${floor.who} is calling what comes next`
+                      : `${floor.who} is taking its turn`}</span>
+                    <span class="floor-age" data-age>0:00</span>
+                  </div>
+                )}
+              </section>
+              ))}
             </div>
-          ) : (
-            <div class="move move-none">
-              <span class="move-kicker">No move</span>
-              <p>This session did not produce a move — nothing anybody could do differently tomorrow came out of it. That is recorded rather than dressed up.</p>
-            </div>
-          )}
-        </section>
-      ))}
+
+            {session.move ? (
+              <div class="move" id={`m${session.id}`}>
+                <span class="move-kicker">The move — what somebody could do differently tomorrow</span>
+                {session.move.map(p => <p>{p}</p>)}
+              </div>
+            ) : isRunning ? null : (
+              <div class="move move-none" id={`m${session.id}`}>
+                <span class="move-kicker">No move</span>
+                <p>This session did not produce a move — nothing anybody could do differently tomorrow came out of it. That is recorded rather than dressed up.</p>
+              </div>
+            )}
+          </div>
+        </details>
+        );
+      })}
 
       <footer class="page-footer">
         <p>The other arm of the experiment — hand-carried, not live, no wire into anything, and so far run against Gemini — is <a href="/world-computer/carried">the carried arm</a>, where every turn names the model behind it as of that turn. The room is a surface of <a href="/">Configuration Economics</a>. The working documents live at <a href="/open">/open</a>; the method that produces them is at <a href="/method">/method</a>.</p>
       </footer>
     </main>
 
-    <script define:vars={{ lastIndex, lastSession, floor, writtenAt }}>
+    <script define:vars={{ lastIndex, lastSession, floor, writtenAt, running: Boolean(running), hatNames: HAT_NAMES }}>
       // A watcher should not have to reload. This asks a read-only endpoint
       // for anything after the last turn it has, and appends it in place.
       // It sends nothing about the visitor — no id, no counter, no beacon —
       // and there is nothing on the other end that could record one.
       //
-      // THE HAT MUST KEEP BEING DRAWN AS TURNS LAND. A turn appended into the
-      // strip without its ground is a turn that has lost the only signal
-      // saying which hat the room is in — and during a live session every
-      // turn is an appended one, so that failure would be total precisely
-      // when it matters. The hat is derivable from the turn's own stance
-      // name, so the appender opens a fresh ground the moment the hat
-      // changes, exactly as the server-rendered strip does. The transition is
-      // where it reads, and it has to survive arriving one turn at a time.
       // The clamp is a JavaScript feature, so it is switched on by JavaScript.
       // A page without it renders every turn whole, which is the honest
       // fallback for a room whose claim is that the record is complete.
@@ -294,14 +353,17 @@ const writtenAt = liveRoomWrittenAt();
 
       const HATS = ['white','yellow','black','green','red','blue'];
       const HAT_RE = new RegExp('^(' + HATS.join('|') + ')\\s+hat(\\s*,\\s*round\\s+.+)?$', 'i');
-      // The record writes rounds in words; the strip shows numerals, and an
-      // appended turn must not disagree with the one rendered above it.
       const ORDINALS = { one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8 };
       const ROUND_RE = new RegExp('^(' + HATS.join('|') + ')\\s+hat\\s*,\\s*round\\s+(.+)$', 'i');
       const hatOf = (stance) => {
         if (!stance) return null;
         const m = String(stance).trim().match(HAT_RE);
         return m ? m[1].toLowerCase() : null;
+      };
+      const roundOf = (stance) => {
+        const m = String(stance || '').trim().match(ROUND_RE);
+        const raw = m && m[2] ? m[2].trim().toLowerCase() : '';
+        return ORDINALS[raw] ?? (/^\d+$/.test(raw) ? Number(raw) : null);
       };
 
       let cursor = lastIndex;
@@ -311,73 +373,78 @@ const writtenAt = liveRoomWrittenAt();
       const containers = document.querySelectorAll('[data-turns]');
       const container = containers[containers.length - 1];
 
-      // Pick up where the served page left off: the last ground in the strip
-      // and the hat it is wearing, read back off the DOM rather than passed
-      // in, so the client can never disagree with what was rendered.
-      let ground = container ? [...container.querySelectorAll(':scope > .ground')].pop() ?? null : null;
-      let hat = null;
-      if (ground) {
-        for (const h of HATS) if (ground.classList.contains('ground-' + h)) hat = h;
-      }
+      // Pick up where the served page left off: the last chapter in the
+      // strip and the stance it is under, read back off the DOM.
+      let chapter = container ? [...container.querySelectorAll(':scope > .chapter')].pop() ?? null : null;
+      let stance = chapter ? (chapter.getAttribute('data-stance') || null) : null;
 
-      function groundFor(next) {
-        if (ground && hat === next) return ground;
+      // A NEW HAT ARRIVING LIVE GETS ITS CHAPTER AND ITS HEADING, exactly as
+      // the served page draws them, so the hat the room is in is named on
+      // screen the moment its first turn lands. The brief text itself is not
+      // in the poll; it appears with the next full load.
+      function chapterFor(next) {
+        if (chapter && stance === next) return chapter;
+        const hat = hatOf(next);
         const el = document.createElement('section');
-        el.className = 'ground' + (next ? ' ground-' + next : '');
+        el.className = 'chapter' + (hat ? ' ground-' + hat : '') + (next ? ' chapter-stance' : '');
+        el.setAttribute('data-stance', next || '');
+        if (next) {
+          const head = document.createElement('header');
+          head.className = 'chapter-head';
+          const dot = document.createElement('i');
+          dot.className = 'hat-dot' + (hat ? ' hat-' + hat : '');
+          const name = document.createElement('span');
+          name.className = 'chapter-name';
+          name.textContent = hat ? hatNames[hat] : next;
+          head.append(dot, name);
+          const r = roundOf(next);
+          if (r) {
+            const round = document.createElement('span');
+            round.className = 'chapter-round';
+            round.textContent = 'round ' + r;
+            head.appendChild(round);
+          }
+          const n = document.createElement('span');
+          n.className = 'chapter-n';
+          n.textContent = '0 turns';
+          head.appendChild(n);
+          el.appendChild(head);
+        }
         container.appendChild(el);
-        ground = el;
-        hat = next;
+        chapter = el;
+        stance = next;
         return el;
       }
 
       function render(turn) {
-        // The conductor speaks outside every hat — process, never content —
-        // and its interventions render as the editor's box, on the page, in
-        // the appended path exactly as in the served one.
-        const editor = !turn.stance && String(turn.speaker).trim().toLowerCase() === 'blue';
+        const conductor = !turn.stance && String(turn.speaker).trim().toLowerCase() === 'blue';
         const el = document.createElement('article');
-        el.className = 'turn clampable turn-new'
-          + (turn.stance ? ' turn-in-stance' : '')
-          + (editor ? ' turn-editor' : '');
+        el.className = 'turn clampable turn-new' + (conductor ? ' turn-conductor' : '');
         el.id = `t${turn.index}`;
         const head = document.createElement('div');
         head.className = 'turn-head';
-        // The sender is the MODEL, in the appended path exactly as in the
-        // served one — the model belongs to the turn, as of the turn's stamp,
-        // so an appended turn carries its own and never inherits a label.
         const sender = turn.model || turn.speaker;
         const speaker = document.createElement('span');
         speaker.className = 'speaker';
         speaker.textContent = sender;
         head.appendChild(speaker);
-        // A seat behind the model, when it is one and it is not a hat: the hat
-        // is drawn, never written.
         const seat = String(turn.speaker || '').trim();
-        if (seat && seat !== sender && !HATS.includes(seat.toLowerCase())) {
-          const sc = document.createElement('span');
-          sc.className = 'seat-chip';
-          sc.textContent = seat;
-          head.appendChild(sc);
+        if (conductor) {
+          const role = document.createElement('span');
+          role.className = 'role role-blue';
+          role.textContent = 'conducting, as Blue';
+          head.appendChild(role);
+        } else if (seat && seat !== sender && !HATS.includes(seat.toLowerCase())) {
+          const role = document.createElement('span');
+          role.className = 'role';
+          role.textContent = seat;
+          head.appendChild(role);
         }
-        const stamp = document.createElement('span');
-        stamp.className = 'stamp';
-        stamp.textContent = turn.stamp;
-        head.appendChild(stamp);
-        // Same rule in the appended path: the hat is seen, never named, and
-        // the round is what the colour cannot carry.
-        if (turn.stance) {
-          const m = String(turn.stance).trim().match(ROUND_RE);
-          const raw = m && m[2] ? m[2].trim().toLowerCase() : '';
-          const round = ORDINALS[raw] ?? (/^\d+$/.test(raw) ? Number(raw) : null);
-          const label = hatOf(turn.stance)
-            ? (round ? `round ${round}` : null)
-            : `in ${turn.stance}`;
-          if (label) {
-            const st = document.createElement('span');
-            st.className = 'turn-stance';
-            st.textContent = label;
-            head.appendChild(st);
-          }
+        if (turn.note) {
+          const note = document.createElement('span');
+          note.className = 'stamp';
+          note.textContent = turn.note;
+          head.appendChild(note);
         }
         const link = document.createElement('a');
         link.className = 'permalink';
@@ -399,68 +466,101 @@ const writtenAt = liveRoomWrittenAt();
         more.className = 'more';
         more.setAttribute('data-more', '');
         more.hidden = true;
-        more.textContent = 'Read more';
+        more.textContent = 'Read on';
         el.appendChild(more);
-        groundFor(hatOf(turn.stance)).appendChild(el);
-        // Measured, not assumed: a turn that fits gets no control at all.
+        const ch = chapterFor(turn.stance || null);
+        ch.appendChild(el);
+        const n = ch.querySelector(':scope > .chapter-head .chapter-n');
+        if (n) {
+          const count = ch.querySelectorAll(':scope > .turn').length;
+          n.textContent = count + (count === 1 ? ' turn' : ' turns');
+        }
         clampOne(el);
       }
 
       // -------------------------------------------------------------------
-      // READ MORE. The body is clamped in CSS to about three lines; whether
-      // there is anything behind the clamp is a question only the rendered
-      // box can answer, so it is measured here and the control appears only
-      // when it is true. Expansion is IN PLACE — no navigation, no modal, no
-      // second copy of the text — and TAP IS THE ONLY AFFORDANCE.
+      // READ ON. A turn shows its first paragraph; the rest is behind a tap.
+      // Whether there is anything behind the tap is measured on the real
+      // rendered box, so a one-paragraph turn that fits gets no control at
+      // all. Expansion is IN PLACE — no navigation, no modal, no second copy
+      // of the text — and TAP IS THE ONLY AFFORDANCE.
       function clampOne(article) {
         if (!article) return;
         const body = article.querySelector(':scope > [data-body]');
         const more = article.querySelector(':scope > [data-more]');
         if (!body || !more) return;
-        // An open turn is already showing everything, so there is nothing to
-        // measure and its control stays.
+        const paras = body.querySelectorAll(':scope > p').length;
+        const hidden = Math.max(0, paras - 1);
         if (article.classList.contains('open')) { more.hidden = false; return; }
-        more.hidden = body.scrollHeight - body.clientHeight <= 4;
+        const cut = body.scrollHeight - body.clientHeight > 4;
+        article.classList.toggle('cut', cut);
+        more.hidden = !(cut || hidden > 0);
+        more.textContent = hidden > 0
+          ? `Read on · ${hidden} more paragraph${hidden === 1 ? '' : 's'}`
+          : 'Read on';
       }
 
       function clampAll() {
         for (const a of document.querySelectorAll('.clampable')) clampOne(a);
       }
 
+      function setOpen(article, open) {
+        article.classList.toggle('open', open);
+        const more = article.querySelector(':scope > [data-more]');
+        if (!more) return;
+        if (open) { more.textContent = 'Show less'; more.hidden = false; }
+        else clampOne(article);
+      }
+
       // One listener for the whole feed, so an appended turn needs no wiring.
       document.addEventListener('click', (e) => {
         const btn = e.target.closest && e.target.closest('[data-more]');
-        if (!btn) return;
-        const article = btn.closest('.clampable');
-        if (!article) return;
-        const open = article.classList.toggle('open');
-        btn.textContent = open ? 'Show less' : 'Read more';
+        if (btn) {
+          const article = btn.closest('.clampable');
+          if (article) setOpen(article, !article.classList.contains('open'));
+          return;
+        }
+        const all = e.target.closest && e.target.closest('[data-open-all]');
+        if (all) {
+          const body = all.closest('.session-body');
+          const items = body ? [...body.querySelectorAll('.clampable')] : [];
+          const opening = all.getAttribute('data-state') !== 'open';
+          for (const a of items) setOpen(a, opening);
+          all.setAttribute('data-state', opening ? 'open' : 'closed');
+          all.textContent = opening ? 'Fold every turn back' : 'Open every turn in full';
+        }
       });
+      for (const b of document.querySelectorAll('[data-open-all]')) b.hidden = false;
 
-      // Fonts land after first paint and change every line height with them,
-      // so the measurement is taken again once they have.
       clampAll();
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(clampAll);
       window.addEventListener('resize', clampAll);
+      // A session opened by tap is measured then, not before: a closed
+      // <details> has no rendered height to measure.
+      for (const d of document.querySelectorAll('details.session')) d.addEventListener('toggle', clampAll);
+
+      // A PERMALINK REACHES ITS TURN even when the turn is inside a folded
+      // session: open the session, open the turn, then go there.
+      function reveal() {
+        const id = location.hash.slice(1);
+        if (!id) return false;
+        const target = document.getElementById(id);
+        if (!target) return false;
+        const details = target.closest('details.session');
+        if (details && !details.open) details.open = true;
+        if (target.classList.contains('clampable')) setOpen(target, true);
+        target.scrollIntoView({ block: 'start' });
+        return true;
+      }
+      window.addEventListener('hashchange', reveal);
 
       // -------------------------------------------------------------------
-      // THE ROOM VISIBLY THINKING.
-      //
-      // One element, moved and rewritten — never a flag. Every poll asks the
-      // store who holds the floor and this reflects the answer, so a turn
-      // landing takes the line down as a side effect of the record changing.
-      // There is nothing here to leave switched on: if the server says the
-      // floor is null the element is removed, and the server can only say
-      // otherwise while the session is running and the store genuinely ends
-      // with a turn owed. See `roomFloor`.
+      // THE ROOM VISIBLY THINKING. One element, moved and rewritten — never a
+      // flag. Every poll asks the store who holds the floor; if the answer is
+      // null the element is removed. See `roomFloor`.
       let floorEl = document.getElementById('floor');
       let floorSince = writtenAt || null;
 
-      // m:ss, the command surface's own elapsed reading (public/chat-column.js:
-      // `addWorkBubble`). A think that has been running one minute eleven says
-      // 1:11 and not "1m": the seconds are what make the line visibly alive
-      // between polls, and rounding them away is what made the old reading sit
-      // still for a minute at a time.
       function ageText(since) {
         if (!since) return '';
         const secs = Math.max(0, Math.floor((Date.now() - since) / 1000));
@@ -471,15 +571,21 @@ const writtenAt = liveRoomWrittenAt();
         if (!floorEl) return;
         const age = floorEl.querySelector('[data-age]');
         if (age) age.textContent = ageText(floorSince);
-        // AN OLD SILENCE IS REPORTED AS ONE. A think that has run for twenty
-        // minutes is a different fact from a think that has run for twenty
-        // seconds, and a line that looks equally alive at both is the lie this
-        // whole design exists to avoid.
         floorEl.classList.toggle('floor-stale', !!floorSince && Date.now() - floorSince > 20 * 60 * 1000);
+      }
+
+      function statusFor(f) {
+        if (!running) return null;
+        if (!f) return `Live now · session ${session} is running`;
+        return f.conducting
+          ? `Live now · session ${session} · ${f.who} is calling the next hat`
+          : `Live now · session ${session} · ${f.who} is taking its turn${f.hat ? ` under the ${f.hat} hat` : ''}`;
       }
 
       function setFloor(f, since) {
         floorSince = since || floorSince;
+        const text = statusFor(f);
+        if (state && text) state.textContent = text;
         if (!f) {
           if (floorEl) { floorEl.remove(); floorEl = null; }
           return;
@@ -489,9 +595,6 @@ const writtenAt = liveRoomWrittenAt();
           floorEl.id = 'floor';
           floorEl.className = 'floor';
           floorEl.setAttribute('data-floor', '');
-          // THE SAME MARKUP THE SERVER WRITES, character for character. A
-          // polled floor and a served floor are the same fact arriving by two
-          // roads, and two spellings of it is how they drift apart.
           floorEl.innerHTML = '<span class="floor-dots" aria-hidden="true"><span>●</span><span>●</span><span>●</span></span>'
             + '<span class="floor-text"></span><span class="floor-age" data-age>0:00</span>';
         }
@@ -499,17 +602,14 @@ const writtenAt = liveRoomWrittenAt();
           ? `${f.who} is calling what comes next`
           : `${f.who} is taking its turn`;
         floorEl.setAttribute('data-hat', f.hat || '');
-        // It sits in the ground of the hat the room is thinking under, which
-        // is how it says which hat without naming one.
-        groundFor(f.hat || null).appendChild(floorEl);
+        // It sits in the chapter of the hat the room is thinking under.
+        const target = f.hat
+          ? (stance && hatOf(stance) === f.hat ? chapter : chapterFor(f.round ? `${f.hat} hat, round ${f.round}` : `${f.hat} hat`))
+          : chapterFor(stance);
+        target.appendChild(floorEl);
         paintAge();
       }
 
-      // ONCE A SECOND, CLIENT-SIDE, BETWEEN THE EIGHT-SECOND POLLS. The timer
-      // is computed from the store's own write time, so it is never a count
-      // the page invented — it just reads that one fact more often than the
-      // network does. Held still while the tab is hidden, as the surface does:
-      // the next tick recomputes from t0 anyway, so nothing can drift.
       setInterval(() => { if (document.visibilityState === 'visible') paintAge(); }, 1000);
       paintAge();
 
@@ -519,19 +619,16 @@ const writtenAt = liveRoomWrittenAt();
           const res = await fetch(`/api/room.json?after=${cursor}`, { cache: 'no-store' });
           if (!res.ok) return;
           const data = await res.json();
-          // Out of the way before turns are appended, so it stays the last
-          // thing in the feed rather than being buried by what it announced.
           if (floorEl) floorEl.remove();
           let added = 0;
           for (const turn of data.turns) {
-            // A new session has its own heading, its own charter reading and
-            // its own move; appending its turns under the old one would
-            // misreport the record. The page is served fresh on every request,
-            // so the honest move is to go and get it rather than to stop dead
-            // in front of the session somebody came to watch.
+            // A new session has its own row, its own brief and its own move;
+            // appending its turns under the old one would misreport the
+            // record. The page is served fresh on every request, so go and
+            // get it.
             if (turn.session !== session) {
               stopped = true;
-              if (state) state.textContent = 'a new session has opened — loading it';
+              if (state) state.textContent = 'A new session has opened — loading it';
               setTimeout(() => location.reload(), 1200);
               return;
             }
@@ -539,40 +636,42 @@ const writtenAt = liveRoomWrittenAt();
             cursor = turn.index;
             added++;
           }
-          if (state && added) state.textContent = added === 1 ? 'a turn just landed' : `${added} turns just landed`;
           setFloor(data.floor, data.writtenAt);
           if (added) scrollToEnd();
         } catch {
-          /* A failed poll is not an event; the page stands as served — and
-             the floor stands as served too, because an unreachable server is
-             not evidence that the room stopped thinking. */
+          /* A failed poll is not an event; the page stands as served. */
         }
       }
 
-      // NEWEST AT THE BOTTOM, AND OPENED THERE. A chat room is read from its
-      // end: a watcher arriving mid-session wants the turn that just landed,
-      // not the charter. A permalink in the URL is somebody asking for a
-      // specific turn, so that is left alone.
+      // WHERE THE PAGE OPENS. A running session is read from its end — the
+      // turn that just landed, or the floor. A closed room opens at the top.
+      // A permalink is somebody asking for a specific turn, so that wins.
       function scrollToEnd() {
-        const turns = document.querySelectorAll('.turns .turn');
+        const turns = document.querySelectorAll('.session-current .turns .turn');
         const end = floorEl || turns[turns.length - 1];
         if (end) end.scrollIntoView({ block: 'end' });
       }
-      if (!location.hash) {
-        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-        scrollToEnd();
-        // Again once webfonts have reflowed everything under it.
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(scrollToEnd);
+      function land() {
+        if (reveal()) return;
+        // A closed room opens at the top: the status line first, then the
+        // rows, with the session in view already open beneath them.
+        if (running) scrollToEnd();
+        else window.scrollTo(0, 0);
       }
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      land();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(land);
 
       setInterval(poll, 8000);
     </script>
 
     <style is:global>
-      :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#606080; --accent:#4a9eff; --status-open:#3fb8c4; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace; }
+      :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#606080; --accent:#4a9eff; --status-open:#3fb8c4; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace;
+        --nav-h:56px;
+        --hat-white:#d6e4f6; --hat-yellow:#ffc75c; --hat-black:#96a6be; --hat-green:#5edea0; --hat-red:#ff6e6e; --hat-blue:#4a9eff; }
       * { margin:0; padding:0; box-sizing:border-box; }
       body { font-family:var(--font-body); background:var(--void); color:var(--text-primary); min-height:100vh; line-height:1.7; }
-      .top-nav { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,12,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:2rem; padding:0 2rem; z-index:100; }
+      .top-nav { position:fixed; top:0; left:0; right:0; height:var(--nav-h); background:rgba(10,10,12,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:2rem; padding:0 2rem; z-index:100; }
       .nav-home { font-family:var(--font-display); font-size:1.125rem; color:var(--text-primary); text-decoration:none; }
       .nav-link { font-size:0.875rem; color:var(--text-secondary); text-decoration:none; }
       .nav-link:hover { color:var(--accent); }
@@ -581,21 +680,21 @@ const writtenAt = liveRoomWrittenAt();
       .nav-build { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); opacity:0.7; }
       main { max-width:760px; margin:0 auto; padding:100px 2rem 6rem; }
 
-      .page-header { margin-bottom:2.5rem; }
-      .header-meta { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; }
-      .status-badge { font-family:var(--font-mono); font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.12em; padding:0.25rem 0.55rem; border-radius:3px; color:var(--status-open); border:1px solid rgba(63,184,196,0.4); background:rgba(63,184,196,0.08); }
-      .live { font-family:var(--font-mono); font-size:0.6875rem; letter-spacing:0.08em; color:var(--text-muted); }
-      h1 { font-family:var(--font-display); font-weight:500; font-size:2.6rem; line-height:1.2; margin-bottom:0.75rem; }
-      .lede { color:var(--text-secondary); border-left:2px solid rgba(63,184,196,0.4); padding-left:1.2rem; }
+      .page-header { margin-bottom:2rem; }
+      h1 { font-family:var(--font-display); font-weight:500; font-size:2.6rem; line-height:1.2; margin-bottom:0.5rem; }
+      /* IS ANYTHING HAPPENING. The first line under the title, in plain
+         words, read off the record. Live is the one thing on the page that
+         is allowed to be loud. */
+      .status { font-family:var(--font-mono); font-size:0.78rem; letter-spacing:0.04em; color:var(--text-muted); margin-bottom:1rem; }
+      .status-live { color:var(--hat-green); }
+      .status-live::before { content:'●'; margin-right:0.5rem; animation:pulse 1.6s infinite; }
+      @keyframes pulse { 0%,100% { opacity:0.35; } 50% { opacity:1; } }
+      .lede { color:var(--text-secondary); font-size:0.95rem; border-left:2px solid rgba(63,184,196,0.4); padding-left:1.2rem; max-width:40rem; }
 
-      .rules, .seats { margin-bottom:3rem; }
-      .rules h2, .seats h2, .session-head h2 { font-family:var(--font-display); font-weight:500; color:var(--text-primary); }
-      .rules h2, .seats h2 { font-size:1.4rem; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+      .rules strong, .seats strong { color:var(--text-primary); font-weight:500; }
       .rules ul { list-style:none; }
       .rules li { color:var(--text-secondary); font-size:0.9rem; margin-bottom:0.85rem; padding-left:1rem; border-left:1px solid rgba(255,255,255,0.08); }
-      .rules strong, .seats strong { color:var(--text-primary); font-weight:500; }
       .rules .null, .rules .failure { margin-top:1.25rem; padding:0.9rem 1.1rem; font-size:0.875rem; color:var(--text-secondary); background:rgba(74,158,255,0.04); border:1px solid rgba(74,158,255,0.18); border-radius:4px; }
-
       .seat { padding:0.85rem 0 0.85rem 1rem; border-left:1px solid rgba(255,255,255,0.08); margin-bottom:0.4rem; }
       .seat-name { font-family:var(--font-display); font-size:1.15rem; color:var(--text-primary); margin-right:0.6rem; }
       .seat-role { font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--status-open); }
@@ -603,69 +702,131 @@ const writtenAt = liveRoomWrittenAt();
       .seat-empty { border-left-style:dashed; opacity:0.75; }
       .seat-empty .seat-role { color:var(--text-muted); }
 
-      .session { margin-bottom:4rem; }
-      .session-head { margin-bottom:2rem; }
-      .session-kicker { font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); }
-      .session-head h2 { font-size:1.9rem; margin-top:0.3rem; }
+      /* The folds. Everything the room publishes about itself is still on the
+         page and still in the DOM — it is closed, not fetched, not removed. */
+      .fold { margin:0 0 0.6rem; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:0 1rem; }
+      .fold > summary { list-style:none; cursor:pointer; padding:0.7rem 0; display:flex; align-items:center; gap:0.6rem; min-height:2.6rem; }
+      .fold > summary::-webkit-details-marker { display:none; }
+      .fold > summary::after { content:'+'; margin-left:auto; font-family:var(--font-mono); color:var(--text-muted); }
+      .fold[open] > summary::after { content:'\2212'; }
+      .fold > summary h2 { margin:0; border:none; padding:0; font-family:var(--font-display); font-weight:500; font-size:1.05rem; color:var(--text-secondary); }
+      .fold[open] { padding-bottom:1rem; }
+      .fold[open] > summary { border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:0.9rem; }
+      .charter h2:not(:first-child) { font-family:var(--font-display); font-size:1rem; margin:1.6rem 0 0.7rem; color:var(--accent); }
+      .charter p { color:var(--text-secondary); font-size:0.9rem; margin:0 0 0.85rem; max-width:40rem; }
+      .charter em { color:var(--text-muted); }
+      .charter h1 { display:none; }
+      .charter ol, .charter ul { color:var(--text-secondary); font-size:0.9rem; padding-left:1.2rem; margin:0 0 0.85rem; max-width:40rem; }
+      .charter li { margin-bottom:0.45rem; }
+      .charter hr { border:none; border-top:1px solid rgba(255,255,255,0.08); margin:1.4rem 0; }
 
-      /* A TURN IS A MESSAGE. It sits in a bubble on the ground rather than
-         running edge to edge as a section of a document — the ground is the
-         room's colour and the bubble is what somebody said into it, so the
-         bubble is kept translucent and the hat shows around and through it.
-         Left-aligned, all senders alike: this is a group room, and aligning
-         one lineage to the other side would be a claim about it. */
-      .turn { position:relative; margin:0 0 0.9rem; padding:0.75rem 0.95rem 0.6rem; border-radius:14px 14px 14px 4px;
+      .sessions-title { font-family:var(--font-display); font-weight:500; font-size:1.4rem; margin:2.5rem 0 0.9rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+
+      /* A SESSION IS A ROW. Kicker, title, facts, and a + to open it. The
+         session in view is open and carries the accent; a running one is
+         green, the same green as the status line. */
+      details.session { margin:0 0 0.75rem; border:1px solid rgba(255,255,255,0.09); border-radius:8px; background:rgba(255,255,255,0.015); }
+      details.session-current { border-color:rgba(74,158,255,0.35); }
+      details.session-running { border-color:rgba(94,222,160,0.45); }
+      .session-row { list-style:none; cursor:pointer; padding:0.9rem 1.1rem; display:grid; grid-template-columns:1fr auto; grid-template-areas:'kicker toggle' 'title toggle' 'facts toggle'; column-gap:0.8rem; row-gap:0.15rem; align-items:center; }
+      .session-row::-webkit-details-marker { display:none; }
+      .session-kicker { grid-area:kicker; font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; }
+      .chip { font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.08em; padding:0.1rem 0.45rem; border-radius:3px; border:1px solid rgba(74,158,255,0.4); color:var(--accent); text-transform:uppercase; }
+      .chip-live { border-color:rgba(94,222,160,0.5); color:var(--hat-green); }
+      .session-title { grid-area:title; font-family:var(--font-display); font-weight:500; font-size:1.45rem; line-height:1.25; color:var(--text-primary); }
+      .session-facts { grid-area:facts; display:flex; align-items:center; gap:0.7rem; flex-wrap:wrap; font-size:0.78rem; color:var(--text-muted); margin-top:0.15rem; }
+      .fact:not(:last-child)::after { content:'·'; margin-left:0.7rem; opacity:0.6; }
+      .session-toggle { grid-area:toggle; font-family:var(--font-mono); color:var(--text-muted); font-size:1.1rem; width:2rem; text-align:center; }
+      .session-toggle::before { content:'+'; }
+      details[open] > .session-row .session-toggle::before { content:'\2212'; }
+      details[open] > .session-row { border-bottom:1px solid rgba(255,255,255,0.07); }
+      .session-body { padding:0.9rem 1.1rem 1.2rem; }
+
+      .hat-strip { display:inline-flex; gap:0.3rem; align-items:center; }
+      .hat-dot { display:inline-block; width:0.7rem; height:0.7rem; border-radius:50%; background:var(--text-muted); border:1px solid rgba(255,255,255,0.18); flex:none; }
+      .hat-white  { background:var(--hat-white); }
+      .hat-yellow { background:var(--hat-yellow); }
+      .hat-black  { background:#0b0d12; border-color:var(--hat-black); }
+      .hat-green  { background:var(--hat-green); }
+      .hat-red    { background:var(--hat-red); }
+      .hat-blue   { background:var(--hat-blue); }
+
+      .conduct { margin:0 0 0.8rem; }
+      .conduct-line, .conduct-defects { font-size:0.78rem; color:var(--text-muted); }
+      .conduct-defects { padding-left:1.1rem; color:#e0864a; margin-top:0.3rem; }
+      .session-tools { display:flex; gap:1.2rem; flex-wrap:wrap; margin:0 0 0.6rem; }
+      .tool { background:none; border:none; cursor:pointer; padding:0.4rem 0; min-height:2.2rem; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.06em; color:var(--accent); text-decoration:none; }
+      .tool:hover { color:var(--text-primary); }
+
+      /* THE CHAPTER. The ground carries the hat's wash, the heading carries
+         its name and pins while the chapter scrolls. */
+      .chapter { --wash:transparent; --hat:var(--text-muted); position:relative; margin:0 -1.1rem 0.6rem; padding:0.2rem 1.1rem 0.6rem; background:var(--wash); }
+      .chapter-stance { border-top:1px solid rgba(255,255,255,0.05); }
+      .chapter-head { position:sticky; top:var(--nav-h); z-index:5; display:flex; align-items:center; gap:0.6rem; margin:0 -1.1rem 0.8rem; padding:0.55rem 1.1rem; background:rgba(12,12,16,0.94); backdrop-filter:blur(8px); border-bottom:1px solid rgba(255,255,255,0.06); box-shadow:inset 3px 0 0 var(--hat); }
+      .chapter-name { font-family:var(--font-display); font-size:1.25rem; font-weight:500; color:var(--hat); line-height:1.2; }
+      .chapter-round { font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); }
+      .chapter-n { font-family:var(--font-mono); font-size:0.66rem; letter-spacing:0.06em; color:var(--text-muted); margin-left:auto; }
+
+      .ground-white  { --wash:rgba(214,228,246,0.045); --hat:var(--hat-white); --bubble:rgba(214,228,246,0.06); }
+      .ground-yellow { --wash:rgba(255,199,92,0.05);   --hat:var(--hat-yellow); --bubble:rgba(255,199,92,0.075); }
+      .ground-black  { --wash:rgba(2,4,9,0.6);         --hat:var(--hat-black); --bubble:rgba(150,166,190,0.05); }
+      .ground-green  { --wash:rgba(94,222,160,0.045);  --hat:var(--hat-green); --bubble:rgba(94,222,160,0.075); }
+      .ground-red    { --wash:rgba(255,110,110,0.05);  --hat:var(--hat-red); --bubble:rgba(255,110,110,0.08); }
+      .ground-blue   { --wash:rgba(74,158,255,0.045);  --hat:var(--hat-blue); --bubble:rgba(74,158,255,0.075); }
+
+      .kicker { display:block; font-family:var(--font-mono); font-size:0.64rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); margin-bottom:0.3rem; }
+      /* THE BRIEF is a rubric, not a message: no bubble, smaller, in the
+         hat's colour at the edge, shown whole. */
+      .brief { margin:0 0 1rem; padding:0.2rem 0 0.2rem 0.9rem; border-left:2px solid var(--hat); max-width:40rem; }
+      .brief p { font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.5rem; }
+      .brief p:last-child { margin-bottom:0; }
+      /* WHAT THE HAT PRODUCED closes the chapter, in the conductor's
+         register, and reads like a turn because it can run as long as one. */
+      .outcome { margin:0.4rem 0 0.6rem; padding:0.75rem 0.95rem 0.5rem; border:1px dashed rgba(255,255,255,0.16); border-radius:6px; max-width:44rem; }
+      .outcome .turn-body p { font-size:0.875rem; color:var(--text-secondary); }
+      .stance-nil { color:var(--text-muted); font-style:italic; }
+
+      /* A TURN IS A MESSAGE. Sender first and large, role beside it, then the
+         words. Left-aligned, all senders alike: this is a group room. */
+      .turn { position:relative; margin:0 0 0.8rem; padding:0.75rem 0.95rem 0.5rem; border-radius:12px 12px 12px 4px;
               background:var(--bubble, rgba(255,255,255,0.035)); border:1px solid rgba(255,255,255,0.07); max-width:44rem; }
-      .turn-head { display:flex; align-items:baseline; gap:0.6rem; margin-bottom:0.35rem; flex-wrap:wrap; }
+      .turn-head { display:flex; align-items:baseline; gap:0.6rem; margin-bottom:0.3rem; flex-wrap:wrap; }
+      .speaker { font-family:var(--font-display); font-size:1.25rem; font-weight:500; line-height:1.2; color:var(--text-primary); }
+      .role { font-family:var(--font-mono); font-size:0.64rem; text-transform:uppercase; letter-spacing:0.09em; color:var(--text-secondary); }
+      .role-blue { color:var(--hat-blue); }
+      .stamp { font-family:var(--font-mono); font-size:0.66rem; color:var(--text-muted); }
+      .permalink { font-family:var(--font-mono); font-size:0.66rem; color:var(--text-muted); text-decoration:none; margin-left:auto; }
+      .permalink:hover { color:var(--accent); }
+      .turn p, .outcome p { color:var(--text-secondary); font-size:0.9375rem; line-height:1.7; margin-bottom:0.9rem; max-width:38rem; }
+      .turn-body > p:last-child { margin-bottom:0.2rem; }
+      .turn em { color:var(--text-primary); font-style:italic; }
+      .turn-new { animation:arrive 1.2s ease-out; }
+      @keyframes arrive { from { opacity:0; } to { opacity:1; } }
 
-      /* THE CLAMP. About three lines, then a fade and a tap — WhatsApp's
-         answer, and the right one here because a turn in this room routinely
-         runs past a thousand words and a feed of them is a document again.
-         The height is set from the body's own type so it is three LINES and
-         not an arbitrary box, and the control is only ever shown when the
-         script has measured that something is actually behind it. */
-      /* Clamped by DEFAULT, and only under .js — which the script adds to
-         <html> before first paint. Two reasons, both load-bearing. Without
-         JavaScript nothing could ever expand it, so a clamp would be a page
-         that hides its own record, and this room's whole claim is that the
-         record is whole. And measuring the overflow requires the clamp to be
-         ON: a body with no max-height has scrollHeight equal to clientHeight,
-         so a clamp applied only after measurement can never fire. */
-      .turn-body { --lines:3; }
-      .js .clampable .turn-body { max-height:calc(var(--lines) * 0.9375rem * 1.7); overflow:hidden;
-        -webkit-mask-image:linear-gradient(to bottom, #000 72%, transparent 100%);
-        mask-image:linear-gradient(to bottom, #000 72%, transparent 100%); }
-      .js .clampable.open .turn-body { max-height:none; -webkit-mask-image:none; mask-image:none; }
-      .js .clampable:not(.open) .turn-body > p:last-child { margin-bottom:0; }
-      .more { display:block; margin-top:0.15rem; padding:0.35rem 0; background:none; border:none; cursor:pointer;
-        font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.06em; color:var(--accent); text-align:left;
-        /* Tap target, because the phone is the first screen. */
-        min-height:2.2rem; }
+      /* The conductor's turns are the room's process, on the record, in a
+         visibly different register — square, blue-edged, never a bubble. */
+      .turn-conductor { border-radius:4px; border-color:rgba(74,158,255,0.35); background:rgba(74,158,255,0.05); }
+      .turn-conductor .speaker { color:var(--hat-blue); }
+
+      /* THE CLAMP. The first paragraph shows; the rest is behind a tap. Only
+         under .js, which the script adds before first paint — without
+         JavaScript nothing could expand it, so the page shows everything.
+         A single paragraph that is itself very long is cut at about nine
+         lines with a fade, and .cut is set only when the measurement says
+         it actually overflows, so a short first paragraph is never faded. */
+      .js .clampable:not(.open) .turn-body > p:not(:first-child) { display:none; }
+      .js .clampable:not(.open) .turn-body { max-height:calc(9 * 0.9375rem * 1.7); overflow:hidden; }
+      .js .clampable.cut:not(.open) .turn-body { -webkit-mask-image:linear-gradient(to bottom, #000 78%, transparent 100%); mask-image:linear-gradient(to bottom, #000 78%, transparent 100%); }
+      .more { display:block; margin-top:0.1rem; padding:0.35rem 0; background:none; border:none; cursor:pointer;
+        font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.06em; color:var(--accent); text-align:left; min-height:2.2rem; }
       .more:hover { color:var(--text-primary); }
+      .outcome .more { color:var(--text-secondary); }
 
-      /* WHO THE ROOM IS WAITING ON. It sits in the ground of the hat being
-         thought under, so the colour answers "under which hat" here exactly
-         as it does for the turns, and it carries an age because a think that
-         has run twenty minutes is a different fact from one that has run
-         twenty seconds. */
-      .floor { display:flex; align-items:center; gap:0.6rem; margin:0.2rem 0 1.4rem; padding:0.55rem 0.95rem;
-        border-radius:14px 14px 14px 4px; background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.14);
+      /* WHO THE ROOM IS WAITING ON. */
+      .floor { display:flex; align-items:center; gap:0.6rem; margin:0.2rem 0 1rem; padding:0.55rem 0.95rem;
+        border-radius:12px 12px 12px 4px; background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.14);
         max-width:26rem; font-size:0.8rem; color:var(--text-secondary); }
-      .floor-text { font-family:var(--font-body); }
-      /* THE COMMAND SURFACE'S OWN IN-FLIGHT INDICATOR, LIFTED FROM SOURCE
-         (~/command-surface: public/index.html `.elapsed` / `.work .dots`, and
-         public/chat-column.js `addWorkBubble`). Three ● glyphs blinking in
-         sequence — 1.2s, staggered 0.2s, resting at 0.25 and peaking at 1 —
-         then the elapsed reading in mono at 12.5px in the surface's blue,
-         which is the same #4a9eff this page already calls --accent. Copied
-         rather than approximated: Tom asked for THAT indicator, and an
-         indicator that merely resembles it is a second one to maintain.
-         WHAT IS DELIBERATELY NOT COPIED IS THE STOP BUTTON. This page is
-         read-only — a watcher has nothing to stop and no channel to stop it
-         through — so the control the surface pairs with these dots has no
-         meaning here and is absent by rule, not by omission. */
-      .floor-age { font-family:ui-monospace,Menlo,monospace; font-size:12.5px;
-        font-style:normal; color:var(--accent); margin-left:auto; }
+      .floor-age { font-family:ui-monospace,Menlo,monospace; font-size:12.5px; color:var(--accent); margin-left:auto; }
       .floor-dots { display:inline-flex; font-size:14.5px; line-height:1; color:var(--text-secondary); }
       .floor-dots span { animation:blink 1.2s infinite; opacity:0.25; }
       .floor-dots span:nth-child(2) { animation-delay:0.2s; }
@@ -674,130 +835,40 @@ const writtenAt = liveRoomWrittenAt();
       .floor-stale { border-style:solid; border-color:rgba(224,134,74,0.35); }
       .floor-stale .floor-dots span { animation:none; opacity:0.25; color:#e0864a; }
       .floor-stale .floor-age { color:#e0864a; }
-      @media (prefers-reduced-motion:reduce) { .floor-dots span { animation:none; opacity:0.6; } }
+      @media (prefers-reduced-motion:reduce) { .floor-dots span, .status-live::before { animation:none; opacity:0.6; } }
 
-      /* The folds. Everything the room publishes about itself is still on the
-         page and still in the DOM — it is closed, not fetched, not removed. */
-      .fold, .fold.charter, .fold.rules, .fold.seats { margin:0 0 0.75rem; }
-      .fold { border-left-width:1px; border-left-color:rgba(255,255,255,0.08); background:none; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:0 1rem; }
-      .fold > summary { list-style:none; cursor:pointer; padding:0.75rem 0; display:flex; align-items:center; gap:0.6rem; }
-      .fold > summary::-webkit-details-marker { display:none; }
-      .fold > summary::after { content:'+'; margin-left:auto; font-family:var(--font-mono); color:var(--text-muted); }
-      .fold[open] > summary::after { content:'\2212'; }
-      .fold > summary h2 { margin:0; border:none; padding:0; font-size:1.05rem; }
-      .fold[open] { padding-bottom:1rem; }
-      .fold[open] > summary { border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:0.9rem; }
-      /* The charter, published so a reader can judge the room against its
-         actual grounding. Set quieter than the record: it is the standing text
-         the room carries, not something anybody said. */
-      .charter { margin:0 0 3rem; padding:1.4rem 1.6rem; border:1px solid rgba(255,255,255,0.10); border-left:2px solid var(--accent); border-radius:4px; background:rgba(74,158,255,0.03); }
-      .charter h2 { font-family:var(--font-display); font-size:1.3rem; margin:0 0 0.9rem; }
-      .charter p { color:var(--text-secondary); font-size:0.9rem; margin:0 0 0.85rem; max-width:40rem; }
-      .charter em { color:var(--text-muted); }
-      .charter h1 { display:none; }
-      .charter h2:not(:first-child) { font-size:1rem; margin:1.6rem 0 0.7rem; color:var(--accent); }
-      .charter ol, .charter ul { color:var(--text-secondary); font-size:0.9rem; padding-left:1.2rem; margin:0 0 0.85rem; max-width:40rem; }
-      .charter li { margin-bottom:0.45rem; }
-      .charter hr { border:none; border-top:1px solid rgba(255,255,255,0.08); margin:1.4rem 0; }
-
-      .conduct { margin:0 0 2rem; padding:0.85rem 1rem; border:1px solid rgba(255,255,255,0.10); border-radius:4px; }
-      .conduct-kicker { font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); }
-      .conduct-line, .conduct-defects { margin:0.5rem 0 0; font-size:0.8rem; color:var(--text-muted); }
-      .conduct-defects { padding-left:1.1rem; color:#e0864a; }
-
-      /* THE HAT IS DRAWN, NOT LABELLED.
-         The colour of the environment changes as the room moves through hats,
-         so a reader scrolling never has to work out which hat is in play. It
-         is the GROUND of a stretch of room, never a badge on a message, and it
-         is deliberately quiet: the transitions are where it reads. If it
-         needed a caption the colour would have failed, so there is no legend
-         and no key anywhere on this page. */
-      .ground { --wash:transparent; --edge:transparent; position:relative; padding:0.1rem 1.25rem; margin:0 -1.25rem; background:var(--wash); transition:background 400ms ease; }
-      .ground::before, .ground::after { content:''; position:absolute; left:0; right:0; height:4.5rem; pointer-events:none; }
-      .ground::before { top:-4.5rem; background:linear-gradient(to bottom, transparent, var(--wash)); }
-      .ground::after { bottom:-4.5rem; background:linear-gradient(to top, transparent, var(--wash)); }
-      .ground[class*="ground-"] { box-shadow:inset 2px 0 0 var(--edge); }
-
-      /* Each hat carries a second value: the tint of a MESSAGE standing on it.
-         A bubble painted a flat neutral would cover the wash with the very
-         thing the wash exists to say — in a feed the bubbles are most of the
-         surface — so the hat is in the bubble too, one step up in strength so
-         it still reads as a message sitting on a ground. */
-      .ground-white  { --wash:rgba(214,228,246,0.055); --edge:rgba(214,228,246,0.30); --bubble:rgba(214,228,246,0.055); }
-      .ground-yellow { --wash:rgba(255,199,92,0.060);  --edge:rgba(255,199,92,0.34);  --bubble:rgba(255,199,92,0.070); }
-      .ground-black  { --wash:rgba(2,4,9,0.55);        --edge:rgba(150,166,190,0.26); --bubble:rgba(150,166,190,0.045); }
-      .ground-green  { --wash:rgba(94,222,160,0.055);  --edge:rgba(94,222,160,0.30);  --bubble:rgba(94,222,160,0.070); }
-      .ground-red    { --wash:rgba(255,110,110,0.060); --edge:rgba(255,110,110,0.32); --bubble:rgba(255,110,110,0.075); }
-      .ground-blue   { --wash:rgba(74,158,255,0.055);  --edge:rgba(74,158,255,0.32);  --bubble:rgba(74,158,255,0.070); }
-
-      /* Under a drawn hat the refusal is the only thing that stays — it is
-         substance, not a caption — so it reads as the room's own aside. */
-      .stance-drawn { border:none; background:none; padding:1.5rem 0 0.5rem; margin:0; }
-      .stance-drawn .more { color:var(--text-muted); }
-      .stance-drawn p { font-size:0.875rem; color:var(--text-muted); font-style:italic; max-width:34rem; }
-
-      /* The conductor's interventions appear IN the page, like a strip
-         editor's box: a visibly different register, on the record, so a
-         redirect can be judged rather than being a hidden hand. */
-      .turn-editor { border:1px solid rgba(74,158,255,0.30); background:rgba(74,158,255,0.045); border-radius:3px; padding:1.1rem 1.25rem 0.4rem; margin:2.5rem 0; }
-      .turn-editor .turn-head { margin-bottom:0.5rem; }
-      .turn-editor .speaker { font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.14em; }
-      .turn-editor p { font-size:0.9rem; }
-
-      .speaker { font-family:var(--font-display); font-size:1.1rem; line-height:1.2; color:var(--accent); }
-      .seat-chip { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.09em; color:var(--text-muted); }
-      .stamp { font-family:var(--font-mono); font-size:0.68rem; color:var(--text-muted); }
-      .permalink { font-family:var(--font-mono); font-size:0.68rem; color:var(--text-muted); text-decoration:none; margin-left:auto; }
-      .permalink:hover { color:var(--accent); }
-      .turn p { color:var(--text-secondary); font-size:0.9375rem; line-height:1.7; margin-bottom:0.9rem; }
-      .turn-body > p:last-child { margin-bottom:0.2rem; }
-      .turn em { color:var(--text-primary); font-style:italic; }
-      .turn-new { animation:arrive 1.2s ease-out; }
-      @keyframes arrive { from { opacity:0; } to { opacity:1; } }
-
-      .stance-open, .stance-close { position:relative; margin:2rem 0 1.5rem; padding:0.85rem 1rem 0.85rem 1.1rem; border:1px dashed rgba(74,158,255,0.35); border-radius:4px; background:rgba(74,158,255,0.04); }
-      .stance-close { border-style:solid; border-color:rgba(255,255,255,0.10); background:none; }
-      .stance-kicker { font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); }
-      .stance-name { font-family:var(--font-display); font-size:1.25rem; color:var(--accent); margin-left:0.5rem; }
-      .stance-called { font-family:var(--font-mono); font-size:0.66rem; color:var(--text-muted); margin-left:0.6rem; }
-      .stance-open p, .stance-close p { color:var(--text-secondary); font-size:0.875rem; margin-top:0.5rem; }
-      .stance-nil { color:var(--text-muted); font-style:italic; }
-      /* .turn-in-stance carries no style now: the hat is the ground, and a
-         bubble standing on it needs no second border to say it is in a
-         stance — one would only compete with the wash. The class stays on the
-         element because it is a fact about the turn a reader may want out of
-         the DOM, not a hook this stylesheet uses. */
-      .model { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.09em; color:var(--text-secondary); }
-      .turn-stance { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); opacity:0.75; }
-
-      .move { margin-top:2.5rem; padding:1.25rem 1.4rem; border:1px solid rgba(63,184,196,0.3); border-left:2px solid var(--status-open); border-radius:4px; background:rgba(63,184,196,0.04); }
-      .move-kicker { font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--status-open); }
-      .move p { color:var(--text-secondary); font-size:0.9375rem; margin-top:0.7rem; }
+      .move { margin-top:1.2rem; padding:1.1rem 1.3rem; border:1px solid rgba(63,184,196,0.3); border-left:3px solid var(--status-open); border-radius:6px; background:rgba(63,184,196,0.05); scroll-margin-top:calc(var(--nav-h) + 1rem); }
+      .move-kicker { font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--status-open); }
+      .move p { color:var(--text-primary); font-size:0.95rem; margin-top:0.7rem; max-width:38rem; }
       .move-none { border-color:rgba(255,255,255,0.12); border-left-color:var(--text-muted); background:rgba(255,255,255,0.02); }
       .move-none .move-kicker { color:var(--text-muted); }
+      .move-none p { color:var(--text-secondary); }
+      .turn, details.session { scroll-margin-top:calc(var(--nav-h) + 3.2rem); }
 
-      .page-footer { margin-top:4rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.06); color:var(--text-muted); font-size:0.875rem; }
+      .page-footer { margin-top:3rem; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,0.06); color:var(--text-muted); font-size:0.85rem; }
       .page-footer a { color:var(--accent); text-decoration:none; }
-      /* THE PHONE IS THE FIRST SCREEN, not the narrow case. A session is
-         watched from wherever the watcher is, so the strip has to read there
-         before it reads anywhere. The ground keeps its full-bleed wash — that
-         is the hat, and cropping it would crop the only signal — while the
-         nav stops pretending to be one fixed-height line and simply wraps,
-         with the build stamp dropped because it is the least of it. */
+
+      /* THE PHONE IS THE FIRST SCREEN. The nav stops being fixed and wraps,
+         the chapter heading pins to the top edge, and bubbles go edge to
+         edge. */
       @media (max-width:600px){
-        main{padding:1.25rem 1.25rem 4rem;} h1{font-size:2rem;} .session-head h2{font-size:1.5rem;}
-        .top-nav{position:static; height:auto; padding:0.6rem 1.25rem; gap:0.75rem; flex-wrap:wrap;}
-        .nav-right{gap:0.75rem; margin-left:0; width:100%;}
+        :root{--nav-h:0px;}
+        main{padding:1rem 0.9rem 4rem;} h1{font-size:2rem;}
+        .top-nav{position:static; height:auto; padding:0.6rem 0.9rem; gap:0.6rem; flex-wrap:wrap;}
+        .nav-right{gap:0.7rem; margin-left:0; width:100%;}
         .nav-build{display:none;}
-        .nav-link{font-size:0.8rem;}
-        .charter{padding:1.1rem 1.15rem;}
-        .turn-head{flex-wrap:wrap; gap:0.4rem 0.6rem;}
-        .permalink{margin-left:0;}
-        .turn-editor{padding:0.9rem 1rem 0.3rem; margin:1.4rem 0;}
-        .turn{padding:0.7rem 0.8rem 0.5rem; max-width:none;}
-        .floor{max-width:none;}
+        .nav-link{font-size:0.78rem;}
         .fold{padding:0 0.85rem;}
-        .fold > summary h2{font-size:0.95rem;}
+        .session-row{padding:0.8rem 0.9rem;}
+        .session-title{font-size:1.3rem;}
+        .session-body{padding:0.7rem 0.9rem 1rem;}
+        .chapter{margin:0 -0.9rem 0.5rem; padding:0.2rem 0.9rem 0.5rem;}
+        .chapter-head{margin:0 -0.9rem 0.7rem; padding:0.5rem 0.9rem;}
+        .turn{padding:0.7rem 0.8rem 0.45rem; max-width:none;}
+        .turn-head{gap:0.4rem 0.55rem;}
+        .floor{max-width:none;}
+        .turn, details.session { scroll-margin-top:3.2rem; }
+        .move{scroll-margin-top:1rem;}
       }
     </style>
   </body>
