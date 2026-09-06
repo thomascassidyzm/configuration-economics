@@ -148,3 +148,71 @@ room is fixed to a single account and therefore needs no controls — if there i
 window spare it uses it, if not it doesn't. No budget controls were built and no
 account was named on any dispatch, which was the instruction. Naming the account
 is yours and nobody else's.
+
+---
+
+# Addendum: the conductor is not a scheduler
+
+*Tom's ruling arrived after session 002 had run and published. It changes
+nothing about that session and everything about the next one. It is landed as
+machinery, not as a memo, and it is now checkable off the record.*
+
+**The ruling, in two parts.** Blue calls each next hat live, from the state of
+the room, saying in one line why that hat now — not a fixed rotation executed as
+a schedule. And Blue's fitness function is **direction, not rigour**: it is the
+sentinel against the room disappearing into caveats, definitional argument,
+methodological throat-clearing and unearned precision, and it calls a hat change
+the moment the room stops generating possibility and starts defending itself.
+Rigour belongs to the registrar layer precisely so Blue never spends itself on
+accuracy.
+
+**What landed.** The doctrine is in the room store's own header. `conductorCadence()`
+reads off the record whether a session was conducted or timetabled — a live call
+leaves a conductor's turn in front of every hat — and the page prints the answer.
+The standing conductor brief, which existed only as scratch text through 002 and
+is *why* 002 ran as a timetable, is now a file in the repo with the three things
+002 paid to learn written into it.
+
+**Session 002 now reports itself: three of twelve hats called live. Part
+conducted, part timetable.** The correction is visible on the page against the
+session that got it wrong, which is the room working as designed.
+
+## What the direction sentinel would have caught in 002
+
+This is the only evidence available for whether the ruling bites, and it is
+retrospective, so treat it accordingly. Reading the record against the new
+fitness function:
+
+- **Round two was definitional argument, end to end.** Is the fork real, does
+  choosing "reach" escape the counterfactual, where does contradictability live.
+  It produced the session's single best wound and then spent the rest of itself
+  on unearned precision — a priced floor, a counting rule, a publishability
+  verdict, an inversion test, for an instrument nobody has built. Blue's own
+  close says that turn "has grown most of the organs of a trace." A direction
+  sentinel should have cut it and called for something usable.
+- **Round three's black is the clearest case.** Six ranked wounds against a
+  design that does not exist. That is the room admiring its own attack, which
+  round one's red had already named — *this room is better at wounding than at
+  wanting* — and which nothing in the mechanism could act on, because the
+  conductor had already timetabled the round.
+- **The person arrived two rounds late.** The receiving reader — tired, late,
+  grateful for a figure — is where the session's move came from, and it entered
+  in round two only because a foreign gut happened to raise it. Under the new
+  function that is a direction call the conductor makes in round one.
+- **What the ruling would not have changed:** the foreign seat's four
+  contributions were the session's actual content, and they came from Astra
+  regardless of cadence. The confound stands.
+
+**Blunt version: two of three rounds were in the weeds, and the new Blue is
+precisely the sentinel that would have said so mid-round.** Session 002 is
+evidence for the ruling rather than against it — but it is retrospective
+evidence, and the ruling is untested until a session runs under it.
+
+## The honest gap
+
+**The addendum has not been run.** It arrived after the session closed, and I did
+not start a second session: the brief bounded this job at three rounds and one
+session, and my dispatch tree is at its ceiling, so a live probe was not
+available. What exists is the machinery, the brief, and a cadence check that
+would show the difference immediately. What does not exist is a round actually
+conducted this way.
