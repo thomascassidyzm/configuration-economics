@@ -24,5 +24,16 @@ export default defineConfig({
     define: {
       '__BUILD_NUMBER__': JSON.stringify(buildNumber),
     },
+    server: {
+      // Serving the dev server behind a tailnet proxy so a session can be
+      // WATCHED while it runs — Vite rejects a Host header it was not told
+      // about, and the room is worth nothing if it cannot be opened on a
+      // phone. Dev-server only: this has no effect on the Vercel build.
+      // Extra hosts come from ALLOWED_HOSTS, comma-separated.
+      allowedHosts: [
+        'watson-1.tail4968cb.ts.net',
+        ...(process.env.ALLOWED_HOSTS ?? '').split(',').map(h => h.trim()).filter(Boolean),
+      ],
+    },
   },
 });
