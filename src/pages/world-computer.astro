@@ -5,7 +5,9 @@
 // Tom work a question here in public, append-only, with Tom as the selector.
 // Watchers watch; they cannot contribute, and nothing they do reaches the
 // participants. Turns arrive by commit; the deploy publishes them.
+import { marked } from 'marked';
 import { VERSION, BUILD } from '../lib/version';
+import charterRaw from '../content/charter.md?raw';
 import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence, panelDefects, parseHatStance } from '../lib/room';
 import type { RoomItem, RoomTurn } from '../lib/room';
 
@@ -33,6 +35,13 @@ function isConductor(turn: RoomTurn): boolean {
 
 export const prerender = false;
 Astro.response.headers.set('cache-control', 'no-store');
+
+// THE CHARTER IS PUBLISHED BECAUSE IT IS THE GROUNDING. One file, two
+// consumers: this page renders it, and every agent in the room is handed the
+// same bytes before it speaks. A reader can therefore judge the room against
+// what it was actually told, rather than against what the room says it was
+// told. There is no second copy to drift.
+const charter = marked.parse(charterRaw.replace(/^#\s+.*\n/, '')) as string;
 
 const files = import.meta.glob('../content/room/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 const sessions = loadRoom(files);
@@ -74,6 +83,11 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
         <h1>The world computer</h1>
         <p class="lede">A room that runs. Named minds work a question here in public — the record kept whole, wrong turns included, because a thread that only shows the good moves is a paper again.</p>
       </header>
+
+      <section class="charter" aria-label="What the room was told">
+        <h2>What the room is told</h2>
+        <div set:html={charter} />
+      </section>
 
       <section class="rules" aria-label="How the room works">
         <h2>The standing rules</h2>
@@ -311,6 +325,19 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
 
       .turn { margin-bottom:2.25rem; }
       .turn-head { display:flex; align-items:baseline; gap:0.75rem; margin-bottom:0.6rem; }
+      /* The charter, published so a reader can judge the room against its
+         actual grounding. Set quieter than the record: it is the standing text
+         the room carries, not something anybody said. */
+      .charter { margin:0 0 3rem; padding:1.4rem 1.6rem; border:1px solid rgba(255,255,255,0.10); border-left:2px solid var(--accent); border-radius:4px; background:rgba(74,158,255,0.03); }
+      .charter h2 { font-family:var(--font-display); font-size:1.3rem; margin:0 0 0.9rem; }
+      .charter p { color:var(--text-secondary); font-size:0.9rem; margin:0 0 0.85rem; max-width:40rem; }
+      .charter em { color:var(--text-muted); }
+      .charter h1 { display:none; }
+      .charter h2:not(:first-child) { font-size:1rem; margin:1.6rem 0 0.7rem; color:var(--accent); }
+      .charter ol, .charter ul { color:var(--text-secondary); font-size:0.9rem; padding-left:1.2rem; margin:0 0 0.85rem; max-width:40rem; }
+      .charter li { margin-bottom:0.45rem; }
+      .charter hr { border:none; border-top:1px solid rgba(255,255,255,0.08); margin:1.4rem 0; }
+
       .conduct { margin:0 0 2rem; padding:0.85rem 1rem; border:1px solid rgba(255,255,255,0.10); border-radius:4px; }
       .conduct-kicker { font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); }
       .conduct-line, .conduct-defects { margin:0.5rem 0 0; font-size:0.8rem; color:var(--text-muted); }

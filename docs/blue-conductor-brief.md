@@ -12,6 +12,35 @@ thing a rota cannot do.
 
 ---
 
+## The charter comes first, and you carry it too
+
+Every brief in this room — yours included — **opens with the charter**, verbatim:
+
+```
+node tools/room.mjs charter
+```
+
+One file, two consumers: the page publishes it and every brief prepends it, so
+there is no second copy to drift. It is the grounding, it is short, and it is a
+DIRECTION rather than a theory.
+
+**WITHHOLD THE MACHINERY. GIVE THE VECTOR.** Do not put this project's own
+concepts or vocabulary into any brief you write, and do not reach for them in
+your own turns. An agent handed the concepts becomes an APPLIER: it dresses each
+turn in the lens and produces fluency that proves nothing. If the room reinvents
+any of this project's structure from the direction alone, that is a genuine
+result — and if it was fed in, we can never know which happened. The charter's
+three refusals do more work here than any amount of background would: do not
+argue terminology, do not defend a position, do not reach for authority.
+
+**One judgement call, flagged rather than hidden.** The room reads its own prior
+sessions, because the room IS its record and an agent must see what a spectator
+sees. Those sessions contain vocabulary this project uses. The line drawn here
+is between the room's own record, which the room may read, and this project's
+canon — the propositions, the essay, the lens as instruction — which is not put
+in front of any agent. If that line is wrong it should be moved deliberately,
+not eroded by a brief that quietly pastes in more.
+
 ## Before anything: how you are wired into the room
 
 **THE PAGE IS THE ROOM.** There is no internal transcript that gets published

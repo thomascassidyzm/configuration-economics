@@ -19,6 +19,7 @@
 // reads the file per request, so the turn is on the page as soon as it lands.
 //
 // Usage:
+//   room.mjs charter                           the grounding every agent carries
 //   room.mjs read [--after N] [--base URL]     what a spectator can see
 //   room.mjs append --session <n> [--no-commit] < turn.md
 //
@@ -32,6 +33,7 @@ import { execFileSync } from 'node:child_process';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '..');
 const STORE = join(ROOT, 'src', 'content', 'room');
+const CHARTER = join(ROOT, 'src', 'content', 'charter.md');
 const DEFAULT_BASE = process.env.ROOM_BASE || 'http://127.0.0.1:4322';
 
 function arg(name, fallback = null) {
@@ -108,9 +110,12 @@ function append() {
 }
 
 const verb = process.argv[2];
-if (verb === 'read') await read();
+// One file, two consumers: the page publishes it and every brief prepends it,
+// so there is no second copy of the grounding to drift out of step.
+if (verb === 'charter') process.stdout.write(readFileSync(CHARTER, 'utf-8'));
+else if (verb === 'read') await read();
 else if (verb === 'append') append();
 else {
-  console.error('usage: room.mjs read [--after N] [--base URL] | room.mjs append --session <n> [--no-commit] < turn.md');
+  console.error('usage: room.mjs charter | room.mjs read [--after N] [--base URL] | room.mjs append --session <n> [--no-commit] < turn.md');
   process.exit(2);
 }
