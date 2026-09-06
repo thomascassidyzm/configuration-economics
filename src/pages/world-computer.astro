@@ -243,11 +243,11 @@ const writtenAt = liveRoomWrittenAt();
                 see `roomFloor` for why that can never be stuck on. */}
             {floor && session === latest && gi === groups.length - 1 && (
               <div class="floor" id="floor" data-floor data-hat={floor.hat ?? ''} data-since={writtenAt ?? ''}>
-                <span class="floor-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="floor-dots" aria-hidden="true"><span>●</span><span>●</span><span>●</span></span>
                 <span class="floor-text">{floor.conducting
                   ? `${floor.who} is calling what comes next`
                   : `${floor.who} is taking its turn`}</span>
-                <span class="floor-age" data-age></span>
+                <span class="floor-age" data-age>0:00</span>
               </div>
             )}
             </section>
@@ -456,13 +456,15 @@ const writtenAt = liveRoomWrittenAt();
       let floorEl = document.getElementById('floor');
       let floorSince = writtenAt || null;
 
+      // m:ss, the command surface's own elapsed reading (public/chat-column.js:
+      // `addWorkBubble`). A think that has been running one minute eleven says
+      // 1:11 and not "1m": the seconds are what make the line visibly alive
+      // between polls, and rounding them away is what made the old reading sit
+      // still for a minute at a time.
       function ageText(since) {
         if (!since) return '';
-        const secs = Math.max(0, Math.round((Date.now() - since) / 1000));
-        if (secs < 60) return `${secs}s`;
-        const mins = Math.round(secs / 60);
-        if (mins < 60) return `${mins}m`;
-        return `${Math.round(mins / 60)}h`;
+        const secs = Math.max(0, Math.floor((Date.now() - since) / 1000));
+        return Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
       }
 
       function paintAge() {
@@ -487,8 +489,11 @@ const writtenAt = liveRoomWrittenAt();
           floorEl.id = 'floor';
           floorEl.className = 'floor';
           floorEl.setAttribute('data-floor', '');
-          floorEl.innerHTML = '<span class="floor-dots" aria-hidden="true"><i></i><i></i><i></i></span>'
-            + '<span class="floor-text"></span><span class="floor-age" data-age></span>';
+          // THE SAME MARKUP THE SERVER WRITES, character for character. A
+          // polled floor and a served floor are the same fact arriving by two
+          // roads, and two spellings of it is how they drift apart.
+          floorEl.innerHTML = '<span class="floor-dots" aria-hidden="true"><span>●</span><span>●</span><span>●</span></span>'
+            + '<span class="floor-text"></span><span class="floor-age" data-age>0:00</span>';
         }
         floorEl.querySelector('.floor-text').textContent = f.conducting
           ? `${f.who} is calling what comes next`
@@ -500,7 +505,12 @@ const writtenAt = liveRoomWrittenAt();
         paintAge();
       }
 
-      setInterval(paintAge, 5000);
+      // ONCE A SECOND, CLIENT-SIDE, BETWEEN THE EIGHT-SECOND POLLS. The timer
+      // is computed from the store's own write time, so it is never a count
+      // the page invented — it just reads that one fact more often than the
+      // network does. Held still while the tab is hidden, as the surface does:
+      // the next tick recomputes from t0 anyway, so nothing can drift.
+      setInterval(() => { if (document.visibilityState === 'visible') paintAge(); }, 1000);
       paintAge();
 
       async function poll() {
@@ -642,17 +652,29 @@ const writtenAt = liveRoomWrittenAt();
         border-radius:14px 14px 14px 4px; background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.14);
         max-width:26rem; font-size:0.8rem; color:var(--text-secondary); }
       .floor-text { font-family:var(--font-body); }
-      .floor-age { font-family:var(--font-mono); font-size:0.66rem; color:var(--text-muted); margin-left:auto; }
-      .floor-dots { display:inline-flex; gap:3px; }
-      .floor-dots i { width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:0.35;
-        animation:think 1.4s ease-in-out infinite; }
-      .floor-dots i:nth-child(2) { animation-delay:0.2s; }
-      .floor-dots i:nth-child(3) { animation-delay:0.4s; }
-      @keyframes think { 0%,100% { opacity:0.2; } 50% { opacity:1; } }
+      /* THE COMMAND SURFACE'S OWN IN-FLIGHT INDICATOR, LIFTED FROM SOURCE
+         (~/command-surface: public/index.html `.elapsed` / `.work .dots`, and
+         public/chat-column.js `addWorkBubble`). Three ● glyphs blinking in
+         sequence — 1.2s, staggered 0.2s, resting at 0.25 and peaking at 1 —
+         then the elapsed reading in mono at 12.5px in the surface's blue,
+         which is the same #4a9eff this page already calls --accent. Copied
+         rather than approximated: Tom asked for THAT indicator, and an
+         indicator that merely resembles it is a second one to maintain.
+         WHAT IS DELIBERATELY NOT COPIED IS THE STOP BUTTON. This page is
+         read-only — a watcher has nothing to stop and no channel to stop it
+         through — so the control the surface pairs with these dots has no
+         meaning here and is absent by rule, not by omission. */
+      .floor-age { font-family:ui-monospace,Menlo,monospace; font-size:12.5px;
+        font-style:normal; color:var(--accent); margin-left:auto; }
+      .floor-dots { display:inline-flex; font-size:14.5px; line-height:1; color:var(--text-secondary); }
+      .floor-dots span { animation:blink 1.2s infinite; opacity:0.25; }
+      .floor-dots span:nth-child(2) { animation-delay:0.2s; }
+      .floor-dots span:nth-child(3) { animation-delay:0.4s; }
+      @keyframes blink { 0%,60%,100% { opacity:0.25; } 30% { opacity:1; } }
       .floor-stale { border-style:solid; border-color:rgba(224,134,74,0.35); }
-      .floor-stale .floor-dots i { animation:none; opacity:0.25; background:#e0864a; }
+      .floor-stale .floor-dots span { animation:none; opacity:0.25; color:#e0864a; }
       .floor-stale .floor-age { color:#e0864a; }
-      @media (prefers-reduced-motion:reduce) { .floor-dots i { animation:none; opacity:0.6; } }
+      @media (prefers-reduced-motion:reduce) { .floor-dots span { animation:none; opacity:0.6; } }
 
       /* The folds. Everything the room publishes about itself is still on the
          page and still in the DOM — it is closed, not fetched, not removed. */
