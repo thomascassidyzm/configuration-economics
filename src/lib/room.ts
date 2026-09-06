@@ -116,12 +116,13 @@ export type RoomItem =
   | { kind: 'stance-open'; stance: RoomStance }
   | { kind: 'stance-close'; stance: RoomStance };
 
-/** Speakers with a seat. Astra's seat is real and currently empty. */
+/** Speakers with a seat. A seat is a role in the room, never a model name. */
 export const SEATS: { name: string; role: string; note: string }[] = [
   { name: 'Tom', role: 'the selector', note: 'Brings the question in from outside, and decides.' },
   { name: 'Watson', role: 'a mind in the room', note: 'Proposes, and is wrong in public when it is wrong.' },
   { name: '環 RBF', role: 'a mind in the room', note: 'Reads the frame, and concedes in public when it concedes.' },
-  { name: 'Astra', role: 'a seat, currently empty', note: 'A mind from another lineage. No turns yet — the seat exists before the occupant does, on purpose: two minds from one training distribution checking each other are siblings, not independents.' },
+  { name: 'Astra', role: 'a mind from another lineage', note: 'The seat existed before the occupant did, on purpose: two minds from one training distribution checking each other are siblings, not independents. It was filled live in session 002 — turns taken in the room, under a hat, not carried in by hand.' },
+  { name: 'Blue', role: 'the conductor', note: 'Process, not content. Sets the hat order before a round runs, reads what the room did afterwards, and reports what was learned — including, especially, from what failed.' },
 ];
 
 function parseFrontmatter(block: string): Record<string, string> {
@@ -231,4 +232,123 @@ export function loadRoom(files: Record<string, string>): RoomSession[] {
   const ordered = Object.keys(files).sort();
   const counter = { n: 0 };
   return ordered.map(k => parseSession(files[k], counter));
+}
+
+// ---------------------------------------------------------------------------
+// The hat rotation.
+//
+// A HAT IS A CALLED STANCE. That is not a convenience, it is the whole design:
+// a hat is a named direction of thinking the room is in for a span, which is
+// exactly what a stance already is, already parsed and already rendered. So
+// there is no hat schema, no picker and no new format — a hat is written as
+// a stance whose name reads `black hat, round two`, and the rotation is READ
+// BACK out of the record rather than stored beside it.
+//
+// A HAT IS A REFUSAL: under black you may only attack, under green you may
+// only generate, and you are forbidden the others for that turn. That is what
+// keeps a swarm from collapsing into mush — the parallel voices are
+// structurally incapable of agreeing prematurely, because the hat forbids it.
+// The refusal lives in the prompt of the turn, not in this file; what lives
+// here is the audit that says whether the room kept to it.
+//
+// NO MODEL OWNS A HAT. A model pinned to black becomes a personality; a model
+// that had to argue the opposite last round cannot hide behind temperament.
+// It is also the cheapest way to see a model's blind spot: it shows up as the
+// same move under every hat. `rotationDefects` is the check that the rotation
+// actually rotated, and it is deliberately a report rather than a throw — the
+// room publishes its own defects rather than refusing to render them.
+
+/** The hat colours the room uses. de Bono's, in his colours. */
+export const HATS = ['white', 'yellow', 'black', 'green', 'red', 'blue'] as const;
+export type Hat = (typeof HATS)[number];
+
+const ORDINALS: Record<string, number> = {
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8,
+};
+
+const HAT_STANCE = new RegExp(
+  `^(${HATS.join('|')})\\s+hat(?:\\s*,\\s*round\\s+([a-z]+|\\d+))?\\s*$`, 'i');
+
+/**
+ * Read a stance name as a hat, or null when it is an ordinary stance.
+ * `black hat, round two` → { hat: 'black', round: 2 }. A hat stance with no
+ * round reads as round null, which is honest rather than guessed.
+ */
+export function parseHatStance(name: string): { hat: Hat; round: number | null } | null {
+  const m = name.trim().match(HAT_STANCE);
+  if (!m) return null;
+  const raw = (m[2] ?? '').toLowerCase();
+  const round = raw ? (ORDINALS[raw] ?? (/^\d+$/.test(raw) ? Number(raw) : null)) : null;
+  return { hat: m[1].toLowerCase() as Hat, round };
+}
+
+export interface HatWearing {
+  /** Round number as written in the stance name, or null when unnumbered. */
+  round: number | null;
+  hat: Hat;
+  /** The model behind the turn, per the turn's own heading. Null if unrecorded. */
+  model: string | null;
+  speaker: string;
+  /** Global turn index, so a defect can be pointed at. */
+  turn: number;
+}
+
+/** Who wore which hat, in which round, in document order. */
+export function hatRotation(sessions: RoomSession[]): HatWearing[] {
+  const out: HatWearing[] = [];
+  for (const session of sessions) {
+    const byIndex = new Map(session.turns.map(t => [t.index, t]));
+    for (const stance of session.stances) {
+      const parsed = parseHatStance(stance.name);
+      if (!parsed) continue;
+      for (const i of stance.turns) {
+        const turn = byIndex.get(i);
+        if (!turn) continue;
+        out.push({ round: parsed.round, hat: parsed.hat, model: turn.model, speaker: turn.speaker, turn: i });
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * What the rotation got wrong, in plain sentences a reader can check against
+ * the record. Empty means the rotation held.
+ *
+ * Three defects, and only three, because a check nobody can verify by eye is
+ * a check nobody trusts: a model wearing the same hat in consecutive rounds
+ * (the rotation did not rotate), a hat turn that records no model (the
+ * rotation is unreadable at that point), and a hat stance covering no turn at
+ * all (a hat was called and nobody wore it).
+ */
+export function rotationDefects(sessions: RoomSession[]): string[] {
+  const defects: string[] = [];
+  const worn = hatRotation(sessions);
+
+  for (const w of worn) {
+    if (!w.model) defects.push(`the ${w.hat} hat turn by ${w.speaker} records no model, so the rotation cannot be read there`);
+  }
+
+  // Same model, same hat, in the round immediately after the last one it wore
+  // it in. Two rounds apart is rotation working, not a defect.
+  const last = new Map<string, number>();
+  for (const w of worn) {
+    if (!w.model || w.round === null) continue;
+    const key = `${w.model}:${w.hat}`;
+    const prev = last.get(key);
+    if (prev !== undefined && w.round === prev + 1) {
+      defects.push(`${w.model} wore the ${w.hat} hat in round ${prev} and again in round ${w.round} — no model owns a hat`);
+    }
+    last.set(key, w.round);
+  }
+
+  for (const session of sessions) {
+    for (const stance of session.stances) {
+      if (parseHatStance(stance.name) && stance.turns.length === 0) {
+        defects.push(`the stance "${stance.name}" was called and no turn was taken under it`);
+      }
+    }
+  }
+
+  return defects;
 }

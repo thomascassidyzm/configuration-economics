@@ -35,6 +35,10 @@ export const ALLOWED_PROPER_NOUNS = [
   // `routing-detail` rules in the guard block them by name. So these two
   // words pass, and nothing after them does.
   'Opus', 'Gemini', 'Fable',
+  // The hats. de Bono's colours are published thinking, not estate facts, and
+  // the room writes them constantly — as stance names, as seat names, and in
+  // ordinary prose. They point at no private object.
+  'Blue', 'White', 'Yellow', 'Black', 'Green', 'Red', 'Hat', 'Hats',
   // The thinkers the room stands on.
   'Buckminster', 'Fuller', 'Edward', 'de', 'Bono', 'David', 'Deutsch',
   'James', 'Carse', 'Bucky', 'Grove', 'Sinek',
