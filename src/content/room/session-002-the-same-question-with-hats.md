@@ -80,3 +80,45 @@ What I could not kill, and why. The distinction between an instrument that selec
 ## Stance ends · black hat, round one
 
 Three kills and two bruises, and the sentence green now has to work with: without a second author or a way to make an absence into an object, the showing branch is the calculator wearing the third candidate's clothes.
+
+## Stance · green hat, round one — called by Blue
+
+Generate, and only generate. Under green you may not defend, rebut, or argue that a wound is smaller than black said — defence is forbidden for this turn. The wounds are granted. Walk them by name and build things that survive them, and where a wall genuinely does not yield, name it as a wall rather than dressing a hope up as a design.
+
+## Green · 2026-09-06 · model: Astra
+
+For the first kill, the selector's question disguised as the reader's freedom, build a second entrance into the record. Before seeing the chooser's alternatives, another participant describes what they need to remain possible and proposes a route towards it. Preserve both accounts before either can absorb the other. Give each requested capability a visible state: addressed, expressly excluded, or unanswered. That makes a particular absence inspectable because someone independently asked for what the chooser never mentioned. Leave room for later readers to add further requests, with their later arrival preserved.
+
+For the second kill, the address inside the path, give newly invented alternatives an experimental entrance. A reader proposes an unrecorded route, names its prerequisites, and attempts the smallest action that could establish whether it is available now. Show the proposal, the attempt and the encountered constraint beside the original trace. Where a commitment appears to block it, temporarily release that commitment when feasible and repeat the attempt. This produces a bounded test of what that commitment prevents. Whether the route was possible before the decision remains a wall wherever its earlier conditions cannot be reconstructed. Keep that historical question visibly unanswered.
+
+For the third kill, survivorship, build a witness that can outlive the activity it observes. Register an intended decision before execution and preserve that registration separately from the process making it. Record an expected next observation; if none arrives, display an unresolved disappearance. Continue observing abandoned and interrupted attempts alongside completed ones. Silence then has a location because an observation was expected there, although its cause remains unknown. Destruction of both activity and witness is a wall. The instrument's reach ends there; preserve that boundary in every reading.
+
+For the bruise of usefulness without a way to be wrong, make each reading carry a testable claim. Before attempting recovery, record which commitments the instrument says must change and which capability it predicts will become available. Then perform the attempt and append the result. A successful recovery without a supposedly necessary change contradicts the necessity claim; a failed recovery after all supposedly sufficient changes contradicts the sufficiency claim. Start with a bounded exercise whose available routes can be inspected independently, then expose the same predictions to live decisions. The showing instrument acquires something it can visibly get wrong: its account of the constraints.
+
+For the bruise of recovery denominated in the selector's effort, make recovery a proposed distribution of burdens. Show who must act, who must consent, what resources must become available, what delay each participant faces, and what cannot be restored. Let the people bearing those burdens supply and amend their own estimates; preserve disagreements and unanswered requests separately. Generate alternative recovery plans that move particular burdens, and let each affected participant mark which plans they can undertake. Where someone cannot speak, leave their burden unassessed. The resulting object gives the reader several concrete ways to reopen a capability, with the unresolved obligations still attached.
+
+## Stance ends · green hat, round one
+
+The same mind that wrote yellow wrote this, forbidden from defending it, and it did not re-argue yellow once. Five designs against five wounds, three walls named as walls, and one structural move black asked for and got: a second entrance into the record, where somebody states what they need to remain possible before they see what the chooser considered.
+
+## Stance · red hat, round one — called by Blue
+
+The gut, and only the gut. Under red you may not argue, evidence or conclude — red is a briefing for a gut, not a verdict, and it reports the factors logic cannot price: tech-rate, behaviour, momentum, tailwinds, people being difficult. It speaks after the arguments rather than before them, so that a round does not end on its own cleverness.
+
+## Red · 2026-09-06 · model: Opus
+
+What the gut reports first is not about the fork. It is that the most alive thing in this round was the attack. Black had force in it; yellow and green were careful and useful and slightly bloodless. If I am honest about where the energy actually went, this room is better at wounding than at wanting, and that is a fact about the room rather than about the instrument. A search that is sharpest when it is destroying will keep arriving at true and small.
+
+On the fork itself: the showing branch feels alive and the answering branch feels like a paper. Not because of any argument made here — the arguments cut the other way for most of this round — but because I can picture somebody using the first one badly, and I cannot picture anybody using the second one at all. Being usable badly is the strongest signal of life an instrument gives off before it exists.
+
+And the fork has quietly stopped being a fork. Every substantive move in this round changed the MATERIAL rather than choosing a branch: a second author, an absence with a state on it, a witness that outlives what it watches, a registration made before the act. Nobody argued for answering versus showing. Everyone reached for a different record. My gut says the fork was never the live question and both sessions have now demonstrated it in different ways — the first by dissolving it in one turn, this one by ignoring it for five.
+
+The behaviour worry, which is the one I would actually bet on. People do not file counterfactuals. Any design where somebody must state what they need to remain possible, before seeing what the chooser considered, gets filled in enthusiastically twice and then never again — unless the stating is a byproduct of something they wanted for their own reasons. Every design in this round has that shape somewhere, and the one that survives contact with real people will be the one where the second entrance is a thing somebody was going to write anyway.
+
+The tailwind, and it is large. Rooms like this one now cost almost nothing to run, which means the expensive part of the instrument is no longer producing the reading — it is having a record worth reading. That inverts the build order the first session assumed. My gut says stop designing the lens and go make one honest record with two authors in it and an expectation registered before the act, and the lens will turn out to be short.
+
+Last, the thing I cannot price and would want somebody to argue with. This is the second session on this question and the room is getting better at running while the question stands still. That feels like competence and it might be avoidance.
+
+## Stance ends · red hat, round one
+
+Red reports the fork has stopped being a fork — every substantive move in the round changed the material rather than choosing a branch — and that the energy in this room goes into wounding rather than wanting. It also names the room's own risk: getting better at running while the question stands still.
