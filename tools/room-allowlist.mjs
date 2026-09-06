@@ -37,7 +37,9 @@ export const ALLOWED_PROPER_NOUNS = [
   // the genuinely one-way facts, and the `model-version` and
   // `routing-detail` rules in the guard block them by name. So these two
   // words pass, and nothing after them does.
-  'Opus', 'Gemini', 'Fable',
+  'Opus', 'Gemini', 'Fable', 'Sonnet',
+  // The seat that holds the record rather than taking a hat.
+  'Registrar',
   // The hats. de Bono's colours are published thinking, not estate facts, and
   // the room writes them constantly — as stance names, as seat names, and in
   // ordinary prose. They point at no private object.

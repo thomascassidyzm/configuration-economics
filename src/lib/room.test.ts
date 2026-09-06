@@ -175,3 +175,45 @@ Nobody said anything.
     ]);
   });
 });
+
+// Added after session 002 published with two hats left open. A hat is a
+// refusal with a timer on it, and a refusal nobody ends is not a refusal.
+describe('an unclosed hat', () => {
+  const FILE = `---
+id: 4
+title: A hat left on
+---
+
+## Stance · yellow hat, round one — called by the conductor
+
+Under yellow you may only build the case.
+
+## Yellow · 2026-09-06 · model: Opus
+
+A case.
+
+## Stance · black hat, round two — called by the conductor
+
+Under black you may only attack.
+
+## Black · 2026-09-06 · model: Astra
+
+An attack.
+
+## Stance ends · black hat, round two
+`;
+  const session = parseSession(FILE, { n: 0 });
+
+  it('still reads the rotation across the unclosed stance', () => {
+    expect(hatRotation([session]).map(w => [w.round, w.hat, w.model])).toEqual([
+      [1, 'yellow', 'Opus'],
+      [2, 'black', 'Astra'],
+    ]);
+  });
+
+  it('reports the hat the room left on', () => {
+    expect(rotationDefects([session])).toEqual([
+      'the stance "yellow hat, round one" was never closed — the room left a hat on',
+    ]);
+  });
+});

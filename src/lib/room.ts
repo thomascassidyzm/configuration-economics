@@ -315,11 +315,18 @@ export function hatRotation(sessions: RoomSession[]): HatWearing[] {
  * What the rotation got wrong, in plain sentences a reader can check against
  * the record. Empty means the rotation held.
  *
- * Three defects, and only three, because a check nobody can verify by eye is
- * a check nobody trusts: a model wearing the same hat in consecutive rounds
+ * Four defects, and only four, because a check nobody can verify by eye is a
+ * check nobody trusts: a model wearing the same hat in consecutive rounds
  * (the rotation did not rotate), a hat turn that records no model (the
- * rotation is unreadable at that point), and a hat stance covering no turn at
- * all (a hat was called and nobody wore it).
+ * rotation is unreadable at that point), a hat stance covering no turn at all
+ * (a hat was called and nobody wore it), and a hat stance the room never
+ * closed.
+ *
+ * The last one was added after session 002 published with two hats left open,
+ * which the record's own bookkeeping did not notice and an outside read did.
+ * A hat is a refusal with a timer on it, and a refusal nobody ends is not a
+ * refusal — so an unclosed hat is a defect of the room, and the room says so
+ * on its own page rather than quietly parsing around it.
  */
 export function rotationDefects(sessions: RoomSession[]): string[] {
   const defects: string[] = [];
@@ -344,8 +351,12 @@ export function rotationDefects(sessions: RoomSession[]): string[] {
 
   for (const session of sessions) {
     for (const stance of session.stances) {
-      if (parseHatStance(stance.name) && stance.turns.length === 0) {
+      if (!parseHatStance(stance.name)) continue;
+      if (stance.turns.length === 0) {
         defects.push(`the stance "${stance.name}" was called and no turn was taken under it`);
+      }
+      if (stance.open) {
+        defects.push(`the stance "${stance.name}" was never closed — the room left a hat on`);
       }
     }
   }
