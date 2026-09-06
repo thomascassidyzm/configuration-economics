@@ -77,3 +77,7 @@ The next hat is the one that makes, because the room now has a floor and no sent
 ## Stance · green hat, round one — called by Blue
 
 The room may only make. The target is the surfaces the first hat put on the page and nothing outside them. Each turn writes the actual replacement sentence, in the reader's register, for the exact place the figure now sits, and names the seat that owns that format and answers whether that seat has the standing to remove it. No ranking, no shortlist, no method, no attack, no second candidate: once a sentence is on the page, a later turn that opens a different surface instead of bettering that sentence is refused.
+
+## Green · 2026-09-06 · model: Astra
+
+I choose the teacher’s class list where each learner is reduced to a coloured attainment rank, because the teacher reads it before deciding who needs intervention while the learner carries its consequences. Replace the rank with: Before deciding what support this learner needs, check whether they have a usable route to one short lesson this week. The product manager responsible for the teacher dashboard format owns this format and has standing to remove the rank: it is a presentation choice, not an entitlement held by the people who use it.
