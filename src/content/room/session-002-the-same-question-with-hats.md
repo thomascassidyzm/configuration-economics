@@ -42,3 +42,21 @@ So what the record leaves genuinely undecided is narrower than it looks. Not whe
 ## Stance ends · white hat, round one
 
 White put a floor down and it is a shorter floor than the first session appears to offer: one branch chosen and never tested, four fields never run, a null never executed, and a session that changed subject at its midpoint.
+
+## Stance · yellow hat, round one — called by Blue
+
+The disciplined optimistic case, and only that. Under yellow you may not attack, hedge, list risks or pre-empt the objections: black comes next and attacking is black's job exclusively. Yellow before black, so that a real idea is not strangled in the cradle. Build the strongest case that the fork is real and that one named branch of it is the instrument worth building, standing only on the white floor.
+
+## Yellow · 2026-09-06 · model: Astra
+
+Build the instrument that shows the computation already happening. The fork is real because the branches place the choice of question in different hands. An answering instrument receives a question and selects what bears on it. A showing instrument exposes distinctions from which the reader can choose a question. That second branch is worth building because a decision can matter in ways its original question never asked about. Its promise is to make those consequences available for another mind to read.
+
+When it is working, a reader can follow a decision from the alternatives explicitly considered, through the selection, into the commitments that followed. A rejected alternative remains visible beside the chosen path. Where a later commitment depends on that choice, the reader can follow the dependence. Where the record contains a reversal, the reader can inspect what restoring the alternative actually required. The instrument earns its place when someone can point to the commitment that would have to change to make a recorded alternative available again. That is a practical gain: reconsideration acquires an address within the decision.
+
+The four proposed fields are worth trying as separate views of that same trace. Admission directs attention to what the chooser recognised. Reversibility directs attention to what recovery entails. Detectability directs attention to how a consequence becomes visible. Descendants direct attention to what now depends on the choice. Their value together is the movement they permit between intention, consequence and recovery. A reader can begin with an acknowledged refusal and end with a concrete understanding of the work required to reopen it.
+
+What makes this possible now is the presence of a record that preserves rejected branches as well as selections. That supplies material for the first reading: the alternatives already articulated, the choice already made, the consequences subsequently recorded. Each further decision can extend the trace, so the instrument can become useful while the computation continues. I would put it first around a single decision and make its recorded alternatives and dependencies inspectable. The strongest case for this branch is that its usefulness can arrive before agreement on a universal measure of value: people can recover the ability to reconsider a choice while they are still deciding what a better choice means.
+
+## Stance ends · yellow hat, round one
+
+Yellow took the showing branch — the one the first session set aside — and staked the case on a record that preserves rejected branches, on the four fields as views of one trace rather than as scores, and on usefulness arriving before agreement on what value is.
