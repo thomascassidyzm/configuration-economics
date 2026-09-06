@@ -8,7 +8,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prebuild": "node tools/room-guard.test.mjs && node tools/room-guard.mjs",
+    "guard:room": "node tools/room-guard.mjs",
+    "test:room-guard": "node tools/room-guard.test.mjs"
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.2",

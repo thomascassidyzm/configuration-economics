@@ -48,3 +48,4 @@ A living register of candidate work: spheres to run the lens on, artefacts to co
 ## Method / openness
 
 - Publish the Six-Hat method + runs as a **/method** or **/evaluations** surface (`NOTES-six-hat-method.md`) — openness made navigable.
+- **The world computer pages, corrected (2026-09-06).** An outside read by a third lineage found three defects in the published record and all three are now repaired on the pages: the control arm was carrying the house's paraphrase rather than the far side's words (allowlist grown, every far-side turn now quoted verbatim, two turns with no surviving verbatim named as gaps); the convergence claim is withdrawn — one lineage was steered there; and the rule the room actually ran, *a block must carry its own reason forward*, is written down beside the yes-and rule it was running underneath. The declared null stands **untested**: every correction so far has come from inside the room.
