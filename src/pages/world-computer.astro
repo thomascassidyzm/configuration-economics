@@ -740,9 +740,11 @@ const writtenAt = liveRoomWrittenAt();
       .stance-called { font-family:var(--font-mono); font-size:0.66rem; color:var(--text-muted); margin-left:0.6rem; }
       .stance-open p, .stance-close p { color:var(--text-secondary); font-size:0.875rem; margin-top:0.5rem; }
       .stance-nil { color:var(--text-muted); font-style:italic; }
-      /* The hat is the ground; a bubble inside it needs no second border to
-         say it is in a stance, and one would compete with the wash. */
-      .turn-in-stance { }
+      /* .turn-in-stance carries no style now: the hat is the ground, and a
+         bubble standing on it needs no second border to say it is in a
+         stance — one would only compete with the wash. The class stays on the
+         element because it is a fact about the turn a reader may want out of
+         the DOM, not a hook this stylesheet uses. */
       .model { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.09em; color:var(--text-secondary); }
       .turn-stance { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); opacity:0.75; }
 
