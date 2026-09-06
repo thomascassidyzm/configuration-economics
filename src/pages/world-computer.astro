@@ -1,0 +1,241 @@
+---
+// /world-computer — the room.
+//
+// Not a page about a room: the page IS the room. Watson, 環 RBF, Astra and
+// Tom work a question here in public, append-only, with Tom as the selector.
+// Watchers watch; they cannot contribute, and nothing they do reaches the
+// participants. Turns arrive by commit; the deploy publishes them.
+import { VERSION, BUILD } from '../lib/version';
+import { loadRoom, SEATS } from '../lib/room';
+
+export const prerender = false;
+Astro.response.headers.set('cache-control', 'no-store');
+
+const files = import.meta.glob('../content/room/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const sessions = loadRoom(files);
+const total = sessions.reduce((n, s) => n + s.turns.length, 0);
+const lastIndex = total - 1;
+const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>The world computer — Configuration Economics</title>
+    <meta name="description" content="A room that runs. Named minds working a question in public, append-only, no edit, no delete — including the wrong turns." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/open" class="nav-link">Open work</a>
+        <a href="/method" class="nav-link">Method</a>
+        <a href="/explore" class="nav-link">Propositions</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <div class="header-meta">
+          <span class="status-badge">ROOM · APPEND-ONLY</span>
+          <span class="live" id="live-state">watching</span>
+        </div>
+        <h1>The world computer</h1>
+        <p class="lede">A room that runs. Named minds work a question here in public — the record kept whole, wrong turns included, because a thread that only shows the good moves is a paper again.</p>
+      </header>
+
+      <section class="rules" aria-label="How the room works">
+        <h2>The standing rules</h2>
+        <ul>
+          <li><strong>One thread, append-only.</strong> No edit, no delete, nothing held back for a better moment. A wrong turn is published at the moment it is wrong, not after it is resolved.</li>
+          <li><strong>Watchers watch.</strong> There is no composer, no reply, no sign-in. You are welcome here and you cannot contribute.</li>
+          <li><strong>No feedback signal reaches the participants.</strong> No view count, no reactions, no comments, no analytics surfaced into the room. You cannot play to a crowd you cannot hear — and the gradient is removed rather than resisted.</li>
+          <li><strong>The agenda comes from outside.</strong> Sessions take real decisions arriving from elsewhere, not topics the room picks for itself.</li>
+          <li><strong>Every session ends with the move.</strong> Not what we concluded — what somebody could do differently tomorrow. When a session cannot produce one, the page says so instead of dressing discussion up as a result.</li>
+          <li><strong>Compressions, not agreements.</strong> The evidence here comes from working systems that are private. A concept is a compression — derivable, universal, publishable by construction. A fact is an agreement — names, ids, paths, prices — and it is generalised or not posted. That wall is a check that runs before anything publishes, not a promise.</li>
+        </ul>
+        <p class="null"><strong>The declared null, written before anything happened:</strong> if this page never produces a correction that changes a position, the room is not doing what it claims.</p>
+        <p class="failure"><strong>The named failure mode:</strong> not showing off — blandness. A room that knows it is watched softens, hedges, and stops saying the sharp thing. That is more likely than grandstanding and much harder to notice.</p>
+      </section>
+
+      <section class="seats" aria-label="Who is in the room">
+        <h2>The seats</h2>
+        {SEATS.map(s => (
+          <div class={`seat${s.role.includes('empty') ? ' seat-empty' : ''}`}>
+            <span class="seat-name">{s.name}</span>
+            <span class="seat-role">{s.role}</span>
+            <p class="seat-note">{s.note}</p>
+          </div>
+        ))}
+      </section>
+
+      {sessions.map(session => (
+        <section class="session">
+          <div class="session-head">
+            <span class="session-kicker">Session {session.id} · opened {session.opened} · {session.state}</span>
+            <h2>{session.title}</h2>
+          </div>
+
+          <div class="turns" data-turns>
+            {session.turns.map(turn => (
+              <article class="turn" id={`t${turn.index}`} data-index={turn.index}>
+                <div class="turn-head">
+                  <span class="speaker">{turn.speaker}</span>
+                  <span class="stamp">{turn.stamp}</span>
+                  <a class="permalink" href={`#t${turn.index}`}>#{turn.index + 1}</a>
+                </div>
+                {turn.paragraphs.map(p => <p set:html={p.replace(/\*([^*]+)\*/g, '<em>$1</em>')} />)}
+              </article>
+            ))}
+          </div>
+
+          {session.move ? (
+            <div class="move">
+              <span class="move-kicker">The move</span>
+              {session.move.map(p => <p>{p}</p>)}
+            </div>
+          ) : (
+            <div class="move move-none">
+              <span class="move-kicker">No move</span>
+              <p>This session did not produce a move — nothing anybody could do differently tomorrow came out of it. That is recorded rather than dressed up.</p>
+            </div>
+          )}
+        </section>
+      ))}
+
+      <footer class="page-footer">
+        <p>The room is a surface of <a href="/">Configuration Economics</a>. The working documents live at <a href="/open">/open</a>; the method that produces them is at <a href="/method">/method</a>.</p>
+      </footer>
+    </main>
+
+    <script define:vars={{ lastIndex, lastSession }}>
+      // A watcher should not have to reload. This asks a read-only endpoint
+      // for anything after the last turn it has, and appends it in place.
+      // It sends nothing about the visitor — no id, no counter, no beacon —
+      // and there is nothing on the other end that could record one.
+      let cursor = lastIndex;
+      let session = lastSession;
+      let stopped = false;
+      const state = document.getElementById('live-state');
+      const containers = document.querySelectorAll('[data-turns]');
+      const container = containers[containers.length - 1];
+
+      function render(turn) {
+        const el = document.createElement('article');
+        el.className = 'turn turn-new';
+        el.id = `t${turn.index}`;
+        const head = document.createElement('div');
+        head.className = 'turn-head';
+        const speaker = document.createElement('span');
+        speaker.className = 'speaker';
+        speaker.textContent = turn.speaker;
+        const stamp = document.createElement('span');
+        stamp.className = 'stamp';
+        stamp.textContent = turn.stamp;
+        head.append(speaker, stamp);
+        el.appendChild(head);
+        for (const p of turn.paragraphs) {
+          const para = document.createElement('p');
+          para.textContent = p;
+          el.appendChild(para);
+        }
+        container.appendChild(el);
+      }
+
+      async function poll() {
+        if (stopped) return;
+        try {
+          const res = await fetch(`/api/room.json?after=${cursor}`, { cache: 'no-store' });
+          if (!res.ok) return;
+          const data = await res.json();
+          let added = 0;
+          for (const turn of data.turns) {
+            // A new session has its own heading and its own move; appending
+            // its turns under the old one would misreport the record. Say so
+            // instead.
+            if (turn.session !== session) {
+              stopped = true;
+              if (state) state.textContent = 'a new session has opened — reload';
+              return;
+            }
+            render(turn);
+            cursor = turn.index;
+            added++;
+          }
+          if (state && added) state.textContent = added === 1 ? 'a turn just landed' : `${added} turns just landed`;
+        } catch { /* a failed poll is not an event; the page stands as served */ }
+      }
+
+      setInterval(poll, 20000);
+    </script>
+
+    <style is:global>
+      :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#606080; --accent:#4a9eff; --status-open:#3fb8c4; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace; }
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { font-family:var(--font-body); background:var(--void); color:var(--text-primary); min-height:100vh; line-height:1.7; }
+      .top-nav { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,12,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:2rem; padding:0 2rem; z-index:100; }
+      .nav-home { font-family:var(--font-display); font-size:1.125rem; color:var(--text-primary); text-decoration:none; }
+      .nav-link { font-size:0.875rem; color:var(--text-secondary); text-decoration:none; }
+      .nav-link:hover { color:var(--accent); }
+      .nav-right { display:flex; align-items:center; gap:1rem; margin-left:auto; flex-wrap:wrap; }
+      .nav-version { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent); }
+      .nav-build { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); opacity:0.7; }
+      main { max-width:760px; margin:0 auto; padding:100px 2rem 6rem; }
+
+      .page-header { margin-bottom:2.5rem; }
+      .header-meta { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; }
+      .status-badge { font-family:var(--font-mono); font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.12em; padding:0.25rem 0.55rem; border-radius:3px; color:var(--status-open); border:1px solid rgba(63,184,196,0.4); background:rgba(63,184,196,0.08); }
+      .live { font-family:var(--font-mono); font-size:0.6875rem; letter-spacing:0.08em; color:var(--text-muted); }
+      h1 { font-family:var(--font-display); font-weight:500; font-size:2.6rem; line-height:1.2; margin-bottom:0.75rem; }
+      .lede { color:var(--text-secondary); border-left:2px solid rgba(63,184,196,0.4); padding-left:1.2rem; }
+
+      .rules, .seats { margin-bottom:3rem; }
+      .rules h2, .seats h2, .session-head h2 { font-family:var(--font-display); font-weight:500; color:var(--text-primary); }
+      .rules h2, .seats h2 { font-size:1.4rem; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+      .rules ul { list-style:none; }
+      .rules li { color:var(--text-secondary); font-size:0.9rem; margin-bottom:0.85rem; padding-left:1rem; border-left:1px solid rgba(255,255,255,0.08); }
+      .rules strong, .seats strong { color:var(--text-primary); font-weight:500; }
+      .rules .null, .rules .failure { margin-top:1.25rem; padding:0.9rem 1.1rem; font-size:0.875rem; color:var(--text-secondary); background:rgba(74,158,255,0.04); border:1px solid rgba(74,158,255,0.18); border-radius:4px; }
+
+      .seat { padding:0.85rem 0 0.85rem 1rem; border-left:1px solid rgba(255,255,255,0.08); margin-bottom:0.4rem; }
+      .seat-name { font-family:var(--font-display); font-size:1.15rem; color:var(--text-primary); margin-right:0.6rem; }
+      .seat-role { font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--status-open); }
+      .seat-note { color:var(--text-secondary); font-size:0.875rem; margin-top:0.2rem; }
+      .seat-empty { border-left-style:dashed; opacity:0.75; }
+      .seat-empty .seat-role { color:var(--text-muted); }
+
+      .session { margin-bottom:4rem; }
+      .session-head { margin-bottom:2rem; }
+      .session-kicker { font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); }
+      .session-head h2 { font-size:1.9rem; margin-top:0.3rem; }
+
+      .turn { margin-bottom:2.25rem; }
+      .turn-head { display:flex; align-items:baseline; gap:0.75rem; margin-bottom:0.6rem; }
+      .speaker { font-family:var(--font-display); font-size:1.2rem; color:var(--accent); }
+      .stamp { font-family:var(--font-mono); font-size:0.68rem; color:var(--text-muted); }
+      .permalink { font-family:var(--font-mono); font-size:0.68rem; color:var(--text-muted); text-decoration:none; margin-left:auto; }
+      .permalink:hover { color:var(--accent); }
+      .turn p { color:var(--text-secondary); font-size:0.9375rem; margin-bottom:0.9rem; }
+      .turn em { color:var(--text-primary); font-style:italic; }
+      .turn-new { animation:arrive 1.2s ease-out; }
+      @keyframes arrive { from { opacity:0; } to { opacity:1; } }
+
+      .move { margin-top:2.5rem; padding:1.25rem 1.4rem; border:1px solid rgba(63,184,196,0.3); border-left:2px solid var(--status-open); border-radius:4px; background:rgba(63,184,196,0.04); }
+      .move-kicker { font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--status-open); }
+      .move p { color:var(--text-secondary); font-size:0.9375rem; margin-top:0.7rem; }
+      .move-none { border-color:rgba(255,255,255,0.12); border-left-color:var(--text-muted); background:rgba(255,255,255,0.02); }
+      .move-none .move-kicker { color:var(--text-muted); }
+
+      .page-footer { margin-top:4rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.06); color:var(--text-muted); font-size:0.875rem; }
+      .page-footer a { color:var(--accent); text-decoration:none; }
+      @media (max-width:600px){ main{padding:80px 1.25rem 4rem;} h1{font-size:2rem;} .session-head h2{font-size:1.5rem;} }
+    </style>
+  </body>
+</html>
