@@ -158,16 +158,33 @@ let quoteFailures = 0;
   }
 }
 
-// 4. Six-plus-word quotation with no detectable attribution -> warns, never blocks.
+// 4. Six-plus-word quotation with no detectable attribution, but it resolves
+// verbatim in the record -> nothing at all: it is a quotation of the record
+// and is correct, so no warn and no block.
 {
   const text = 'Somebody mentioned that "The world computer is probably not a thing you build." during the session.';
-  const { blocks, warns } = scanQuotes(text, quoteCorpus, 'unattributed');
+  const { blocks, warns } = scanQuotes(text, quoteCorpus, 'unattributed-verbatim');
+  if (blocks.length > 0 || warns.length > 0) {
+    console.error('FAIL (should pass silently) unattributed quote that resolves verbatim');
+    for (const e of [...blocks, ...warns]) console.error(`        [${e.rule}] "${e.match}"`);
+    quoteFailures++;
+  }
+}
+
+// 4b. Six-plus-word quotation with no detectable attribution that does NOT
+// resolve -> exactly one warn, zero blocks, warn carries the nearest text.
+{
+  const text = 'Somebody mentioned that "the world computer is not something you would ever construct" during the session.';
+  const { blocks, warns } = scanQuotes(text, quoteCorpus, 'unattributed-unresolved');
   if (blocks.length > 0) {
-    console.error('FAIL (should never block) unattributed six-plus-word quote');
+    console.error('FAIL (should never block) unattributed unresolved quote');
     quoteFailures++;
   }
   if (warns.length !== 1) {
-    console.error(`FAIL (should warn once) unattributed six-plus-word quote: got ${warns.length} warning(s)`);
+    console.error(`FAIL (should warn once) unattributed unresolved quote: got ${warns.length} warning(s)`);
+    quoteFailures++;
+  } else if (!warns[0].nearest) {
+    console.error('FAIL (warn must carry nearest text) unattributed unresolved quote');
     quoteFailures++;
   }
 }
@@ -182,10 +199,54 @@ let quoteFailures = 0;
   }
 }
 
+// 6. "In its own words: ..." followed by a verbatim quote -> passes silently
+// (no name adjacent to the quote, but the explicit claim is attribution).
+{
+  const text = 'In its own words: "The world computer is probably not a thing you build. It is a thing you notice is already running."';
+  const { blocks, warns } = scanQuotes(text, quoteCorpus, 'own-words-verbatim');
+  if (blocks.length > 0 || warns.length > 0) {
+    console.error('FAIL (should pass silently) "in its own words" preceding a verbatim quote');
+    for (const e of [...blocks, ...warns]) console.error(`        [${e.rule}] "${e.match}"`);
+    quoteFailures++;
+  }
+}
+
+// 7. "In its own words: ..." followed by a paraphrase -> BLOCKS, with speaker
+// reading "the record" (no name was written) and a non-empty nearest.
+{
+  const text = 'In its own words: "It is a thing you notice already running, and the world computer is probably not something you build."';
+  const { blocks } = scanQuotes(text, quoteCorpus, 'own-words-paraphrase');
+  const b = blocks[0];
+  if (!b) {
+    console.error('FAIL (should block) "in its own words" preceding a paraphrase');
+    quoteFailures++;
+  } else if (b.speaker !== 'the record' || !b.nearest) {
+    console.error(`FAIL (block must read speaker "the record" and carry nearest): speaker="${b.speaker}" nearest="${b.nearest}"`);
+    quoteFailures++;
+  }
+}
+
+// 8. Other explicit-verbatimness trigger phrases, each proven on a
+// paraphrase -> BLOCKS.
+{
+  const cases = [
+    ['word for word', 'Word for word: "It is a thing you notice already running, and the world computer is probably not something you build."'],
+    ['verbatim', 'Here it is verbatim: "It is a thing you notice already running, and the world computer is probably not something you build."'],
+  ];
+  for (const [name, text] of cases) {
+    const { blocks } = scanQuotes(text, quoteCorpus, `trigger-${name}`);
+    const b = blocks[0];
+    if (!b || b.speaker !== 'the record' || !b.nearest) {
+      console.error(`FAIL (should block) explicit-verbatimness trigger "${name}"`);
+      quoteFailures++;
+    }
+  }
+}
+
 failures += quoteFailures;
 
 if (failures) {
-  console.error(`\nroom-guard test: ${failures} failure(s) of ${MUST_BLOCK.length + MUST_PASS.length + 7} (2 heading/clean + 5 quote-guard cases).`);
+  console.error(`\nroom-guard test: ${failures} failure(s) of ${MUST_BLOCK.length + MUST_PASS.length + 10} (2 heading/clean + 8 quote-guard cases).`);
   process.exit(1);
 }
-console.log(`room-guard test: ${MUST_BLOCK.length} block cases, ${MUST_PASS.length} pass cases, and 5 quote-guard cases, all green.`);
+console.log(`room-guard test: ${MUST_BLOCK.length} block cases, ${MUST_PASS.length} pass cases, and 8 quote-guard cases, all green.`);
