@@ -1,0 +1,67 @@
+{
+	email tomcassidy@mac.com
+	acme_ca https://acme-v02.api.letsencrypt.org/directory
+	admin off
+}
+
+# The World Computer room, public and read-only.
+#
+# Bound to this box's PUBLIC addresses only: tailscaled already holds :443 on
+# the tailnet address, and the tailnet URL (watson-1.tail4968cb.ts.net:8450)
+# keeps working untouched. This is an addition, not a migration.
+room.tomcassidy.co {
+	bind 62.238.49.218 2a01:4f9:c015:2b8e::1
+
+	log {
+		output file /var/log/caddy/room.log
+	}
+
+	route {
+		# A bare visit lands in the room.
+		@root path /
+		redir @root /world-computer permanent
+
+		# THE ALLOWLIST. Exactly what the room page needs to draw itself and
+		# to stay current, and nothing else:
+		#   /world-computer                  the page
+		#   /api/room.json                   the poll (read-only by construction)
+		#   /favicon.svg                     the icon
+		#   /@vite/client, /src/pages/...    the dev server's style module
+		# GET and HEAD only, so no method that could write is reachable at all.
+		# Deliberately NOT here: /api/guide (it spends money on the Anthropic
+		# API), and /@fs/* (vite will serve files off this disk through it).
+		# Everything not named below is a 404 before it ever reaches the app.
+		@room {
+			method GET HEAD
+			path /world-computer /api/room.json /favicon.svg /@vite/client /src/pages/world-computer.astro
+		}
+		reverse_proxy @room 127.0.0.1:4326 {
+			# The app is a dev server behind this proxy and vite refuses a Host
+			# header it was not told about. Presenting the loopback address it
+			# is actually listening on means the live service needs no change
+			# and no restart to gain a second, public front door.
+			header_up Host 127.0.0.1:4326
+		}
+
+		# The room page carries the site's own nav — /explore, /method, /open.
+		# This host serves the room and nothing else, so rather than dead-end
+		# a reader on a 404, hand those links to the published site, which is
+		# where they actually live. Only GET and HEAD, and never /api/*: a
+		# non-allowlisted API call is refused outright, not forwarded.
+		@handoff {
+			method GET HEAD
+			not path /api/* /@* /src/* /node_modules/* /.*
+		}
+		redir @handoff https://ce.tomcassidy.co{uri} temporary
+
+		respond "Not here. The room is at /world-computer" 404
+	}
+}
+
+# Plain HTTP, declared explicitly rather than left to Caddy's automatic
+# redirect server: with two bind addresses that server silently failed to take
+# IPv4 :80, so http:// never answered on the v4 address. Named here, it does.
+http://room.tomcassidy.co {
+	bind 62.238.49.218 2a01:4f9:c015:2b8e::1
+	redir https://room.tomcassidy.co{uri} permanent
+}
