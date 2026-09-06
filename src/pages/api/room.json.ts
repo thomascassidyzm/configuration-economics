@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { loadRoom } from '../../lib/room';
+import { readLiveRoom } from '../../lib/room-live';
 
 export const prerender = false;
 
@@ -9,7 +10,9 @@ export const prerender = false;
 // the visitor, sets no cookie, and records nothing anywhere: there is no
 // feedback channel of any kind reaching the participants, by construction.
 export const GET: APIRoute = ({ url }) => {
-  const files = import.meta.glob('../../content/room/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+  // Live off the disk when a ROOM_DIR is named, otherwise the built-in store.
+  const files = readLiveRoom()
+    ?? (import.meta.glob('../../content/room/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
   const sessions = loadRoom(files);
   const after = Number(url.searchParams.get('after') ?? -1);
 

@@ -8,6 +8,7 @@
 import { marked } from 'marked';
 import { VERSION, BUILD } from '../lib/version';
 import charterRaw from '../content/charter.md?raw';
+import { readLiveRoom } from '../lib/room-live';
 import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence, panelDefects, parseHatStance } from '../lib/room';
 import type { RoomItem, RoomTurn } from '../lib/room';
 
@@ -43,7 +44,9 @@ Astro.response.headers.set('cache-control', 'no-store');
 // told. There is no second copy to drift.
 const charter = marked.parse(charterRaw.replace(/^#\s+.*\n/, '')) as string;
 
-const files = import.meta.glob('../content/room/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+// Live off the disk when a ROOM_DIR is named, otherwise the built-in store.
+const files = readLiveRoom()
+  ?? (import.meta.glob('../content/room/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
 const sessions = loadRoom(files);
 const total = sessions.reduce((n, s) => n + s.turns.length, 0);
 const lastIndex = total - 1;
@@ -213,6 +216,23 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
       // for anything after the last turn it has, and appends it in place.
       // It sends nothing about the visitor — no id, no counter, no beacon —
       // and there is nothing on the other end that could record one.
+      //
+      // THE HAT MUST KEEP BEING DRAWN AS TURNS LAND. A turn appended into the
+      // strip without its ground is a turn that has lost the only signal
+      // saying which hat the room is in — and during a live session every
+      // turn is an appended one, so that failure would be total precisely
+      // when it matters. The hat is derivable from the turn's own stance
+      // name, so the appender opens a fresh ground the moment the hat
+      // changes, exactly as the server-rendered strip does. The transition is
+      // where it reads, and it has to survive arriving one turn at a time.
+      const HATS = ['white','yellow','black','green','red','blue'];
+      const HAT_RE = new RegExp('^(' + HATS.join('|') + ')\\s+hat(\\s*,\\s*round\\s+.+)?$', 'i');
+      const hatOf = (stance) => {
+        if (!stance) return null;
+        const m = String(stance).trim().match(HAT_RE);
+        return m ? m[1].toLowerCase() : null;
+      };
+
       let cursor = lastIndex;
       let session = lastSession;
       let stopped = false;
@@ -220,9 +240,34 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
       const containers = document.querySelectorAll('[data-turns]');
       const container = containers[containers.length - 1];
 
+      // Pick up where the served page left off: the last ground in the strip
+      // and the hat it is wearing, read back off the DOM rather than passed
+      // in, so the client can never disagree with what was rendered.
+      let ground = container ? [...container.querySelectorAll(':scope > .ground')].pop() ?? null : null;
+      let hat = null;
+      if (ground) {
+        for (const h of HATS) if (ground.classList.contains('ground-' + h)) hat = h;
+      }
+
+      function groundFor(next) {
+        if (ground && hat === next) return ground;
+        const el = document.createElement('section');
+        el.className = 'ground' + (next ? ' ground-' + next : '');
+        container.appendChild(el);
+        ground = el;
+        hat = next;
+        return el;
+      }
+
       function render(turn) {
+        // The conductor speaks outside every hat — process, never content —
+        // and its interventions render as the editor's box, on the page, in
+        // the appended path exactly as in the served one.
+        const editor = !turn.stance && String(turn.speaker).trim().toLowerCase() === 'blue';
         const el = document.createElement('article');
-        el.className = `turn turn-new${turn.stance ? ' turn-in-stance' : ''}`;
+        el.className = 'turn turn-new'
+          + (turn.stance ? ' turn-in-stance' : '')
+          + (editor ? ' turn-editor' : '');
         el.id = `t${turn.index}`;
         const head = document.createElement('div');
         head.className = 'turn-head';
@@ -253,7 +298,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
           para.textContent = p;
           el.appendChild(para);
         }
-        container.appendChild(el);
+        groundFor(hatOf(turn.stance)).appendChild(el);
       }
 
       async function poll() {
@@ -264,12 +309,15 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
           const data = await res.json();
           let added = 0;
           for (const turn of data.turns) {
-            // A new session has its own heading and its own move; appending
-            // its turns under the old one would misreport the record. Say so
-            // instead.
+            // A new session has its own heading, its own charter reading and
+            // its own move; appending its turns under the old one would
+            // misreport the record. The page is served fresh on every request,
+            // so the honest move is to go and get it rather than to stop dead
+            // in front of the session somebody came to watch.
             if (turn.session !== session) {
               stopped = true;
-              if (state) state.textContent = 'a new session has opened — reload';
+              if (state) state.textContent = 'a new session has opened — loading it';
+              setTimeout(() => location.reload(), 1200);
               return;
             }
             render(turn);
@@ -280,7 +328,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
         } catch { /* a failed poll is not an event; the page stands as served */ }
       }
 
-      setInterval(poll, 20000);
+      setInterval(poll, 8000);
     </script>
 
     <style is:global>
