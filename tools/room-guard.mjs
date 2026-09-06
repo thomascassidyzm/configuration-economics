@@ -307,6 +307,16 @@ function attributionRegexes(speakerNames) {
   };
 }
 
+// An explicit claim that the words to follow are the speaker's actual words.
+// This is attribution without a name adjacent to the quote — the corpus's own
+// "In its own words: ..." idiom, plus its siblings. Deliberately a fixed list
+// of explicit textual claims, not a guessing heuristic: no "nearest preceding
+// heading" or other inference of a speaker who isn't written next to the quote.
+const VERBATIM_CLAIM_RE = /\bin\s+(?:its|his|her|their|my)\s+own\s+words\b|\bin\s+(?:its|the|these)\s+exact\s+words\b|\bword[\s-]for[\s-]word\b|\bquoted\s+verbatim\b|\bverbatim\b/i;
+// `quoting <Name>` names a speaker explicitly, just not adjacent to the quote
+// via the said/wrote verb forms `attributionRegexes` already covers.
+const QUOTING_NAME_RE = /\bquoting\s+([A-Z][A-Za-z'-]*(?:\s+[A-Z][A-Za-z'-]*)?)\b/;
+
 const QUOTE_CONTEXT_BEFORE = 160;
 const QUOTE_CONTEXT_AFTER = 80;
 const MIN_QUOTE_WORDS = 6;
@@ -344,22 +354,36 @@ export function scanQuotes(text, corpus, label = 'text') {
       }
     }
 
-    const line = lineOf(prose, idx);
-
+    // No name adjacent to the quote — but an explicit claim of verbatimness
+    // just before it ("in its own words", "word for word", "quoting X") is
+    // attribution too, even with no name to report.
+    let explicitClaim = false;
     if (!speaker) {
+      const qNameM = QUOTING_NAME_RE.exec(before);
+      if (qNameM) speaker = qNameM[1];
+      else if (VERBATIM_CLAIM_RE.test(before)) explicitClaim = true;
+    }
+
+    const line = lineOf(prose, idx);
+    const resolved = containsSubsequence(corpus.normTokens, quoteNorm);
+
+    if (!speaker && !explicitClaim) {
+      if (resolved) continue; // a quotation of the record is correct, silently
+      const nearest = findNearest(corpus.origTokens, corpus.normTokens, quoteNorm);
       warns.push({
-        rule: 'unattributed-quote', match: quoteText.trim(), line, label,
-        why: 'a quotation of six or more words with no detectable speaker cannot be mechanically checked against the record',
+        rule: 'unattributed-quote', match: quoteText.trim(), line, label, nearest,
+        why: `a quotation of six or more words could not be found in the record and no speaker was named — nearest: "${nearest}"`,
       });
       continue;
     }
 
-    if (containsSubsequence(corpus.normTokens, quoteNorm)) continue;
+    if (resolved) continue;
 
     const nearest = findNearest(corpus.origTokens, corpus.normTokens, quoteNorm);
+    const reportedSpeaker = speaker || 'the record';
     blocks.push({
-      rule: 'fabricated-quote', match: quoteText.trim(), line, label, speaker, nearest,
-      why: `attributed to ${speaker} but no verbatim match exists in the record — nearest: "${nearest}"`,
+      rule: 'fabricated-quote', match: quoteText.trim(), line, label, speaker: reportedSpeaker, nearest,
+      why: `attributed to ${reportedSpeaker} but no verbatim match exists in the record — nearest: "${nearest}"`,
     });
   }
 
