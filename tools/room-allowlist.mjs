@@ -22,10 +22,13 @@
 // per-file exemption, never a weakened rule in the guard, and never a
 // paraphrase to dodge the check.
 
+// The participants. Named separately so the quote guard can use exactly this
+// list to recognise a speaker attribution, without duplicating it.
+export const ALLOWED_PARTICIPANTS = ['Watson', 'RBF', 'Astra', 'Tom', 'Cassidy'];
+
 /** Capitalised words the room may say. Matched case-sensitively, whole word. */
 export const ALLOWED_PROPER_NOUNS = [
-  // The participants.
-  'Watson', 'RBF', 'Astra', 'Tom', 'Cassidy',
+  ...ALLOWED_PARTICIPANTS,
   // The model families. A FAMILY NAME IS PUBLISHABLE; the routing around it
   // is not. Which family answered a turn is what lets a reader weigh the
   // record at all — "Gemini, in a browser tab, carried by hand" can be

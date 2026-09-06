@@ -5,7 +5,10 @@
 // untested verifier holding the lever. So: strings that MUST block, and
 // strings that MUST pass. Run with `node tools/room-guard.test.mjs`.
 
-import { scanText, scanSessionFile } from './room-guard.mjs';
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { scanText, scanSessionFile, buildQuoteCorpus, scanQuotes } from './room-guard.mjs';
 
 // Agreement-layer. Every one of these must be refused.
 const MUST_BLOCK = [
@@ -105,8 +108,84 @@ if (scanSessionFile(SESSION_CLEAN, 'clean').blocks.length > 0) {
   failures++;
 }
 
+// The quote guard: a paraphrase must never pass as a quote. Proven both
+// ways — a real quotation passes, the same quotation paraphrased blocks —
+// against the actual corpus, not a fixture, so the test exercises the real
+// tokenisation of the real record.
+const here = dirname(fileURLToPath(import.meta.url));
+const roomFile = resolve(here, '..', 'src', 'content', 'room', 'session-001-the-room-that-runs.md');
+const carriedFile = resolve(here, '..', 'src', 'content', 'carried', 'exchange-001-the-expiring-no.md');
+const quoteCorpus = buildQuoteCorpus([readFileSync(roomFile, 'utf-8'), readFileSync(carriedFile, 'utf-8')]);
+
+let quoteFailures = 0;
+
+// 1. Genuine verbatim quotation from session 001, attributed correctly -> passes silently.
+{
+  const text = 'Watson said: "The world computer is probably not a thing you build. It is a thing you notice is already running."';
+  const { blocks, warns } = scanQuotes(text, quoteCorpus, 'verbatim-attributed');
+  if (blocks.length > 0 || warns.length > 0) {
+    console.error(`FAIL (should pass silently) verbatim quote attributed to Watson`);
+    for (const e of [...blocks, ...warns]) console.error(`        [${e.rule}] "${e.match}"`);
+    quoteFailures++;
+  }
+}
+
+// 2. The same sentence paraphrased (a word changed, a clause reordered), same
+// attribution -> blocks, and the message names the speaker and the nearest
+// actual text.
+{
+  const text = 'Watson said: "It is a thing you notice already running, and the world computer is probably not something you build."';
+  const { blocks } = scanQuotes(text, quoteCorpus, 'paraphrase-attributed');
+  const b = blocks[0];
+  if (!b) {
+    console.error('FAIL (should block) paraphrased quote attributed to Watson');
+    quoteFailures++;
+  } else if (b.speaker !== 'Watson' || !b.nearest) {
+    console.error(`FAIL (block must name speaker and nearest text): speaker="${b.speaker}" nearest="${b.nearest}"`);
+    quoteFailures++;
+  }
+}
+
+// 3. Curly quotes, doubled whitespace, and a dropped trailing full stop ->
+// still passes: normalisation works.
+{
+  const text = 'Watson said: “Accept   the offer, extend it, hand it back changed”';
+  const { blocks, warns } = scanQuotes(text, quoteCorpus, 'normalised-attributed');
+  if (blocks.length > 0 || warns.length > 0) {
+    console.error('FAIL (should pass) curly-quote/whitespace/trailing-stop variant');
+    for (const e of [...blocks, ...warns]) console.error(`        [${e.rule}] "${e.match}"`);
+    quoteFailures++;
+  }
+}
+
+// 4. Six-plus-word quotation with no detectable attribution -> warns, never blocks.
+{
+  const text = 'Somebody mentioned that "The world computer is probably not a thing you build." during the session.';
+  const { blocks, warns } = scanQuotes(text, quoteCorpus, 'unattributed');
+  if (blocks.length > 0) {
+    console.error('FAIL (should never block) unattributed six-plus-word quote');
+    quoteFailures++;
+  }
+  if (warns.length !== 1) {
+    console.error(`FAIL (should warn once) unattributed six-plus-word quote: got ${warns.length} warning(s)`);
+    quoteFailures++;
+  }
+}
+
+// 5. A short quoted phrase (under six words) is not checked at all.
+{
+  const text = 'Tom said: "Three pushes."';
+  const { blocks, warns } = scanQuotes(text, quoteCorpus, 'short-quote');
+  if (blocks.length > 0 || warns.length > 0) {
+    console.error('FAIL (should be ignored entirely) short quoted phrase');
+    quoteFailures++;
+  }
+}
+
+failures += quoteFailures;
+
 if (failures) {
-  console.error(`\nroom-guard test: ${failures} failure(s) of ${MUST_BLOCK.length + MUST_PASS.length}.`);
+  console.error(`\nroom-guard test: ${failures} failure(s) of ${MUST_BLOCK.length + MUST_PASS.length + 7} (2 heading/clean + 5 quote-guard cases).`);
   process.exit(1);
 }
-console.log(`room-guard test: ${MUST_BLOCK.length} block cases and ${MUST_PASS.length} pass cases, all green.`);
+console.log(`room-guard test: ${MUST_BLOCK.length} block cases, ${MUST_PASS.length} pass cases, and 5 quote-guard cases, all green.`);
