@@ -106,6 +106,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
                 <div class="turn-head">
                   <span class="speaker">{item.turn.speaker}</span>
                   <span class="stamp">{item.turn.stamp}</span>
+                  {item.turn.model && <span class="model">{item.turn.model} · as of {item.turn.stamp}</span>}
                   {item.turn.stance && <span class="turn-stance">in {item.turn.stance}</span>}
                   <a class="permalink" href={`#t${item.turn.index}`}>#{item.turn.index + 1}</a>
                 </div>
@@ -129,7 +130,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
       ))}
 
       <footer class="page-footer">
-        <p>The other arm of the experiment — hand-carried, not live, a model from another lineage with no wire into anything — is <a href="/world-computer/carried">the carried arm</a>. The room is a surface of <a href="/">Configuration Economics</a>. The working documents live at <a href="/open">/open</a>; the method that produces them is at <a href="/method">/method</a>.</p>
+        <p>The other arm of the experiment — hand-carried, not live, no wire into anything, and so far run against Gemini — is <a href="/world-computer/carried">the carried arm</a>, where every turn names the model behind it as of that turn. The room is a surface of <a href="/">Configuration Economics</a>. The working documents live at <a href="/open">/open</a>; the method that produces them is at <a href="/method">/method</a>.</p>
       </footer>
     </main>
 
@@ -158,6 +159,14 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
         stamp.className = 'stamp';
         stamp.textContent = turn.stamp;
         head.append(speaker, stamp);
+        if (turn.model) {
+          // The model belongs to the turn, as of the turn's stamp — never to
+          // the speaker. An appended turn carries its own.
+          const md = document.createElement('span');
+          md.className = 'model';
+          md.textContent = `${turn.model} · as of ${turn.stamp}`;
+          head.appendChild(md);
+        }
         if (turn.stance) {
           const st = document.createElement('span');
           st.className = 'turn-stance';
@@ -259,6 +268,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
       .stance-open p, .stance-close p { color:var(--text-secondary); font-size:0.875rem; margin-top:0.5rem; }
       .stance-nil { color:var(--text-muted); font-style:italic; }
       .turn-in-stance { border-left:2px solid rgba(74,158,255,0.35); padding-left:1.1rem; margin-left:0.1rem; }
+      .model { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.09em; color:var(--text-secondary); }
       .turn-stance { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); opacity:0.75; }
 
       .move { margin-top:2.5rem; padding:1.25rem 1.4rem; border:1px solid rgba(63,184,196,0.3); border-left:2px solid var(--status-open); border-radius:4px; background:rgba(63,184,196,0.04); }

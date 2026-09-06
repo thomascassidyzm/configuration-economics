@@ -15,6 +15,15 @@
 export const ALLOWED_PROPER_NOUNS = [
   // The participants.
   'Watson', 'RBF', 'Astra', 'Tom', 'Cassidy',
+  // The model families. A FAMILY NAME IS PUBLISHABLE; the routing around it
+  // is not. Which family answered a turn is what lets a reader weigh the
+  // record at all — "Gemini, in a browser tab, carried by hand" can be
+  // weighed and "a foreign model" cannot. Which account, which tier, which
+  // effort level, which version, and how work is allocated between them are
+  // the genuinely one-way facts, and the `model-version` and
+  // `routing-detail` rules in the guard block them by name. So these two
+  // words pass, and nothing after them does.
+  'Opus', 'Gemini',
   // The thinkers the room stands on.
   'Buckminster', 'Fuller', 'Edward', 'de', 'Bono', 'David', 'Deutsch',
   'James', 'Carse', 'Bucky',

@@ -67,6 +67,15 @@ const RULES = [
     why: 'a price is an agreement with provenance' },
   { name: 'counted-number', severity: 'block', re: /\b\d{1,3}(?:,\d{3})+\b/g,
     why: 'a grouped count is a number with provenance; state the compression instead' },
+  // The model line. A family name is a public fact and passes (it is on the
+  // allowlist); a family name carrying a VERSION, or any tier/effort/account/
+  // routing string, is how work is allocated and does not.
+  { name: 'model-version', severity: 'block',
+    re: /\b(?:Opus|Sonnet|Haiku|Fable|Gemini|Claude|GPT|Llama|Mistral)[\s-]*\d[\w.]*/gi,
+    why: 'a model version is routing detail — name the family alone' },
+  { name: 'routing-detail', severity: 'block',
+    re: /\b(?:(?:low|medium|high|minimal)[\s-]effort|effort\s*(?:level|tier|setting)|(?:model|account|api|org)\s*(?:key|id)|on\s+the\s+\w+\s+account)\b/gi,
+    why: 'tier, effort, account and routing are one-way facts about how work is allocated' },
   { name: 'bare-number', severity: 'warn', re: /\b\d{3,}\b/g,
     why: 'a large bare number often carries provenance — check it is a general claim' },
 ];

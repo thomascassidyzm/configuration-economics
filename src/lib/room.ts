@@ -17,6 +17,9 @@
 //   ## Watson · 2026-09-06
 //   ...prose...
 //
+//   ## The far side · 2026-09-06 · model: Gemini · carried by hand
+//   ...prose...
+//
 //   ## Stance · how might we — called by Tom
 //   ...what everyone is doing for as long as this runs...
 //
@@ -25,6 +28,19 @@
 //
 //   ## Move
 //   ...the one thing somebody could do differently tomorrow...
+//
+// A MODEL NAME BELONGS TO A TURN, NEVER TO A PARTICIPANT. The name of a
+// model family is not a fixed property of a seat: today's Opus is a
+// different model from next year's Opus, and a seat can change what is
+// behind it mid-transcript. So the name is written into the turn's own
+// heading, as of that turn's stamp, and is read back the same way — never
+// as a standing label on the page. A turn with no `model:` segment simply
+// records none, which is honest rather than empty.
+//
+// What the name discloses is the FAMILY and nothing else. Routing, tier,
+// effort, account and version are one-way facts about how work is
+// allocated and stay behind the wall; the family is what lets a reader
+// weigh the record at all. The guard enforces that line mechanically.
 //
 // A CALLED STANCE is alongsideness: a named direction of thinking that every
 // participant is in at once, for a span. It is a property of the ROOM at a
@@ -53,6 +69,13 @@ export interface RoomTurn {
   stamp: string;
   /** Anything further in the heading — on the carried arm, the transport. */
   note: string;
+  /**
+   * The model family behind this turn, as of this turn's stamp — written
+   * `model: Opus` in the heading. A property of the turn, never of the
+   * speaker: a seat's model may change between turns and the record must be
+   * able to say so. Null when the turn does not record one.
+   */
+  model: string | null;
   /** Paragraphs of the turn, already split. */
   paragraphs: string[];
   /** The stance the room was in when this turn was taken, if any. */
@@ -167,13 +190,22 @@ export function parseSession(raw: string, counter: { n: number }): RoomSession {
       continue;
     }
 
-    const [speaker, stamp, ...note] = heading.split('·').map(s => s.trim());
+    const [speaker, stamp, ...rest2] = heading.split('·').map(s => s.trim());
+    // `model: Opus` is lifted out of the heading segments into its own field
+    // and removed from the note, so the name is queryable per turn rather
+    // than buried in free text. Last one wins if a heading repeats it.
+    const modelSegs = rest2.filter(s => /^model\s*:/i.test(s));
+    const note = rest2.filter(s => !/^model\s*:/i.test(s));
+    const model = modelSegs.length
+      ? modelSegs[modelSegs.length - 1].replace(/^model\s*:\s*/i, '').trim() || null
+      : null;
     const turn: RoomTurn = {
       index: counter.n++,
       session: id,
       speaker: speaker ?? heading,
       stamp: stamp ?? '',
       note: note.join(' · '),
+      model,
       paragraphs: paragraphs(rest),
       stance: current ? current.name : null,
     };

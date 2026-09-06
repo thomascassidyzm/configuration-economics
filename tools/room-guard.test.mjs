@@ -23,6 +23,10 @@ const MUST_BLOCK = [
   ['counted number', 'The sweep found 1,383 skips in one pass.'],
   ['proper noun', 'The problem showed up first in Bethesda, then everywhere.'],
   ['proper noun mid-sentence', 'We saw it again when Gwynedd ran the same loop.'],
+  // The model line: the family publishes, the routing around it does not.
+  ['model version', 'The turn came back from Opus 5 in about an hour.'],
+  ['effort level', 'It was run at low effort and still found the move.'],
+  ['account routing', 'That one went on the second account for the afternoon.'],
 ];
 
 // Concept-layer. Every one of these must pass: these are compressions, and
@@ -40,6 +44,7 @@ const MUST_PASS = [
   ['quoted sentence starts', 'He said: "Descendant count measures the path, not the space."'],
   ['hyphenated prose', 'An undetectable foreclosure is unrecoverable even when technically reversible.'],
   ['a plain slash pair', 'It is not thesis/antithesis/synthesis; it is closer to six-hat thinking.'],
+  ['the model families, named and bare', 'The far side was Gemini and this side was Opus, with a hand between them.'],
 ];
 
 let failures = 0;
