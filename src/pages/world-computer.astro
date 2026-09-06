@@ -182,7 +182,19 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
                   <span class="speaker">{item.turn.speaker}</span>
                   <span class="stamp">{item.turn.stamp}</span>
                   {item.turn.model && <span class="model">{item.turn.model} · as of {item.turn.stamp}</span>}
-                  {item.turn.stance && <span class="turn-stance">in {item.turn.stance}</span>}
+                  {/* THE HAT IS NEVER NAMED IN WORDS. A chip reading "in
+                      white hat, round one" is exactly the caption the drawn
+                      ground exists instead of — and a colour that needs its
+                      name printed beside it has already failed. What the
+                      colour genuinely cannot carry is WHICH round this is, so
+                      that is what stays, and the hat itself is left to be
+                      seen. A stance that is not a hat has no colour to be
+                      read from, so it keeps its name. */}
+                  {item.turn.stance && (() => {
+                    const h = parseHatStance(item.turn.stance);
+                    if (!h) return <span class="turn-stance">in {item.turn.stance}</span>;
+                    return h.round ? <span class="turn-stance">round {h.round}</span> : null;
+                  })()}
                   <a class="permalink" href={`#t${item.turn.index}`}>#{item.turn.index + 1}</a>
                 </div>
                 {item.turn.paragraphs.map(p => <p set:html={p.replace(/\*([^*]+)\*/g, '<em>$1</em>')} />)}
@@ -227,6 +239,10 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
       // where it reads, and it has to survive arriving one turn at a time.
       const HATS = ['white','yellow','black','green','red','blue'];
       const HAT_RE = new RegExp('^(' + HATS.join('|') + ')\\s+hat(\\s*,\\s*round\\s+.+)?$', 'i');
+      // The record writes rounds in words; the strip shows numerals, and an
+      // appended turn must not disagree with the one rendered above it.
+      const ORDINALS = { one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8 };
+      const ROUND_RE = new RegExp('^(' + HATS.join('|') + ')\\s+hat\\s*,\\s*round\\s+(.+)$', 'i');
       const hatOf = (stance) => {
         if (!stance) return null;
         const m = String(stance).trim().match(HAT_RE);
@@ -286,11 +302,21 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
           md.textContent = `${turn.model} · as of ${turn.stamp}`;
           head.appendChild(md);
         }
+        // Same rule in the appended path: the hat is seen, never named, and
+        // the round is what the colour cannot carry.
         if (turn.stance) {
-          const st = document.createElement('span');
-          st.className = 'turn-stance';
-          st.textContent = `in ${turn.stance}`;
-          head.appendChild(st);
+          const m = String(turn.stance).trim().match(ROUND_RE);
+          const raw = m && m[2] ? m[2].trim().toLowerCase() : '';
+          const round = ORDINALS[raw] ?? (/^\d+$/.test(raw) ? Number(raw) : null);
+          const label = hatOf(turn.stance)
+            ? (round ? `round ${round}` : null)
+            : `in ${turn.stance}`;
+          if (label) {
+            const st = document.createElement('span');
+            st.className = 'turn-stance';
+            st.textContent = label;
+            head.appendChild(st);
+          }
         }
         el.appendChild(head);
         for (const p of turn.paragraphs) {
