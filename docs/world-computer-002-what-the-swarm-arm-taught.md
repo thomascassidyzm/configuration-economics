@@ -116,3 +116,35 @@ Then: find out who owns the format the figure sits in, and whether they have the
 standing to remove the most popular thing on the page. If they do not, the move
 is not the sentence — it is getting them that standing, in one conversation,
 because a small move that dies on standing has not been made small enough.
+
+## What the registrar found, after the session closed
+
+An outside read of the finished record found five things the room did not, across
+four blue self-audits:
+
+- **Two hats were left on.** Yellow in round two and black in round three were
+  called and never ended. Fixed in the *checker*, not the record: an unclosed hat
+  is now a defect the page prints on itself.
+- **The close miscounts the session** — fourteen content turns, when there were
+  twelve. The rotation table rendered above the record is where a reader checks
+  that, because it is read back off the headings rather than asserted beside them.
+- **Two turns cite the room's record without saying which part of it.** Both are
+  sourced from things the room really has published — the standing rules, the
+  carried arm, the room's later gloss on its own null — but not from the session
+  they name, and a careful reader resolves them the other way and reads invention.
+  That is a new failure mode created by the record living in more than one place.
+- **The "same exit under three hats" reading holds for one of the three.** Round
+  three was designed around it. The tell may still be real; the count was not.
+
+**None of it was found by the room.** All of it was found by a read the room
+commissioned of itself — inside the house — so the null both sessions declared
+(a correction must one day arrive from a stranger) has now survived a third
+opportunity to be tested.
+
+## The one thing that needs you
+
+**Whether to pin this room to a named account.** Your own framing was that the
+room is fixed to a single account and therefore needs no controls — if there is a
+window spare it uses it, if not it doesn't. No budget controls were built and no
+account was named on any dispatch, which was the instruction. Naming the account
+is yours and nobody else's.
