@@ -18,7 +18,7 @@ Every hat measures against the same standard: Fuller's mission as CE's viable ob
 - **Black** — failure modes; attack *this specific* yellow case (not generic pessimism); rank by how badly each wounds it; name which CE gate fails.
 - **Green** — creative ways through; take the *specific* black wounds and leap to better configurations; antifragility done right (attack absorbed, then leap). Name walls that genuinely don't yield in-horizon.
 - **Red** — the factors logic can't price (tech-rate, behaviour, momentum, "people being dicks", tailwinds). A *briefing for a gut*, not a verdict.
-- **Blue (close)** — reconvene, sequence the best-next-actions, name the binding constraint, state the CE-honest verdict.
+- **Blue (close)** — reconvene, sequence the best-next-actions, name the binding constraint, state the CE-honest verdict. When a run dies or a hypothesis fails outright, this is where it gets booked as a result, not absorbed as a setback — Fuller's own reflex, watching an experiment fail: "Now we're learning!" — so the close names what is now known that wasn't before, and sequences the next action from that.
 
 ## The orchestration (how the swarm runs)
 
