@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseSession, parseHatStance, hatRotation, rotationDefects, conductorCadence } from './room';
+import { parseSession, parseHatStance, hatRotation, rotationDefects, conductorCadence, panelDefects } from './room';
 
 // The model name belongs to the TURN, as of that turn's stamp — never to a
 // participant as a standing label. These are the tests for that: a name is
@@ -287,5 +287,58 @@ describe('conductor cadence', () => {
   it('says nothing about a session that ran no hats', () => {
     const s = parseSession(head + '## Watson · 2026-09-06 · model: Opus\n\nA turn.\n', { n: 0 });
     expect(conductorCadence(s)).toEqual({ hats: 0, called: 0, cadence: 'none' });
+  });
+});
+
+// The panel is sequenced and the hats are improvised: once each, in the
+// announced order, with the starting position shifted by one for each new hat
+// so that speaking last is not always the same agent's advantage.
+describe('the panel takes its turns', () => {
+  const build = (hats: [string, string[]][]) => parseSession(
+    `---\nid: 7\ntitle: A panel\npanel: Opus, Astra, Fable\n---\n\n` +
+    hats.map(([name, models]) =>
+      `## Stance · ${name} — called by Blue\n\nThe refusal.\n\n` +
+      models.map(m => `## ${m} · 2026-09-06 · model: ${m}\n\nA turn.\n`).join('\n') +
+      `\n## Stance ends · ${name}\n`).join('\n'),
+    { n: 0 });
+
+  it('reads the panel off the frontmatter, in the announced order', () => {
+    expect(build([['green hat', ['Opus', 'Astra', 'Fable']]]).panel).toEqual(['Opus', 'Astra', 'Fable']);
+  });
+
+  it('passes a panel that shifts its start by one for each new hat', () => {
+    expect(panelDefects(build([
+      ['green hat', ['Opus', 'Astra', 'Fable']],
+      ['black hat', ['Astra', 'Fable', 'Opus']],
+      ['red hat', ['Fable', 'Opus', 'Astra']],
+      ['white hat', ['Opus', 'Astra', 'Fable']],
+    ]))).toEqual([]);
+  });
+
+  it('catches a hat that did not shift the start', () => {
+    expect(panelDefects(build([
+      ['green hat', ['Opus', 'Astra', 'Fable']],
+      ['black hat', ['Opus', 'Astra', 'Fable']],
+    ]))).toEqual([
+      'under "black hat" the panel spoke Opus, Astra, Fable — the announced order, started one place on for this hat, is Astra, Fable, Opus',
+    ]);
+  });
+
+  it('catches a skip, because there is no pass and no skip', () => {
+    expect(panelDefects(build([['green hat', ['Opus', 'Fable']]]))).toEqual([
+      'under "green hat" the panel of 3 spoke 2 times — the panel speaks once each, with no pass and no skip',
+    ]);
+  });
+
+  it('catches a voice that is not on the panel', () => {
+    expect(panelDefects(build([['green hat', ['Opus', 'Astra', 'Gemini']]]))).toEqual([
+      'under "green hat" the speakers were Opus, Astra, Gemini, which is not the announced panel Opus, Astra, Fable',
+    ]);
+  });
+
+  it('says nothing about a session that ran before the rule', () => {
+    const old = parseSession(`---\nid: 8\ntitle: No panel\n---\n\n## Stance · green hat — called by Blue\n\nThe refusal.\n\n## Watson · 2026-09-06 · model: Opus\n\nA turn.\n\n## Stance ends · green hat\n`, { n: 0 });
+    expect(old.panel).toEqual([]);
+    expect(panelDefects(old)).toEqual([]);
   });
 });

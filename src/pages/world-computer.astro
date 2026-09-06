@@ -6,7 +6,7 @@
 // Watchers watch; they cannot contribute, and nothing they do reaches the
 // participants. Turns arrive by commit; the deploy publishes them.
 import { VERSION, BUILD } from '../lib/version';
-import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence, parseHatStance } from '../lib/room';
+import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence, panelDefects, parseHatStance } from '../lib/room';
 import type { RoomItem, RoomTurn } from '../lib/room';
 
 /**
@@ -118,7 +118,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
             // record's own bookkeeping got wrong.
             const worn = hatRotation([session]);
             if (!worn.length) return null;
-            const defects = rotationDefects([session]);
+            const defects = [...rotationDefects([session]), ...panelDefects(session)];
             const cad = conductorCadence(session);
             const cadenceLine = cad.cadence === 'live'
               ? 'The conductor called every hat live, one at a time, from the state of the room.'
@@ -131,7 +131,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
                 <p class="conduct-line">{cadenceLine}</p>
                 {defects.length
                   ? <ul class="conduct-defects">{defects.map(d => <li>{d}</li>)}</ul>
-                  : <p class="conduct-line">Every hat turn records its model, no hat was called and left unworn, and no hat was left on.</p>}
+                  : <p class="conduct-line">Every hat turn records its model, no hat was called and left unworn, and no hat was left on{session.panel.length ? '. The panel spoke once each, in the announced order, with the start shifted a place for each new hat' : ''}.</p>}
               </div>
             );
           })()}

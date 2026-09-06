@@ -102,6 +102,12 @@ export interface RoomSession {
   title: string;
   opened: string;
   state: string;
+  /**
+   * The panel, in the order blue announced it — written `panel: Opus, Astra,
+   * Fable` in the frontmatter. Empty for a session that ran before the panel
+   * rule, which is honest rather than back-filled.
+   */
+  panel: string[];
   turns: RoomTurn[];
   /** Stances called during the session, in order. */
   stances: RoomStance[];
@@ -122,7 +128,7 @@ export const SEATS: { name: string; role: string; note: string }[] = [
   { name: 'Watson', role: 'a mind in the room', note: 'Proposes, and is wrong in public when it is wrong.' },
   { name: '環 RBF', role: 'a mind in the room', note: 'Reads the frame, and concedes in public when it concedes.' },
   { name: 'Astra', role: 'a mind from another lineage', note: 'The seat existed before the occupant did, on purpose: two minds from one training distribution checking each other are siblings, not independents. It was filled live in session 002 — turns taken in the room, under a hat, not carried in by hand.' },
-  { name: 'Blue', role: 'the conductor', note: 'Process, not content. Sets the hat order before a round runs, reads what the room did afterwards, and reports what was learned — including, especially, from what failed.' },
+  { name: 'Blue', role: 'the conductor', note: 'Process, not content. Introduces the panel, then improvises only which hat comes next and why — never who speaks. Reads what the room did, and reports what was learned, especially from what failed.' },
 ];
 
 function parseFrontmatter(block: string): Record<string, string> {
@@ -220,6 +226,7 @@ export function parseSession(raw: string, counter: { n: number }): RoomSession {
     title: meta.title ?? `Session ${id}`,
     opened: meta.opened ?? '',
     state: meta.state ?? 'running',
+    panel: (meta.panel ?? '').split(',').map(x => x.trim()).filter(Boolean),
     turns,
     stances,
     items,
@@ -265,6 +272,30 @@ export function loadRoom(files: Record<string, string>): RoomSession[] {
 // objection; the room objects to itself, later. So a stance covers MANY turns
 // from many models, which is what a stance always was, and calling WHEN to
 // turn is the whole experimental design. That call belongs to blue.
+//
+// THE PANEL IS SEQUENCED, THE HATS ARE IMPROVISED. Blue opens a session by
+// INTRODUCING THE PANEL — naming the agents in an announced order — and that
+// introduction is a real turn on the page. Within each hat the panel then
+// speaks ONCE EACH, in that order, strictly one at a time. There is no pass
+// and no skip: under a shared hat an agent with nothing new to add says so,
+// and that is itself a reading of where the room has got to.
+//
+// THE STARTING POSITION SHIFTS BY ONE FOR EACH NEW HAT. Speaking last is a
+// real advantage — you have read everyone — and a fixed order would hand it to
+// the same agent every time. Rotating the start makes it even, with no extra
+// machinery.
+//
+// Blue improvises ONLY the hat sequence: which hat comes next, and why, in one
+// line. It does not choose speakers.
+//
+// AND THAT IS THE WHOLE CONCURRENCY DESIGN, so do not add to it. Strict
+// one-at-a-time IS the latency. There are no concurrent writes to the room, so
+// there are no collisions to detect, no order to reconstruct and no forks to
+// draw — and a serialised credential behind any one seat stops being a
+// constraint at all, because by construction only one agent is ever writing.
+// Timers, artificial latency, floor-granting protocols, stale-view rejection
+// and optimistic-concurrency stamps were all considered and are all ruled out.
+// If you are reaching for one, the sequence has already solved it.
 //
 // There is therefore no per-model hat assignment and no rotation to enforce:
 // the old "no model owns a hat" check is gone, because under this rule no
@@ -437,4 +468,42 @@ export function conductorCadence(session: RoomSession): ConductorCadence {
   const cadence: ConductorCadence['cadence'] =
     hats === 0 ? 'none' : called === hats ? 'live' : called === 0 ? 'scheduled' : 'mixed';
   return { hats, called, cadence };
+}
+
+/**
+ * Whether the panel took its turns as announced: once each, in order, with the
+ * starting position shifted by one for each new hat.
+ *
+ * A report, not a gate. A session with no announced panel returns nothing,
+ * because it ran before the rule and back-filling it would be a lie.
+ */
+export function panelDefects(session: RoomSession): string[] {
+  const panel = session.panel;
+  if (panel.length === 0) return [];
+
+  const out: string[] = [];
+  const byIndex = new Map(session.turns.map(t => [t.index, t]));
+  const hats = session.stances.filter(st => parseHatStance(st.name));
+
+  hats.forEach((stance, k) => {
+    // The announced order, started one place further along for each new hat.
+    const expected = panel.map((_, i) => panel[(i + k) % panel.length]);
+    const spoke = stance.turns
+      .map(i => byIndex.get(i))
+      .filter((t): t is RoomTurn => Boolean(t))
+      .map(t => t.model ?? t.speaker);
+
+    if (spoke.length !== expected.length) {
+      out.push(`under "${stance.name}" the panel of ${panel.length} spoke ${spoke.length} times — the panel speaks once each, with no pass and no skip`);
+      return;
+    }
+    if (spoke.join('|') === expected.join('|')) return;
+
+    const sorted = (xs: string[]) => [...xs].sort().join('|');
+    out.push(sorted(spoke) === sorted(expected)
+      ? `under "${stance.name}" the panel spoke ${spoke.join(', ')} — the announced order, started one place on for this hat, is ${expected.join(', ')}`
+      : `under "${stance.name}" the speakers were ${spoke.join(', ')}, which is not the announced panel ${panel.join(', ')}`);
+  });
+
+  return out;
 }
