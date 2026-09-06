@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseSession, parseHatStance, hatRotation, rotationDefects } from './room';
+import { parseSession, parseHatStance, hatRotation, rotationDefects, conductorCadence } from './room';
 
 // The model name belongs to the TURN, as of that turn's stamp — never to a
 // participant as a standing label. These are the tests for that: a name is
@@ -215,5 +215,43 @@ An attack.
     expect(rotationDefects([session])).toEqual([
       'the stance "yellow hat, round one" was never closed — the room left a hat on',
     ]);
+  });
+});
+
+// The conductor calls one hat at a time, live, or it timetabled the round.
+// The difference is visible in the record — a live call leaves a conductor's
+// turn in front of every hat — so the page can say which it was rather than
+// letting a reader assume.
+describe('conductor cadence', () => {
+  const hat = (name: string, speaker: string, model: string) =>
+    `## Stance · ${name} — called by Blue\n\nThe refusal.\n\n## ${speaker} · 2026-09-06 · model: ${model}\n\nA turn.\n\n## Stance ends · ${name}\n\nIt ran.\n\n`;
+  const call = '## Blue · 2026-09-06 · model: Fable\n\nWhy this hat now.\n\n';
+  const head = '---\nid: 5\ntitle: A session\n---\n\n';
+
+  it('reads a live call in front of every hat', () => {
+    const s = parseSession(
+      head + call + hat('white hat, round one', 'White', 'Opus') +
+             call + hat('black hat, round one', 'Black', 'Astra'), { n: 0 });
+    expect(conductorCadence(s)).toEqual({ hats: 2, called: 2, cadence: 'live' });
+  });
+
+  it('reads a timetabled round as scheduled, not conducted', () => {
+    const s = parseSession(
+      head + call + hat('white hat, round one', 'White', 'Opus') +
+                    hat('black hat, round one', 'Black', 'Astra') +
+                    hat('green hat, round one', 'Green', 'Fable'), { n: 0 });
+    expect(conductorCadence(s)).toEqual({ hats: 3, called: 1, cadence: 'mixed' });
+  });
+
+  it('does not count a conductor wearing a hat as a call', () => {
+    const s = parseSession(
+      head + hat('red hat, round one', 'Blue', 'Fable') +
+             hat('black hat, round one', 'Black', 'Astra'), { n: 0 });
+    expect(conductorCadence(s)).toEqual({ hats: 2, called: 0, cadence: 'scheduled' });
+  });
+
+  it('says nothing about a session that ran no hats', () => {
+    const s = parseSession(head + '## Watson · 2026-09-06 · model: Opus\n\nA turn.\n', { n: 0 });
+    expect(conductorCadence(s)).toEqual({ hats: 0, called: 0, cadence: 'none' });
   });
 });

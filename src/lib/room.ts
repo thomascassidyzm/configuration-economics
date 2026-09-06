@@ -257,6 +257,27 @@ export function loadRoom(files: Record<string, string>): RoomSession[] {
 // same move under every hat. `rotationDefects` is the check that the rotation
 // actually rotated, and it is deliberately a report rather than a throw — the
 // room publishes its own defects rather than refusing to render them.
+//
+// THE CONDUCTOR CALLS ONE HAT AT A TIME, LIVE. Blue is not a scheduler and the
+// hat order is NOT a rota. Blue reads the state of the room and calls the next
+// hat from it, one at a time, saying in one line why that hat now. A round
+// whose whole order was fixed before the round ran has not been conducted; it
+// has been timetabled, and the difference is visible in the record because a
+// live call leaves a Blue turn in front of every hat. `conductorCadence` reads
+// that back off the record, so which of the two happened is checkable rather
+// than claimed.
+//
+// AND BLUE'S FITNESS FUNCTION IS DIRECTION, NOT RIGOUR. The room is here to
+// build possibilities and be open to usefulness, not to be academically
+// respectable, and Blue is the sentinel for that direction: it calls a hat
+// change the MOMENT the room stops generating possibility and starts defending
+// itself. Caveats, definitional argument, methodological throat-clearing and
+// unearned precision are the failure it exists to catch, and it may say so
+// bluntly mid-round and redirect. Rigour is not its job — accuracy, citation
+// and the wall belong to the registrar layer precisely so that Blue can spend
+// itself entirely on whether the room is still going anywhere.
+//
+// Toward a round that collapses, its stance is Fuller's: now we're learning.
 
 /** The hat colours the room uses. de Bono's, in his colours. */
 export const HATS = ['white', 'yellow', 'black', 'green', 'red', 'blue'] as const;
@@ -362,4 +383,52 @@ export function rotationDefects(sessions: RoomSession[]): string[] {
   }
 
   return defects;
+}
+
+/**
+ * How the conductor ran: called live, hat by hat, or scheduled a round at a
+ * time. Read off the record, because the difference is visible in it — a live
+ * call leaves a conductor's turn in front of the hat it calls, and a timetable
+ * leaves one turn in front of a whole round of them.
+ *
+ * This is a report and not a rule. A session that was timetabled is not
+ * invalid; it is a different thing from a conducted one, and the page should
+ * be able to say which it was rather than letting the reader assume.
+ */
+export interface ConductorCadence {
+  /** Hat stances in the session. */
+  hats: number;
+  /** Hats with a conductor's turn immediately in front of them. */
+  called: number;
+  cadence: 'live' | 'scheduled' | 'mixed' | 'none';
+}
+
+/** The speaker holding the conductor's seat. Process, never content. */
+const CONDUCTOR = 'blue';
+
+export function conductorCadence(session: RoomSession): ConductorCadence {
+  const byIndex = new Map(session.turns.map(t => [t.index, t]));
+  let hats = 0;
+  let called = 0;
+  // A conductor's turn is one taken OUTSIDE every hat — inside a hat it is
+  // wearing one, and a hat turn is content, not a call.
+  let pendingCall = false;
+
+  for (const item of session.items) {
+    if (item.kind === 'turn') {
+      const turn = byIndex.get(item.turn.index);
+      if (!turn) continue;
+      if (!turn.stance && turn.speaker.trim().toLowerCase() === CONDUCTOR) pendingCall = true;
+      continue;
+    }
+    if (item.kind === 'stance-open' && parseHatStance(item.stance.name)) {
+      hats++;
+      if (pendingCall) called++;
+      pendingCall = false;
+    }
+  }
+
+  const cadence: ConductorCadence['cadence'] =
+    hats === 0 ? 'none' : called === hats ? 'live' : called === 0 ? 'scheduled' : 'mixed';
+  return { hats, called, cadence };
 }

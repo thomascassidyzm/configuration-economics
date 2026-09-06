@@ -6,7 +6,7 @@
 // Watchers watch; they cannot contribute, and nothing they do reaches the
 // participants. Turns arrive by commit; the deploy publishes them.
 import { VERSION, BUILD } from '../lib/version';
-import { loadRoom, SEATS, hatRotation, rotationDefects } from '../lib/room';
+import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence } from '../lib/room';
 
 export const prerender = false;
 Astro.response.headers.set('cache-control', 'no-store');
@@ -97,6 +97,15 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
             if (!worn.length) return null;
             const defects = rotationDefects([session]);
             const rounds = [...new Set(worn.map(w => w.round))];
+            // Conducted or timetabled. The conductor is meant to call one hat
+            // at a time from the state of the room; a whole order fixed before
+            // the round ran is a rota, and the record shows which happened.
+            const cad = conductorCadence(session);
+            const cadenceLine = cad.cadence === 'live'
+              ? 'The conductor called every hat live, one at a time, from the state of the room.'
+              : cad.cadence === 'scheduled'
+                ? 'The conductor set the order in advance and called no hat live: this round was timetabled, not conducted.'
+                : `The conductor called ${cad.called} of ${cad.hats} hats live and set the rest in advance — part conducted, part timetable.`;
             return (
               <div class="rotation">
                 <span class="rotation-kicker">The rotation · {worn.length} hat turns across {rounds.length} rounds</span>
@@ -112,6 +121,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
                     ))}
                   </tbody>
                 </table>
+                <p class="rotation-clean">{cadenceLine}</p>
                 {defects.length
                   ? <ul class="rotation-defects">{defects.map(d => <li>{d}</li>)}</ul>
                   : <p class="rotation-clean">No model wore the same hat in consecutive rounds, every hat turn records its model, and no hat was called and left unworn.</p>}
