@@ -680,7 +680,7 @@ The question splits in two.
 
 *Local* option space — the differential effect of a move on the reachable set — is tractable. Δω evaluation requires only directional comparison between pre-move and post-move reachable sets, not a global scalar. Mass extinction, monoculture conversion, fossil-fuel lock-in to 4°C are unambiguously option-space-degrading even where global ω cannot be computed. See option-space-as-chess-moves.
 
-What remains open is the global state measure. Until it lands, "option space" at the state level functions as a direction for measurement rather than a measurement. At the move level, the framework already ships with a usable decision procedure.`,
+What remains open is the global state measure. Until it lands, "option space" at the state level functions as a direction for measurement rather than a measurement. At the move level, the framework already ships with a usable decision procedure for refusing foreclosing moves. The gain side of move evaluation — telling which moves actively enlarge the reachable set — is not closed by that procedure, and is open at every scope. See gain-side-unread.`,
     logic: {
       claim: 'Global option space as a state measure currently lacks a rigorous measurement procedure suitable for economic use; local Δω evaluation as a move measure is operational.',
       premises: [
@@ -689,17 +689,17 @@ What remains open is the global state measure. Until it lands, "option space" at
         'Candidate forward-looking state measures exist but have not been demonstrated to be economically operational.',
         'Local Δω evaluation does not require a global state measure — it requires only directional comparison between pre-move and post-move reachable sets (option-space-as-chess-moves).'
       ],
-      conclusion: 'The state-level measurement of option space remains a genuinely open research problem; the move-level measurement is already operational.',
+      conclusion: 'The state-level measurement of option space remains a genuinely open research problem; the move-level measurement is operational on the loss side — irreversible loss, structural lock-in, asymptotic collapse — and is not demonstrated on the gain side, where counting reachable states rewards optionality rather than generativity.',
       predictive: 'Operationalising the state-level measure is a prerequisite for state-comparison applications (ranking configurations, scoring economies). Move-evaluation applications (policy choices, infrastructure commitments, irreversibility detection) do not wait on it.'
     },
     layers: {
       coreClaim: 'Option space at the state level isn\'t measured yet. Option space at the move level — directionally — already is.',
       formalDefinition: 'Global option space as a scalar over configurations lacks a rigorous measurement procedure; existing complexity measures (Assembly Index, logical depth) are backward-looking. Local Δω evaluation on R_living(C, B, T) — the directional comparison between pre-move and post-move reachable sets — is operational, per option-space-as-chess-moves.',
       implications: 'The framework is prescriptive at the move level (next-best-move evaluation against R_living) and diagnostic at the state level (no scalar to maximise across configurations). State-comparison applications wait on the global measure; move-evaluation applications do not.',
-      openQuestions: 'Candidate global measures (reachable configurations under an exergy budget, Kauffman\'s adjacent possible, Assembly-weighted reachable sets) exist. None has been shown to be economically operational at state level. This — the global state measure — is the central remaining open problem. The move-level measure is no longer open.'
+      openQuestions: 'Candidate global measures (reachable configurations under an exergy budget, Kauffman\'s adjacent possible, Assembly-weighted reachable sets) exist. None has been shown to be economically operational at state level. This — the global state measure — is one of two open problems here. The move-level measure is settled only on the loss side: it decides foreclosure, lock-in and asymptotic collapse. It is not demonstrated on the gain side — cone-counting shows its teeth at cliffs and grade-crossings and does not mechanically reward building (CE RIG v1 design, §5.2/§6) — which is the sharper open problem carried by gain-side-unread.'
     },
-    revisedAt: '2026-05-10',
-    linksTo: ['value-option-space', 'viable-objective', 'configuration-not-information', 'option-space-as-chess-moves', 'configuration-generates-configuration']
+    revisedAt: '2026-09-06',
+    linksTo: ['value-option-space', 'viable-objective', 'configuration-not-information', 'option-space-as-chess-moves', 'configuration-generates-configuration', 'gain-side-unread']
   },
 
   {
@@ -852,6 +852,8 @@ The same operation is available here. Every policy decision, infrastructure comm
 
 Mass extinction events, monoculture conversions, fossil-fuel commitments locking in 4°C are unambiguously option-space-degrading even when global option space after the move is non-computable. Local gradient evaluation is tractable where global value computation isn't.
 
+The scope is worth stating plainly, because the claim is validated on one side of it. This is a veto on foreclosure, not a selector among generative moves: the local Δω reading is demonstrated as a loss-detector — cliffs, lock-in, irreversible foreclosure — and is not yet demonstrated as a gain-detector. Nothing here, and nothing at the global scope either, has been shown to read expansion the way it reads collapse. See gain-side-unread.
+
 This is not new. Dave Snowden has articulated next best move as the central practical primitive in complex domains since Cynefin took its modern form. Aubin's viability theory formalises admissible trajectories under non-empty constraint sets. This work inherits both lineages and adds physical grounding — moves are evaluated over an explicit exergy budget and horizon, restricted to the class of observers that maintain themselves and persist.`,
     logic: {
       claim: 'Option space is evaluable locally as the differential effect of moves, even where it is not computable globally as a state measure.',
@@ -870,8 +872,8 @@ This is not new. Dave Snowden has articulated next best move as the central prac
       implications: 'The single-board chess metaphor extends to polychess — multiple games on multiple boards, with pieces shared across boards, players often unaware that other games are even being played. Externalities reframe from "side effects" to uncounted moves on boards you didn\'t know you were playing on. GDP is the score on one board. Standard economics plays one board; ecological economics adds one more; this work is explicitly polychess. The unit of value is preserved option space across the poly-board, not the score on any single board.',
       openQuestions: 'Aggregation across simultaneous moves by many agents (chess has one player; the biosphere has many). The operational definition of "major class of life" — phylum-level, functional ecological role, capacity for distinction-making? Selection of the relevant horizon for any specific decision (default: the longest horizon any major class depends on, but this is contestable). When does a move eliminate a class\'s reachable set vs. merely narrow it — the criterion as currently stated is binary; reality is graded.'
     },
-    revisedAt: '2026-04-29',
-    linksTo: ['value-option-space', 'option-space-measurability', 'viable-objective', 'transition-fragility', 'displaced-costs', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'infinite-game']
+    revisedAt: '2026-09-06',
+    linksTo: ['value-option-space', 'option-space-measurability', 'viable-objective', 'transition-fragility', 'displaced-costs', 'asymmetry-of-option-space-change', 'configuration-generates-configuration', 'infinite-game', 'gain-side-unread']
   },
 
   // --- v0.7 additions (May 2026, from session 2026-05-18) ---
@@ -1390,6 +1392,47 @@ The sharpest objection, shipped with this claim: one rail so far. Exactly one li
     ],
     revisedAt: '2026-07-03',
     linksTo: ['configuration-generates-configuration', 'coordination-wealth', 'structural-memory', 'institutions-precipitate', 'route-around-the-chokepoint']
+  },
+  {
+    id: 'gain-side-unread',
+    title: 'The Gain Side Is Not Read Yet',
+    epistemicStatus: 'forming',
+    surface: `The work has a decision procedure for moves, and it is honest about the half it can do. It reads losses. Foreclosure, lock-in, asymptotic collapse — these produce convergent verdicts across observers, which is exactly what option-space-as-chess-moves claims and exactly what its predictive field names. What it does not do, and has never been shown to do, is read gains.
+
+The natural assumption is that this is a scope problem: the local reader is too near-sighted to see a slow, systemic expansion, and a global measure would catch it. The rig design says otherwise, and this is the finding that makes the problem sharper than the standing one. Raw reachable-set counting does not mechanically reward building. Far from any cliff, one tending move versus one extracting move barely shifts the cone. The cone's teeth show at exactly two kinds of place: cliffs, where possibility collapses, and grade-crossings, where a threshold is passed and a band of new states enters the cone at once. Both scopes read the same events well. Neither reads generativity as such.
+
+So the split the framework drew — global state measure open, local move measure operational — was drawn on the wrong axis. The axis that carries the actual gap is loss-side versus gain-side, and it cuts across local and global alike. Losses are legible at both scopes. Gains are legible at neither, except where they happen to arrive as a threshold crossing.
+
+The worked case is the razor-blade (CE RIG v1 design, §6): a move that reads as an increase in possibility measured locally and at an instant, and as a collapse measured over the trajectory. Its eleven-line miniature verifies by hand. It is worth reading for what it does *not* contain as much as for what it does — the winning move is Rest, and the trajectory reading rewards it for not doing the destructive thing. Nowhere in that demonstration does any instrument read a generative gain. The counter-case that arbitrates the whole question is itself a veto verdict.
+
+The direction with the most promise, flagged as a direction and not a claim: the gain of a generative move may not be *more reachable states* at all, but *grade-crossings brought within reach* — threshold events after which the world's later moves are cheaper. That is countable, attributable, and locally predictable, because a threshold is a named feature of a domain rather than an emergent property of a cone.
+
+The sharpest objection, shipped with this claim: this may be a category error rather than a gap. If the framework's objective is a no-regret criterion — a class of moves to refuse — then a gain-detector is not missing equipment, it is equipment the design deliberately declined, and demanding one smuggles back the scalar maximisation the viable objective was built to avoid. The answer that keeps this node alive is that pattern-intelligence-constraint hands the correction of foreclosure to aim, and aim is a positive act a veto cannot perform: something has to point the amplifier, and nothing in the set currently can. If that turns out to be answerable purely by refusal — if every case where aim seems needed decomposes into refusals — the node folds and the category error was mine.
+
+Climb condition: one worked treatment logs a real divergence on the gain side and acts on it — an expansion an instrument read that a veto would have missed — or the grade-crossing ledger is specified sharply enough to run on a case.`,
+    logic: {
+      claim: 'Local Δω evaluation has no demonstrated way to detect option-space-expanding moves, and neither does global cone-counting: the measurement gap runs along the loss-side/gain-side axis rather than the local/global one, which makes this a sharper form of the open problem than the general state-measure question.',
+      premises: [
+        'Move evaluation is demonstrated on the loss side: option-space-as-chess-moves predicts convergent verdicts specifically on irreversible loss, structural lock-in and asymptotic collapse, and its worked cases are foreclosures.',
+        'Reachable-set counting at the global scope does not mechanically reward building either — far from a cliff, a generative move and an extractive move move the cone very little, and the cone shows its teeth only at cliffs and threshold crossings (CE RIG v1 design, §5.2).',
+        'Cliffs and thresholds are loss-side and grade-crossing events; neither scope contains an operation that reads generativity as such.',
+        'The framework leans on a positive act it has no instrument for: pattern-intelligence-constraint concedes that foreclosure is the cheap default and hands the correction to aim, but the correcting nodes (viable-objective, coordination-as-move-evaluation) are veto-shaped, and a veto can stop the amplifier pointing at a cliff without being able to point it anywhere.',
+        'The framework\'s own filing of this — option-space-measurability\'s global/local split — declared the move level closed, which mislocates a second open problem as solved.'
+      ],
+      conclusion: 'The gain side of option-space evaluation is open at every scope, and it is the specific form the measurement problem takes for a framework whose operational core is a veto.',
+      predictive: 'If the gap is real, worked treatments should keep producing confident refusals and hedged selections — the no-regret gate should decide foreclosures cleanly and fail to separate two non-foreclosing candidates. If an instrument exists, it should be a ledger of threshold crossings a move brings within reach rather than a measure over states; and if every case where aim seems required decomposes into refusals, the node fails.'
+    },
+    layers: {
+      coreClaim: 'The move-level procedure detects moves that close the future. It has never been shown to detect moves that open it — and enumerating the whole cone does not fix that, because counting states rewards restraint, not building.',
+      formalDefinition: 'For Δω on R_living(C, B, T): the sign of Δω is reliably readable for foreclosing moves at both local and trajectory scope, and is not demonstrated for expanding moves at either scope. Cone cardinality registers cliffs (collapse of the reachable set) and grade-crossings (bands of states entering the cone at a threshold) but is near-flat over generative moves away from those structures. The measurement gap is therefore loss-side/gain-side, orthogonal to the global-state/local-move split drawn in option-space-measurability.',
+      implications: 'The framework should describe its decision procedure as a veto on foreclosure and not as a general move-evaluator — which is what option-space-as-chess-moves now says in scope, and what the /attack answer now concedes. It also means the amplifier problem in pattern-intelligence-constraint has no current answer: refusal cannot aim. And it re-prices the search: the thing to look for is not a better reader of states, local or global, but a different object of measurement.',
+      openQuestions: 'Is a grade-crossing ledger — thresholds a move brings within reach, counted and attributed — an instrument or a restatement? Does generativity have any signature in reachable-set structure away from thresholds? And is the gap a gap at all, or the correct shape of a no-regret criterion, in which case the demand for a gain-detector is the scalar objective returning by the back door?'
+    },
+    statusHistory: [
+      { version: 'v0.12.0', status: 'forming', note: 'captured 2026-09-06 from the Six-Hat run on the #925 canon audit: the objection was right that the canon overclaims and wrong about which node — option-space-as-chess-moves stays derived, and the real open problem is the gain side, unread at every scope. Worked case: the razor-blade miniature in the CE RIG v1 design (§6.2), which decides the question and is itself a veto verdict.' }
+    ],
+    revisedAt: '2026-09-06',
+    linksTo: ['option-space-measurability', 'option-space-as-chess-moves', 'asymmetry-of-option-space-change', 'viable-objective', 'pattern-intelligence-constraint', 'configuration-generates-configuration']
   }
 ];
 
