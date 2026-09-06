@@ -157,11 +157,17 @@ export function scanSessionFile(raw, label) {
 
 function main(argv) {
   const here = dirname(fileURLToPath(import.meta.url));
-  const store = resolve(here, '..', 'src', 'content', 'room');
-  if (!argv.length && !existsSync(store)) { console.log("room-guard: no session store yet — nothing to check."); return; }
+  // Both arms of the experiment, under the identical wall. The carried arm
+  // gets no exemption: it is hand-transported, not privileged.
+  const stores = [
+    resolve(here, '..', 'src', 'content', 'room'),
+    resolve(here, '..', 'src', 'content', 'carried'),
+  ];
   const files = argv.length
     ? argv
-    : readdirSync(store).filter(f => f.endsWith('.md')).sort().map(f => join(store, f));
+    : stores.filter(existsSync).flatMap(store =>
+        readdirSync(store).filter(f => f.endsWith('.md')).sort().map(f => join(store, f)));
+  if (!files.length) { console.log('room-guard: no session store yet — nothing to check.'); return; }
 
   let blocks = 0, warns = 0;
   for (const f of files) {

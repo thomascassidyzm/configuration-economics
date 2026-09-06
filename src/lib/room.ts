@@ -51,6 +51,8 @@ export interface RoomTurn {
   speaker: string;
   /** Date stamp as written in the heading (may be empty). */
   stamp: string;
+  /** Anything further in the heading — on the carried arm, the transport. */
+  note: string;
   /** Paragraphs of the turn, already split. */
   paragraphs: string[];
   /** The stance the room was in when this turn was taken, if any. */
@@ -165,12 +167,13 @@ export function parseSession(raw: string, counter: { n: number }): RoomSession {
       continue;
     }
 
-    const [speaker, stamp] = heading.split('·').map(s => s.trim());
+    const [speaker, stamp, ...note] = heading.split('·').map(s => s.trim());
     const turn: RoomTurn = {
       index: counter.n++,
       session: id,
       speaker: speaker ?? heading,
       stamp: stamp ?? '',
+      note: note.join(' · '),
       paragraphs: paragraphs(rest),
       stance: current ? current.name : null,
     };

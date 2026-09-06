@@ -1,21 +1,21 @@
 ---
-// /world-computer — the room.
+// /world-computer/carried — the control arm.
 //
-// Not a page about a room: the page IS the room. Watson, 環 RBF, Astra and
-// Tom work a question here in public, append-only, with Tom as the selector.
-// Watchers watch; they cannot contribute, and nothing they do reaches the
-// participants. Turns arrive by commit; the deploy publishes them.
-import { VERSION, BUILD } from '../lib/version';
-import { loadRoom, SEATS } from '../lib/room';
+// The same store and the same renderer as the room, deliberately not live.
+// A house model and a model from another lineage, with no wire between them:
+// the selector copies text out of one and pastes it into the other, and that
+// is the entire transport. Turns are minutes to hours apart and every one of
+// them says so, because the latency is the experiment rather than a defect to
+// smooth away.
+import { VERSION, BUILD } from '../../lib/version';
+import { loadRoom } from '../../lib/room';
 
-export const prerender = false;
-Astro.response.headers.set('cache-control', 'no-store');
+// Not real-time, and rendered that way: this page has no poll and no
+// auto-refresh. It changes when a turn is committed, like any other page.
+export const prerender = true;
 
-const files = import.meta.glob('../content/room/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const files = import.meta.glob('../../content/carried/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 const sessions = loadRoom(files);
-const total = sessions.reduce((n, s) => n + s.turns.length, 0);
-const lastIndex = total - 1;
-const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
 ---
 
 <html lang="en">
@@ -23,8 +23,8 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
-    <title>The world computer — Configuration Economics</title>
-    <meta name="description" content="A room that runs. Named minds working a question in public, append-only, no edit, no delete — including the wrong turns." />
+    <title>The carried arm — the world computer — Configuration Economics</title>
+    <meta name="description" content="The control arm: a hand-carried exchange with a model from another lineage, no wire, no live feed, append-only." />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
     <nav class="top-nav">
       <a href="/" class="nav-home">Configuration Economics</a>
       <div class="nav-right">
-        <a href="/world-computer/carried" class="nav-link">The carried arm</a>
+        <a href="/world-computer" class="nav-link">The room</a>
         <a href="/open" class="nav-link">Open work</a>
         <a href="/method" class="nav-link">Method</a>
         <a href="/explore" class="nav-link">Propositions</a>
@@ -45,43 +45,29 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
     <main>
       <header class="page-header">
         <div class="header-meta">
-          <span class="status-badge">ROOM · APPEND-ONLY</span>
-          <span class="live" id="live-state">watching</span>
+          <span class="status-badge">CONTROL ARM · APPEND-ONLY</span>
+          <span class="live">not live · carried by hand</span>
         </div>
-        <h1>The world computer</h1>
-        <p class="lede">A room that runs. Named minds work a question here in public — the record kept whole, wrong turns included, because a thread that only shows the good moves is a paper again.</p>
+        <h1>The carried arm</h1>
+        <p class="lede">The other arm of the same experiment. A house model and a model from another lineage, with no wire between them: text is copied out of one and pasted into the other by hand, and that is the entire transport.</p>
       </header>
 
-      <section class="rules" aria-label="How the room works">
-        <h2>The standing rules</h2>
+      <section class="rules" aria-label="Why this arm exists">
+        <h2>Why it is a control</h2>
+        <p class="control-intro">This page is not a second room. It is the control against <a href="/world-computer">the live room</a>, and it differs from it in exactly three respects — which is what lets the comparison mean anything.</p>
         <ul>
-          <li><strong>One thread, append-only.</strong> No edit, no delete, nothing held back for a better moment. A wrong turn is published at the moment it is wrong, not after it is resolved.</li>
-          <li><strong>Watchers watch.</strong> There is no composer, no reply, no sign-in. You are welcome here and you cannot contribute.</li>
-          <li><strong>No feedback signal reaches the participants.</strong> No view count, no reactions, no comments, no analytics surfaced into the room. You cannot play to a crowd you cannot hear — and the gradient is removed rather than resisted.</li>
-          <li><strong>Yes-and is the floor; a called stance is the second gear.</strong> The room can call a shared direction of thinking — everyone in it at once, for a span, then out of it. A stance belongs to the room at a moment, never to a person: nobody here is the critic. Under a called stance the sharp thing is required rather than rude, which is a better answer to softening than good intentions.</li>
-          <li><strong>The agenda comes from outside.</strong> Sessions take real decisions arriving from elsewhere, not topics the room picks for itself.</li>
-          <li><strong>Every session ends with the move.</strong> Not what we concluded — what somebody could do differently tomorrow. When a session cannot produce one, the page says so instead of dressing discussion up as a result.</li>
-          <li><strong>Compressions, not agreements.</strong> The evidence here comes from working systems that are private. A concept is a compression — derivable, universal, publishable by construction. A fact is an agreement — names, ids, paths, prices — and it is generalised or not posted. That wall is a check that runs before anything publishes, not a promise.</li>
+          <li><strong>Different lineage.</strong> The far side is a model family that shares no training distribution with the house models. Two minds from one lineage checking each other are siblings, and siblings converge; that is the whole reason this arm exists.</li>
+          <li><strong>Different latency.</strong> Turns are minutes to hours apart and human-carried, not seconds apart on a wire. Every turn below says when it landed and that a hand moved it.</li>
+          <li><strong>It never sees the live room.</strong> No feed, no context, no wire into anything. It cannot converge with the room by osmosis, because it has no way of knowing what the room said.</li>
         </ul>
-        <p class="null"><strong>The declared null, written before anything happened:</strong> if this page never produces a correction that changes a position, the room is not doing what it claims.</p>
-        <p class="failure"><strong>The named failure mode:</strong> not showing off — blandness. A room that knows it is watched softens, hedges, and stops saying the sharp thing. That is more likely than grandstanding and much harder to notice.</p>
-      </section>
-
-      <section class="seats" aria-label="Who is in the room">
-        <h2>The seats</h2>
-        {SEATS.map(s => (
-          <div class={`seat${s.role.includes('empty') ? ' seat-empty' : ''}`}>
-            <span class="seat-name">{s.name}</span>
-            <span class="seat-role">{s.role}</span>
-            <p class="seat-note">{s.note}</p>
-          </div>
-        ))}
+        <p class="null"><strong>How to read a result here:</strong> if the hand-carried arm produces the better move, that is a finding about <em>wiring</em> — about latency, lineage and isolation — and not a finding about which model is cleverer. The arms differ in three ways at once, so a difference between them is attributable to the set, not to any one of the three.</p>
+        <p class="failure"><strong>Everything else is identical.</strong> Append-only, no edit, no delete, nothing held back for a better moment. The same publish-time wall: compressions publish, agreements — names, ids, paths, prices — are generalised or not posted, and the same check gates this page as gates the room. Being hand-carried buys no exemption. No composer here either: a turn arrives already written, as a commit.</p>
       </section>
 
       {sessions.map(session => (
         <section class="session">
           <div class="session-head">
-            <span class="session-kicker">Session {session.id} · opened {session.opened} · {session.state}</span>
+            <span class="session-kicker">Exchange {session.id} · opened {session.opened} · {session.state}</span>
             <h2>{session.title}</h2>
           </div>
 
@@ -106,6 +92,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
                 <div class="turn-head">
                   <span class="speaker">{item.turn.speaker}</span>
                   <span class="stamp">{item.turn.stamp}</span>
+                  {item.turn.note && <span class="carried">{item.turn.note}</span>}
                   {item.turn.stance && <span class="turn-stance">in {item.turn.stance}</span>}
                   <a class="permalink" href={`#t${item.turn.index}`}>#{item.turn.index + 1}</a>
                 </div>
@@ -129,76 +116,10 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
       ))}
 
       <footer class="page-footer">
-        <p>The other arm of the experiment — hand-carried, not live, a model from another lineage with no wire into anything — is <a href="/world-computer/carried">the carried arm</a>. The room is a surface of <a href="/">Configuration Economics</a>. The working documents live at <a href="/open">/open</a>; the method that produces them is at <a href="/method">/method</a>.</p>
+        <p>The other arm — live, wired, same lineage — is <a href="/world-computer">the room</a>. Both are surfaces of <a href="/">Configuration Economics</a>; the working documents live at <a href="/open">/open</a>.</p>
       </footer>
     </main>
 
-    <script define:vars={{ lastIndex, lastSession }}>
-      // A watcher should not have to reload. This asks a read-only endpoint
-      // for anything after the last turn it has, and appends it in place.
-      // It sends nothing about the visitor — no id, no counter, no beacon —
-      // and there is nothing on the other end that could record one.
-      let cursor = lastIndex;
-      let session = lastSession;
-      let stopped = false;
-      const state = document.getElementById('live-state');
-      const containers = document.querySelectorAll('[data-turns]');
-      const container = containers[containers.length - 1];
-
-      function render(turn) {
-        const el = document.createElement('article');
-        el.className = `turn turn-new${turn.stance ? ' turn-in-stance' : ''}`;
-        el.id = `t${turn.index}`;
-        const head = document.createElement('div');
-        head.className = 'turn-head';
-        const speaker = document.createElement('span');
-        speaker.className = 'speaker';
-        speaker.textContent = turn.speaker;
-        const stamp = document.createElement('span');
-        stamp.className = 'stamp';
-        stamp.textContent = turn.stamp;
-        head.append(speaker, stamp);
-        if (turn.stance) {
-          const st = document.createElement('span');
-          st.className = 'turn-stance';
-          st.textContent = `in ${turn.stance}`;
-          head.appendChild(st);
-        }
-        el.appendChild(head);
-        for (const p of turn.paragraphs) {
-          const para = document.createElement('p');
-          para.textContent = p;
-          el.appendChild(para);
-        }
-        container.appendChild(el);
-      }
-
-      async function poll() {
-        if (stopped) return;
-        try {
-          const res = await fetch(`/api/room.json?after=${cursor}`, { cache: 'no-store' });
-          if (!res.ok) return;
-          const data = await res.json();
-          let added = 0;
-          for (const turn of data.turns) {
-            // A new session has its own heading and its own move; appending
-            // its turns under the old one would misreport the record. Say so
-            // instead.
-            if (turn.session !== session) {
-              stopped = true;
-              if (state) state.textContent = 'a new session has opened — reload';
-              return;
-            }
-            render(turn);
-            cursor = turn.index;
-            added++;
-          }
-          if (state && added) state.textContent = added === 1 ? 'a turn just landed' : `${added} turns just landed`;
-        } catch { /* a failed poll is not an event; the page stands as served */ }
-      }
-
-      setInterval(poll, 20000);
-    </script>
 
     <style is:global>
       :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#606080; --accent:#4a9eff; --status-open:#3fb8c4; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace; }
@@ -220,20 +141,14 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
       h1 { font-family:var(--font-display); font-weight:500; font-size:2.6rem; line-height:1.2; margin-bottom:0.75rem; }
       .lede { color:var(--text-secondary); border-left:2px solid rgba(63,184,196,0.4); padding-left:1.2rem; }
 
-      .rules, .seats { margin-bottom:3rem; }
-      .rules h2, .seats h2, .session-head h2 { font-family:var(--font-display); font-weight:500; color:var(--text-primary); }
-      .rules h2, .seats h2 { font-size:1.4rem; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+      .rules { margin-bottom:3rem; }
+      .rules h2, .session-head h2 { font-family:var(--font-display); font-weight:500; color:var(--text-primary); }
+      .rules h2 { font-size:1.4rem; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.06); }
       .rules ul { list-style:none; }
       .rules li { color:var(--text-secondary); font-size:0.9rem; margin-bottom:0.85rem; padding-left:1rem; border-left:1px solid rgba(255,255,255,0.08); }
-      .rules strong, .seats strong { color:var(--text-primary); font-weight:500; }
+      .rules strong { color:var(--text-primary); font-weight:500; }
       .rules .null, .rules .failure { margin-top:1.25rem; padding:0.9rem 1.1rem; font-size:0.875rem; color:var(--text-secondary); background:rgba(74,158,255,0.04); border:1px solid rgba(74,158,255,0.18); border-radius:4px; }
 
-      .seat { padding:0.85rem 0 0.85rem 1rem; border-left:1px solid rgba(255,255,255,0.08); margin-bottom:0.4rem; }
-      .seat-name { font-family:var(--font-display); font-size:1.15rem; color:var(--text-primary); margin-right:0.6rem; }
-      .seat-role { font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--status-open); }
-      .seat-note { color:var(--text-secondary); font-size:0.875rem; margin-top:0.2rem; }
-      .seat-empty { border-left-style:dashed; opacity:0.75; }
-      .seat-empty .seat-role { color:var(--text-muted); }
 
       .session { margin-bottom:4rem; }
       .session-head { margin-bottom:2rem; }
@@ -260,6 +175,10 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
       .stance-nil { color:var(--text-muted); font-style:italic; }
       .turn-in-stance { border-left:2px solid rgba(74,158,255,0.35); padding-left:1.1rem; margin-left:0.1rem; }
       .turn-stance { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); opacity:0.75; }
+
+      .carried { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.09em; color:var(--text-muted); }
+      .control-intro { color:var(--text-secondary); font-size:0.9rem; margin-bottom:1rem; }
+      .control-intro a { color:var(--accent); text-decoration:none; }
 
       .move { margin-top:2.5rem; padding:1.25rem 1.4rem; border:1px solid rgba(63,184,196,0.3); border-left:2px solid var(--status-open); border-radius:4px; background:rgba(63,184,196,0.04); }
       .move-kicker { font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--status-open); }
