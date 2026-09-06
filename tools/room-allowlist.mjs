@@ -10,6 +10,17 @@
 // switched off. Extend it in one line. Everything here is a fact that is
 // ALREADY public: participants who consented to be named, thinkers whose
 // books are in libraries, frameworks published on this site.
+//
+// THE WALL EXISTS TO STOP ESTATE FACTS LEAKING, NEVER TO STOP A CITED NAME
+// OR A FOREIGN VOICE. This is not a nicety; it is a correction paid for in
+// data. The proper-noun rule cannot tell a private fact from a cited author
+// or a named move, and on the first pass of the carried arm that was met by
+// writing AROUND the names — which rewrote a foreign model's words into this
+// house's register and destroyed the very thing the control arm exists to
+// measure. An outside read caught it. So: when a real name legitimately
+// needs to pass, THE ALLOWLIST GROWS BY A LINE. Never a bypass, never a
+// per-file exemption, never a weakened rule in the guard, and never a
+// paraphrase to dodge the check.
 
 /** Capitalised words the room may say. Matched case-sensitively, whole word. */
 export const ALLOWED_PROPER_NOUNS = [
@@ -23,10 +34,16 @@ export const ALLOWED_PROPER_NOUNS = [
   // the genuinely one-way facts, and the `model-version` and
   // `routing-detail` rules in the guard block them by name. So these two
   // words pass, and nothing after them does.
-  'Opus', 'Gemini',
+  'Opus', 'Gemini', 'Fable',
   // The thinkers the room stands on.
   'Buckminster', 'Fuller', 'Edward', 'de', 'Bono', 'David', 'Deutsch',
-  'James', 'Carse', 'Bucky', 'Grove',
+  'James', 'Carse', 'Bucky', 'Grove', 'Sinek',
+  // The moves this record names. A move's name is a compression the room or
+  // the far side coined and published here; it points at no private object.
+  'Anchor', 'Fuse', 'Deletion', 'Test', 'Orthogonal', 'Inversion',
+  'Exhumation', 'Binary', 'Ledger', 'Minimum', 'Viable', 'Witness',
+  'Structured', 'Friction', 'Compliance', 'Trap', 'House', 'Register',
+  'Filter', 'Layer', 'Specification',
   // The frameworks and the public objects.
   'Configuration', 'Economics', 'Distinction', 'Physics', 'AlphaGo', 'Go',
   'Assembly', 'Theory', 'Option', 'Space',
