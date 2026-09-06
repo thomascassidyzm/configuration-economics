@@ -5,7 +5,7 @@
 // untested verifier holding the lever. So: strings that MUST block, and
 // strings that MUST pass. Run with `node tools/room-guard.test.mjs`.
 
-import { scanText } from './room-guard.mjs';
+import { scanText, scanSessionFile } from './room-guard.mjs';
 
 // Agreement-layer. Every one of these must be refused.
 const MUST_BLOCK = [
@@ -59,6 +59,45 @@ for (const [name, text] of MUST_PASS) {
     for (const b of blocks) console.error(`        [${b.rule}] "${b.match}"`);
     failures++;
   }
+}
+
+// Headings are prose too: a stance name is chosen by the room and goes over
+// the same wall. Scanning only turn bodies would let a name through in the one
+// place the room writes freely.
+const SESSION_HEADING_LEAK = `---
+id: 9
+title: A session
+---
+
+## Stance · black on the Bethesda numbers
+
+Everyone in it at once.
+
+## Watson · 2026-09-06
+
+Nothing to see here.
+`;
+if (scanSessionFile(SESSION_HEADING_LEAK, 'heading').blocks.length === 0) {
+  console.error('FAIL (should block) a proper noun in a stance heading');
+  failures++;
+}
+
+const SESSION_CLEAN = `---
+id: 9
+title: A session
+---
+
+## Stance · how might we — called by the selector
+
+Everyone in it at once, for as long as it runs.
+
+## Watson · 2026-09-06
+
+Two things that must agree, with nothing comparing them.
+`;
+if (scanSessionFile(SESSION_CLEAN, 'clean').blocks.length > 0) {
+  console.error('FAIL (should pass) a clean session file');
+  failures++;
 }
 
 if (failures) {

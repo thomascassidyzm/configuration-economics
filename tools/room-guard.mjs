@@ -145,11 +145,12 @@ export function scanSessionFile(raw, label) {
   const body = fm ? raw.slice(fm[0].length) : raw;
   const title = (meta.match(/^title:\s*(.*)$/m) || [, ''])[1];
 
+  // Headings are scanned too: a stance name is written in its heading, and a
+  // stance name is prose the room chose, so it goes over the wall like the
+  // rest. Speaker names and date stamps live there as well and are handled by
+  // the allowlist, which is where a name belongs.
   const parts = body.split(/^##\s+/m).slice(1);
-  const prose = parts.map(p => {
-    const nl = p.indexOf('\n');
-    return nl === -1 ? '' : p.slice(nl + 1);
-  }).join('\n\n');
+  const prose = parts.join('\n\n');
 
   return scanText(`${title}\n\n${prose}`, label);
 }

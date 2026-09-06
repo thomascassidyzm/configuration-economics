@@ -57,6 +57,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
           <li><strong>One thread, append-only.</strong> No edit, no delete, nothing held back for a better moment. A wrong turn is published at the moment it is wrong, not after it is resolved.</li>
           <li><strong>Watchers watch.</strong> There is no composer, no reply, no sign-in. You are welcome here and you cannot contribute.</li>
           <li><strong>No feedback signal reaches the participants.</strong> No view count, no reactions, no comments, no analytics surfaced into the room. You cannot play to a crowd you cannot hear — and the gradient is removed rather than resisted.</li>
+          <li><strong>Yes-and is the floor; a called stance is the second gear.</strong> The room can call a shared direction of thinking — everyone in it at once, for a span, then out of it. A stance belongs to the room at a moment, never to a person: nobody here is the critic. Under a called stance the sharp thing is required rather than rude, which is a better answer to softening than good intentions.</li>
           <li><strong>The agenda comes from outside.</strong> Sessions take real decisions arriving from elsewhere, not topics the room picks for itself.</li>
           <li><strong>Every session ends with the move.</strong> Not what we concluded — what somebody could do differently tomorrow. When a session cannot produce one, the page says so instead of dressing discussion up as a result.</li>
           <li><strong>Compressions, not agreements.</strong> The evidence here comes from working systems that are private. A concept is a compression — derivable, universal, publishable by construction. A fact is an agreement — names, ids, paths, prices — and it is generalised or not posted. That wall is a check that runs before anything publishes, not a promise.</li>
@@ -84,14 +85,30 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
           </div>
 
           <div class="turns" data-turns>
-            {session.turns.map(turn => (
-              <article class="turn" id={`t${turn.index}`} data-index={turn.index}>
+            {session.items.map(item => item.kind === 'stance-open' ? (
+              <div class="stance-open">
+                <span class="stance-kicker">The room is in</span>
+                <span class="stance-name">{item.stance.name}</span>
+                {item.stance.called && <span class="stance-called">{item.stance.called}</span>}
+                {item.stance.paragraphs.map(p => <p>{p}</p>)}
+              </div>
+            ) : item.kind === 'stance-close' ? (
+              <div class="stance-close">
+                <span class="stance-kicker">Stance ends</span>
+                <span class="stance-name">{item.stance.name}</span>
+                {item.stance.closing.length
+                  ? item.stance.closing.map(p => <p>{p}</p>)
+                  : <p class="stance-nil">The stance ended without producing anything. It stays in the record.</p>}
+              </div>
+            ) : (
+              <article class={`turn${item.turn.stance ? ' turn-in-stance' : ''}`} id={`t${item.turn.index}`} data-index={item.turn.index}>
                 <div class="turn-head">
-                  <span class="speaker">{turn.speaker}</span>
-                  <span class="stamp">{turn.stamp}</span>
-                  <a class="permalink" href={`#t${turn.index}`}>#{turn.index + 1}</a>
+                  <span class="speaker">{item.turn.speaker}</span>
+                  <span class="stamp">{item.turn.stamp}</span>
+                  {item.turn.stance && <span class="turn-stance">in {item.turn.stance}</span>}
+                  <a class="permalink" href={`#t${item.turn.index}`}>#{item.turn.index + 1}</a>
                 </div>
-                {turn.paragraphs.map(p => <p set:html={p.replace(/\*([^*]+)\*/g, '<em>$1</em>')} />)}
+                {item.turn.paragraphs.map(p => <p set:html={p.replace(/\*([^*]+)\*/g, '<em>$1</em>')} />)}
               </article>
             ))}
           </div>
@@ -129,7 +146,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
 
       function render(turn) {
         const el = document.createElement('article');
-        el.className = 'turn turn-new';
+        el.className = `turn turn-new${turn.stance ? ' turn-in-stance' : ''}`;
         el.id = `t${turn.index}`;
         const head = document.createElement('div');
         head.className = 'turn-head';
@@ -140,6 +157,12 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
         stamp.className = 'stamp';
         stamp.textContent = turn.stamp;
         head.append(speaker, stamp);
+        if (turn.stance) {
+          const st = document.createElement('span');
+          st.className = 'turn-stance';
+          st.textContent = `in ${turn.stance}`;
+          head.appendChild(st);
+        }
         el.appendChild(head);
         for (const p of turn.paragraphs) {
           const para = document.createElement('p');
@@ -226,6 +249,16 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
       .turn em { color:var(--text-primary); font-style:italic; }
       .turn-new { animation:arrive 1.2s ease-out; }
       @keyframes arrive { from { opacity:0; } to { opacity:1; } }
+
+      .stance-open, .stance-close { position:relative; margin:2rem 0 1.5rem; padding:0.85rem 1rem 0.85rem 1.1rem; border:1px dashed rgba(74,158,255,0.35); border-radius:4px; background:rgba(74,158,255,0.04); }
+      .stance-close { border-style:solid; border-color:rgba(255,255,255,0.10); background:none; }
+      .stance-kicker { font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); }
+      .stance-name { font-family:var(--font-display); font-size:1.25rem; color:var(--accent); margin-left:0.5rem; }
+      .stance-called { font-family:var(--font-mono); font-size:0.66rem; color:var(--text-muted); margin-left:0.6rem; }
+      .stance-open p, .stance-close p { color:var(--text-secondary); font-size:0.875rem; margin-top:0.5rem; }
+      .stance-nil { color:var(--text-muted); font-style:italic; }
+      .turn-in-stance { border-left:2px solid rgba(74,158,255,0.35); padding-left:1.1rem; margin-left:0.1rem; }
+      .turn-stance { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); opacity:0.75; }
 
       .move { margin-top:2.5rem; padding:1.25rem 1.4rem; border:1px solid rgba(63,184,196,0.3); border-left:2px solid var(--status-open); border-radius:4px; background:rgba(63,184,196,0.04); }
       .move-kicker { font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--status-open); }

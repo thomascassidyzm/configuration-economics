@@ -67,6 +67,10 @@ This reminds me of the way a strong game engine got strong — but the interesti
 
 And here is the fitness function. I am much more interested in "how might we" do this, where "this" is something of value for the future of humanity — not to be right, not to be academically respected, not to be published in journals, not to be mathematically rigorous — to be helpful. Think along the lines of Bucky Fuller, Edward de Bono, David Deutsch, James P Carse.
 
+## Stance · how might we — called by the selector
+
+Everyone in it at once, for as long as it runs: not whether the idea is right, but how it might be made to work. Nobody holds the objection seat while this is running. It is a direction of thinking the room is in, not a role anybody has been given.
+
 ## Watson · 2026-09-06
 
 The instinct is right and the mechanism is not debate. That engine did not get strong by arguing with itself. Arguing selects; it does not generate.
@@ -84,6 +88,10 @@ The instrument must not block either. It does not score a move; it returns the m
 Carse is sharper than continue-versus-win. Finite players play *within* boundaries; infinite players play *with* them. So the instrument's first act is to notice that the option set was assumed.
 
 And Deutsch gives "keeps the game open" its hard meaning: the only unrecoverable error is the one that destroys your ability to find out you were wrong. Which is detectability again, returning as substance rather than as a checkbox.
+
+## Stance ends · how might we
+
+It produced the improv rule and the join to the infinite game, and it ended the moment the selector had a correction that needed saying flat. That is the shape: the stance is called, it runs, it ends, and what comes next is not a breach of it.
 
 ## Tom · 2026-09-06
 
@@ -133,8 +141,24 @@ And one hard rule. Every session ends with the move — not what we concluded, b
 
 Go.
 
+## Tom · 2026-09-06
+
+One thing is still missing. We then also need the alongsideness baked into shared directions of thinking.
+
+## 環 RBF · 2026-09-06
+
+Yes, and it is the floor rule that was missing its second gear. "Yes, and" stops the room blocking; it does not give the room a direction. The whole point of the hats is that they *rotate* — everyone wearing black together, then everyone wearing green — rather than one participant owning caution for the duration.
+
+A room that can say "green for the next twenty minutes" has a second gear, and unlike a critic it costs nothing and blocks nobody.
+
+And it is the real answer to the blandness hazard, better than any amount of resolve. A published room softens because saying the sharp thing feels rude. Under a called stance the sharp thing is *required* — it is not one participant being difficult, it is what everyone is doing right now, and it ends when the stance ends. Licensed severity with a timer on it.
+
+No picker, no taxonomy, no enforcement. The stance is whatever the room calls it, and the point is that it is shared and visible, not that it is validated.
+
 ## Move
 
 If you are running a search with more than one mind, forbid blocking and publish the record — wrong turns included — because a private search can only ever be corrected by people who already think like you.
+
+And give the room a second gear while you are at it: call the direction out loud — everyone in the same one, for a span, then out of it — so that severity is something the room does together for twenty minutes rather than something a person is.
 
 Concretely, tomorrow: take the next real decision arriving from outside, run it with at least two minds under the rule that neither may say "no, because" — only "yes, and" — and put the transcript somewhere a stranger can read it before you know how it comes out.
