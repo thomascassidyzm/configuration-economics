@@ -1,9 +1,10 @@
 ---
-// /open/[slug] — render a working document live.
+// /canon/[slug] — render a canonical node live.
 //
-// The work in the open: applications, evaluations, the method, the register.
-// NOT a backstage queue (that was retired with the drafts) — this is the
-// thinking itself, published as it happens, settledness on its face.
+// One canonical statement per load-bearing idea; everything else references it
+// and does not restate it. The markdown stays in docs/canonical/ because the
+// distinction-physics repo, the RBF archive and the nodes themselves cite those
+// paths — this route serves those same files rather than moving them.
 import { marked } from 'marked';
 import { VERSION, BUILD } from '../../lib/version';
 import GuidePanel from '../../components/GuidePanel.astro';
@@ -11,32 +12,21 @@ import GuidePanel from '../../components/GuidePanel.astro';
 export const prerender = true;
 
 export async function getStaticPaths() {
-  // Friendly titles (kept inside getStaticPaths — Astro scopes it separately).
   const TITLES: Record<string, string> = {
-    'NOTES-six-hat-method': 'The Six-Hat evaluation method',
-    'NOTES-dna-economy-ogwen': 'Application — the Ogwen DNA-economy cell',
-    'NOTES-ogwen-six-hats': 'Evaluation — the Ogwen six-hat run',
-    'NOTES-ssi-currency-surface': 'Proposal — SSi as the local-currency surface',
-    'NOTES-ssi-six-hats': 'Evaluation — the SSi six-hat run (a strong failure)',
-    'NOTES-uk-legal-saudi-football': 'Proposal — a UK legal company and the Saudi football money',
-    'NOTES-saudi-legal-six-hats': 'Evaluation — the Saudi-legal six-hat run',
-    'NOTES-autonomous-fleet-frozen-cars': 'Proposal — autonomous fleets and the frozen value in cars',
-    'NOTES-autonomous-fleet-six-hats': 'Evaluation — the autonomous-fleet six-hat run',
-    'NOTES-iterative-search-method': 'Method — the iterative search-based loop',
-    'NOTES-iterative-search-mobility': 'Run — the search loop re-levels the car problem',
-    'NOTES-explanation-layer': 'Direction — the explanation layer',
-    'NOTES-razor-blade-case': 'The razor-blade case — why possibility space is measured trajectory-long',
-    'BACKLOG': 'Register — things to have a pop at',
+    'the-selection-primitive': 'The selection primitive — the canonical statement',
+    'the-jeremy-vine-finding': 'The Jeremy Vine finding — one sentence of Welsh, and a filter that changed',
   };
-  const mods = import.meta.glob('../../content/open/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
-  return Object.entries(mods).map(([path, content]) => {
-    const slug = path.split('/').pop()!.replace(/\.md$/, '');
-    const h1 = content.match(/^#\s+(.+)$/m);
-    const title = TITLES[slug] ?? (h1 ? h1[1].trim() : slug);
-    const body = content.replace(/^#\s+.+$/m, '').trim();
-    const html = marked.parse(body, { async: false }) as string;
-    return { params: { slug }, props: { title, html, slug } };
-  });
+  const mods = import.meta.glob('../../../docs/canonical/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+  return Object.entries(mods)
+    .filter(([path]) => !path.endsWith('README.md'))
+    .map(([path, content]) => {
+      const slug = path.split('/').pop()!.replace(/\.md$/, '');
+      const h1 = content.match(/^#\s+(.+)$/m);
+      const title = TITLES[slug] ?? (h1 ? h1[1].trim() : slug);
+      const body = content.replace(/^#\s+.+$/m, '').trim();
+      const html = marked.parse(body, { async: false }) as string;
+      return { params: { slug }, props: { title, html, slug } };
+    });
 }
 
 const { title, html, slug } = Astro.props;
@@ -47,7 +37,7 @@ const { title, html, slug } = Astro.props;
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
-    <title>{title} — Open — Configuration Economics</title>
+    <title>{title} — Canon — Configuration Economics</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -56,8 +46,8 @@ const { title, html, slug } = Astro.props;
     <nav class="top-nav">
       <a href="/" class="nav-home">Configuration Economics</a>
       <div class="nav-right">
-        <a href="/open" class="nav-link">All open work</a>
         <a href="/canon" class="nav-link">Canonical nodes</a>
+        <a href="/open" class="nav-link">Open work</a>
         <a href="/explore" class="nav-link">Propositions</a>
         <span class="nav-version">{VERSION}</span>
         <span class="nav-build">build {BUILD}</span>
@@ -65,16 +55,16 @@ const { title, html, slug } = Astro.props;
     </nav>
     <main>
       <header class="page-header">
-        <div class="header-meta"><span class="status-badge">OPEN · WORKING</span><span class="filename">{slug}.md</span></div>
+        <div class="header-meta"><span class="status-badge">CANONICAL NODE</span><span class="filename">docs/canonical/{slug}.md</span></div>
         <h1>{title}</h1>
       </header>
       <aside class="open-banner">
-        <p><strong>The work in the open.</strong> This is live working material — an application, an evaluation, the method, or the register — published as it happens rather than after it settles. It is not a backstage queue; it is the thinking itself, with its uncertainty on its face. See <a href="/open">all open work</a> or <a href="/practice">/practice</a>.</p>
+        <p><strong>A canonical node.</strong> One home per load-bearing idea: everything else in the work references this statement rather than restating it, so a correction here propagates by citation. Each node carries its own status on its face. See <a href="/canon">all canonical nodes</a>, or the <a href="/open">work in the open</a>.</p>
       </aside>
       <article class="open-content" set:html={html} />
-      <footer class="page-footer"><p>Back to <a href="/open">open work</a>, or the <a href="/explore">propositions</a>.</p></footer>
+      <footer class="page-footer"><p>Back to the <a href="/canon">canonical nodes</a>, or the <a href="/explore">propositions</a>.</p></footer>
     </main>
-    <GuidePanel currentSection={`Open · ${title}`} />
+    <GuidePanel currentSection={`Canon · ${title}`} />
     <style is:global>
       :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#606080; --accent:#4a9eff; --status-open:#3fb8c4; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace; }
       * { margin:0; padding:0; box-sizing:border-box; }
@@ -90,10 +80,10 @@ const { title, html, slug } = Astro.props;
       @media (min-width:1101px) { main { margin-right:460px; } }
       .page-header { margin-bottom:2rem; }
       .header-meta { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; }
-      .status-badge { font-family:var(--font-mono); font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.12em; padding:0.25rem 0.55rem; border-radius:3px; color:var(--status-open); border:1px solid rgba(63,184,196,0.4); background:rgba(63,184,196,0.08); }
+      .status-badge { font-family:var(--font-mono); font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.12em; padding:0.25rem 0.55rem; border-radius:3px; color:var(--accent); border:1px solid rgba(74,158,255,0.4); background:rgba(74,158,255,0.08); }
       .filename { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); }
       .page-header h1 { font-family:var(--font-display); font-size:2.25rem; font-weight:400; line-height:1.25; }
-      .open-banner { margin-bottom:3rem; padding:1rem 1.25rem; background:rgba(63,184,196,0.05); border:1px solid rgba(63,184,196,0.2); border-left:2px solid var(--status-open); border-radius:4px; }
+      .open-banner { margin-bottom:3rem; padding:1rem 1.25rem; background:rgba(74,158,255,0.05); border:1px solid rgba(74,158,255,0.2); border-left:2px solid var(--accent); border-radius:4px; }
       .open-banner p { color:var(--text-secondary); font-size:0.875rem; line-height:1.65; }
       .open-banner strong { color:var(--text-primary); font-weight:500; }
       .open-banner a, .page-footer a { color:var(--accent); text-decoration:none; }
