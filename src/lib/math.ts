@@ -10,7 +10,14 @@ export function renderMath(latex: string, displayMode: boolean): string {
       throwOnError: false,
       errorColor: '#cc0000',
       strict: false,
-      trust: true,
+      // `trust: true` enables \href (any scheme, including javascript:) and
+      // \includegraphics — and this HTML lands straight in the client via
+      // innerHTML (GuidePanel.astro's substituteMath). The LaTeX here is the
+      // MODEL'S output, not Tom's own essay source, and a reader can steer
+      // model output with an ordinary chat message — this was a live XSS
+      // sink. Untrusted math never needs either command; leave KaTeX's
+      // default (trust: false) rather than opting back in.
+      // Found and fixed first in tomcassidy-site 2026-09-20; ported here.
       output: 'html',
     });
   } catch (error) {
