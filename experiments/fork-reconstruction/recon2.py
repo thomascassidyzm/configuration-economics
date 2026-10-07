@@ -253,6 +253,8 @@ def main():
     forks = json.load(open(P(a.data, a.forks)))
     if a.only: forks = [f for f in forks if f['key'] in a.only.split(',')]
     forks = [f for f in forks if f.get('q')] if a.step != 'questions' else forks
+    if a.step not in ('questions', 'snapshots'):
+        forks = [f for f in forks if os.path.exists(P(a.data, 'snapshots', f['key'] + '.meta.json'))]
     globals()['step_' + a.step.replace('-', '_')](a, forks)
 
 def forks_all(a):
@@ -292,6 +294,12 @@ def step_snapshots(a, forks):
     for f in forks:
         sp = P(a.data, 'snapshots', f['key'] + '.txt')
         if os.path.exists(sp): continue
+        try: snapshot_one(a, f, full, sup, db, sp)
+        except AssertionError as e:
+            open(P(a.data, 'snapshot-skips.log'), 'a').write(f"{f['key']} {f['id']}: {e}\n"); print('SKIP', e, flush=True)
+
+def snapshot_one(a, f, full, sup, db, sp):
+    if True:
         r = full[f['id']]; loc, frag = locate(db, r['quote']); job, ts = loc[0], loc[2]
         later_id = sup.get(f['id']); later = full.get(later_id, {}).get('rule')
         tail, t1 = same_room(db, job, ts)
