@@ -16,6 +16,7 @@ import recon2 as R2
 
 MODELS = {'haiku': R2.HAIKU, 'sonnet': 'sonnet', 'opus': 'opus'}   # haiku pinned exactly as round 2
 N = 10
+LIMIT = [0]   # usage-limit failures are never written; 20 of them stop the run
 
 def P(a, *x): return os.path.join(a.data, *x)
 def Q(a, *x): return os.path.join(a.r2, *x)
@@ -45,11 +46,14 @@ def run_jobs(jobs, workers, passes=4):
         done = [0]
         def one(j):
             path, fn = j
+            if LIMIT[0] >= 20: return
             r = fn()
+            if not r.get('ok') and 'limit' in str(r.get('err') or '').lower(): LIMIT[0] += 1; return
             tmp = path + '.tmp'; json.dump(r, open(tmp, 'w'), ensure_ascii=False); os.replace(tmp, path)
             done[0] += 1
             if done[0] % 100 == 0: print(f"  {done[0]}/{len(todo)} {time.strftime('%H:%M:%S')}", flush=True)
         with ThreadPoolExecutor(workers) as ex: list(ex.map(one, todo))
+        if LIMIT[0] >= 20: sys.exit('ABORT: account usage limit hit; rerun on another account (resumable)')
         if p < passes - 1: time.sleep(60)
 
 def qprompt(r):   # the round-2 question prompt, verbatim
@@ -121,6 +125,7 @@ def step_select(a):
                          (lambda pr=pr, m=m: R2.claude_call(pr, R2.SEL_SCHEMA, model=MODELS[m]))))
     # interleave models so the pool never stalls on one model's rate limit
     random.Random(0).shuffle(jobs)
+    run_jobs([j for j in jobs if '.Wopus.' in j[0]], a.workers)   # part 1 first
     run_jobs(jobs, a.workers)
 
 def step_score(a):
