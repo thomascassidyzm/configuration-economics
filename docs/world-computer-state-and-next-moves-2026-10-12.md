@@ -76,6 +76,50 @@ status doc's frozen-value item. Put C to the room as a one-line card. Leave B's 
 - **Round 4.** Pre-registered in `experiments/fork-reconstruction/PREREG-round4.md`, committed before any call. Harness:
   `experiments/fork-reconstruction/recon4.py`.
 
-### Round 4 results
+### Round 4 results (2026-10-12, 1,970 Opus calls, every pre-registered threshold applied as written)
 
-_(filled in from `scores4.json` when the run completes — see below)_
+**Verdict: the hard core is real.** Opus read ~4.8× more of the record: a median of 82k characters against round 2's
+17k, leak-guarded, with no fork dropped by the guard. **All 8 hard-core forks survive.** Of the 23 forks Opus missed,
+15 survive, 4 flip ("record held it") and 4 stay unresolved. The pre-registered aggregate is "mostly outside the
+record". No flip carries the prior-voicing flag (Tom had not said the same thing earlier in the retrieved record).
+
+| Check | Pre-registered bar | Result |
+|---|---|---|
+| Dilution (R + recovered M forks, n = 93) | mean(p_wide − p_std) ≥ −0.15 | **−0.02**: no dilution. R stays at 0.99. |
+| Opus misses (23) | record-held ≥ 12 → snapshot; outside ≥ 12 → outside | **15 outside / 4 held / 4 unresolved** |
+| Hard core (8) | reported as its own line | **8/8 outside** (max p_wide 0.2) |
+| Whole missed set (90) | — | mean p 0.68 → 0.70; forks ≥ 0.5: 63 → 65 |
+
+The four that flipped (F106, F123, F125, F148) are ordinary context misses. The wider room tail held what the
+1,400-character cut had hidden. The survivors are mostly mid-course reversals of a standing ruling: account routing,
+voice and label choices, and audio spend above a cap. That is the round-3 shape, now no longer attributable to the
+snapshot.
+
+**Opus baseline, measured not extrapolated (part A).** On the 77 unsampled reconstructed forks: 69 reconstructed, 4
+split, 4 missed. Across all 277 scored forks, Opus reconstructs **214 (77%)**, splits 24 and misses 39. Round 3
+extrapolated ~219. For comparison, Haiku reconstructed 107 (38%).
+
+**Status quo.** Opus names keep/defer as Tom's single move 12% of the time on the part-A forks, where Tom's own rate is
+23%, and 14% on the missed set. The lean round 2 found is gone at Opus.
+
+**What this does and does not license.**
+- The instrument now has a stable menu, a reader at 77% reconstruction, and a residue of 15 forks that does not
+  dissolve under a much wider read. That residue is the first measured instance of "moves the record did not prepare".
+- A residue of 15 does not decide *what* those moves were: new information from outside the record, taste, or
+  pattern-intelligence. Only Tom can say what he knew at those forks (candidate D).
+- Retrieval is BM25 on the question and the room's tail, so some of the record may still sit beyond both queries.
+
+**Cost.**
+- 1,970 Opus calls; $359.77 at list price, subscription-billed.
+- Tokens: 42.5M cache-write, 1.6M cache-read, 0.97M output.
+- Accounts:
+  - iCloud: 1,467 calls;
+  - claude@: 474 calls, under the ramp rule of < 90% weekly and < 70% five-hour, else wait;
+  - mac.com: 29 calls, before that rule reached this job. It is outside the ramp's allowed accounts.
+- About 2.5 hours of wall time across one reboot and one five-hour limit.
+- Data: private repo `ce-experiments`, `fork-recon-r4-ceiling/` (`scores4.json`, `analysis4.json`).
+
+**Next, for the room.** Put the 8 hard-core forks (or all 15 survivors) to Tom as one card each: what was known at the
+fork that the record did not hold? That is the selector speaking about its own selections (open thread 2). Each answer
+is either new information the record should have carried, which is an instrument fix, or the selector moving from
+outside the record, which is the claim's evidence.

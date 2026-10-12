@@ -21,3 +21,10 @@ GPT-6 Astra) on the 90 missed. 11,400 calls. Verdict: mostly Haiku's limit — O
 Haiku's own re-run recovers 2 (not regression to the mean). Hard core: 8 forks missed by every model under every wording; half are
 reversals of a ruling in force at the fork. Status-quo picks: Haiku 33%, Sonnet 25%, Opus 12%, Tom 7%. Data (private):
 `~/ce-experiments/fork-recon-r3-control/`.
+
+## Round 4: the record ceiling (2026-10-12, #981·O)
+`recon4.py` + `analyse4.py`, pre-registered in `PREREG-round4.md`. Opus re-reads the 90 misses + 30 calibration forks with a
+~4.8× wider leak-guarded slice of the record (median 82k chars vs 17k), and completes the Opus baseline on the 77 unsampled
+reconstructed forks. No dilution (−0.02). All 8 hard-core forks survive; of 23 Opus misses, 15 survive, 4 flip, 4 unresolved
+("mostly outside the record"). Opus reconstructs 214/277 (77%) measured. 1,970 Opus calls, $360 list. Data (private repo
+`ce-experiments`): `fork-recon-r4-ceiling/`. Note: `docs/world-computer-state-and-next-moves-2026-10-12.md`.
