@@ -45,6 +45,7 @@ This isn't just content — it's a new publication format featuring:
 │   │   ├── changelog.astro          # Version-grain history
 │   │   ├── motion.astro             # Settledness spine watchable: entry + climb per node
 │   │   ├── canon/                   # Canonical nodes, published straight from source
+│   │   ├── world-computer.astro     # World Computer (plus world-computer/)
 │   │   ├── concept-dark.astro       # 301 → /format (legacy bookmark redirect)
 │   │   ├── concept-light.astro      # 301 → /format (legacy bookmark redirect)
 │   │   └── api/guide.ts             # Guide (Alexander) API endpoint

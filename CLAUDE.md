@@ -6,7 +6,7 @@
 
 **Core thesis**: Value = configurations that expand future option space under bounded energy flux.
 
-## Current State (July 2026)
+## Current State
 
 > As of v0.11.0 the notion of "drafts" is retired: there is no backstage. New thinking enters on the settledness spine at `forming` (published, live, not yet load-bearing) and climbs in public. Status is now a *trajectory* — each node carries a `statusHistory` — and the climb is watchable on `/motion`.
 
@@ -25,6 +25,7 @@
 - **/attack** - per-premise stress-testing. Three worked examples (one per epistemic-status tier) as steelman → response → concession → blast-radius (blast-radius chips computed live from the link graph). The third credibility surface; the format's sharpest self-demonstration.
 - **/open** - the work in the open: applications, evaluations, the method, and the register, published as they happen. Index at `src/pages/open/index.astro`, individual documents rendered from `src/content/open/*.md` via `src/pages/open/[slug].astro`. See `src/content/open/BACKLOG.md` for the live register and `NOTES-six-hat-method.md` for the evaluation method itself.
 - **/method** - the Six-Hat evaluation method surfaced as its own navigable page: the method plus links to every run and treatment it has produced.
+- **/world-computer** - the World Computer pages (`src/pages/world-computer.astro`, `src/pages/world-computer/`)
 - **Version + build tracking** (semantic version + git hash)
 
 ### Key Files
@@ -64,7 +65,7 @@ line drift on every release and are a maintenance pain. The source of truth:
 - **What changed per version** → `src/content/version-history.ts`.
 - **Live bucket counts** → read `propositions.ts`, or the status filter on `/explore`.
 
-Snapshot at v0.11.0 (will drift — verify against `propositions.ts`, don't trust this line): 35 nodes across five rungs — `forming` / `established` / `derived` / `contested` / `open`. The sole `open` node is `option-space-measurability`, the framework's central open problem. `forming` is the entry rung for new thinking (the first three: `held-value-not-reachable`, `coordination-bounds-reachability`, `pattern-intelligence-constraint`).
+Five rungs: `forming` / `established` / `derived` / `contested` / `open`. `forming` is the entry rung for new thinking. The current version is `VERSION` in `src/lib/version.ts`.
 
 ## Architecture Decisions
 
@@ -92,7 +93,7 @@ Status is a *trajectory*, not a fixed label: each node carries a `statusHistory`
 ## Theoretical Foundation
 
 ### Connection to Distinction Physics
-Configuration Economics builds on Distinction Physics (separate project at `/Users/tomcassidy/distinction-physics/`):
+Configuration Economics builds on Distinction Physics (separate project at `~/distinction-physics/`):
 
 - **Distinction Physics**: Distinctions are primitive, cost energy, observers have finite budgets
 - **Configuration Economics**: Configurations (patterns of distinctions) expand or contract future distinction-making potential
@@ -141,7 +142,7 @@ Deployed on Vercel - auto-deploys from main branch.
 
 ## Related Projects
 
-- **Distinction Physics** (`/Users/tomcassidy/distinction-physics/`) - Foundational meta-theory, actively evolving. CE treats it as preferred foundational vocabulary, not required grounding (see `PLAN.md` v0.2 direction).
+- **Distinction Physics** (`~/distinction-physics/`) - Foundational meta-theory, actively evolving. CE treats it as preferred foundational vocabulary, not required grounding (see `PLAN.md` v0.2 direction).
 - This work is the 2026 application of that foundation, now decoupled from any single DP version.
 
 ## Style Notes
