@@ -128,6 +128,60 @@ def step_select(a):
     random.Random(4).shuffle(jobs)
     R3.run_jobs(jobs, a.workers)
 
+# ---- ramp 967 account rule (Tom 2026-10-12 via #967·O; mirrors #979's ops/lanes/phrase-quality/ramp/accounts.cjs):
+# iCloud (account-5) first; claude@ (account-3) only while weekly < 90% AND five-hour < 70%; never any other account;
+# nothing open -> wait 10 min and re-check. No fallback.
+import time, urllib.request
+ALLOW = ['account-5', 'account-3']; WEEKLY_CAP = {'account-3': 90}; FIVE_HOUR_CAP = {'account-3': 70}
+def _get(path):
+    rq = urllib.request.Request('http://localhost:4317' + path, headers={'x-cs-conv': os.environ.get('CS_CONV', '')})
+    return json.load(urllib.request.urlopen(rq, timeout=30))
+def choose_account(benched):
+    try: routing, usage = _get('/api/routing'), _get('/api/usage')
+    except Exception as e: print('usage/routing unreachable:', e, flush=True); return None
+    by_dir = {u.get('dir'): u for u in (usage.get('accounts') or {}).values()}
+    for name in ALLOW:
+        r = next((x for x in routing.get('accounts') or [] if x['name'] == name), None)
+        if not r or r.get('blocked') or r.get('benched') or benched.get(name, 0) > time.time(): continue
+        u = by_dir.get(name)
+        if u and (u.get('at_limit') or (u.get('five_hour_pct') or 0) >= 100 or (u.get('weekly_all_pct_used') or 0) >= 100): continue
+        if name in WEEKLY_CAP and not (u and isinstance(u.get('weekly_all_pct_used'), (int, float)) and u['weekly_all_pct_used'] < WEEKLY_CAP[name]): continue
+        if name in FIVE_HOUR_CAP and not (u and isinstance(u.get('five_hour_pct'), (int, float)) and u['five_hour_pct'] < FIVE_HOUR_CAP[name]): continue
+        return name
+    return None
+
+def step_ramp(a, chunk=60):
+    """select, but spent only on the ramp-allowed accounts, re-choosing the account every chunk."""
+    from concurrent.futures import ThreadPoolExecutor
+    os.makedirs(P(a, 'calls'), exist_ok=True)
+    fk = R3.forks_by_key(argparse.Namespace(r2=a.r2)); jobs = []
+    for k, part, sp in cells(a):
+        snap = open(sp).read(); menu = json.load(open(Q2(a, 'calls', f"{k}.A.merge.call.json")))['out']['options']
+        for i in range(N):
+            jobs.append((P(a, 'calls', f"{k}.{part}.{MODEL}.sel{i:02d}.call.json"), R2.sel_prompt(snap, fk[k]['q'], menu, 'base', f"{k}:A:{i}")))
+    random.Random(4).shuffle(jobs)
+    def ok(path):
+        try: return json.load(open(path)).get('ok')
+        except Exception: return False
+    benched, tries = {}, {}
+    while True:
+        todo = [j for j in jobs if not ok(j[0]) and tries.get(j[0], 0) < 4]
+        print(f"{len(jobs)} calls, {len(todo)} to run {time.strftime('%H:%M:%S')}", flush=True)
+        if not todo: return
+        acct = choose_account(benched)
+        if not acct: print('no allowed account open; waiting 10 min', flush=True); time.sleep(600); continue
+        os.environ['CLAUDE_CONFIG_DIR'] = os.path.expanduser(f'~/.cs-accounts/{acct}'); os.environ.pop('CLAUDE_CODE_OAUTH_TOKEN', None)
+        lim = [0]
+        def one(j):
+            path, pr = j
+            r = R2.claude_call(pr, R2.SEL_SCHEMA, model=MODEL); r['account'] = acct
+            if not r.get('ok') and 'limit' in str(r.get('err') or '').lower(): lim[0] += 1; return
+            tries[path] = tries.get(path, 0) + (0 if r.get('ok') else 1)
+            tmp = path + '.tmp'; json.dump(r, open(tmp, 'w'), ensure_ascii=False); os.replace(tmp, path)
+        with ThreadPoolExecutor(a.workers) as ex: list(ex.map(one, todo[:chunk]))
+        print(f"  chunk on {acct}: {min(chunk, len(todo))} sent, {lim[0]} usage-limit refusals", flush=True)
+        if lim[0]: benched[acct] = time.time() + 900
+
 def runs_of(path_fmt, labels):
     runs, cost, fails, served = [], 0.0, 0, {}
     for i in range(N):
