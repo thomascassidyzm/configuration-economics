@@ -1,11 +1,11 @@
 import type { APIRoute } from 'astro';
 import { SYSTEM_PROMPT_WITH_INDEX, buildSectionContext, type GuideContext } from '../../lib/guide-prompt';
 import {
-  MODEL,
   selectTier,
   buildSystemBlocks,
   buildUserTurn,
 } from '../../lib/guide-request';
+import { sessionGate, issueSession } from '../../lib/guide-session';
 import { extractAndRenderMath } from '../../lib/math';
 import {
   GUIDE_TOOLS,
@@ -24,16 +24,15 @@ interface ChatMessage {
 }
 
 // Model selection is SERVER-SIDE ONLY. The caller sends intent — a boolean
-// `escalate` — never a model name and never a tier the server trusts. The two
-// tiers below are the complete set the endpoint can ever reach: there is no
-// code path from any request body to any other model, and Opus is not
-// reachable at all. A request that names a model is rejected outright (400)
+// `escalate` — never a model name and never a tier the server trusts. The
+// rungs in guide-request.ts are the complete set the endpoint can ever reach:
+// there is no code path from any request body to any model. A request that names a model is rejected outright (400)
 // rather than silently downgraded, so the refusal is visible to whoever sent
 // it.
-// Every rung is Sonnet 5; the rungs differ by `effort`, not by model.
-// Caches are model-scoped, so a model switch would throw away the whole
-// cached prefix at exactly the moment the request got expensive, while effort
-// is not part of the cached prefix at all. See guide-request.ts.
+// Haiku greets, Sonnet carries the body (its deep rungs differ by effort, not
+// model, so climbing them keeps the cache), and Opus answers only REPEATED
+// confusion, capped per session by a server-signed token. The model never
+// chooses its own rung. See guide-request.ts and guide-session.ts.
 
 const MAX_MESSAGE_LENGTH = 4000;
 const MAX_HISTORY_TURNS = 20;
@@ -136,6 +135,8 @@ interface GuideRequest {
   // The Deeper button's signal. Anything other than boolean true is treated as
   // false — a string, a model name, a tier label all fall through to base.
   escalate?: boolean;
+  // The server's own signed session token, echoed back. Opaque to the client.
+  session?: string | null;
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -210,7 +211,21 @@ export const POST: APIRoute = async ({ request }) => {
     // Which rung this turn earned. Decided here and nowhere else, from the
     // message and history the client already sends — never from a client-
     // supplied tier field, which does not exist.
-    let decision = selectTier({ message, history, escalate });
+    const apiKey = import.meta.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: 'API key not configured' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    // What this session has proven to the server, and whether Opus is still
+    // within its cap. Computed before selectTier so the ladder never offers a
+    // rung the session cannot have.
+    const historyUserTurns = history.filter((m) => m?.role === 'user').length;
+    const { state: session, opusAllowed } = sessionGate(apiKey, body.session, historyUserTurns);
+
+    let decision = selectTier({ message, history, escalate, opusAllowed });
 
     // Every deep answer spends from the escalated budget, whether the reader
     // pressed Deeper or the server inferred it — otherwise auto-escalation is
@@ -237,16 +252,8 @@ export const POST: APIRoute = async ({ request }) => {
             },
           });
         }
-        decision = selectTier({ message, history, escalate, escalatedBudgetSpent: true });
+        decision = selectTier({ message, history, escalate, opusAllowed, escalatedBudgetSpent: true });
       }
-    }
-
-    const apiKey = import.meta.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'API key not configured' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
     }
 
     // The layered, cacheable prompt: global material first with a breakpoint
@@ -315,10 +322,11 @@ export const POST: APIRoute = async ({ request }) => {
           'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify({
-          model: MODEL,
+          model: decision.model,
           max_tokens: decision.maxTokens,
-          // Sonnet 5 defaults to `high` effort when omitted, so silence here
-          // means silently paying for `high` on every trivial question.
+          // Every family defaults to medium or high effort when this is
+          // omitted, so silence here means silently paying for depth on every
+          // trivial question.
           output_config: { effort: decision.effort },
           system: systemBlocks,
           messages: conversation,
@@ -383,7 +391,7 @@ export const POST: APIRoute = async ({ request }) => {
     // identical-prefix requests, a silent invalidator has crept into the
     // prefix and the layering above is doing nothing.
     console.log(
-      `[guide] model=${MODEL} effort=${decision.effort} reason=${decision.reason} ` +
+      `[guide] model=${decision.model} rung=${decision.rung} effort=${decision.effort} reason=${decision.reason} ` +
         `rounds=${toolRounds} input=${totals.input} cache_write=${totals.cache_write} ` +
         `cache_read=${totals.cache_read} output=${totals.output}`,
     );
@@ -409,6 +417,13 @@ export const POST: APIRoute = async ({ request }) => {
       // The client uses it to label the response and to hide the Deeper button
       // once the deep tier has already answered.
       tier: decision.tier,
+      // Which family answered — haiku, sonnet or opus. A label, never an input.
+      model: decision.family,
+      // The session, re-signed with this turn counted. The client echoes it.
+      session: issueSession(apiKey, {
+        turns: session.turns + 1,
+        opus: session.opus + (decision.family === 'opus' ? 1 : 0),
+      }),
       // Why this tier. Never taken from the request; always the server's own
       // decision.
       tierReason: decision.reason,
