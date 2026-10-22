@@ -421,6 +421,7 @@ export const POST: APIRoute = async ({ request }) => {
       model: decision.family,
       // The session, re-signed with this turn counted. The client echoes it.
       session: issueSession(apiKey, {
+        sid: session.sid,
         turns: session.turns + 1,
         opus: session.opus + (decision.family === 'opus' ? 1 : 0),
       }),

@@ -12,7 +12,7 @@
 // The signing key is derived from ANTHROPIC_API_KEY so the cap needs no new
 // environment variable: anyone who can forge it already holds the key it
 // protects. Rotating that key simply starts every live session afresh.
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { OPUS_PER_SESSION } from './guide-request';
 
 export interface SessionState {
@@ -20,9 +20,41 @@ export interface SessionState {
   turns: number;
   /** Opus answers spent in the session. */
   opus: number;
+  /** Server-minted session id; lets the server notice a replayed older token. */
+  sid?: string;
 }
 
 const FRESH: SessionState = { turns: 0, opus: 0 };
+
+// A signature stops EDITING a token, not REPLAYING an earlier genuine one
+// ({t:3,o:0} after the reader has since spent the cap). So the server also
+// remembers, per session id, the furthest state it has ever issued, and a token
+// that is behind that mark is stale: it is treated as already past the cap.
+// Module-level like the rate limiter — it holds within one serverless instance
+// and is bounded (TTL + size cap). Across cold instances a replay can still
+// fork the session; the per-IP escalated budget in guide.ts is the backstop.
+const LEDGER_TTL_MS = 6 * 60 * 60 * 1000;
+const LEDGER_MAX = 5000;
+const ledger = new Map<string, { turns: number; opus: number; at: number }>();
+
+function remember(sid: string, state: SessionState): void {
+  const now = Date.now();
+  for (const [k, v] of ledger) if (now - v.at > LEDGER_TTL_MS) ledger.delete(k);
+  while (ledger.size >= LEDGER_MAX && !ledger.has(sid)) {
+    ledger.delete(ledger.keys().next().value as string);
+  }
+  const prev = ledger.get(sid);
+  ledger.set(sid, {
+    turns: Math.max(prev?.turns ?? 0, state.turns),
+    opus: Math.max(prev?.opus ?? 0, state.opus),
+    at: now,
+  });
+}
+
+/** Test hook: forget every remembered session. */
+export function _resetSessionLedger(): void {
+  ledger.clear();
+}
 
 function keyFrom(apiKey: string): Buffer {
   return createHmac('sha256', 'alexander-session-v1').update(apiKey).digest();
@@ -33,7 +65,9 @@ function sign(key: Buffer, payload: string): string {
 }
 
 export function issueSession(apiKey: string, state: SessionState): string {
-  const payload = Buffer.from(JSON.stringify({ v: 1, t: state.turns, o: state.opus })).toString('base64url');
+  const sid = state.sid ?? randomBytes(12).toString('base64url');
+  remember(sid, state);
+  const payload = Buffer.from(JSON.stringify({ v: 2, t: state.turns, o: state.opus, s: sid })).toString('base64url');
   return `${payload}.${sign(keyFrom(apiKey), payload)}`;
 }
 
@@ -47,8 +81,9 @@ export function readSession(apiKey: string, token: unknown): SessionState | null
   if (expected.length !== given.length || !timingSafeEqual(expected, given)) return null;
   try {
     const p = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
-    if (p?.v !== 1 || !Number.isInteger(p.t) || !Number.isInteger(p.o) || p.t < 0 || p.o < 0) return null;
-    return { turns: p.t, opus: p.o };
+    if (p?.v !== 2 || !Number.isInteger(p.t) || !Number.isInteger(p.o) || p.t < 0 || p.o < 0) return null;
+    if (typeof p.s !== 'string' || p.s.length === 0 || p.s.length > 64) return null;
+    return { turns: p.t, opus: p.o, sid: p.s };
   } catch {
     return null;
   }
@@ -69,8 +104,16 @@ export function sessionGate(
   historyUserTurns: number,
 ): { state: SessionState; opusAllowed: boolean } {
   const proven = readSession(apiKey, token);
-  const state = proven ?? FRESH;
+  if (proven === null) return { state: FRESH, opusAllowed: false };
+  // Replay guard: a token behind the server's own record of this session is
+  // stale. Carry the record forward (so the re-issued token is current) and
+  // shut Opus, since the reader has already had at least what the record says.
+  const seen = proven.sid ? ledger.get(proven.sid) : undefined;
+  const stale = !!seen && (proven.opus < seen.opus || proven.turns < seen.turns);
+  const state: SessionState = stale
+    ? { turns: seen!.turns, opus: seen!.opus, sid: proven.sid }
+    : proven;
   const opusAllowed =
-    proven !== null && historyUserTurns <= proven.turns && proven.opus < OPUS_PER_SESSION;
+    !stale && historyUserTurns <= proven.turns && proven.opus < OPUS_PER_SESSION;
   return { state, opusAllowed };
 }
