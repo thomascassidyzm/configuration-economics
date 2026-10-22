@@ -255,6 +255,23 @@ describe('slug references that begin with an article', () => {
 });
 
 describe('the three families — Haiku greets, Sonnet carries, Opus only when stuck', () => {
+  // The live specimen from the CE preview, 2026-10-22: the reader's FIRST
+  // "I don't understand", re-asking the question just answered, reached Opus.
+  // That is Sonnet-high territory; Opus waits for confusion said twice.
+  it('keeps the first confused re-ask on Sonnet even with Opus headroom', () => {
+    const d = selectTier({
+      message: "I don't understand what you mean by configuration value.",
+      history: [
+        { role: 'user', content: 'What does this site mean by configuration value?' },
+        { role: 'assistant', content: 'Value located in the arrangement of things...' },
+      ],
+      opusAllowed: true,
+    });
+    expect(d.reason).toBe('repeated-confusion');
+    expect(d.family).toBe('sonnet');
+    expect(d.effort).toBe('high');
+  });
+
   const confusedHistory = [
     { role: 'user' as const, content: "i don't understand the action functional" },
     { role: 'assistant' as const, content: 'It is an integral over the trajectory...' },
