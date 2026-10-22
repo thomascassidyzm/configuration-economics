@@ -608,9 +608,22 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
       // Ignore storage errors
     }
 
+    // The server's signed record of this session (turns served, Opus answers
+    // spent). Opaque here: the client only echoes it back. It lives beside the
+    // history so a page navigation keeps the same session, and a new tab
+    // starts a fresh one.
+    const SESSION_KEY = 'guide-session';
+    let guideSession: string | null = null;
+    try {
+      guideSession = sessionStorage.getItem(SESSION_KEY);
+    } catch (e) {
+      // sessionStorage unavailable — every request is then a fresh session
+    }
+
     // Save conversation to sessionStorage
     function saveConversation() {
       try {
+        if (guideSession) sessionStorage.setItem(SESSION_KEY, guideSession);
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify(conversationHistory));
       } catch (e) {
         // Ignore storage errors
@@ -884,7 +897,8 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
         },
         // Intent, not a model. The server maps this to a tier and enforces the
         // ceiling; nothing the client sends can name a model.
-        escalate: escalateRequest
+        escalate: escalateRequest,
+        session: guideSession,
       };
 
       try {
@@ -903,6 +917,7 @@ const { currentSection = 'Essay 1', epistemicStatus = 'Overview' } = Astro.props
         const followUps = createFollowUpButtons();
         typingEl.appendChild(followUps);
 
+        if (typeof data.session === 'string') guideSession = data.session;
         const respondedTier: Tier = data.tier === 'deep' ? 'deep' : 'base';
         appendDeeperActions(typingEl, respondedTier);
 

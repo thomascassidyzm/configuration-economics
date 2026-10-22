@@ -29,14 +29,11 @@
 //              construction — never cached, always after the last breakpoint.
 //
 // WHY THE SECTION GOES IN `system` AND NOT IN `messages`
-// Three reasons, in order of weight. First, `system` renders before `messages`,
+// Two reasons. First, `system` renders before `messages`,
 // so a breakpoint there covers the section for EVERY subsequent turn no matter
 // how the conversation grows; a block parked in messages[0] would be equally
 // cacheable but would sit tangled up with history that the tool loop rewrites
-// mid-request. Second, Sonnet 5 does NOT support mid-conversation system
-// messages (`{role: 'system'}` inside messages[]) — that is Opus 5 / Opus 4.8 /
-// Fable 5 only — so the operator-authority channel inside messages is closed to
-// us. Third, it keeps the reader's turn as the last thing in the prefix, which
+// mid-request. Second, it keeps the reader's turn as the last thing in the prefix, which
 // is exactly where the volatile content belongs.
 //
 // WHAT USED TO BREAK THIS
@@ -52,36 +49,64 @@
 // Model and ladder
 // ---------------------------------------------------------------------------
 
-// Sonnet 5 at every rung, deliberately. Caches are MODEL-SCOPED: switching
-// model invalidates tools, system and messages together — the entire prefix.
-// Effort, by contrast, is not part of the cached prefix at all, so climbing the
-// ladder costs nothing in cache terms. A ladder built from effort levels on one
-// model is therefore strictly better than one built from models: same reach,
-// no cache loss at exactly the moment the request got expensive.
-export const MODEL = 'claude-sonnet-5';
+// Three families, each on its latest version, chosen by CODE per turn (Tom,
+// 2026-10-22: "haiku for the greeting, Sonnet for the main body of
+// interactions — Opus only escalated to if someone is really being obtuse").
+// The rest of the file speaks in family names; this map is the one place a
+// version id lives, so moving to the next release is a three-line edit.
+export const MODELS = {
+  haiku: 'claude-haiku-5-5',
+  sonnet: 'claude-sonnet-5-5',
+  opus: 'claude-opus-5-5',
+} as const;
+export type Family = keyof typeof MODELS;
 
-// Sonnet 5 runs adaptive thinking by default and defaults to `high` effort if
-// you say nothing at all — so silence here means silently paying for `high` on
-// every trivial question. Every rung sets effort explicitly.
+// THE CACHE ARGUMENT, WEIGHED. Caches are MODEL-SCOPED, so every change of
+// family writes the prefix fresh for the new model. That is why the deep rungs
+// on the body model are still built from effort (effort is not part of the
+// prefix), and why the families sit where they do:
+//   - haiku -> sonnet happens once, at turn 2. Turn 1 on an all-Sonnet ladder
+//     would have written the Sonnet prefix anyway, so the switch only MOVES that
+//     write one turn later and adds Haiku's own write, which is priced at a
+//     twentieth of Sonnet's. Net: cheaper, not dearer.
+//   - sonnet -> opus is the real cost: one Opus write of the prefix per Opus
+//     turn. The Sonnet cache is still warm when the reader drops back (5-minute
+//     TTL), so the return costs nothing. Opus is capped per session (below), so
+//     that write is bounded per session too.
+//
+// Effort is set explicitly on every rung: Sonnet defaults to `high` and Haiku
+// and Opus to `medium` if nothing is said, which would silently price trivial
+// questions at the dear rate.
 export type Tier = 'base' | 'deep';
 export type Effort = 'low' | 'high' | 'xhigh';
+export type Rung = 'greet' | 'base' | 'high' | 'xhigh' | 'stuck';
 
 // max_tokens caps thinking AND text together, so the dearer rungs need real
 // headroom or answers truncate mid-sentence.
-export const TIER_CONFIG: Record<Effort, { maxTokens: number }> = {
-  low: { maxTokens: 2048 },
-  high: { maxTokens: 8192 },
-  xhigh: { maxTokens: 12288 },
+export const RUNGS: Record<Rung, { family: Family; effort: Effort; maxTokens: number; tier: Tier }> = {
+  greet: { family: 'haiku', effort: 'low', maxTokens: 2048, tier: 'base' },
+  base: { family: 'sonnet', effort: 'low', maxTokens: 2048, tier: 'base' },
+  high: { family: 'sonnet', effort: 'high', maxTokens: 8192, tier: 'deep' },
+  xhigh: { family: 'sonnet', effort: 'xhigh', maxTokens: 12288, tier: 'deep' },
+  stuck: { family: 'opus', effort: 'high', maxTokens: 8192, tier: 'deep' },
 };
+
+// Hard ceiling on Opus answers in one reading session, enforced by a signed
+// session token (guide-session.ts). Past it, repeated confusion is served by
+// Sonnet at high effort, as it was before Opus was on the ladder.
+export const OPUS_PER_SESSION = 2;
 
 export type EscalationReason =
   | 'none'
+  | 'greeting'
   | 'explicit-deeper'
   | 'cross-section-comparison'
   | 'repeated-confusion';
 
 export interface TierDecision {
-  model: typeof MODEL;
+  family: Family;
+  model: (typeof MODELS)[Family];
+  rung: Rung;
   tier: Tier;
   effort: Effort;
   maxTokens: number;
@@ -116,6 +141,12 @@ const COMPARISON_VERB =
   /\b(compare[ds]?|comparison|contrast(?:s|ed|ing)?|versus|vs\.?|differ(?:s|ence|ences)?|distinguish(?:es)?|reconcile|tension|square with|set against|consistent with|relate[ds]? to|same as|whereas|unlike)\b/i;
 
 // The reader coming back at the same thing, not understanding it yet.
+// A reader saying hello or asking where to start. Only ever consulted on the
+// opening turn of a session, and only when nothing else in the message has
+// earned a dearer rung.
+const GREETING =
+  /^\W*(hi|hello|hey|hiya|good (?:morning|afternoon|evening)|thanks|thank you|who are you|what (?:is|'s) this|what can you do|where (?:do|should) i (?:start|begin)|help)\b/i;
+
 const CONFUSION_MARKER =
   /\b(still (?:don'?t|do not|not|unclear|confus)|i'?m confus|i don'?t (?:get|understand|follow|see)|doesn'?t make sense|makes no sense|not following|lost me|you said|as i said|again[,:]|rephrase|say that again|what do you mean|i asked)\b/i;
 
@@ -188,28 +219,46 @@ export function selectTier(input: {
   escalate?: boolean;
   /** Set when the escalated budget is spent; auto-escalation then declines quietly. */
   escalatedBudgetSpent?: boolean;
+  /**
+   * True only when the endpoint has PROVEN this session may still reach Opus:
+   * a valid signed session token, history no longer than the turns the server
+   * actually served, and the per-session cap not yet spent. Absent means no:
+   * missing evidence never opens the dearest rung.
+   */
+  opusAllowed?: boolean;
 }): TierDecision {
   const message = typeof input.message === 'string' ? input.message : '';
   const history = Array.isArray(input.history) ? input.history : [];
 
-  const at = (effort: Effort, reason: EscalationReason, explicit: boolean): TierDecision => ({
-    model: MODEL,
-    tier: effort === 'low' ? 'base' : 'deep',
-    effort,
-    maxTokens: TIER_CONFIG[effort].maxTokens,
-    reason,
-    explicit,
-  });
+  const at = (rung: Rung, reason: EscalationReason, explicit: boolean): TierDecision => {
+    const r = RUNGS[rung];
+    return {
+      family: r.family,
+      model: MODELS[r.family],
+      rung,
+      tier: r.tier,
+      effort: r.effort,
+      maxTokens: r.maxTokens,
+      reason,
+      explicit,
+    };
+  };
 
-  // Rung 3 — the reader asked, in as many words. Strict equality, so 'true',
-  // 1 and 'opus' all fall through to base.
+  // The Deeper button — the reader asked, in as many words. Sonnet at xhigh,
+  // never Opus: Opus is for the reader who is stuck, not the one who is keen.
+  // Strict equality, so 'true', 1 and 'opus' all fall through to base.
   if (input.escalate === true) return at('xhigh', 'explicit-deeper', true);
 
   // Auto-escalation spends from the escalated budget like any other deep
   // answer. When that budget is gone the answer is still served — at base —
   // rather than 429'd, because the reader never asked for the dear tier and
   // shouldn't be punished for a server-side heuristic.
-  if (input.escalatedBudgetSpent) return at('low', 'none', false);
+  if (input.escalatedBudgetSpent) return at('base', 'none', false);
+
+  // Repeated confusion is the ONLY road to Opus, and only while the session
+  // has proven Opus headroom. Otherwise it is what it always was: Sonnet, high.
+  const stuck = (): TierDecision =>
+    at(input.opusAllowed === true ? 'stuck' : 'high', 'repeated-confusion', false);
 
   const userTurns = history.filter((t) => t?.role === 'user').map((t) => String(t?.content ?? ''));
 
@@ -229,16 +278,23 @@ export function selectTier(input: {
   if (CONFUSION_MARKER.test(message)) {
     const priorConfusion = userTurns.some((t) => CONFUSION_MARKER.test(t));
     const priorSimilar = userTurns.some((t) => overlap(message, t) >= 0.5);
-    if (priorConfusion || priorSimilar) return at('high', 'repeated-confusion', false);
+    if (priorConfusion || priorSimilar) return stuck();
   }
 
   // Three consecutive user turns circling one point, even politely worded.
   const recent = userTurns.slice(-2);
   if (recent.length === 2 && recent.every((t) => overlap(message, t) >= 0.6)) {
-    return at('high', 'repeated-confusion', false);
+    return stuck();
   }
 
-  return at('low', 'none', false);
+  // The opening turn of a session, when it is a hello rather than a question
+  // about the text: Haiku. Anything substantive, even on turn one, is Sonnet's.
+  const words = message.trim().split(/\s+/).filter(Boolean).length;
+  if (userTurns.length === 0 && (GREETING.test(message) || words <= 3)) {
+    return at('greet', 'greeting', false);
+  }
+
+  return at('base', 'none', false);
 }
 
 // ---------------------------------------------------------------------------
@@ -265,8 +321,8 @@ export interface SystemBlock {
  * TTL costs 2x on write rather than 1.25x and needs three-plus reads to break
  * even where the 5-minute one needs two.
  *
- * A section shorter than the 1024-token minimum cacheable prefix on Sonnet 5
- * simply will not cache — silently, with `cache_creation_input_tokens: 0` and
+ * A section shorter than the model's minimum cacheable prefix simply will not
+ * cache — silently, with `cache_creation_input_tokens: 0` and
  * no error. The breakpoint is then a harmless no-op: it costs nothing, and it
  * also saves nothing. Do not report a saving that did not occur.
  */

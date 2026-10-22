@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
-  MODEL,
+  MODELS,
+  OPUS_PER_SESSION,
   selectTier,
   buildSystemBlocks,
   buildUserTurn,
@@ -75,10 +76,10 @@ describe('buildUserTurn — tier instructions sit AFTER the last breakpoint', ()
 });
 
 describe('selectTier — the distinction-distance ladder', () => {
-  it('serves a plain question on Sonnet 5 at low effort', () => {
+  it('serves a plain question on Sonnet at low effort', () => {
     const d = selectTier({ message: 'explain this section in simple terms' });
-    expect(d.model).toBe(MODEL);
-    expect(d.model).toBe('claude-sonnet-5');
+    expect(d.family).toBe('sonnet');
+    expect(d.model).toBe(MODELS.sonnet);
     expect(d.effort).toBe('low');
     expect(d.tier).toBe('base');
     expect(d.reason).toBe('none');
@@ -134,6 +135,8 @@ describe('selectTier — the distinction-distance ladder', () => {
     });
     expect(second.tier).toBe('deep');
     expect(second.reason).toBe('repeated-confusion');
+    // No proven session headroom was passed, so this is Sonnet, not Opus.
+    expect(second.family).toBe('sonnet');
   });
 
   it('escalates when the reader asks a near-identical question again', () => {
@@ -175,15 +178,15 @@ describe('selectTier — the distinction-distance ladder', () => {
 
   it('gives every rung explicit effort and real max_tokens headroom', () => {
     const rungs = [
-      selectTier({ message: 'plain' }),
+      selectTier({ message: 'what does this section claim?' }),
       selectTier({ message: 'compare §4.2 with §8.1' }),
       selectTier({ message: 'x', escalate: true }),
     ];
     for (const d of rungs) {
       expect(['low', 'high', 'xhigh']).toContain(d.effort);
       expect(d.maxTokens).toBeGreaterThanOrEqual(2048);
-      // Every rung on one model: a model switch would void the cache.
-      expect(d.model).toBe(MODEL);
+      // The body's rungs are one model: climbing them must not void the cache.
+      expect(d.family).toBe('sonnet');
     }
     expect(rungs[0].maxTokens).toBeLessThan(rungs[2].maxTokens);
   });
@@ -196,7 +199,7 @@ describe('selectTier — the distinction-distance ladder', () => {
       effort: 'max',
     } as unknown as Parameters<typeof selectTier>[0];
     const d = selectTier(hostile);
-    expect(d.model).toBe('claude-sonnet-5');
+    expect(d.family).not.toBe('opus');
     expect(d.effort).toBe('low');
   });
 
@@ -248,5 +251,72 @@ describe('slug references that begin with an article', () => {
   it('trusts a backticked token even when it looks like ordinary English', () => {
     const d = selectTier({ message: 'how does this differ from `well-known`?' });
     expect(d.reason).toBe('cross-section-comparison');
+  });
+});
+
+describe('the three families — Haiku greets, Sonnet carries, Opus only when stuck', () => {
+  const confusedHistory = [
+    { role: 'user' as const, content: "i don't understand the action functional" },
+    { role: 'assistant' as const, content: 'It is an integral over the trajectory...' },
+  ];
+  const stillConfused = "i still don't understand the action functional";
+
+  it('names latest-version ids only in the one map', () => {
+    expect(Object.keys(MODELS).sort()).toEqual(['haiku', 'opus', 'sonnet']);
+  });
+
+  it('greets on Haiku on the opening turn', () => {
+    for (const m of ['hello', 'Hi there!', 'where do I start?', 'what is this site about']) {
+      const d = selectTier({ message: m });
+      expect(d.family).toBe('haiku');
+      expect(d.reason).toBe('greeting');
+    }
+  });
+
+  it('puts a substantive opening question on Sonnet, not Haiku', () => {
+    const d = selectTier({ message: 'how does the least-action principle fit the treatise?' });
+    expect(d.family).toBe('sonnet');
+  });
+
+  it('never greets after the opening turn', () => {
+    const d = selectTier({ message: 'hello', history: confusedHistory });
+    expect(d.family).toBe('sonnet');
+  });
+
+  it('reaches Opus on repeated confusion only when the session has proven headroom', () => {
+    const d = selectTier({ message: stillConfused, history: confusedHistory, opusAllowed: true });
+    expect(d.family).toBe('opus');
+    expect(d.model).toBe(MODELS.opus);
+    expect(d.tier).toBe('deep');
+    expect(d.reason).toBe('repeated-confusion');
+  });
+
+  it('falls back to Sonnet high when Opus headroom is absent or not boolean true', () => {
+    for (const allowed of [undefined, false, 'true', 1] as unknown[]) {
+      const d = selectTier({ message: stillConfused, history: confusedHistory, opusAllowed: allowed as boolean });
+      expect(d.family).toBe('sonnet');
+      expect(d.effort).toBe('high');
+    }
+  });
+
+  it('never sends the Deeper button or a comparison to Opus', () => {
+    expect(selectTier({ message: 'x', escalate: true, opusAllowed: true }).family).toBe('sonnet');
+    expect(selectTier({ message: 'compare §4.2 with §8.1', opusAllowed: true }).family).toBe('sonnet');
+  });
+
+  it('declines Opus quietly when the escalated budget is spent', () => {
+    const d = selectTier({
+      message: stillConfused,
+      history: confusedHistory,
+      opusAllowed: true,
+      escalatedBudgetSpent: true,
+    });
+    expect(d.family).toBe('sonnet');
+    expect(d.tier).toBe('base');
+  });
+
+  it('caps Opus per session at a small number', () => {
+    expect(OPUS_PER_SESSION).toBeGreaterThanOrEqual(1);
+    expect(OPUS_PER_SESSION).toBeLessThanOrEqual(2);
   });
 });
