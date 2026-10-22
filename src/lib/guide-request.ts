@@ -278,7 +278,11 @@ export function selectTier(input: {
   if (CONFUSION_MARKER.test(message)) {
     const priorConfusion = userTurns.some((t) => CONFUSION_MARKER.test(t));
     const priorSimilar = userTurns.some((t) => overlap(message, t) >= 0.5);
-    if (priorConfusion || priorSimilar) return stuck();
+    // Confusion said twice is the reader still stuck after an answer aimed
+    // at them: Opus territory. Confusion once, corroborated only by a
+    // similar earlier question, is the first "I don't get it" — Sonnet high.
+    if (priorConfusion) return stuck();
+    if (priorSimilar) return at('high', 'repeated-confusion', false);
   }
 
   // Three consecutive user turns circling one point, even politely worded.
