@@ -14,6 +14,7 @@
 // protects. Rotating that key simply starts every live session afresh.
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { OPUS_PER_SESSION } from './guide-request';
+import { counterStore } from './guide-store';
 
 export interface SessionState {
   /** User turns this server has answered in the session. */
@@ -27,84 +28,53 @@ export interface SessionState {
 const FRESH: SessionState = { turns: 0, opus: 0 };
 
 // A signature stops EDITING a token, not REPLAYING an earlier genuine one
-// ({t:3,o:0} after the reader has since spent the cap). So the server also
-// remembers, per session id, the furthest state it has ever issued, and a token
-// that is behind that mark is stale: it is treated as already past the cap.
-// Module-level like the rate limiter — it holds within one serverless instance
-// and is bounded (TTL + size cap). Across cold instances a replay can still
-// fork the session; the per-IP escalated budget in guide.ts is the backstop.
+// ({t:3,o:0} after the reader has since spent the cap), and nothing held in one
+// serverless instance's memory can stop a replay that lands on another (#369).
+// So the token's Opus count is only a cheap first check; the cap itself is a
+// counter per session id in the shared store (guide-store.ts), taken BEFORE the
+// Anthropic call — check and take are one atomic step there, so overlapping
+// requests on any mix of instances cannot all see the same headroom — and
+// given back if the call fails. A replayed token carries the same session id,
+// so it meets the same counter.
 //
-// The ledger also holds Opus RESERVATIONS. Eligibility is checked before the
-// Anthropic call and the use is only recorded after it, so without a hold every
-// request that overlaps in that window sees the same headroom and all of them
-// get Opus. reserveOpus() takes the slot synchronously — no await between the
-// check and the take — and the endpoint commits it when the answer is served
-// or releases it when the call fails.
-const LEDGER_TTL_MS = 6 * 60 * 60 * 1000;
-const LEDGER_MAX = 5000;
-interface LedgerEntry { turns: number; opus: number; held: number; at: number }
-const ledger = new Map<string, LedgerEntry>();
-
-function prune(keep: string): void {
-  const now = Date.now();
-  for (const [k, v] of ledger) if (v.held === 0 && now - v.at > LEDGER_TTL_MS) ledger.delete(k);
-  if (ledger.size < LEDGER_MAX || ledger.has(keep)) return;
-  for (const [k, v] of ledger) {
-    if (ledger.size < LEDGER_MAX) break;
-    if (v.held === 0) ledger.delete(k);
-  }
-}
-
-function entryFor(sid: string): LedgerEntry {
-  let e = ledger.get(sid);
-  if (!e) {
-    prune(sid);
-    e = { turns: 0, opus: 0, held: 0, at: Date.now() };
-    ledger.set(sid, e);
-  }
-  return e;
-}
-
-function remember(sid: string, state: SessionState): void {
-  const e = entryFor(sid);
-  e.turns = Math.max(e.turns, state.turns);
-  e.opus = Math.max(e.opus, state.opus);
-  e.at = Date.now();
-}
+// The counter outlives any reading session the token could prove (6 h).
+const OPUS_TTL_MS = 6 * 60 * 60 * 1000;
 
 export interface OpusReservation {
-  /** The Opus answer was served: the slot becomes a spent use. */
+  /** The Opus answer was served: the slot stays spent. */
   commit(): void;
   /** The call failed: give the slot back. */
   release(): void;
 }
 
 /**
- * Take one Opus slot for this session, or null if the cap — counting answers
- * already spent AND calls still in flight — is full. Synchronous on purpose:
- * the check and the take cannot be split by another request.
+ * Take one Opus slot for this session from the shared counter, or null if the
+ * cap — answers spent AND calls in flight, across every instance — is full.
+ * Null too when the store is missing or down: failing closed means Sonnet.
  */
-export function reserveOpus(state: SessionState): OpusReservation | null {
+export async function reserveOpus(state: SessionState, site: string): Promise<OpusReservation | null> {
   if (!state.sid) return null;
-  const e = entryFor(state.sid);
-  e.opus = Math.max(e.opus, state.opus);
-  if (e.opus + e.held >= OPUS_PER_SESSION) return null;
-  e.held += 1;
-  e.at = Date.now();
+  const store = counterStore();
+  if (!store) return null;
+  const key = `alexander:${site}:opus:${state.sid}`;
+  try {
+    if (!(await store.take(key, OPUS_PER_SESSION, OPUS_TTL_MS))) return null;
+  } catch (err) {
+    console.warn('[guide] counter store unavailable; Opus shut for this turn:', err);
+    return null;
+  }
   let settled = false;
-  const settle = (spent: boolean) => {
-    if (settled) return;
-    settled = true;
-    e.held -= 1;
-    if (spent) e.opus += 1;
-    e.at = Date.now();
+  return {
+    commit: () => {
+      settled = true;
+    },
+    release: () => {
+      if (settled) return;
+      settled = true;
+      // Best effort: a lost give-back leaves the reader one Opus short, never one over.
+      store.give(key).catch(() => {});
+    },
   };
-  return { commit: () => settle(true), release: () => settle(false) };
-}
-
-/** Test hook: forget every remembered session. */
-export function _resetSessionLedger(): void {
-  ledger.clear();
 }
 
 function keyFrom(apiKey: string): Buffer {
@@ -117,7 +87,6 @@ function sign(key: Buffer, payload: string): string {
 
 export function issueSession(apiKey: string, state: SessionState): string {
   const sid = state.sid ?? randomBytes(12).toString('base64url');
-  remember(sid, state);
   const payload = Buffer.from(JSON.stringify({ v: 2, t: state.turns, o: state.opus, s: sid })).toString('base64url');
   return `${payload}.${sign(keyFrom(apiKey), payload)}`;
 }
@@ -156,17 +125,8 @@ export function sessionGate(
 ): { state: SessionState; opusAllowed: boolean } {
   const proven = readSession(apiKey, token);
   if (proven === null) return { state: FRESH, opusAllowed: false };
-  // Replay guard: a token behind the server's own record of this session is
-  // stale. Carry the record forward (so the re-issued token is current) and
-  // shut Opus, since the reader has already had at least what the record says.
-  const seen = proven.sid ? ledger.get(proven.sid) : undefined;
-  const stale = !!seen && (proven.opus < seen.opus || proven.turns < seen.turns);
-  const state: SessionState = stale
-    ? { turns: seen!.turns, opus: seen!.opus, sid: proven.sid }
-    : proven;
-  const opusAllowed =
-    !stale &&
-    historyUserTurns <= proven.turns &&
-    proven.opus + (seen?.held ?? 0) < OPUS_PER_SESSION;
-  return { state, opusAllowed };
+  // The shared counter in reserveOpus() is the cap; this only spares it a
+  // round trip when the token itself already says the cap is spent.
+  const opusAllowed = historyUserTurns <= proven.turns && proven.opus < OPUS_PER_SESSION;
+  return { state: proven, opusAllowed };
 }

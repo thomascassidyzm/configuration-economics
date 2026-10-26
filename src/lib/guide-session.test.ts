@@ -1,9 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { issueSession, readSession, sessionGate, _resetSessionLedger } from './guide-session';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { issueSession, readSession, sessionGate, reserveOpus } from './guide-session';
 import { OPUS_PER_SESSION } from './guide-request';
+import { _setCounterStore, memoryStore } from './guide-store';
 
 const KEY = 'sk-test-not-a-real-key';
-beforeEach(() => _resetSessionLedger());
+beforeEach(() => _setCounterStore(memoryStore()));
+afterEach(() => _setCounterStore(undefined));
 
 describe('the signed session — the hard per-session Opus cap', () => {
   it('round-trips what it signed', () => {
@@ -49,20 +51,31 @@ describe('the signed session — the hard per-session Opus cap', () => {
     expect(g.opusAllowed).toBe(false);
   });
 
-  it('does not let a replayed earlier token reset the Opus count', () => {
-    // The server grants Opus up to the cap, re-signing each time; the attacker
-    // keeps the early {t:3,o:0} token and replays it instead of the fresh one.
-    const early = issueSession(KEY, { turns: 3, opus: 0 });
-    const sid = readSession(KEY, early)!.sid;
+  it('does not let a replayed earlier token reset the Opus count', async () => {
+    // The attacker keeps the early {t:3,o:0} token and replays it after every
+    // answer. The token still says "no Opus spent"; the shared counter does not.
+    const early = readSession(KEY, issueSession(KEY, { turns: 3, opus: 0 }))!;
     let granted = 0;
-    let token = early;
     for (let i = 0; i < 5; i++) {
-      const g = sessionGate(KEY, token, 3);
-      if (g.opusAllowed) granted++;
-      issueSession(KEY, { sid, turns: g.state.turns + 1, opus: g.state.opus + (g.opusAllowed ? 1 : 0) });
-      token = early;
+      const hold = await reserveOpus(early, 'test');
+      if (hold) {
+        granted++;
+        hold.commit();
+      }
     }
-    expect(granted).toBeLessThanOrEqual(OPUS_PER_SESSION);
-    expect(sessionGate(KEY, early, 3).opusAllowed).toBe(false);
+    expect(granted).toBe(OPUS_PER_SESSION);
+  });
+
+  it('a released slot can be taken again; a store that is down grants nothing', async () => {
+    const s = readSession(KEY, issueSession(KEY, { turns: 3, opus: 0 }))!;
+    for (let i = 0; i < OPUS_PER_SESSION; i++) expect(await reserveOpus(s, 'test')).not.toBeNull();
+    expect(await reserveOpus(s, 'test')).toBeNull();
+    _setCounterStore(memoryStore());
+    const hold = (await reserveOpus(s, 'test'))!;
+    hold.release();
+    await Promise.resolve();
+    expect(await reserveOpus(s, 'test')).not.toBeNull();
+    _setCounterStore(null);
+    expect(await reserveOpus(s, 'test')).toBeNull();
   });
 });

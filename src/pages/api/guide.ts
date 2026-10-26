@@ -6,6 +6,7 @@ import {
   buildUserTurn,
 } from '../../lib/guide-request';
 import { sessionGate, issueSession, reserveOpus } from '../../lib/guide-session';
+import { counterStore } from '../../lib/guide-store';
 import { extractAndRenderMath } from '../../lib/math';
 import {
   GUIDE_TOOLS,
@@ -38,9 +39,10 @@ const MAX_MESSAGE_LENGTH = 4000;
 const MAX_HISTORY_TURNS = 20;
 const MAX_BODY_BYTES = 50 * 1024;
 
-// Sliding-window rate limit, keyed on client IP. Module-level Map is fine for
-// a single serverless instance; entries are pruned on every request so it
-// cannot grow unbounded.
+// Rate limit, keyed on client IP, counted in the shared store so every
+// serverless instance sees the same budget (#369). The module-level Maps below
+// are only the fallback for when that store is down: per-instance, so weaker,
+// but a reader is never locked out because Redis blinked.
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 15;
 // Escalated answers cost roughly an order of magnitude more than base ones, so
@@ -51,6 +53,9 @@ const RATE_LIMIT_MAX_REQUESTS = 15;
 const ESCALATED_RATE_LIMIT_MAX_REQUESTS = 4;
 const requestLog = new Map<string, number[]>();
 const escalatedRequestLog = new Map<string, number[]>();
+
+// Which site's keys these are in the store the team's projects share.
+const SITE = 'ce';
 
 function getClientIp(request: Request): string {
   const forwardedFor = request.headers.get('x-forwarded-for');
@@ -87,6 +92,23 @@ function checkRateLimit(
   timestamps.push(now);
   log.set(ip, timestamps);
   return { allowed: true, retryAfterSeconds: 0 };
+}
+
+async function spendBudget(
+  ip: string,
+  budget: 'chat' | 'deep',
+): Promise<{ allowed: boolean; retryAfterSeconds: number }> {
+  const max = budget === 'deep' ? ESCALATED_RATE_LIMIT_MAX_REQUESTS : RATE_LIMIT_MAX_REQUESTS;
+  const store = counterStore();
+  if (store) {
+    try {
+      const { count, resetMs } = await store.hit(`alexander:${SITE}:rl:${budget}:${ip}`, RATE_LIMIT_WINDOW_MS);
+      return { allowed: count <= max, retryAfterSeconds: Math.max(1, Math.ceil(resetMs / 1000)) };
+    } catch (err) {
+      console.warn('[guide] counter store unavailable; per-instance rate limit:', err);
+    }
+  }
+  return checkRateLimit(ip, budget === 'deep' ? escalatedRequestLog : requestLog, max);
 }
 
 // The set of hostnames that count as "this site" for the same-origin check.
@@ -149,7 +171,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const clientIp = getClientIp(request);
-    const rateLimit = checkRateLimit(clientIp);
+    const rateLimit = await spendBudget(clientIp, 'chat');
     if (!rateLimit.allowed) {
       return new Response(JSON.stringify({ error: 'Too many requests' }), {
         status: 429,
@@ -233,15 +255,7 @@ export const POST: APIRoute = async ({ request }) => {
     // diverge: an inferred escalation declines quietly to base rather than
     // 429ing a reader who never asked for the dear tier.
     if (decision.tier === 'deep') {
-      // NOTE the shape: this site's helper is checkRateLimit(), returning
-      // { allowed, retryAfterSeconds } — not the boolean isRateLimited() the
-      // other two sites use. Same idea, different signature; do not port the
-      // call blind.
-      const deepLimit = checkRateLimit(
-        clientIp,
-        escalatedRequestLog,
-        ESCALATED_RATE_LIMIT_MAX_REQUESTS,
-      );
+      const deepLimit = await spendBudget(clientIp, 'deep');
       if (!deepLimit.allowed) {
         if (decision.explicit) {
           return new Response(JSON.stringify({ error: 'Too many deeper requests' }), {
@@ -258,8 +272,9 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Opus is RESERVED before the call, not recorded after it: overlapping
     // requests on one session otherwise all pass the cap check while the first
-    // is still waiting on Anthropic. No slot left → the same turn at Sonnet.
-    const opusHold = decision.family === 'opus' ? reserveOpus(session) : null;
+    // is still waiting on Anthropic. No slot left, or the shared counter is
+    // down → the same turn at Sonnet.
+    const opusHold = decision.family === 'opus' ? await reserveOpus(session, SITE) : null;
     if (decision.family === 'opus' && !opusHold) {
       decision = selectTier({ message, history, escalate, opusAllowed: false });
     }
