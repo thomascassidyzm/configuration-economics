@@ -5,7 +5,7 @@ import {
   buildSystemBlocks,
   buildUserTurn,
 } from '../../lib/guide-request';
-import { sessionGate, issueSession } from '../../lib/guide-session';
+import { sessionGate, issueSession, reserveOpus } from '../../lib/guide-session';
 import { extractAndRenderMath } from '../../lib/math';
 import {
   GUIDE_TOOLS,
@@ -256,6 +256,14 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
+    // Opus is RESERVED before the call, not recorded after it: overlapping
+    // requests on one session otherwise all pass the cap check while the first
+    // is still waiting on Anthropic. No slot left → the same turn at Sonnet.
+    const opusHold = decision.family === 'opus' ? reserveOpus(session) : null;
+    if (decision.family === 'opus' && !opusHold) {
+      decision = selectTier({ message, history, escalate, opusAllowed: false });
+    }
+
     // The layered, cacheable prompt: global material first with a breakpoint
     // on it, then the section the reader has open with a second breakpoint,
     // then nothing — the conversation goes in `messages`, after both.
@@ -311,80 +319,89 @@ export const POST: APIRoute = async ({ request }) => {
     // exactly the questions we most want to price.
     const totals = { input: 0, cache_write: 0, cache_read: 0, output: 0 };
 
-    for (;;) {
-      const toolsAllowed = toolRounds < MAX_TOOL_ROUNDS && toolCharsUsed < MAX_TOOL_CHARS_TOTAL;
+    // The Opus slot is committed only if an answer is served; any early
+    // return or throw in the loop gives it back.
+    let served = false;
+    try {
+      for (;;) {
+        const toolsAllowed = toolRounds < MAX_TOOL_ROUNDS && toolCharsUsed < MAX_TOOL_CHARS_TOTAL;
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-        },
-        body: JSON.stringify({
-          model: decision.model,
-          max_tokens: decision.maxTokens,
-          // Every family defaults to medium or high effort when this is
-          // omitted, so silence here means silently paying for depth on every
-          // trivial question.
-          output_config: { effort: decision.effort },
-          system: systemBlocks,
-          messages: conversation,
-          // `tools` ALWAYS goes on the wire, byte-identical, every round.
-          // Tools render at position 0 of the prefix — ahead of `system` — so
-          // dropping the array would change byte 0 and invalidate the ENTIRE
-          // cache on the last and most context-heavy call. tool_choice
-          // reaches the same end and preserves the tools+system cache.
-          tools: GUIDE_TOOLS,
-          ...(toolsAllowed ? {} : { tool_choice: { type: 'none' } }),
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.text();
-        console.error('Anthropic API error:', error);
-        return new Response(JSON.stringify({ error: 'Guide unavailable' }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+          },
+          body: JSON.stringify({
+            model: decision.model,
+            max_tokens: decision.maxTokens,
+            // Every family defaults to medium or high effort when this is
+            // omitted, so silence here means silently paying for depth on every
+            // trivial question.
+            output_config: { effort: decision.effort },
+            system: systemBlocks,
+            messages: conversation,
+            // `tools` ALWAYS goes on the wire, byte-identical, every round.
+            // Tools render at position 0 of the prefix — ahead of `system` — so
+            // dropping the array would change byte 0 and invalidate the ENTIRE
+            // cache on the last and most context-heavy call. tool_choice
+            // reaches the same end and preserves the tools+system cache.
+            tools: GUIDE_TOOLS,
+            ...(toolsAllowed ? {} : { tool_choice: { type: 'none' } }),
+          }),
         });
-      }
 
-      data = await response.json();
-      const ru = data?.usage ?? {};
-      totals.input += ru.input_tokens ?? 0;
-      totals.cache_write += ru.cache_creation_input_tokens ?? 0;
-      totals.cache_read += ru.cache_read_input_tokens ?? 0;
-      totals.output += ru.output_tokens ?? 0;
-
-      if (!toolsAllowed || data?.stop_reason !== 'tool_use') break;
-
-      const blocks: any[] = Array.isArray(data.content) ? data.content : [];
-      const toolUses = blocks.filter((b) => b?.type === 'tool_use');
-      if (toolUses.length === 0) break;
-
-      toolRounds += 1;
-      // Push the assistant turn back VERBATIM — thinking blocks and their
-      // signatures must survive intact on the escalated tier.
-      conversation.push({ role: 'assistant', content: blocks });
-
-      const toolResults = toolUses.map((tu) => {
-        const remaining = MAX_TOOL_CHARS_TOTAL - toolCharsUsed;
-        let text: string;
-        if (remaining <= 0) {
-          text =
-            'Reading budget for this question is used up. Answer from what you ' +
-            'have already read, and say plainly if that means you cannot fully ' +
-            'answer.';
-        } else {
-          const result = runGuideTool(tu.name, tu.input);
-          text = truncate(result.text, Math.min(MAX_TOOL_CHARS_PER_RESULT, remaining));
-          toolCharsUsed += text.length;
-          if (result.found && typeof tu.input?.id === 'string') readIds.push(tu.input.id);
+        if (!response.ok) {
+          const error = await response.text();
+          console.error('Anthropic API error:', error);
+          return new Response(JSON.stringify({ error: 'Guide unavailable' }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+          });
         }
-        return { type: 'tool_result', tool_use_id: tu.id, content: text };
-      });
 
-      conversation.push({ role: 'user', content: toolResults });
+        data = await response.json();
+        const ru = data?.usage ?? {};
+        totals.input += ru.input_tokens ?? 0;
+        totals.cache_write += ru.cache_creation_input_tokens ?? 0;
+        totals.cache_read += ru.cache_read_input_tokens ?? 0;
+        totals.output += ru.output_tokens ?? 0;
+
+        if (!toolsAllowed || data?.stop_reason !== 'tool_use') break;
+
+        const blocks: any[] = Array.isArray(data.content) ? data.content : [];
+        const toolUses = blocks.filter((b) => b?.type === 'tool_use');
+        if (toolUses.length === 0) break;
+
+        toolRounds += 1;
+        // Push the assistant turn back VERBATIM — thinking blocks and their
+        // signatures must survive intact on the escalated tier.
+        conversation.push({ role: 'assistant', content: blocks });
+
+        const toolResults = toolUses.map((tu) => {
+          const remaining = MAX_TOOL_CHARS_TOTAL - toolCharsUsed;
+          let text: string;
+          if (remaining <= 0) {
+            text =
+              'Reading budget for this question is used up. Answer from what you ' +
+              'have already read, and say plainly if that means you cannot fully ' +
+              'answer.';
+          } else {
+            const result = runGuideTool(tu.name, tu.input);
+            text = truncate(result.text, Math.min(MAX_TOOL_CHARS_PER_RESULT, remaining));
+            toolCharsUsed += text.length;
+            if (result.found && typeof tu.input?.id === 'string') readIds.push(tu.input.id);
+          }
+          return { type: 'tool_result', tool_use_id: tu.id, content: text };
+        });
+
+        conversation.push({ role: 'user', content: toolResults });
+      }
+        served = true;
+    } finally {
+      if (served) opusHold?.commit();
+      else opusHold?.release();
     }
 
     // Cache verification. If cache_read stays at zero across repeated
@@ -423,7 +440,7 @@ export const POST: APIRoute = async ({ request }) => {
       session: issueSession(apiKey, {
         sid: session.sid,
         turns: session.turns + 1,
-        opus: session.opus + (decision.family === 'opus' ? 1 : 0),
+        opus: session.opus + (opusHold ? 1 : 0),
       }),
       // Why this tier. Never taken from the request; always the server's own
       // decision.

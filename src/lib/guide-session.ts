@@ -33,22 +33,73 @@ const FRESH: SessionState = { turns: 0, opus: 0 };
 // Module-level like the rate limiter — it holds within one serverless instance
 // and is bounded (TTL + size cap). Across cold instances a replay can still
 // fork the session; the per-IP escalated budget in guide.ts is the backstop.
+//
+// The ledger also holds Opus RESERVATIONS. Eligibility is checked before the
+// Anthropic call and the use is only recorded after it, so without a hold every
+// request that overlaps in that window sees the same headroom and all of them
+// get Opus. reserveOpus() takes the slot synchronously — no await between the
+// check and the take — and the endpoint commits it when the answer is served
+// or releases it when the call fails.
 const LEDGER_TTL_MS = 6 * 60 * 60 * 1000;
 const LEDGER_MAX = 5000;
-const ledger = new Map<string, { turns: number; opus: number; at: number }>();
+interface LedgerEntry { turns: number; opus: number; held: number; at: number }
+const ledger = new Map<string, LedgerEntry>();
+
+function prune(keep: string): void {
+  const now = Date.now();
+  for (const [k, v] of ledger) if (v.held === 0 && now - v.at > LEDGER_TTL_MS) ledger.delete(k);
+  if (ledger.size < LEDGER_MAX || ledger.has(keep)) return;
+  for (const [k, v] of ledger) {
+    if (ledger.size < LEDGER_MAX) break;
+    if (v.held === 0) ledger.delete(k);
+  }
+}
+
+function entryFor(sid: string): LedgerEntry {
+  let e = ledger.get(sid);
+  if (!e) {
+    prune(sid);
+    e = { turns: 0, opus: 0, held: 0, at: Date.now() };
+    ledger.set(sid, e);
+  }
+  return e;
+}
 
 function remember(sid: string, state: SessionState): void {
-  const now = Date.now();
-  for (const [k, v] of ledger) if (now - v.at > LEDGER_TTL_MS) ledger.delete(k);
-  while (ledger.size >= LEDGER_MAX && !ledger.has(sid)) {
-    ledger.delete(ledger.keys().next().value as string);
-  }
-  const prev = ledger.get(sid);
-  ledger.set(sid, {
-    turns: Math.max(prev?.turns ?? 0, state.turns),
-    opus: Math.max(prev?.opus ?? 0, state.opus),
-    at: now,
-  });
+  const e = entryFor(sid);
+  e.turns = Math.max(e.turns, state.turns);
+  e.opus = Math.max(e.opus, state.opus);
+  e.at = Date.now();
+}
+
+export interface OpusReservation {
+  /** The Opus answer was served: the slot becomes a spent use. */
+  commit(): void;
+  /** The call failed: give the slot back. */
+  release(): void;
+}
+
+/**
+ * Take one Opus slot for this session, or null if the cap — counting answers
+ * already spent AND calls still in flight — is full. Synchronous on purpose:
+ * the check and the take cannot be split by another request.
+ */
+export function reserveOpus(state: SessionState): OpusReservation | null {
+  if (!state.sid) return null;
+  const e = entryFor(state.sid);
+  e.opus = Math.max(e.opus, state.opus);
+  if (e.opus + e.held >= OPUS_PER_SESSION) return null;
+  e.held += 1;
+  e.at = Date.now();
+  let settled = false;
+  const settle = (spent: boolean) => {
+    if (settled) return;
+    settled = true;
+    e.held -= 1;
+    if (spent) e.opus += 1;
+    e.at = Date.now();
+  };
+  return { commit: () => settle(true), release: () => settle(false) };
 }
 
 /** Test hook: forget every remembered session. */
@@ -114,6 +165,8 @@ export function sessionGate(
     ? { turns: seen!.turns, opus: seen!.opus, sid: proven.sid }
     : proven;
   const opusAllowed =
-    !stale && historyUserTurns <= proven.turns && proven.opus < OPUS_PER_SESSION;
+    !stale &&
+    historyUserTurns <= proven.turns &&
+    proven.opus + (seen?.held ?? 0) < OPUS_PER_SESSION;
   return { state, opusAllowed };
 }
