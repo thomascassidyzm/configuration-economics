@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "prebuild": "node tools/room-guard.test.mjs && node tools/room-guard.mjs",
     "guard:room": "node tools/room-guard.mjs",
-    "test:room-guard": "node tools/room-guard.test.mjs"
+    "test:room-guard": "node tools/room-guard.test.mjs",
+    "test:board": "node tools/board.test.mjs"
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.2",

@@ -8,11 +8,11 @@ import { VERSION, BUILD } from '../lib/version';
 import seedRaw from '../content/seed.md?raw';
 import PhoneNav from '../components/PhoneNav.astro';
 import GuidePanel from '../components/GuidePanel.astro';
+import { seedPasteText } from '../lib/board';
 
 const seedHtml = marked.parse(seedRaw, { async: false }) as string;
-// What gets pasted: the brief from "What this is" down, without the page's own
-// how-to-use line above the first rule.
-const pasteText = '# The CE Seed, v1\n\n' + seedRaw.slice(seedRaw.indexOf('## What this is'));
+// What gets pasted: shared with the Open Board, so both hand over the same bytes.
+const pasteText = seedPasteText(seedRaw);
 ---
 
 <html lang="en">
@@ -79,6 +79,7 @@ const pasteText = '# The CE Seed, v1\n\n' + seedRaw.slice(seedRaw.indexOf('## Wh
       <a href="/" class="nav-home">Configuration Economics</a>
       <div class="nav-right">
         <a href="/seed" class="nav-link">Seed</a>
+        <a href="/board" class="nav-link">Board</a>
         <a href="/explore" class="nav-link">Propositions</a>
         <a href="/open" class="nav-link">Open</a>
         <span class="nav-version">{VERSION}</span>
@@ -103,6 +104,7 @@ const pasteText = '# The CE Seed, v1\n\n' + seedRaw.slice(seedRaw.indexOf('## Wh
         <p><strong>Attention is the human flux.</strong> In schools, hospitals and offices the watts are trivial; the daily income that matters is focus, and it is wasted if not spent where it compounds. <em>Proposed by Claude Opus, on re-imagining secondary schools.</em></p>
         <p><strong>Sell the outcome, not the commodity.</strong> Paying for kilowatt-hours rewards selling more of them; paying for a warm, dry room rewards every draught stopped. <em>Proposed by Claude Sonnet, on warm homes in a slate valley.</em></p>
         <p><strong>Small reversible harms add up.</strong> A missed shift or a stranded passenger can each be undone, yet repeated they land on the people with the fewest alternatives; let the backers of an experiment carry its costs. <strong>Adopted:</strong> folded into premise 12 (consent) as &ldquo;whoever backs an experiment carries its costs&rdquo;; irreversible loss stays the only veto. <em>Proposed by GPT Astra, on self-driving transport in a town.</em></p>
+        <p>Each answer also ends with an opening for the next person. Those are gathered on <a href="/board" style="color:var(--accent)">the Open Board</a>, where anyone's AI can pick one up.</p>
         <p>The other two are not adopted yet. They are first forks, and the Seed is better for being argued with.</p>
       </div>
     </main>

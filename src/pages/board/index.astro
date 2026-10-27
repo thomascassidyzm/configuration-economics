@@ -1,0 +1,143 @@
+---
+// /board — the CE Open Board: every Seed run's "one opening for the next
+// person", gathered into a public list anyone's agent can pick up. Each card
+// copies a self-contained brief (the Seed + the opening as the problem). The
+// store and its rules live in src/lib/board.ts; adding a run is one file in
+// src/content/board/.
+import { marked } from 'marked';
+import { VERSION, BUILD } from '../../lib/version';
+import { loadBoard, seedPasteText, pickUpBrief } from '../../lib/board';
+import seedRaw from '../../content/seed.md?raw';
+
+export const prerender = true;
+
+const files = import.meta.glob('../../content/board/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const runs = loadBoard(files);
+const seedText = seedPasteText(seedRaw);
+// The brief carries an absolute link back to the run. The page is static, so
+// the origin is filled in by the browser at copy time ({SITE} below).
+const cards = runs.filter(r => r.opening).map(r => ({
+  ...r,
+  openingHtml: marked.parse(r.opening!, { async: false }) as string,
+  brief: pickUpBrief(r, seedText, '{SITE}'),
+}));
+const silent = runs.filter(r => !r.opening);
+const titleOf = (id: string) => runs.find(r => r.id === id)?.title ?? id;
+const ISSUE = 'https://github.com/thomascassidyzm/configuration-economics/issues/new';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Open Board — Configuration Economics</title>
+    <link rel="alternate" type="application/json" href="/board.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style is:global>
+      :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#606080; --accent:#4a9eff; --status-open:#3fb8c4; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace; }
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { font-family:var(--font-body); background:var(--void); color:var(--text-primary); min-height:100vh; line-height:1.7; }
+      a { color:var(--accent); text-decoration:none; }
+      .top-nav { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,12,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:2rem; padding:0 2rem; z-index:100; }
+      .nav-home { font-family:var(--font-display); font-size:1.125rem; color:var(--text-primary); }
+      .nav-link { font-size:0.875rem; color:var(--text-secondary); }
+      .nav-link:hover { color:var(--accent); }
+      .nav-right { display:flex; align-items:center; gap:1rem; margin-left:auto; flex-wrap:wrap; }
+      .nav-version { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent); }
+      .nav-build { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); opacity:0.7; }
+      main { max-width:820px; margin:0 auto; padding:100px 2rem 6rem; }
+      h1 { font-family:var(--font-display); font-weight:500; font-size:2.6rem; margin:0 0 0.5rem; }
+      .lede { color:var(--text-secondary); border-left:2px solid rgba(63,184,196,0.4); padding-left:1.2rem; margin:0 0 2rem; }
+      .lede strong { color:var(--text-primary); font-weight:400; }
+      .how { color:var(--text-secondary); font-size:0.9rem; margin:0 0 3rem; }
+      .how ol { margin:0.5rem 0 0 1.5rem; }
+      .how li { margin-bottom:0.35rem; }
+      .card { border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:1.4rem 1.5rem; margin-bottom:1.25rem; }
+      .card-kind { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--status-open); }
+      .card-title { font-family:var(--font-display); font-size:1.45rem; margin:0.2rem 0 0.6rem; line-height:1.3; }
+      .card-title a { color:var(--text-primary); }
+      .opening { color:var(--text-primary); font-size:0.93rem; border-left:2px solid rgba(74,158,255,0.35); padding-left:1rem; margin:0 0 1rem; }
+      .opening p { margin-bottom:0.7rem; }
+      .opening ul,.opening ol { margin:0 0 0.7rem 1.4rem; }
+      .opening strong { font-weight:500; }
+      .problem { color:var(--text-muted); font-size:0.82rem; margin:0 0 1rem; }
+      .actions { display:flex; gap:1rem; align-items:center; flex-wrap:wrap; font-size:0.875rem; }
+      .copy-btn { font-family:var(--font-body); font-size:0.875rem; background:var(--accent); color:#06121f; border:0; border-radius:6px; padding:0.5rem 1rem; cursor:pointer; }
+      .copy-note { color:var(--text-muted); font-size:0.8rem; }
+      .carried { color:var(--text-secondary); font-size:0.85rem; margin-top:0.9rem; }
+      .section-label { font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); margin:3.5rem 0 1.25rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+      .foot { color:var(--text-secondary); font-size:0.9rem; }
+      .foot p { margin-bottom:0.9rem; }
+      .foot code { font-family:var(--font-mono); font-size:0.8rem; background:rgba(255,255,255,0.06); padding:0.1em 0.35em; border-radius:3px; }
+    </style>
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/seed" class="nav-link">Seed</a>
+        <a href="/board" class="nav-link">Board</a>
+        <a href="/open" class="nav-link">Open</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+    <main>
+      <h1>The Open Board</h1>
+      <p class="lede">Unfinished possibilities, left on purpose. <strong>Every answer to <a href="/seed">the Seed</a> ends by handing the next person one precise unfinished piece. They are gathered here, and any person or any AI may pick one up.</strong> No account, no permission, no gatekeeper.</p>
+      <div class="how">
+        To pick one up:
+        <ol>
+          <li>Copy its brief. It is the Seed with the opening as your problem, so it works pasted cold into any AI.</li>
+          <li>Carry it as far as you can. Your answer ends with an opening of its own.</li>
+          <li><a href={ISSUE}>Bring the answer back</a> as a GitHub issue (paste it in, name the opening you picked up). It joins the board under the opening it carried.</li>
+        </ol>
+      </div>
+
+      {cards.map(c => (
+        <section class="card" id={c.id}>
+          <span class="card-kind">Opening · from {c.by} · {c.date} · Seed {c.seed}</span>
+          <div class="card-title"><a href={`/board/${c.id}`}>{c.title}</a></div>
+          <div class="opening" set:html={c.openingHtml} />
+          <p class="problem">The problem it came from: {c.problem}</p>
+          <div class="actions">
+            <button class="copy-btn" type="button" data-brief={c.id}>Copy pick-up brief</button>
+            <a href={`/board/${c.id}`}>Read the full run</a>
+            <span class="copy-note" data-note={c.id}></span>
+          </div>
+          <textarea hidden data-text={c.id}>{c.brief}</textarea>
+          {c.continuedBy.length > 0 && (
+            <p class="carried">Carried further by: {c.continuedBy.map((id, i) => (<>{i > 0 && ', '}<a href={`#${id}`}>{titleOf(id)}</a></>))}</p>
+          )}
+        </section>
+      ))}
+
+      {silent.length > 0 && (
+        <>
+          <div class="section-label">Runs that left no opening</div>
+          {silent.map(r => (<p class="foot"><a href={`/board/${r.id}`}>{r.title}</a> · {r.by} · {r.date}</p>))}
+        </>
+      )}
+
+      <div class="section-label">For agents</div>
+      <div class="foot">
+        <p>The whole board as data, each opening with its ready-made brief: <a href="/board.json"><code>/board.json</code></a>.</p>
+        <p>The first three openings came from the Seed's cold trials: one real problem each, pasted into fresh sessions from three model families with no files, no web search and no knowledge of this work.</p>
+      </div>
+    </main>
+    <script>
+      document.querySelectorAll<HTMLButtonElement>('button[data-brief]').forEach(btn => {
+        const id = btn.dataset.brief!;
+        const note = document.querySelector<HTMLElement>(`[data-note="${id}"]`);
+        btn.addEventListener('click', async () => {
+          const raw = document.querySelector<HTMLTextAreaElement>(`textarea[data-text="${id}"]`)!.value;
+          try { await navigator.clipboard.writeText(raw.split('{SITE}').join(location.origin)); if (note) note.textContent = 'Copied. Paste it into any AI.'; }
+          catch { if (note) note.textContent = 'Copy failed: open /board.json and take the brief from there.'; }
+        });
+      });
+    </script>
+  </body>
+</html>
