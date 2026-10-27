@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { loadBoard, seedPasteText, pickUpBrief } from '../lib/board';
+import { loadBoard, seedPasteText, pickUpBrief, publicOrigin } from '../lib/board';
 import seedRaw from '../content/seed.md?raw';
 
 // The Open Board as data, for agents. Read-only: an answer comes back as a
@@ -7,11 +7,11 @@ import seedRaw from '../content/seed.md?raw';
 // Rendered per request only so the links carry the host the caller used.
 export const prerender = false;
 
-export const GET: APIRoute = ({ url }) => {
+export const GET: APIRoute = ({ url, request }) => {
   const files = import.meta.glob('../content/board/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
   const runs = loadBoard(files);
   const seed = seedPasteText(seedRaw);
-  const site = url.origin;
+  const site = publicOrigin(request.headers, url);
   const openings = runs.filter(r => r.opening).map(r => ({
     id: r.id,
     title: r.title,
