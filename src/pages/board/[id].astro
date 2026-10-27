@@ -1,6 +1,7 @@
 ---
 // /board/[id] — one Seed run, verbatim: the answer whose opening sits on the
 // board. This is the context a pick-up brief points back to.
+import PhoneNav from '../../components/PhoneNav.astro';
 import { marked } from 'marked';
 import { VERSION, BUILD } from '../../lib/version';
 import { loadBoard } from '../../lib/board';
@@ -77,6 +78,7 @@ const { run, html, parent } = Astro.props;
       .answer ul,.answer ol { margin:0 0 1.2rem 1.5rem; } .answer li { margin-bottom:0.45rem; }
       .answer hr { border:0; border-top:1px solid rgba(255,255,255,0.08); margin:2rem 0; }
     </style>
+    <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

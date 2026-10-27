@@ -4,6 +4,7 @@
 // copies a self-contained brief (the Seed + the opening as the problem). The
 // store and its rules live in src/lib/board.ts; adding a run is one file in
 // src/content/board/.
+import PhoneNav from '../../components/PhoneNav.astro';
 import { marked } from 'marked';
 import { VERSION, BUILD } from '../../lib/version';
 import { loadBoard, seedPasteText, pickUpBrief } from '../../lib/board';
@@ -73,6 +74,7 @@ const ISSUE = 'https://github.com/thomascassidyzm/configuration-economics/issues
       .foot p { margin-bottom:0.9rem; }
       .foot code { font-family:var(--font-mono); font-size:0.8rem; background:rgba(255,255,255,0.06); padding:0.1em 0.35em; border-radius:3px; }
     </style>
+    <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">
