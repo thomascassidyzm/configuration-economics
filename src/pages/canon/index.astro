@@ -6,6 +6,7 @@
 // distinction-physics and the RBF archive.
 import { VERSION, BUILD } from '../../lib/version';
 import GuidePanel from '../../components/GuidePanel.astro';
+import PhoneNav from '../../components/PhoneNav.astro';
 
 const NODES: { href: string; title: string; kind: string; blurb: string }[] = [
   { href: '/canon/the-selection-primitive', title: 'The selection primitive', kind: 'Canonical node',
@@ -51,6 +52,7 @@ const NODES: { href: string; title: string; kind: string; blurb: string }[] = [
       .note { color:var(--text-muted); font-size:0.85rem; margin-top:2.5rem; }
       .note code { font-family:var(--font-mono); font-size:0.78rem; }
     </style>
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

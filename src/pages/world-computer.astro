@@ -11,6 +11,7 @@ import charterRaw from '../content/charter.md?raw';
 import { readLiveRoom } from '../lib/room-live';
 import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence, panelDefects, parseHatStance } from '../lib/room';
 import type { RoomItem, RoomTurn } from '../lib/room';
+import PhoneNav from '../components/PhoneNav.astro';
 
 /**
  * The strip, cut into grounds. A run of turns under one hat is ONE ground, so
@@ -63,6 +64,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

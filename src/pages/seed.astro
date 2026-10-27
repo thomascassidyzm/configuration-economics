@@ -6,6 +6,7 @@
 import { marked } from 'marked';
 import { VERSION, BUILD } from '../lib/version';
 import seedRaw from '../content/seed.md?raw';
+import PhoneNav from '../components/PhoneNav.astro';
 
 const seedHtml = marked.parse(seedRaw, { async: false }) as string;
 // What gets pasted: the brief from "What this is" down, without the page's own
@@ -63,22 +64,9 @@ const pasteText = '# The CE Seed, v1\n\n' + seedRaw.slice(seedRaw.indexOf('## Wh
       .trial { color:var(--text-secondary); font-size:0.9375rem; }
       .trial p { margin-bottom:1rem; }
       .trial strong { color:var(--text-primary); font-weight:500; }
-      /* Phones: one-row nav without version/build; two rows below 380px. */
-      @media (max-width:640px) {
-        .top-nav { gap:1rem; padding:0 1rem; }
-        .nav-home { font-size:1rem; white-space:nowrap; }
-        .nav-right { flex-wrap:nowrap; gap:0.85rem; }
-        .nav-link { font-size:0.8125rem; }
-        .nav-version, .nav-build { display:none; }
-        main { padding:88px 1.25rem 4rem; }
-        .seed { padding:1.25rem 1.1rem; }
-      }
-      @media (max-width:380px) {
-        .top-nav { height:auto; flex-wrap:wrap; row-gap:0.15rem; padding:0.5rem 1rem; }
-        .nav-right { margin-left:0; width:100%; }
-        main { padding-top:104px; }
-      }
+      @media (max-width:640px) { main { padding-left:1.25rem; padding-right:1.25rem; } .seed { padding:1.25rem 1.1rem; } }
     </style>
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

@@ -13,6 +13,7 @@ import { PROPOSITIONS } from '../content/propositions';
 import { getStatusHistory, hasClimbed } from '../content/status-history';
 import { VERSION_HISTORY } from '../content/version-history';
 import { VERSION, BUILD } from '../lib/version';
+import PhoneNav from '../components/PhoneNav.astro';
 
 // Map version → date for axis labelling.
 const versionDate: Record<string, string> = {};
@@ -180,6 +181,7 @@ const formingNow = PROPOSITIONS.filter(p => p.epistemicStatus === 'forming');
       .swatch { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
       a.chip:hover { background: rgba(255,255,255,0.05); }
     </style>
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

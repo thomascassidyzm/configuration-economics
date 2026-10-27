@@ -8,6 +8,7 @@
 
 import { VERSION, BUILD } from '../lib/version';
 import GuidePanel from '../components/GuidePanel.astro';
+import PhoneNav from '../components/PhoneNav.astro';
 ---
 
 <html lang="en">
@@ -24,6 +25,7 @@ import GuidePanel from '../components/GuidePanel.astro';
       window.currentSectionId = 'objections';
       window.currentSection = 'Objections';
     </script>
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

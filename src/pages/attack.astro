@@ -14,6 +14,7 @@
 import { VERSION, BUILD } from '../lib/version';
 import { getPropositionById, getNeighbourhood } from '../content/propositions';
 import GuidePanel from '../components/GuidePanel.astro';
+import PhoneNav from '../components/PhoneNav.astro';
 
 // The three worked cases, one per epistemic-status tier. The premise text is
 // pulled from canon by index so it stays in sync with propositions.ts.
@@ -50,6 +51,7 @@ const measure = caseData('option-space-measurability', 2);
       window.currentMode = 'attack';
       window.currentSection = 'Attack a Premise';
     </script>
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

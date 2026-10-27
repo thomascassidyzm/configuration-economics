@@ -8,6 +8,7 @@
 import { marked } from 'marked';
 import { VERSION, BUILD } from '../../lib/version';
 import GuidePanel from '../../components/GuidePanel.astro';
+import PhoneNav from '../../components/PhoneNav.astro';
 
 export const prerender = true;
 
@@ -41,6 +42,7 @@ const { title, html, slug } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

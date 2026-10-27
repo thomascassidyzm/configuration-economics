@@ -5,6 +5,7 @@
 import GuidePanel from '../../components/GuidePanel.astro';
 import { ESSAY_META, SECTIONS as SECTION_META } from '../../content/essay-1/config';
 import { SECTIONS as SECTION_CONTENT } from '../../content/essay-1/sections';
+import PhoneNav from '../../components/PhoneNav.astro';
 
 // Simple markdown parser for content
 function parseMarkdown(text: string): string {
@@ -40,6 +41,7 @@ function parseMarkdown(text: string): string {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

@@ -1,0 +1,32 @@
+---
+// Shared phone fix for the top nav. Every page carries its own inline
+// <nav class="top-nav"> with 3-7 links; on a phone they overflowed the 56px
+// fixed bar. Below 640px the bar sits in the flow (sticky), the brand takes
+// row one and the links scroll sideways on row two; version/build are hidden.
+// Rules are global and !important because each page styles .top-nav itself.
+---
+<style is:global>
+  @media (max-width: 640px) {
+    .top-nav {
+      position: sticky !important;
+      height: auto !important;
+      flex-wrap: wrap !important;
+      gap: 0 !important;
+      padding: 0.55rem 1rem 0.35rem !important;
+    }
+    .top-nav .nav-home { font-size: 1rem !important; white-space: nowrap; width: 100%; }
+    .top-nav .nav-right {
+      flex-wrap: nowrap !important;
+      margin-left: 0 !important;
+      width: 100%;
+      gap: 1.1rem !important;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 0.45rem 0;
+    }
+    .top-nav .nav-right::-webkit-scrollbar { display: none; }
+    .top-nav .nav-link { font-size: 0.875rem !important; white-space: nowrap; flex: none; }
+    .top-nav .nav-version, .top-nav .nav-build { display: none !important; }
+    main { padding-top: 1.5rem !important; }
+  }
+</style>

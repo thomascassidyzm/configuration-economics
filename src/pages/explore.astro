@@ -6,6 +6,7 @@ import { PROPOSITIONS, getLinkedPropositions, type EpistemicStatus } from '../co
 import { VERSION, BUILD } from '../lib/version';
 import GuidePanel from '../components/GuidePanel.astro';
 import StatusRibbon from '../components/StatusRibbon.astro';
+import PhoneNav from '../components/PhoneNav.astro';
 
 // Read optional status filter from URL (?status=contested etc.)
 const VALID_STATUSES: EpistemicStatus[] = ['forming', 'established', 'derived', 'contested', 'open'];
@@ -35,6 +36,7 @@ const counts = {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

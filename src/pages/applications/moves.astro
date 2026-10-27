@@ -9,6 +9,7 @@
 
 import { VERSION, BUILD } from '../../lib/version';
 import GuidePanel from '../../components/GuidePanel.astro';
+import PhoneNav from '../../components/PhoneNav.astro';
 
 type Verdict = 'degrading' | 'preserving' | 'expanding' | 'ambiguous';
 
@@ -133,6 +134,7 @@ const verdictLabel: Record<Verdict, string> = {
       window.currentSectionId = 'applications';
       window.currentSection = 'Applications · Moves';
     </script>
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">

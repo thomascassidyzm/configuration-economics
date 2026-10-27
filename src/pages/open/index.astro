@@ -3,6 +3,7 @@
 // evaluations, the method, the register. Published as it happens.
 import { VERSION, BUILD } from '../../lib/version';
 import GuidePanel from '../../components/GuidePanel.astro';
+import PhoneNav from '../../components/PhoneNav.astro';
 
 const META: { slug: string; title: string; kind: string; blurb: string }[] = [
   { slug: 'NOTES-razor-blade-case', title: 'The razor-blade case — why possibility space is measured trajectory-long', kind: 'Canonical node',
@@ -93,6 +94,7 @@ const META: { slug: string; title: string; kind: string; blurb: string }[] = [
       .doc-title { font-family:var(--font-display); font-size:1.4rem; color:var(--text-primary); margin:0.2rem 0 0.4rem; }
       .doc-blurb { color:var(--text-secondary); font-size:0.9rem; margin:0; }
     </style>
+      <PhoneNav />
   </head>
   <body>
     <nav class="top-nav">
