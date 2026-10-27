@@ -6,3 +6,4 @@
 - **Register default (no ruling existed):** the Seed speaks as nobody, as pure direction, like the room charter. Opus's seat named this as Tom's taste call; this is the default until he says otherwise.
 - **Trial:** pasted cold into Opus (schools), Sonnet (Ogwen warm homes) and Astra (self-driving mobility). All three returned arrangements CE did not contain, so the one test passed and the Seed was not revised. Each proposed a premise 13; they are shown on `/seed` as first forks and not adopted.
 - **Open for Tom:** Astra's fork challenges ruling (1) directly (accumulating reversible harms as a second guardrail). Kept as a fork, because the ruling is his.
+- **Adopted (job #859):** Tom took Astra's fork as "whoever backs an experiment carries its costs", added to premise 12 (consent). It does not add a second guardrail: irreversible loss stays the only veto. Marked adopted on `/seed`.

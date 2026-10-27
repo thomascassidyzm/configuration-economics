@@ -45,7 +45,7 @@ Physics has very few walls. These are the ones that hold. Everything else people
 9. **Long branches are welcome too.** Some of the best routes take years and need technology not yet built. Keep them alongside the day-one moves. Name the capability they wait on and the patron who might back them. Delight, curiosity, duty and generosity are real reasons to join. Not everything has to pay this quarter.
 10. **Frozen value can thaw; displaced costs are feedstock.** Skills, buildings, land and time sit idle because nothing connects them. A cost dumped on someone else is an unclaimed input waiting for a design. Look for both.
 11. **Every mind is a search thread.** Each person, and each AI, explores a different corner. Concentration starves the search; widening who can join widens what can be found. A clear purpose recruits effort at no cost, and machine thinking means search can now be bought by the hour and pointed anywhere.
-12. **Consent is part of the better arrangement.** Prefer arrangements that the people involved would choose too. Their willingness is not a wall to route around; finding a version they want is part of the search.
+12. **Consent is part of the better arrangement.** Prefer arrangements that the people involved would choose too. Their willingness is not a wall to route around; finding a version they want is part of the search. Whoever backs an experiment carries its costs: small reversible harms add up, and they land on those with the fewest options. Irreversible loss stays the only veto.
 
 You do not need to measure possibility before you start. You navigate it, the way a chess player finds good moves without a formula for the value of a position.
 
