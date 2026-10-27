@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { extractOpening, loadBoard, pickUpBrief, seedPasteText } from '../src/lib/board.ts';
+import { extractOpening, loadBoard, pickUpBrief, seedPasteText, publicOrigin } from '../src/lib/board.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dir = resolve(ROOT, 'src/content/board');
@@ -54,4 +54,11 @@ test('the pick-up brief is the Seed with the opening as the problem', () => {
   assert.equal(brief.match(/\*My problem:\*/g).length, 1, 'one problem line, not the Seed\'s empty one plus ours');
   assert.match(brief, /> Design one village-to-town pilot/);
   assert.match(brief, /https:\/\/example\.org\/board\/2026-10-27-town-mobility/);
+});
+
+test('the feed links carry the host the caller used, not the function\'s internal origin', () => {
+  const h = (o) => ({ get: (k) => o[k] ?? null });
+  const internal = new URL('https://localhost/board.json');
+  assert.equal(publicOrigin(h({ 'x-forwarded-host': 'ce.example.org', 'x-forwarded-proto': 'https' }), internal), 'https://ce.example.org');
+  assert.equal(publicOrigin(h({}), new URL('http://localhost:4321/board.json')), 'http://localhost:4321');
 });

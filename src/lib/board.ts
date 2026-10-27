@@ -132,3 +132,12 @@ export function pickUpBrief(run: BoardRun, seedText: string, site: string): stri
     'Carry the opening as far as you can. Return the four parts the Seed asks for, and leave your own opening for the next person.',
   ].join('\n');
 }
+
+// The public origin a request came in on. Behind Vercel the function sees an
+// internal origin (https://localhost), so the forwarded host wins.
+export function publicOrigin(headers: { get(name: string): string | null }, url: URL): string {
+  const host = headers.get('x-forwarded-host') ?? headers.get('host');
+  if (!host) return url.origin;
+  const proto = headers.get('x-forwarded-proto') ?? url.protocol.replace(':', '');
+  return `${proto}://${host.split(',')[0].trim()}`;
+}
