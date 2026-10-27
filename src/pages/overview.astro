@@ -9,6 +9,7 @@ import { SECTION_PROPOSITIONS } from '../lib/guide-prompt';
 import { VERSION, BUILD } from '../lib/version';
 import GuidePanel from '../components/GuidePanel.astro';
 import PhoneNav from '../components/PhoneNav.astro';
+import ScopeMap from '../components/ScopeMap.astro';
 
 function getProp(id: string) {
   return PROPOSITIONS.find(p => p.id === id);
@@ -41,8 +42,10 @@ const crossCutting = PROPOSITIONS.filter(p => !mappedIds.has(p.id));
     <nav class="top-nav">
       <a href="/" class="nav-home">Configuration Economics</a>
       <div class="nav-right">
-        <a href="/essay" class="nav-link">Essay</a>
-        <a href="/explore" class="nav-link">Explore</a>
+        <a href="/seed" class="nav-link">Seed</a>
+        <a href="/board" class="nav-link">Board</a>
+        <a href="/explore" class="nav-link">Propositions</a>
+        <a href="/open" class="nav-link">Work</a>
         <span class="nav-version">{VERSION}</span>
         <span class="nav-build">build {BUILD}</span>
       </div>
@@ -50,6 +53,7 @@ const crossCutting = PROPOSITIONS.filter(p => !mappedIds.has(p.id));
 
     <main>
       <header class="page-header">
+        <p class="area-eyebrow"><a href="/">Configuration Economics</a> · Read the argument</p>
         <h1>Overview</h1>
         <p class="subtitle">The whole structure. Core claims, in the order the essay develops them.</p>
         <p class="note">Each section of the essay is grounded by one or more propositions. Click a proposition to see its full logic on the Explore page.</p>
@@ -113,7 +117,7 @@ const crossCutting = PROPOSITIONS.filter(p => !mappedIds.has(p.id));
       )}
 
       <footer class="page-footer">
-        <p>Read the full essay at <a href="/essay">/essay</a>, browse every proposition with its full logic at <a href="/explore">/explore</a>, see the framework operating on real cases at <a href="/applications/moves">/applications/moves</a>, sit at the open boundary at <a href="/research-frontier">/research-frontier</a>, see the predecessors at <a href="/lineage">/lineage</a>, engage the strongest attacks at <a href="/objections">/objections</a>, or take any single premise apart at <a href="/attack">/attack</a>.</p>
+        <ScopeMap compact current="/overview" />
       </footer>
     </main>
 
@@ -216,6 +220,24 @@ const crossCutting = PROPOSITIONS.filter(p => !mappedIds.has(p.id));
 
       .page-header {
         margin-bottom: 4rem;
+      }
+
+      .area-eyebrow {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+      }
+
+      .area-eyebrow a {
+        color: var(--text-muted);
+        text-decoration: none;
+      }
+
+      .area-eyebrow a:hover {
+        color: var(--accent);
       }
 
       .page-header h1 {

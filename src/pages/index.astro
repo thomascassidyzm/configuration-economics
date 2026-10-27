@@ -1,6 +1,12 @@
 ---
 // Configuration Economics - Living Epistemic Work
-// Index page with navigation to concept explorations
+// The front door: the whole scope in one view. Seed and Board first (the live
+// edge, for a visitor who wants to do something with the work), then every
+// surface grouped by what it is for. The map itself is ScopeMap, shared with
+// the Overview so the front door and the page after it stay in step.
+import { VERSION, BUILD } from '../lib/version';
+import PhoneNav from '../components/PhoneNav.astro';
+import ScopeMap from '../components/ScopeMap.astro';
 ---
 
 <html lang="en">
@@ -13,10 +19,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <PhoneNav />
     <style>
       :root {
         --void: #0a0a0c;
-        --depth-1: #12121a;
         --text-primary: #e8e8f0;
         --text-secondary: #a0a0b8;
         --text-muted: #606080;
@@ -25,140 +31,61 @@
         --font-body: 'Sora', sans-serif;
         --font-mono: 'JetBrains Mono', monospace;
       }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: var(--font-body); background: var(--void); color: var(--text-primary); min-height: 100vh; line-height: 1.6; }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      .top-nav { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,12,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:2rem; padding:0 2rem; z-index:100; }
+      .nav-home { font-family:var(--font-display); font-size:1.125rem; color:var(--text-primary); text-decoration:none; }
+      .nav-link { font-size:0.875rem; color:var(--text-secondary); text-decoration:none; }
+      .nav-link:hover { color:var(--accent); }
+      .nav-right { display:flex; align-items:center; gap:1rem; margin-left:auto; flex-wrap:wrap; }
+      .nav-version { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent); }
+      .nav-build { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); opacity:0.7; }
 
-      body {
-        font-family: var(--font-body);
-        background: var(--void);
-        color: var(--text-primary);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-      }
+      main { max-width: 1080px; margin: 0 auto; padding: 120px 2rem 5rem; }
+      .hero { max-width: 640px; margin-bottom: 3rem; }
+      h1 { font-family: var(--font-display); font-size: 3rem; font-weight: 300; line-height: 1.1; margin-bottom: 0.5rem; }
+      .subtitle { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.75rem; }
+      .claim { font-family: var(--font-display); font-size: 1.45rem; font-style: italic; color: var(--text-primary); line-height: 1.4; margin-bottom: 1.25rem; }
+      .note { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; }
 
-      .container {
-        max-width: 600px;
-        text-align: center;
-      }
+      .side-note { font-size: 0.8125rem; color: var(--text-muted); line-height: 1.6; max-width: 560px; margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.06); }
 
-      h1 {
-        font-family: var(--font-display);
-        font-size: 3rem;
-        font-weight: 300;
-        margin-bottom: 0.5rem;
-      }
-
-      .subtitle {
-        font-size: 0.875rem;
-        color: var(--text-muted);
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        margin-bottom: 3rem;
-      }
-
-      .status {
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin-bottom: 3rem;
-        padding: 0.5rem 1rem;
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 4px;
-        display: inline-block;
-      }
-
-      .links {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-      }
-
-      a.secondary {
-        border: none;
-        padding: 0;
-        font-size: 0.875rem;
-        color: var(--text-muted);
-        letter-spacing: 0.02em;
-        display: inline-block;
-        margin-bottom: 3rem;
-      }
-
-      a.secondary:hover {
-        border: none;
-        transform: none;
-        color: var(--text-secondary);
-      }
-
-      a {
-        color: var(--text-secondary);
-        text-decoration: none;
-        padding: 1rem 2rem;
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 8px;
-        transition: all 0.3s ease;
-      }
-
-      a:hover {
-        border-color: var(--accent);
-        color: var(--text-primary);
-        transform: translateY(-2px);
-      }
-
-      a.primary-link {
-        border-color: var(--accent);
-        background: rgba(74, 158, 255, 0.08);
-      }
-
-      a.primary-link:hover {
-        background: rgba(74, 158, 255, 0.15);
-      }
-
-      .note {
-        font-size: 0.875rem;
-        color: var(--text-muted);
-        line-height: 1.6;
-        max-width: 500px;
-      }
-
-      .side-note {
-        font-size: 0.8125rem;
-        color: var(--text-muted);
-        line-height: 1.6;
-        max-width: 500px;
-        margin: 2.5rem auto 0;
+      @media (max-width: 640px) {
+        main { padding-left: 1.25rem; padding-right: 1.25rem; padding-bottom: 3.5rem; }
+        h1 { font-size: 2.4rem; }
+        .claim { font-size: 1.25rem; }
+        .hero { margin-bottom: 2.25rem; }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Configuration Economics</h1>
-      <p class="subtitle">A Living Epistemic Work</p>
-
-      <span class="status">Development Preview</span>
-
-      <div class="links">
-        <a href="/format" class="primary-link">Enter Configuration Economics</a>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/seed" class="nav-link">Seed</a>
+        <a href="/board" class="nav-link">Board</a>
+        <a href="/explore" class="nav-link">Propositions</a>
+        <a href="/open" class="nav-link">Work</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
       </div>
+    </nav>
+    <main>
+      <header class="hero">
+        <h1>Configuration Economics</h1>
+        <p class="subtitle">A Living Epistemic Work</p>
+        <p class="claim">Value is about what enables future possibilities, not what gets consumed.</p>
+        <p class="note">
+          A living epistemic work where content can be read at multiple resolutions,
+          each claim carries its epistemic status, and an embedded guide helps you
+          think through the framework at your own depth.
+        </p>
+      </header>
 
-      <a href="/essay" class="secondary">or read Essay 1 directly</a>
-      <a href="/world-computer" class="secondary">or watch the room run — minds working a question in public, append-only</a>
-
-      <p class="note">
-        A living epistemic work where content can be read at multiple resolutions,
-        each claim carries its epistemic status, and an embedded guide helps you
-        think through the framework at your own depth.
-      </p>
+      <ScopeMap />
 
       <p class="side-note">Configuration Economics is my major project for 2026. After this year I'll keep it ticking along, and I hope some of you will come and share the interest.</p>
-    </div>
+    </main>
   </body>
 </html>

@@ -1,0 +1,158 @@
+---
+// The whole scope of the work in one view: the two pages you can DO something
+// with (Seed, Board), then every other surface grouped into three areas.
+// Shared by the front door (full) and the Overview (compact, as "where next")
+// so the two pages name the same areas in the same order and stay in step.
+// Every one-liner is the page's own subtitle or lede, quoted — change a page's
+// line and change it here.
+interface Props {
+  compact?: boolean;
+  current?: string;
+}
+const { compact = false, current } = Astro.props;
+
+const USE = [
+  { href: '/seed', title: 'The Seed', line: 'One brief you paste into your own AI.' },
+  { href: '/board', title: 'The Open Board', line: 'Unfinished possibilities, left on purpose.' },
+];
+
+const AREAS = [
+  {
+    name: 'Read the argument',
+    pages: [
+      { href: '/overview', title: 'Overview', line: 'The whole structure. Core claims, in the order the essay develops them.' },
+      { href: '/essay', title: 'Essay', line: 'Value under Physical Constraint: A Framework for Economic Accounting under Thermodynamic Limits.' },
+      { href: '/explore', title: 'Propositions', line: 'Each node is self-contained and meaningful in isolation.' },
+      { href: '/canon', title: 'Canonical nodes', line: 'One canonical statement per load-bearing idea.' },
+    ],
+  },
+  {
+    name: 'Test it',
+    pages: [
+      { href: '/objections', title: 'Objections', line: 'The strongest attacks, and where this work answers them.' },
+      { href: '/attack', title: 'Attack a Premise', line: 'A claim is not a monolith. Pick it apart at the joint.' },
+      { href: '/lineage', title: 'Lineage', line: 'Predecessors, debts, and where this work adds something.' },
+      { href: '/applications/moves', title: 'Moves', line: 'The framework, in operation.' },
+      { href: '/research-frontier', title: 'Research Frontier', line: "Where the work's current thinking ends. Open questions and live disagreements." },
+    ],
+  },
+  {
+    name: 'Watch it move',
+    pages: [
+      { href: '/open', title: 'Open', line: 'The work in the open.' },
+      { href: '/motion', title: 'Motion', line: 'The canon does not arrive finished. Watch it move.' },
+      { href: '/world-computer', title: 'The world computer', line: 'A room that runs.' },
+      { href: '/method', title: 'Method', line: 'How proposals and artefacts are conceived and tested here.' },
+      { href: '/practice', title: 'Practice', line: 'How this work tries to embody the structure it describes.' },
+    ],
+  },
+];
+
+const ALSO = [
+  { href: '/format', title: 'The format' },
+  { href: '/polychess', title: 'Polychess' },
+  { href: '/changelog', title: 'Changelog' },
+];
+---
+
+<div class:list={['scope', { compact }]}>
+  <section class="scope-use" aria-label="Use it">
+    <h2 class="scope-area">Use it</h2>
+    <div class="use-cards">
+      {USE.map(p => (
+        <a class:list={['use-card', { here: p.href === current }]} href={p.href}>
+          <span class="use-title">{p.title}</span>
+          <span class="use-line">{p.line}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <div class="scope-areas">
+    {AREAS.map(a => (
+      <section class="scope-group" aria-label={a.name}>
+        <h2 class="scope-area">{a.name}</h2>
+        <ul>
+          {a.pages.map(p => (
+            <li>
+              <a class:list={['scope-link', { here: p.href === current }]} href={p.href}>
+                <span class="scope-title">{p.title}</span>
+                {!compact && <span class="scope-line">{p.line}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <p class="scope-also">
+    {ALSO.map((p, i) => (<>{i > 0 && <span class="dot">·</span>}<a href={p.href}>{p.title}</a></>))}
+  </p>
+</div>
+
+<style>
+  .scope { text-align: left; }
+  .scope-area {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #606080;
+    margin: 0 0 0.9rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .use-cards { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
+  @media (min-width: 640px) { .use-cards { grid-template-columns: 1fr 1fr; } }
+  .use-card {
+    display: block;
+    text-decoration: none;
+    border: 1px solid #4a9eff;
+    background: rgba(74, 158, 255, 0.07);
+    border-radius: 8px;
+    padding: 1.15rem 1.3rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .use-card:hover { background: rgba(74, 158, 255, 0.14); transform: translateY(-2px); }
+  .use-title {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #e8e8f0;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+  }
+  .use-line { display: block; font-size: 0.9rem; color: #a0a0b8; line-height: 1.5; }
+
+  .scope-areas { display: grid; grid-template-columns: 1fr; gap: 2.25rem; margin-top: 2.75rem; }
+  @media (min-width: 900px) { .scope-areas { grid-template-columns: repeat(3, 1fr); gap: 2rem; } }
+  .scope-group ul { list-style: none; margin: 0; padding: 0; }
+  .scope-group li { margin: 0 0 0.85rem; }
+  .scope-link { display: block; text-decoration: none; }
+  .scope-title {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    color: #e8e8f0;
+    line-height: 1.25;
+    transition: color 0.15s ease;
+  }
+  .scope-line { display: block; font-size: 0.82rem; color: #a0a0b8; line-height: 1.5; margin-top: 0.1rem; }
+  .scope-link:hover .scope-title { color: #4a9eff; }
+  .here .scope-title, .use-card.here .use-title { color: #4a9eff; }
+
+  .scope-also { margin-top: 2.25rem; font-size: 0.82rem; color: #606080; }
+  .scope-also a { color: #a0a0b8; text-decoration: none; }
+  .scope-also a:hover { color: #4a9eff; }
+  .scope-also .dot { margin: 0 0.6rem; }
+
+  /* Compact: Overview's foot. Same areas, titles only, tighter. */
+  .compact .use-card { padding: 0.85rem 1.1rem; }
+  .compact .use-title { font-size: 1.3rem; }
+  .compact .scope-areas { margin-top: 2rem; gap: 1.75rem; }
+  .compact .scope-group li { margin-bottom: 0.45rem; }
+  .compact .scope-title { font-size: 1.1rem; }
+</style>
