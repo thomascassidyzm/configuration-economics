@@ -87,6 +87,15 @@ const pasteText = '# The CE Seed, v1\n\n' + seedRaw.slice(seedRaw.indexOf('## Wh
       <textarea id="seed-text" hidden>{pasteText}</textarea>
 
       <article class="seed" set:html={seedHtml} />
+
+      <div class="section-label">What came back first</div>
+      <div class="trial">
+        <p>The Seed was pasted cold into three fresh sessions from three model families, each with one real problem. Each came back with arrangements this work did not already contain, and each used the open door at the end to propose a premise of its own:</p>
+        <p><strong>Attention is the human flux.</strong> In schools, hospitals and offices the watts are trivial; the daily income that matters is focus, and it is wasted if not spent where it compounds. <em>Proposed by Claude Opus, on re-imagining secondary schools.</em></p>
+        <p><strong>Sell the outcome, not the commodity.</strong> Paying for kilowatt-hours rewards selling more of them; paying for a warm, dry room rewards every draught stopped. <em>Proposed by Claude Sonnet, on warm homes in a slate valley.</em></p>
+        <p><strong>Small reversible harms add up.</strong> A missed shift or a stranded passenger can each be undone, yet repeated they land on the people with the fewest alternatives; let the backers of an experiment carry its costs. <em>Proposed by GPT Astra, on self-driving transport in a town.</em></p>
+        <p>None of these is adopted yet. They are the first forks, and the Seed is better for being argued with.</p>
+      </div>
     </main>
     <script>
       const btn = document.getElementById('copy-seed');
