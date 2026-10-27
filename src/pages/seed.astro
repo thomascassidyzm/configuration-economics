@@ -7,6 +7,7 @@ import { marked } from 'marked';
 import { VERSION, BUILD } from '../lib/version';
 import seedRaw from '../content/seed.md?raw';
 import PhoneNav from '../components/PhoneNav.astro';
+import GuidePanel from '../components/GuidePanel.astro';
 
 const seedHtml = marked.parse(seedRaw, { async: false }) as string;
 // What gets pasted: the brief from "What this is" down, without the page's own
@@ -23,6 +24,10 @@ const pasteText = '# The CE Seed, v1\n\n' + seedRaw.slice(seedRaw.indexOf('## Wh
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <script is:inline>
+      window.currentMode = 'essay';
+      window.currentSection = 'The Seed';
+    </script>
     <style is:global>
       :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#606080; --accent:#4a9eff; --status-open:#3fb8c4; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace; }
       * { margin:0; padding:0; box-sizing:border-box; }
@@ -35,6 +40,7 @@ const pasteText = '# The CE Seed, v1\n\n' + seedRaw.slice(seedRaw.indexOf('## Wh
       .nav-version { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent); }
       .nav-build { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); opacity:0.7; }
       main { max-width:820px; margin:0 auto; padding:100px 2rem 6rem; }
+      @media (min-width:1101px) { main { margin-right:460px; } }
             h1 { font-family:var(--font-display); font-weight:500; font-size:2.6rem; margin:0 0 0.5rem; }
       .lede { color:var(--text-secondary); border-left:2px solid rgba(63,184,196,0.4); padding-left:1.2rem; margin:0 0 3rem; }
       .lede strong { color:var(--text-primary); font-weight:400; }
@@ -100,6 +106,7 @@ const pasteText = '# The CE Seed, v1\n\n' + seedRaw.slice(seedRaw.indexOf('## Wh
         <p>The other two are not adopted yet. They are first forks, and the Seed is better for being argued with.</p>
       </div>
     </main>
+    <GuidePanel currentSection="The Seed" epistemicStatus="forming" />
     <script>
       const btn = document.getElementById('copy-seed');
       const note = document.getElementById('copy-note');
