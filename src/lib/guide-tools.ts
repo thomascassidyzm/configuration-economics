@@ -42,6 +42,14 @@ const FRONTIER_DOCS = import.meta.glob('../content/frontier/*.md', {
   eager: true,
 }) as Record<string, string>;
 
+// The Seed (/seed): the same bytes the page renders and the copy button hands
+// over, so a premise changed in seed.md reaches Alexander with no edit here.
+const SEED_DOC = import.meta.glob('../content/seed.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
 // ---------------------------------------------------------------------------
 // Bounds. All three sites use the same numbers.
 // ---------------------------------------------------------------------------
@@ -82,6 +90,7 @@ function toDocEntries(mods: Record<string, string>): DocEntry[] {
 
 const OPEN_ENTRIES = toDocEntries(OPEN_DOCS);
 const FRONTIER_ENTRIES = toDocEntries(FRONTIER_DOCS);
+const SEED_ENTRIES = toDocEntries(SEED_DOC);
 
 function normaliseKey(raw: string): string {
   return String(raw ?? '')
@@ -105,7 +114,7 @@ for (const prop of PROPOSITIONS) {
 }
 
 const DOC_KEYS = new Map<string, DocEntry>();
-for (const entry of [...FRONTIER_ENTRIES, ...OPEN_ENTRIES]) {
+for (const entry of [...SEED_ENTRIES, ...FRONTIER_ENTRIES, ...OPEN_ENTRIES]) {
   DOC_KEYS.set(normaliseKey(entry.slug), entry);
 }
 
@@ -135,6 +144,11 @@ export function buildSiteIndex(): string {
   out += `\n### Propositions (${PROPOSITIONS.length}) — read any by its id\n\n`;
   out += PROPOSITIONS.map((p) => `\`${p.id}\` [${p.epistemicStatus}]`).join(', ') + '\n';
 
+  if (SEED_ENTRIES.length > 0) {
+    out += `\n### The Seed (\`/seed\` — the portable brief)\n\n`;
+    for (const d of SEED_ENTRIES) out += `- \`${d.slug}\` — ${d.title}\n`;
+  }
+
   if (FRONTIER_ENTRIES.length > 0) {
     out += `\n### Research-frontier documents\n\n`;
     for (const d of FRONTIER_ENTRIES) out += `- \`${d.slug}\` — ${d.title}\n`;
@@ -152,7 +166,7 @@ function buildShortIndex(): string {
   return [
     `Essay sections: ${SECTION_META.map((s) => `§${s.number} \`${s.id}\``).join(', ')} (plus \`essay-1\` for the overview)`,
     `Propositions: ${PROPOSITIONS.map((p) => `\`${p.id}\``).join(', ')}`,
-    `Documents: ${[...FRONTIER_ENTRIES, ...OPEN_ENTRIES].map((d) => `\`${d.slug}\``).join(', ')}`,
+    `Documents: ${[...SEED_ENTRIES, ...FRONTIER_ENTRIES, ...OPEN_ENTRIES].map((d) => `\`${d.slug}\``).join(', ')}`,
   ].join('\n\n');
 }
 
