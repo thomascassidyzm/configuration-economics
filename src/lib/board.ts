@@ -69,17 +69,22 @@ export function parseFrontmatter(raw: string): { meta: Record<string, string>; b
 }
 
 // The Seed's fourth return part. Answers mark it as a heading
-// ("### 4. One opening for the next person") or as a bold run-in
-// ("**4. One opening for the next person.** text…"); either way the part runs
-// until the next heading, the next numbered bold part, or a rule. The first
-// occurrence wins: a long answer followed by its own short form says the same
-// thing twice.
+// ("### 4. One opening for the next person"), as a bold run-in
+// ("**4. One opening for the next person.** text…"), or as a plain numbered
+// line with the label in bold ("4. **One opening for the next person.** text…",
+// which is how most models write a numbered list); either way the part runs
+// until the next heading, the next numbered bold part in any of those shapes,
+// or a rule. The first occurrence wins: a long answer followed by its own short
+// form says the same thing twice.
 const OPENING = /one opening for the next person/i;
 const WAITS = /waits on a person/i;
+// A bold label, optionally led by a list bullet or a list number: "**x**",
+// "- **x**", "4. **x**".
+const BOLD_LABEL = /^(?:(?:[-*]|\d+\.)\s+)?\*\*[^*]*\*\*:?\s*(.*)$/;
 const isPart = (l: string) => /^(#{1,6}\s|\*\*|\d+\.\s)/.test(l.trim());
 const isOpeningMarker = (l: string) => OPENING.test(l) && isPart(l);
-const isWaitsMarker = (l: string) => WAITS.test(l) && /^(#{1,6}\s|\*\*|[-*]\s+\*\*)/.test(l.trim());
-const isStop = (t: string) => /^#{1,6}\s/.test(t) || /^---+$/.test(t) || /^\*\*\d+\.\s/.test(t);
+const isWaitsMarker = (l: string) => WAITS.test(l) && /^(#{1,6}\s|\*\*|(?:[-*]|\d+\.)\s+\*\*)/.test(l.trim());
+const isStop = (t: string) => /^#{1,6}\s/.test(t) || /^---+$/.test(t) || /^\*\*\d+\.\s/.test(t) || /^\d+\.\s+\*\*/.test(t);
 
 // Reads the text of one labelled part: a bold run-in carries its text on the
 // same line after the label; either way the part runs until a heading, a
@@ -87,7 +92,7 @@ const isStop = (t: string) => /^#{1,6}\s/.test(t) || /^---+$/.test(t) || /^\*\*\
 function readPart(lines: string[], start: number, label: RegExp, stopAt: (t: string) => boolean): string | null {
   const first = lines[start].trim();
   const out: string[] = [];
-  const runIn = first.match(/^(?:[-*]\s+)?\*\*[^*]*\*\*:?\s*(.*)$/);
+  const runIn = first.match(BOLD_LABEL);
   if (runIn && runIn[1] && label.test(first)) out.push(runIn[1]);
   for (let i = start + 1; i < lines.length; i++) {
     const t = lines[i].trim();

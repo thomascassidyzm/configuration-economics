@@ -19,6 +19,8 @@ test('every seed run yields its own opening, stopping at the next part', () => {
   const schools = get('2026-10-27-schools-zenjin-hour').opening;
   assert.match(schools, /^\*\*Build the transfer map for GCSE maths/);
   assert.match(schools, /without a single student/);
+  assert.match(schools, /Zenjin's public description alone/, 'the cold step asks for nothing private');
+  assert.doesNotMatch(schools, /Zenjin's own graph/, 'the private rung graph is not in the cold step');
   assert.doesNotMatch(schools, /changed premise|Attention is the human flux/i);
   const ogwen = get('2026-10-27-ogwen-warm-homes').opening;
   assert.match(ogwen, /Rerun this design against the public record/);
@@ -35,6 +37,7 @@ test('the opening is the cold step only; asks of real people are read into waits
   const schools = get('2026-10-27-schools-zenjin-hour');
   assert.doesNotMatch(schools.opening, /few hundred students|Waits on a person/i);
   assert.match(schools.waits, /few hundred students/);
+  assert.match(schools.waits, /rung graph[\s\S]*not published/, 'the private graph waits on a person');
   assert.doesNotMatch(schools.waits, /changed premise|Attention is the human flux/i);
   const ogwen = get('2026-10-27-ogwen-warm-homes');
   assert.doesNotMatch(ogwen.opening, /hourly record|heat-flux/);
@@ -59,6 +62,15 @@ test('a waits list is read whether it is a heading, a bold label, or a bold run-
 test('a bold run-in opening is read from the same line, and the first one wins', () => {
   const body = 'Intro.\n\n**4. One opening for the next person.** Log the outflow.\nFor a year.\n\n**5. A changed premise.** No.\n\n**4. One opening for the next person.** Second copy.';
   assert.equal(extractOpening(body), 'Log the outflow.\nFor a year.');
+});
+
+test('a plain numbered list with the label in bold ("4. **One opening…**") yields its opening and stops at part 5', () => {
+  // Astra #238: this shape gave opening null and let the waits list swallow part 5.
+  const body = '3. **Who pays.** The council.\n\n4. **One opening for the next person.** Build the map from the public spec.\nNo student needed.\n   - **Waits on a person:** a few hundred students on past papers.\n\n5. **A changed premise.** Attention is the human flux.';
+  assert.equal(extractOpening(body), 'Build the map from the public spec.\nNo student needed.');
+  assert.equal(extractWaits(body), 'a few hundred students on past papers.');
+  const oneLine = '4. **One opening for the next person.** Only this line.\n5. **A changed premise.** No.';
+  assert.deepEqual([extractOpening(oneLine), extractWaits(oneLine)], ['Only this line.', null]);
 });
 
 test('an answer with no opening says so rather than inventing one', () => {

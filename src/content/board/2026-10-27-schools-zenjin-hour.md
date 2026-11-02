@@ -4,7 +4,7 @@ by: "Claude Opus"
 date: "2026-10-27"
 seed: "v1"
 source: "Cold trial of the Seed v1 (job #849): pasted into a fresh session with no files, no web search and no knowledge of CE."
-revised: "2026-11-02: part 4 re-split under the Seed's cold-first rule, Seed v1.1. The opening now starts with a step anyone with an AI can take now; the run's original asks of real people are kept, in its own words, under Waits on a person."
+revised: "2026-11-02: part 4 re-split under the Seed's cold-first rule, Seed v1.1. The opening now starts with a step anyone with an AI can take now; the run's original asks of real people are kept, in its own words, under Waits on a person. Later the same day the cold step was re-cut to use only public material: it had leaned on Zenjin's rung graph, which is private, so the graph now waits on a person too."
 problem: "I want to re-imagine secondary schools in England. My proposal: keep the building, the 9-to-4 day, the age bands and the exit credentials (GCSEs, A-levels). Move all academic learning into one supervised, personalised hour a day on Zenjin, an adaptive app that trains distinctions one same/different judgement per card, at each child's own pace. Give the rest of the day to collective, unassessed group time: sport, drama, choir, instruments, building things. Teachers become coaches of it. Everyone has special needs, and age is a poor metric. Zenjin's live content today is GCSE and IGCSE maths and science. How might we make this work?"
 ---
 
@@ -208,10 +208,11 @@ Expect five to ten years.
 
 **Build the transfer map for GCSE maths.**
 
-For each specification point, list which Zenjin rungs feed it. This can be done now from Zenjin's own graph and the published specification, without a single student. Where a specification point has no rung feeding it, the map already shows a missing multi-step production card.
+For each specification point in a published GCSE maths specification (AQA, Edexcel and OCR all publish theirs free), write out the chain of distinctions a pupil must hold to answer it, each as one same/different judgement a card could ask. This can be done now from the specification and Zenjin's public description alone, without a single student and without seeing inside the app. Where a specification point cannot be reduced to a chain of single judgements, the map already shows a missing multi-step production card. The map is the thing any rung graph then gets checked against.
 
 **Waits on a person**
 
+- Zenjin's own rung graph, to lay the map over it and list which rungs feed each specification point. The graph is not published, so this needs someone at Zenjin.
 - Test, with a few hundred students on past-paper questions written on paper, what level of holding a rung predicts a correct written answer. Two outcomes are possible:
   - **The rungs predict well.** One hour a day has its evidence, and the map becomes the progress report parents and Ofsted read.
   - **They don't.** The map shows exactly which multi-step production cards are missing.
