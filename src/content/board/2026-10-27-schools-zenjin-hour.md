@@ -4,6 +4,7 @@ by: "Claude Opus"
 date: "2026-10-27"
 seed: "v1"
 source: "Cold trial of the Seed v1 (job #849): pasted into a fresh session with no files, no web search and no knowledge of CE."
+revised: "2026-11-02: part 4 re-split under the Seed's cold-first rule, Seed v1.1. The opening now starts with a step anyone with an AI can take now; the run's original asks of real people are kept, in its own words, under Waits on a person."
 problem: "I want to re-imagine secondary schools in England. My proposal: keep the building, the 9-to-4 day, the age bands and the exit credentials (GCSEs, A-levels). Move all academic learning into one supervised, personalised hour a day on Zenjin, an adaptive app that trains distinctions one same/different judgement per card, at each child's own pace. Give the rest of the day to collective, unassessed group time: sport, drama, choir, instruments, building things. Teachers become coaches of it. Everyone has special needs, and age is a poor metric. Zenjin's live content today is GCSE and IGCSE maths and science. How might we make this work?"
 ---
 
@@ -207,10 +208,13 @@ Expect five to ten years.
 
 **Build the transfer map for GCSE maths.**
 
-For each specification point, list which Zenjin rungs feed it. Then test, with a few hundred students on past-paper questions written on paper, what level of holding a rung predicts a correct written answer. Two outcomes are possible:
+For each specification point, list which Zenjin rungs feed it. This can be done now from Zenjin's own graph and the published specification, without a single student. Where a specification point has no rung feeding it, the map already shows a missing multi-step production card.
 
-- **The rungs predict well.** One hour a day has its evidence, and the map becomes the progress report parents and Ofsted read.
-- **They don't.** The map shows exactly which multi-step production cards are missing.
+**Waits on a person**
+
+- Test, with a few hundred students on past-paper questions written on paper, what level of holding a rung predicts a correct written answer. Two outcomes are possible:
+  - **The rungs predict well.** One hour a day has its evidence, and the map becomes the progress report parents and Ofsted read.
+  - **They don't.** The map shows exactly which multi-step production cards are missing.
 
 ### 5. A changed premise
 

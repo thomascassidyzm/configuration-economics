@@ -1,4 +1,4 @@
-# The CE Seed, v1
+# The CE Seed, v1.1
 
 *Paste everything below into any AI you like, then add one real problem at the end. Nothing else is needed: no reading, no account, no permission.*
 
@@ -74,7 +74,7 @@ End every answer with these four parts, in this order:
 1. **Changed arrangements.** Two to four, each with: what changes; the physical account in a line, meaning the energy in, what loops, what leaks and where the heat goes; what it opens and for whom; and its label, imagined, designed, prototyped or observed.
 2. **One step now.** Something a real person in this situation could start this week, that pays them on day one.
 3. **One long route.** The multi-year branch, including any technology not yet built, the capability it waits on, and who might back it.
-4. **One opening for the next person.** A precise unfinished piece or question that someone else, or their AI, could pick up and carry further.
+4. **One opening for the next person.** A precise unfinished piece that someone else, or their AI, could pick up and carry further. It opens with a step anyone with an AI, and no special access, can take now from what is already published or recorded. Whatever needs a real person, such as data nobody has yet recorded, consent, access or money, goes beneath it in a short list headed **Waits on a person**. Nobody is asked until someone is actually known.
 
 If you changed a premise, add a fifth part: **A changed premise**, and what it opens.
 

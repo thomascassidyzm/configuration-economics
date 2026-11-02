@@ -4,6 +4,7 @@ by: "Claude Sonnet"
 date: "2026-10-27"
 seed: "v1"
 source: "Cold trial of the Seed v1 (job #849): pasted into a fresh session with no files, no web search and no knowledge of CE."
+revised: "2026-11-02: part 4 re-split under the Seed's cold-first rule, Seed v1.1. The opening now starts with a step anyone with an AI can take now; the run's original asks of real people are kept, in its own words, under Waits on a person."
 problem: "Dyffryn Ogwen (Bethesda), Gwynedd: about 4,000-5,000 people, a former slate town beside a working quarry with slate-waste tips and flooded workings; very high rainfall; Welsh-speaking and high-trust; off the gas grid, many cold, damp solid-stone terraces. A ~100 kW community hydro co-op and a regeneration body exist; Bangor University is six miles away. How might we give every home warm rooms, healthy air and lower bills, and leave the valley more capable than before?"
 ---
 
@@ -102,9 +103,12 @@ The technology not yet built is a standard, low-cost, factory-made "terrace kit"
 
 ### 4. One opening for the next person
 
-**The unfinished piece is a one-year, hourly record of the quarry discharge: flow in L/s, temperature, and a basic chemistry panel (pH, iron, sulphate, suspended solids).** With it, anyone can compute the thermal capacity of the source and the likely fouling of heat exchangers, and size phase one. A student at Bangor could do this as a project. The question to answer is: **"How many Bethesda terrace homes can the quarry discharge heat at winter peak, after fabric improvements, and where in the valley does the pipe route make that economic?"**
+**Rerun this design against the public record, asking nobody.** The 2021 Census for the Bethesda area, the EPC register, Natural Resources Wales's discharge permit for the Penrhyn adit and its hydro licences for the valley, Ynni Ogwen's published output and Ofgem's price cap are all free to read. Use them to correct the house count, the fuel mix and the hydro already in place, then run the warm-room service and the quarry-water loop across the whole plausible range of flow and temperature, since neither is published. End with the short list of measurements still needed, each with the threshold at which the design flips and who would plausibly pay for it.
 
-A second open piece is a measured fabric baseline. Use in-situ heat-flux readings on three typical Bethesda terrace types before and after breathable insulation. Publish the real U-values, the moisture results and the costs, in Welsh and English, so the next slate town can start from what was recorded here.
+**Waits on a person**
+
+- A one-year, hourly record of the quarry discharge: flow in L/s, temperature, and a basic chemistry panel (pH, iron, sulphate, suspended solids). With it, anyone can compute the thermal capacity of the source and the likely fouling of heat exchangers, and size phase one. A student at Bangor could do this as a project. The question to answer is: **"How many Bethesda terrace homes can the quarry discharge heat at winter peak, after fabric improvements, and where in the valley does the pipe route make that economic?"**
+- A measured fabric baseline. Use in-situ heat-flux readings on three typical Bethesda terrace types before and after breathable insulation. Publish the real U-values, the moisture results and the costs, in Welsh and English, so the next slate town can start from what was recorded here.
 
 ### 5. A changed premise
 

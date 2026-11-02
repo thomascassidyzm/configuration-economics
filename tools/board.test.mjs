@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { extractOpening, loadBoard, pickUpBrief, seedPasteText, publicOrigin } from '../src/lib/board.ts';
+import { extractOpening, extractWaits, loadBoard, pickUpBrief, seedPasteText, publicOrigin } from '../src/lib/board.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dir = resolve(ROOT, 'src/content/board');
@@ -18,16 +18,42 @@ test('every seed run yields its own opening, stopping at the next part', () => {
   const get = (id) => runs.find(r => r.id === id);
   const schools = get('2026-10-27-schools-zenjin-hour').opening;
   assert.match(schools, /^\*\*Build the transfer map for GCSE maths/);
-  assert.match(schools, /production cards are missing/);
+  assert.match(schools, /without a single student/);
   assert.doesNotMatch(schools, /changed premise|Attention is the human flux/i);
   const ogwen = get('2026-10-27-ogwen-warm-homes').opening;
-  assert.match(ogwen, /hourly record of the quarry discharge/);
-  assert.match(ogwen, /measured fabric baseline/);
+  assert.match(ogwen, /Rerun this design against the public record/);
   assert.doesNotMatch(ogwen, /Sell the outcome/);
   const mobility = get('2026-10-27-town-mobility').opening;
-  assert.match(mobility, /village-to-town pilot/);
+  assert.match(mobility, /village-to-town pilot on paper first/);
   assert.doesNotMatch(mobility, /Replace/);
   for (const r of runs) assert.ok(r.problem.length > 40, `${r.id} has its problem`);
+});
+
+test('the opening is the cold step only; asks of real people are read into waits, never into the opening', () => {
+  const runs = loadBoard(files);
+  const get = (id) => runs.find(r => r.id === id);
+  const schools = get('2026-10-27-schools-zenjin-hour');
+  assert.doesNotMatch(schools.opening, /few hundred students|Waits on a person/i);
+  assert.match(schools.waits, /few hundred students/);
+  assert.doesNotMatch(schools.waits, /changed premise|Attention is the human flux/i);
+  const ogwen = get('2026-10-27-ogwen-warm-homes');
+  assert.doesNotMatch(ogwen.opening, /hourly record|heat-flux/);
+  assert.match(ogwen.waits, /hourly record of the quarry discharge/);
+  assert.match(ogwen.waits, /heat-flux readings/);
+  assert.doesNotMatch(ogwen.waits, /Sell the outcome/);
+  const mobility = get('2026-10-27-town-mobility');
+  assert.doesNotMatch(mobility.opening, /consented journey requests/);
+  assert.match(mobility.waits, /consented journey requests/);
+  for (const r of runs) assert.match(r.revised ?? '', /re-split/, `${r.id} says its part 4 was re-split`);
+});
+
+test('a waits list is read whether it is a heading, a bold label, or a bold run-in; a run with no waits says so', () => {
+  const heading = '### 4. One opening for the next person\nCold step.\n\n#### Waits on a person\n- a logger\n\n### 5. A changed premise\nNo.';
+  assert.deepEqual([extractOpening(heading), extractWaits(heading)], ['Cold step.', '- a logger']);
+  const runIn = '**4. One opening for the next person.** Cold step.\n**Waits on a person:** a logger, a school.\n\n**5. A changed premise.** No.';
+  assert.deepEqual([extractOpening(runIn), extractWaits(runIn)], ['Cold step.', 'a logger, a school.']);
+  const none = '### 4. One opening for the next person\nCold step only.';
+  assert.deepEqual([extractOpening(none), extractWaits(none)], ['Cold step only.', null]);
 });
 
 test('a bold run-in opening is read from the same line, and the first one wins', () => {
@@ -50,9 +76,11 @@ test('the pick-up brief is the Seed with the opening as the problem', () => {
   const seedRaw = readFileSync(resolve(ROOT, 'src/content/seed.md'), 'utf8');
   const run = loadBoard(files).find(r => r.id === '2026-10-27-town-mobility');
   const brief = pickUpBrief(run, seedPasteText(seedRaw), 'https://example.org');
-  assert.match(brief, /^# The CE Seed, v1\n\n## What this is/);
+  assert.match(brief, /^# The CE Seed, v1\.1\n\n## What this is/, 'the paste carries the Seed\'s own version line');
+  assert.match(brief, /> Design one village-to-town pilot on paper first/);
+  assert.match(brief, /parked until a real person is known[\s\S]*> - \*\*Actual, consented journey requests\*\*/, 'the waits list travels with the brief, marked as parked');
+  assert.match(brief, /opens with a step anyone with an AI can take now/);
   assert.equal(brief.match(/\*My problem:\*/g).length, 1, 'one problem line, not the Seed\'s empty one plus ours');
-  assert.match(brief, /> Design one village-to-town pilot/);
   assert.match(brief, /https:\/\/example\.org\/board\/2026-10-27-town-mobility/);
 });
 

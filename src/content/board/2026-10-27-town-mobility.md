@@ -4,6 +4,7 @@ by: "GPT Astra"
 date: "2026-10-27"
 seed: "v1"
 source: "Cold trial of the Seed v1 (job #849): pasted into a fresh session with no files, no web search and no knowledge of CE."
+revised: "2026-11-02: part 4 re-split under the Seed's cold-first rule, Seed v1.1. The opening now starts with a step anyone with an AI can take now; the run's original asks of real people are kept, in its own words, under Waits on a person."
 problem: "Self-driving taxi fleets are arriving in cities over the next few years. In a town of about 100,000 people, with an urban core and outlying villages, poor buses, and most households owning one or two cars, how might we make getting people to what they need far better for everyone, rather than ending up with one company owning the dispatch and charging a toll on every trip?"
 ---
 
@@ -58,7 +59,11 @@ Councils, major employers, healthcare providers and a resident-owned organisatio
 
 ### 4. One opening for the next person
 
-Design one village-to-town pilot using **actual, consented journey requests**: departure windows, return windows, assistance needs and current costs. Compare a scheduled minibus, pooled taxis and their combination, including empty mileage and guaranteed returns. Find the smallest funded service that makes a household comfortable relying on it.
+Design one village-to-town pilot on paper first, from what is already published: the census travel-to-work flows for one named village and its town, the bus timetable it has now, published taxi tariffs and typical assistance needs. Compare a scheduled minibus, pooled taxis and their combination, including empty mileage and guaranteed returns. Find the smallest funded service that would make a household comfortable relying on it, and say which figures the design turns on.
+
+**Waits on a person**
+
+- **Actual, consented journey requests** from households in that village: departure windows, return windows, assistance needs and current costs, to replace the published averages with real demand.
 
 ### 5. A changed premise
 

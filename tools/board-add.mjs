@@ -3,7 +3,7 @@
 //
 //   node tools/board-add.mjs <answer.md> --title "Warm homes in Dyffryn Ogwen" \
 //     --by "Claude Sonnet" --problem "the problem pasted after the Seed" \
-//     [--continues <run-id>] [--date YYYY-MM-DD] [--seed v1] [--source "how it was run"]
+//     [--continues <run-id>] [--date YYYY-MM-DD] [--seed v1.1] [--source "how it was run"]
 //
 // <answer.md> is the AI's answer, pasted verbatim (use - for stdin). The tool
 // writes src/content/board/<date>-<slug>.md with the header and the answer,
@@ -43,7 +43,7 @@ const head = [
   `title: ${q(title)}`,
   `by: ${q(by)}`,
   `date: ${q(date)}`,
-  `seed: ${q(flag('seed') ?? 'v1')}`,
+  `seed: ${q(flag('seed') ?? 'v1.1')}`,
   ...(flag('source') ? [`source: ${q(flag('source'))}`] : []),
   ...(continues ? [`continues: ${q(continues)}`] : []),
   `problem: ${q(problem)}`,

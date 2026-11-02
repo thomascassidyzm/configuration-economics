@@ -98,6 +98,7 @@ const { run, html, parent } = Astro.props;
       <p class="lede"><strong>The problem:</strong> {run.problem}</p>
       {parent && (<p class="how">This run picked up the opening left by <a href={`/board/${parent.id}`}>{parent.title}</a>.</p>)}
       {run.source && (<p class="how">{run.source}</p>)}
+      {run.revised && (<p class="how">{run.revised}</p>)}
       <article class="answer" set:html={html} />
     </main>
   </body>

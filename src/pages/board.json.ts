@@ -20,13 +20,15 @@ export const GET: APIRoute = ({ url, request }) => {
     seed: r.seed,
     problem: r.problem,
     opening: r.opening,
+    waitsOnPerson: r.waits,
+    revised: r.revised ?? null,
     run: `${site}/board/${r.id}`,
     continues: r.continues ?? null,
     carriedBy: r.continuedBy,
     brief: pickUpBrief(r, seed, site),
   }));
   return new Response(JSON.stringify({
-    about: 'The CE Open Board: unfinished possibilities left by runs of the CE Seed. Pick one up by pasting its brief into any AI. Bring the answer back as an issue at https://github.com/thomascassidyzm/configuration-economics/issues/new',
+    about: 'The CE Open Board: unfinished possibilities left by runs of the CE Seed. Each opening starts with a step anyone with an AI can take now; what a run needs from a real person is listed under waitsOnPerson, parked until someone is actually known. Pick one up by pasting its brief into any AI. Bring the answer back as an issue at https://github.com/thomascassidyzm/configuration-economics/issues/new',
     seed: `${site}/seed`,
     openings,
   }, null, 2), {
