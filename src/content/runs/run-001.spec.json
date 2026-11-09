@@ -1,0 +1,23 @@
+{
+  "id": "run-001",
+  "title": "What a ratchet cell takes from each level of government",
+  "question": "Does the governance ledger hold up: is the real take sideways (onto the roofless neighbour) rather than upwards, and is 'option 1 plus option 5 by default, option 2 to campaign for' the right posture for a Bethesda cell?",
+  "note": "src/content/open/NOTES-ratchet-cell-governance-ledger.md",
+  "seats": { "Salviati": "opus", "Sagredo": "opus", "Simplicio": "sonnet" },
+  "clerk": "sonnet",
+  "researcher": "sonnet",
+  "critic": "fable",
+  "budget": {
+    "usdCap": 3.5,
+    "usdReserve": 0.8,
+    "roundCostEstimate": 0.6,
+    "maxRounds": 4,
+    "minRounds": 2,
+    "patience": 1,
+    "maxResearch": 7
+  },
+  "seedResearch": [
+    "SP Energy Networks' network capacity / constraint information for the primary substation serving Bethesda, Gwynedd (SP Manweb area): is it shown as constrained (demand or generation headroom), and is any flexibility tender or Flexible Connection zone live there? Use SPEN's own network capacity map, heat maps, or flexibility procurement documents.",
+    "The rateable value or business-rates entry on the Valuation Office Agency (VOA) list for Ynni Ogwen's hydro scheme on the Afon Ogwen at Bethesda (Ynni Ogwen Cyf, around 100 kW): what rateable value is listed, from which list (2023 Welsh list), and does any relief or exemption apply?"
+  ]
+}

@@ -1,5 +1,12 @@
 # Decisions
 
+## 2026-11-09 — The world computer rebuilt: three seats, bounded runs (job #434)
+
+- **Design (Tom's):** three seats after Galileo's *Dialogue* — Salviati argues the design (Opus), Sagredo the outsider to be convinced, carrying readers' questions (Opus), Simplicio the conventional view at full strength with evidence on a different model (Sonnet). Research runs off-thread (Sonnet + web search) and returns one line with sources, the full loop expandable. A run is bounded like a training run: budget fixed in `src/content/runs/<id>.spec.json` before start and printed on the page; loss = open objections + unchecked load-bearing claims + parties left with fewer options, recounted by a clerk (Sonnet) after every round; early stop the first round the loss does not fall; checkpoint = Salviati's full rewrite plus a diff; a held-out critic (Fable) that never sees the thread scores it. The note in /open moves only when the checkpoint changed it and the critic passed it.
+- **Live without a build per turn:** the runner (`tools/wc-run.mjs`) writes every event to the site's existing Upstash store (`ce-room:` keys, the one Alexander already counts in); `/world-computer` and `/api/run.json` read it at request time; the finished record is committed to `src/content/runs/<id>.json`, which is the durable, git-audited copy. Better (live, auditable), simpler (no new store, one script), cheaper (no Vercel build per turn; spend on the existing Alexander key, capped per run).
+- **The one public write:** `/api/run-question` takes a reader's question for Sagredo only while a run is live (400 chars, 3/hour/address, 20 queued). It is never shown verbatim; Sagredo carries it in his own words.
+- **The six-hat room** (sessions 001–002) is kept as it ran at `/world-computer/hats`.
+
 ## 2026-11-02 — Seed v1.1: an opening starts cold (job #226·AC)
 
 - **Ruling (Tom, Y to the room's question):** part 4 of the Seed, "One opening for the next person", must open with a step anyone with an AI and no special access can take now. Asks of real people go on a separate list inside part 4 headed **Waits on a person**, and nobody is asked until someone is actually known.

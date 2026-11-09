@@ -6,12 +6,12 @@
 // Watchers watch; they cannot contribute, and nothing they do reaches the
 // participants. Turns arrive by commit; the deploy publishes them.
 import { marked } from 'marked';
-import { VERSION, BUILD } from '../lib/version';
-import charterRaw from '../content/charter.md?raw';
-import { readLiveRoom } from '../lib/room-live';
-import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence, panelDefects, parseHatStance } from '../lib/room';
-import type { RoomItem, RoomTurn } from '../lib/room';
-import PhoneNav from '../components/PhoneNav.astro';
+import { VERSION, BUILD } from '../../lib/version';
+import charterRaw from '../../content/charter.md?raw';
+import { readLiveRoom } from '../../lib/room-live';
+import { loadRoom, SEATS, hatRotation, rotationDefects, conductorCadence, panelDefects, parseHatStance } from '../../lib/room';
+import type { RoomItem, RoomTurn } from '../../lib/room';
+import PhoneNav from '../../components/PhoneNav.astro';
 
 /**
  * The strip, cut into grounds. A run of turns under one hat is ONE ground, so
@@ -47,7 +47,7 @@ const charter = marked.parse(charterRaw.replace(/^#\s+.*\n/, '')) as string;
 
 // Live off the disk when a ROOM_DIR is named, otherwise the built-in store.
 const files = readLiveRoom()
-  ?? (import.meta.glob('../content/room/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
+  ?? (import.meta.glob('../../content/room/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
 const sessions = loadRoom(files);
 const total = sessions.reduce((n, s) => n + s.turns.length, 0);
 const lastIndex = total - 1;
@@ -70,6 +70,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
     <nav class="top-nav">
       <a href="/" class="nav-home">Configuration Economics</a>
       <div class="nav-right">
+        <a href="/world-computer" class="nav-link">The room now</a>
         <a href="/world-computer/carried" class="nav-link">The carried arm</a>
         <a href="/open" class="nav-link">Work</a>
         <a href="/method" class="nav-link">Method</a>
@@ -80,6 +81,7 @@ const lastSession = sessions.length ? sessions[sessions.length - 1].id : 0;
     </nav>
 
     <main>
+      <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:2rem;padding:0.7rem 1rem;border:1px solid rgba(74,158,255,0.25);border-radius:4px;">This is the archive of the six-hat sessions of September 2026, kept as they ran. The room has since been rebuilt as three seats and bounded runs: <a href="/world-computer" style="color:var(--accent)">the world computer now</a>.</p>
       <header class="page-header">
         <div class="header-meta">
           <span class="status-badge">ROOM · APPEND-ONLY</span>

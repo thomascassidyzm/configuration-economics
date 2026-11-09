@@ -1,0 +1,414 @@
+---
+// /world-computer — the room, rebuilt as three seats and bounded runs.
+//
+// Galileo's Dialogue: Salviati argues the design, Sagredo is the intelligent
+// outsider to be convinced (readers' questions enter through his seat),
+// Simplicio is the conventional view at full strength, on a different model.
+// A run is bounded like a training run: its budget is fixed before it starts
+// and printed here, its loss is recomputed after every round, it stops early
+// when the loss stops falling, and its checkpoint is scored by a held-out
+// critic that never saw the thread. The note in /open moves only when a run
+// moved it and the critic passed it.
+//
+// The thread is read live from the store the runner writes to; nothing here
+// waits for a build. The six-hat sessions it grew out of are at /world-computer/hats.
+import { marked } from 'marked';
+import { VERSION, BUILD } from '../../lib/version';
+import PhoneNav from '../../components/PhoneNav.astro';
+import { getRun, listRuns } from '../../lib/run-store';
+import type { Run, RunItem } from '../../lib/run-store';
+
+export const prerender = false;
+Astro.response.headers.set('cache-control', 'no-store');
+
+const ids = await listRuns();
+const want = Astro.url.searchParams.get('run');
+const runId = want && ids.includes(want) ? want : ids[ids.length - 1];
+const run: Run | null = runId ? await getRun(runId) : null;
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const md = (s: string) => marked.parse(esc(s ?? ''), { async: false }) as string;
+const usd = (n?: number) => `$${(n ?? 0).toFixed(n && n < 0.1 ? 3 : 2)}`;
+const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+const live = run && ['running', 'checkpointing', 'critic'].includes(run.state);
+
+const SEAT_CLASS: Record<string, string> = { Salviati: 'salviati', Sagredo: 'sagredo', Simplicio: 'simplicio' };
+
+// The loss curve: one point per round, round 0 the baseline.
+const pts = run?.loss ?? [];
+const maxLoss = Math.max(1, ...pts.map(p => p.loss));
+const W = 320, H = 110, PAD = 22;
+const xAt = (i: number) => PAD + (i * (W - 2 * PAD)) / Math.max(1, run?.budget.maxRounds ?? 1);
+const yAt = (v: number) => H - PAD - (v / maxLoss) * (H - 2 * PAD);
+const path = pts.map((p, i) => `${i ? 'L' : 'M'}${xAt(i).toFixed(1)},${yAt(p.loss).toFixed(1)}`).join(' ');
+const last = pts[pts.length - 1];
+
+const spentPct = run ? Math.min(100, (run.spentUsd / run.budget.usdCap) * 100) : 0;
+const items: RunItem[] = run?.items ?? [];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The world computer — Configuration Economics</title>
+    <meta name="description" content="Three seats work one design note in public, in a bounded run: a budget fixed before it starts, a loss, an early stop, a checkpoint and a held-out critic." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <PhoneNav />
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/world-computer/hats" class="nav-link">The six-hat sessions</a>
+        <a href="/open" class="nav-link">Work</a>
+        <a href="/method" class="nav-link">Method</a>
+        <a href="/explore" class="nav-link">Propositions</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <p class="kicker">The world computer · three seats · bounded runs</p>
+        {run ? (
+          <>
+            <h1>{run.title}</h1>
+            <p class="lede">{run.question}</p>
+            <p class="subject">Working on <a href={`/open/${run.noteSlug}`}>the design note</a> as it stood at <code>{run.noteSha}</code>.</p>
+          </>
+        ) : (
+          <>
+            <h1>The world computer</h1>
+            <p class="lede">No run has started yet.</p>
+          </>
+        )}
+      </header>
+
+      <div id="live" data-run={run?.id ?? ''} data-updated={run?.updatedAt ?? ''} data-live={live ? '1' : '0'}>
+      {run && (
+        <>
+          <section class="status">
+            <span class={`pill ${run.state}`}>{live ? (run.state === 'running' ? `live · round ${run.round || 0}` : run.state === 'checkpointing' ? 'live · writing the checkpoint' : 'live · the critic is reading') : run.state === 'failed' ? 'failed' : 'run stopped'}</span>
+            {run.stopReason && <span class="stop-reason">{run.stopReason}</span>}
+          </section>
+
+          <section class="panel budget" aria-label="Budget">
+            <h2>Budget <span class="h2-note">fixed before the run started</span></h2>
+            <div class="bar"><div class="fill" style={`width:${spentPct.toFixed(1)}%`}></div></div>
+            <p class="figures"><strong>{usd(run.spentUsd)}</strong> spent of a <strong>{usd(run.budget.usdCap)}</strong> cap, on the site's own Alexander key. {usd(run.budget.usdReserve)} of it is held back for the checkpoint and the critic.</p>
+            <ul class="caps">
+              <li><span>rounds</span>{run.round} of {run.budget.maxRounds}</li>
+              <li><span>research loops</span>{run.researchCount} of {run.budget.maxResearch}</li>
+              <li><span>early stop</span>first round from {run.budget.minRounds} on where the loss does not fall</li>
+            </ul>
+          </section>
+
+          <section class="panel loss" aria-label="Loss">
+            <h2>Loss <span class="h2-note">lower is better</span></h2>
+            <p class="formula">loss = open objections + unchecked load-bearing claims + anyone left with fewer options</p>
+            {pts.length > 0 && (
+              <svg viewBox={`0 0 ${W} ${H}`} class="curve" role="img" aria-label={`Loss by round: ${pts.map(p => p.loss).join(', ')}`}>
+                <line x1={PAD} y1={H - PAD} x2={W - PAD} y2={H - PAD} class="axis" />
+                <path d={path} class="line" />
+                {pts.map((p, i) => (
+                  <g>
+                    <circle cx={xAt(i)} cy={yAt(p.loss)} r="3.5" class="dot" />
+                    <text x={xAt(i)} y={yAt(p.loss) - 8} class="val">{p.loss}</text>
+                    <text x={xAt(i)} y={H - 6} class="tick">{p.round === 0 ? 'start' : `r${p.round}`}</text>
+                  </g>
+                ))}
+              </svg>
+            )}
+            {last && <p class="now">Now <strong>{last.loss}</strong> = {last.objections} open objection{last.objections === 1 ? '' : 's'} + {last.claims} unchecked claim{last.claims === 1 ? '' : 's'} + {last.fewerOptions} left with fewer options.{pts.length > 1 && <> Started at {pts[0].loss}.</>}</p>}
+          </section>
+
+          <section class="seats" aria-label="Seats">
+            {Object.entries(run.seats).map(([name, s]) => (
+              <div class={`seat ${SEAT_CLASS[name]}`}>
+                <span class="seat-name">{name}</span>
+                <span class="seat-model">{s.model}</span>
+                <p class="seat-role">{s.role}</p>
+              </div>
+            ))}
+            <p class="offstage">Off the thread: a clerk ({run.clerk}) keeps the loss ledger, research loops ({run.researcher}, web search) go out and return one line with sources, and a held-out critic ({run.critic}) that never sees the thread scores the checkpoint.</p>
+          </section>
+
+          <section class="thread" aria-label="The thread">
+            <h2 class="thread-h">The thread</h2>
+            {items.map(it => (
+              it.kind === 'turn' ? (
+                <article class={`turn ${SEAT_CLASS[it.speaker!] ?? ''}`} id={`t${it.n}`}>
+                  <header class="turn-head">
+                    <span class="who">{it.speaker}</span>
+                    <span class="meta">round {it.round} · {it.model} · {usd(it.costUsd)}</span>
+                  </header>
+                  {it.readerQuestions ? <p class="carried">carries {it.readerQuestions} reader question{it.readerQuestions === 1 ? '' : 's'}, in his own words</p> : null}
+                  <div class="body" set:html={md(it.text ?? '')} />
+                  {it.changes && it.changes.length > 0 && (
+                    <ul class="changes">{it.changes.map(c => <li><span>change</span>{c}</li>)}</ul>
+                  )}
+                </article>
+              ) : it.kind === 'research' ? (
+                <aside class={`research ${it.state === 'running' ? 'pending' : ''}`} id={`r-${it.label}`}>
+                  <p class="r-line"><span class="r-label">{it.label}</span><span class="r-by">asked by {it.askedBy}</span></p>
+                  <p class="r-answer">{it.line}</p>
+                  {it.sources && it.sources.length > 0 && (
+                    <p class="r-sources">{it.sources.map(s => <a href={s} rel="noopener nofollow" target="_blank">{host(s)}</a>)}</p>
+                  )}
+                  {it.state !== 'running' && (
+                    <details id={`loop-${it.label}`}>
+                      <summary>the full loop · {it.model} · {usd(it.costUsd)}</summary>
+                      <p class="r-q"><strong>Question.</strong> {it.question}</p>
+                      <ol class="steps">{(it.loop ?? []).map(s => <li><span>{s.step}</span> {s.what}</li>)}</ol>
+                      {it.full && <div class="r-full" set:html={md(it.full)} />}
+                    </details>
+                  )}
+                </aside>
+              ) : (
+                <div class="ledger" id={`l${it.round}`}>
+                  <details id={`ledger-${it.round}`}>
+                    <summary><span class="l-k">{it.round === 0 ? 'baseline' : `after round ${it.round}`}</span> loss <strong>{it.loss}</strong></summary>
+                    {it.parseFailed && <p class="warn">The clerk's answer did not parse; the previous ledger stands for this round.</p>}
+                    <h3>Objections</h3>
+                    <ul>{(it.objections ?? []).map(o => <li class={`st-${o.status}`}><span>{o.status}</span>{o.text} <em>({o.by})</em></li>)}</ul>
+                    <h3>Load-bearing claims</h3>
+                    <ul>{(it.claims ?? []).map(c => <li class={`st-${c.status}`}><span>{c.status}</span>{c.text}{c.by ? <em> ({c.by})</em> : null}</li>)}</ul>
+                    <h3>Left with fewer options</h3>
+                    {(it.fewerOptions ?? []).length ? <ul>{it.fewerOptions!.map(f => <li class="st-open"><span>{f.who}</span>{f.how}</li>)}</ul> : <p class="none">Nobody, on the clerk's reading.</p>}
+                    <p class="l-cost">clerk · {it.model} · {usd(it.costUsd)}</p>
+                  </details>
+                </div>
+              )
+            ))}
+            {live && <p class="waiting">The run is live. This page follows it.</p>}
+          </section>
+
+          {run.checkpoint && (
+            <section class="panel checkpoint" aria-label="Checkpoint">
+              <h2>Checkpoint</h2>
+              <p>The best design at the stop, written out in full by Salviati ({run.checkpoint.model}, {usd(run.checkpoint.costUsd)}). Loss {run.checkpoint.baselineLoss} at the start, {run.checkpoint.lossAtStop} at the stop.</p>
+              {run.checkpoint.changed ? (
+                <details id="diff">
+                  <summary>what the run changed</summary>
+                  <pre class="diff">{run.checkpoint.diff.split('\n').map(l => <span class={l.startsWith('+') ? 'add' : l.startsWith('-') ? 'del' : l.startsWith('@@') ? 'hunk' : ''}>{l + '\n'}</span>)}</pre>
+                </details>
+              ) : <p class="none">The run did not change the note.</p>}
+            </section>
+          )}
+
+          {run.critic && (
+            <section class={`panel critic ${run.critic.pass ? 'pass' : 'fail'}`} aria-label="Held-out critic">
+              <h2>Held-out critic <span class="h2-note">{run.critic.model} · never saw the thread · {usd(run.critic.costUsd)}</span></h2>
+              <p class="verdict"><strong>{run.critic.pass ? 'Passed' : 'Did not pass'}</strong>{run.critic.score != null && <> · {run.critic.score}/10 (5 = no better than the original)</>}</p>
+              <p>{run.critic.verdict}</p>
+              {run.critic.better?.length ? <><h3>Better</h3><ul>{run.critic.better.map(b => <li>{b}</li>)}</ul></> : null}
+              {run.critic.worse?.length ? <><h3>Worse</h3><ul>{run.critic.worse.map(b => <li>{b}</li>)}</ul></> : null}
+              {run.critic.unsupported?.length ? <><h3>Unsupported</h3><ul>{run.critic.unsupported.map(b => <li>{b}</li>)}</ul></> : null}
+              <p class="moved">{run.published ? <>The note in <a href={`/open/${run.noteSlug}`}>/open</a> moved to this checkpoint.</> : run.critic.pass && run.checkpoint?.changed ? <>The critic passed it; the note moves when this record lands.</> : <>The note in /open did not move: it moves only when a run changed it and the critic passed it.</>}</p>
+            </section>
+          )}
+        </>
+      )}
+      </div>
+
+      {run && run.state === 'running' && (
+        <section class="panel ask" aria-label="Ask Sagredo">
+          <h2>Ask through Sagredo</h2>
+          <p>Sagredo carries readers' questions into the room in his own words at his next turn. Your text is not published and reaches no person.</p>
+          <form id="ask">
+            <textarea name="q" maxlength="400" rows="3" placeholder="What would you want the outsider to ask?" required></textarea>
+            <button type="submit">Give it to Sagredo</button>
+            <p class="ask-msg" aria-live="polite"></p>
+          </form>
+        </section>
+      )}
+
+      <section class="how">
+        <details>
+          <summary>How a run works</summary>
+          <ul>
+            <li><strong>Three seats.</strong> After Galileo's <em>Dialogue on the Two Chief World Systems</em>. Salviati argues the design. Sagredo is the intelligent outsider who has to be convinced. Simplicio holds the conventional view at full strength, with real evidence, on a different model from the other two so the strongest objection is not a sibling of the argument it attacks.</li>
+            <li><strong>Research happens off the thread.</strong> Any seat can ask a checkable question. A loop goes out to the web and comes back as one line with its sources; the whole loop is under it, one tap away.</li>
+            <li><strong>The budget is fixed before the start</strong> and shown above: dollars, rounds, research loops.</li>
+            <li><strong>The loss</strong> is recounted by a clerk after every round: open objections, plus load-bearing claims nobody has checked, plus anyone the design leaves with fewer options. The run stops early the first round the loss does not fall.</li>
+            <li><strong>The checkpoint</strong> is the best design at the stop, with a diff of what changed. A <strong>held-out critic</strong> that never saw the thread scores it against the original.</li>
+            <li><strong>Nothing publishes itself.</strong> Research loops never touch /open. The design note moves only when a run changed it and the critic passed it.</li>
+          </ul>
+        </details>
+      </section>
+
+      <section class="others">
+        {ids.length > 1 && <p>Runs: {ids.map(id => <a href={`/world-computer?run=${id}`} class={id === runId ? 'on' : ''}>{id}</a>)}</p>}
+        <p>The room grew out of <a href="/world-computer/hats">the six-hat sessions</a> of September 2026, kept as they ran. Data: <a href={`/api/run.json${run ? `?id=${run.id}` : ''}`}>/api/run.json</a>.</p>
+      </section>
+    </main>
+
+    <script>
+      // Follow a live run without a reload: poll the run's stamp and, when it
+      // moves, swap in the freshly rendered #live block, keeping open the
+      // details a reader has opened.
+      const box = document.getElementById('live');
+      async function tick() {
+        if (!box || box.dataset.live !== '1') return;
+        try {
+          const r = await fetch(`/api/run.json?id=${box.dataset.run}`, { cache: 'no-store' });
+          const j = await r.json();
+          if (j.updatedAt && j.updatedAt !== box.dataset.updated) {
+            const html = await (await fetch(location.href, { cache: 'no-store' })).text();
+            const next = new DOMParser().parseFromString(html, 'text/html').getElementById('live');
+            if (next) {
+              const open = [...box.querySelectorAll('details[open]')].map(d => d.id).filter(Boolean);
+              box.innerHTML = next.innerHTML;
+              Object.assign(box.dataset, next.dataset);
+              for (const id of open) document.getElementById(id)?.setAttribute('open', '');
+              if (next.dataset.live !== '1') document.querySelector('.ask')?.remove();
+            }
+          }
+        } catch { /* try again next tick */ }
+        setTimeout(tick, 8000);
+      }
+      setTimeout(tick, 8000);
+
+      const form = document.getElementById('ask') as HTMLFormElement | null;
+      form?.addEventListener('submit', async e => {
+        e.preventDefault();
+        const msg = form.querySelector('.ask-msg')!;
+        const q = (form.elements.namedItem('q') as HTMLTextAreaElement).value;
+        msg.textContent = 'Sending…';
+        try {
+          const r = await fetch('/api/run-question', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: box?.dataset.run, q }) });
+          const j = await r.json();
+          msg.textContent = r.ok ? j.note : j.error;
+          if (r.ok) form.reset();
+        } catch { msg.textContent = 'That did not send. Try again in a moment.'; }
+      });
+    </script>
+
+    <style is:global>
+      :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#707090; --accent:#4a9eff; --salviati:#4a9eff; --sagredo:#d9b25c; --simplicio:#c8796a; --good:#5fbf8f; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace; }
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { font-family:var(--font-body); background:var(--void); color:var(--text-primary); min-height:100vh; line-height:1.65; }
+      a { color:var(--accent); }
+      .top-nav { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,12,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:2rem; padding:0 2rem; z-index:100; }
+      .nav-home { font-family:var(--font-display); font-size:1.125rem; color:var(--text-primary); text-decoration:none; }
+      .nav-link { font-size:0.875rem; color:var(--text-secondary); text-decoration:none; }
+      .nav-link:hover { color:var(--accent); }
+      .nav-right { display:flex; align-items:center; gap:1rem; margin-left:auto; flex-wrap:wrap; }
+      .nav-version { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent); }
+      .nav-build { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); opacity:0.7; }
+      main { max-width:720px; margin:0 auto; padding:96px 1.25rem 5rem; }
+
+      .kicker { font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); margin-bottom:0.6rem; }
+      h1 { font-family:var(--font-display); font-weight:500; font-size:2.3rem; line-height:1.15; margin-bottom:0.8rem; }
+      .lede { color:var(--text-secondary); border-left:2px solid rgba(74,158,255,0.45); padding-left:1rem; }
+      .subject { font-size:0.82rem; color:var(--text-muted); margin-top:0.7rem; }
+      code { font-family:var(--font-mono); font-size:0.8em; }
+      .page-header { margin-bottom:1.6rem; }
+
+      .status { display:flex; flex-wrap:wrap; gap:0.6rem; align-items:center; margin-bottom:1.2rem; }
+      .pill { font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; padding:0.25rem 0.6rem; border-radius:3px; border:1px solid rgba(255,255,255,0.18); color:var(--text-secondary); }
+      .pill.running, .pill.checkpointing, .pill.critic { color:var(--good); border-color:rgba(95,191,143,0.5); animation:pulse 2.4s ease-in-out infinite; }
+      .pill.failed { color:#e0864a; border-color:rgba(224,134,74,0.5); }
+      @keyframes pulse { 50% { opacity:0.55; } }
+      .stop-reason { font-size:0.8rem; color:var(--text-muted); }
+
+      .panel { border:1px solid rgba(255,255,255,0.09); border-radius:6px; padding:1rem 1.1rem; margin-bottom:1rem; background:rgba(255,255,255,0.015); }
+      .panel h2, .thread-h { font-family:var(--font-display); font-weight:500; font-size:1.35rem; margin-bottom:0.5rem; }
+      .h2-note { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-left:0.4rem; }
+      .panel h3 { font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin:0.8rem 0 0.3rem; font-weight:400; }
+      .panel p, .panel li { font-size:0.88rem; color:var(--text-secondary); }
+      .panel ul { padding-left:1.1rem; }
+      .bar { height:8px; border-radius:4px; background:rgba(255,255,255,0.07); overflow:hidden; margin:0.3rem 0 0.6rem; }
+      .fill { height:100%; background:var(--accent); }
+      .figures strong { color:var(--text-primary); font-weight:500; }
+      .caps { list-style:none; padding:0 !important; display:grid; gap:0.25rem; margin-top:0.6rem; }
+      .caps li { font-size:0.82rem; }
+      .caps span { display:inline-block; min-width:7.5rem; font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); }
+      .formula { font-family:var(--font-mono); font-size:0.72rem !important; color:var(--text-muted) !important; }
+      .curve { width:100%; max-width:420px; height:auto; display:block; margin:0.5rem 0; }
+      .curve .axis { stroke:rgba(255,255,255,0.12); }
+      .curve .line { fill:none; stroke:var(--accent); stroke-width:2; }
+      .curve .dot { fill:var(--accent); }
+      .curve .val { fill:var(--text-primary); font-size:11px; text-anchor:middle; font-family:var(--font-mono); }
+      .curve .tick { fill:var(--text-muted); font-size:9px; text-anchor:middle; font-family:var(--font-mono); }
+      .now strong { color:var(--text-primary); }
+
+      .seats { display:grid; grid-template-columns:repeat(3, 1fr); gap:0.5rem; margin:1.4rem 0 0.6rem; }
+      .seat { border-top:2px solid var(--c); padding:0.5rem 0.2rem 0; }
+      .seat.salviati { --c:var(--salviati); } .seat.sagredo { --c:var(--sagredo); } .seat.simplicio { --c:var(--simplicio); }
+      .seat-name { font-family:var(--font-display); font-size:1.15rem; color:var(--c); margin-right:0.35rem; }
+      .seat-model { font-family:var(--font-mono); font-size:0.62rem; color:var(--text-muted); }
+      .seat-role { font-size:0.74rem; color:var(--text-secondary); line-height:1.4; margin-top:0.2rem; }
+      .offstage { grid-column:1 / -1; font-size:0.76rem; color:var(--text-muted); margin-top:0.3rem; }
+      @media (max-width:520px) { .seats { grid-template-columns:1fr; } .seat { display:block; } }
+
+      .thread { margin:2rem 0 1.5rem; }
+      .thread-h { margin-bottom:1rem; }
+      .turn { border-left:2px solid var(--c, rgba(255,255,255,0.15)); padding:0.1rem 0 0.1rem 0.95rem; margin:0 0 1.6rem; }
+      .turn.salviati { --c:var(--salviati); } .turn.sagredo { --c:var(--sagredo); } .turn.simplicio { --c:var(--simplicio); }
+      .turn-head { display:flex; flex-wrap:wrap; align-items:baseline; gap:0.6rem; margin-bottom:0.35rem; }
+      .who { font-family:var(--font-display); font-size:1.25rem; color:var(--c); }
+      .meta { font-family:var(--font-mono); font-size:0.64rem; color:var(--text-muted); }
+      .carried { font-size:0.75rem; color:var(--sagredo); font-style:italic; margin-bottom:0.3rem; }
+      .body p { margin:0 0 0.7rem; font-size:0.94rem; }
+      .body ul, .body ol { padding-left:1.2rem; margin-bottom:0.7rem; font-size:0.94rem; }
+      .changes { list-style:none; margin-top:0.3rem; }
+      .changes li { font-size:0.82rem; color:var(--text-secondary); padding:0.35rem 0.6rem; border:1px dashed rgba(74,158,255,0.35); border-radius:4px; margin-bottom:0.35rem; }
+      .changes span { font-family:var(--font-mono); font-size:0.6rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-right:0.5rem; }
+
+      .research { margin:0 0 1.4rem 0.95rem; padding:0.6rem 0.8rem; border-radius:5px; background:rgba(95,191,143,0.05); border:1px solid rgba(95,191,143,0.22); }
+      .research.pending { opacity:0.7; }
+      .r-line { display:flex; gap:0.6rem; align-items:baseline; }
+      .r-label { font-family:var(--font-mono); font-size:0.7rem; color:var(--good); }
+      .r-by { font-size:0.68rem; color:var(--text-muted); }
+      .r-answer { font-size:0.88rem; margin:0.2rem 0; }
+      .r-sources { display:flex; flex-wrap:wrap; gap:0.25rem 0.8rem; font-size:0.72rem; }
+      .research details { margin-top:0.35rem; }
+      .research summary, .ledger summary, .checkpoint summary, .how summary { cursor:pointer; font-size:0.74rem; color:var(--text-muted); }
+      .r-q, .r-full p { font-size:0.8rem; color:var(--text-secondary); margin:0.4rem 0; }
+      .steps { padding-left:1.2rem; font-size:0.72rem; color:var(--text-muted); word-break:break-word; }
+      .steps span { font-family:var(--font-mono); color:var(--good); }
+
+      .ledger { margin:0 0 1.6rem; padding:0.45rem 0.7rem; border-top:1px solid rgba(255,255,255,0.08); border-bottom:1px solid rgba(255,255,255,0.08); }
+      .ledger summary strong { color:var(--text-primary); font-size:0.9rem; }
+      .l-k { font-family:var(--font-mono); font-size:0.64rem; text-transform:uppercase; letter-spacing:0.08em; margin-right:0.4rem; }
+      .ledger h3 { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin:0.7rem 0 0.25rem; font-weight:400; }
+      .ledger ul { list-style:none; }
+      .ledger li { font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.3rem; }
+      .ledger li span { font-family:var(--font-mono); font-size:0.6rem; text-transform:uppercase; margin-right:0.45rem; padding:0.05rem 0.3rem; border-radius:2px; background:rgba(255,255,255,0.06); }
+      .ledger li.st-open span, .ledger li.st-unchecked span, .ledger li.st-contradicted span { color:#e0864a; }
+      .ledger li.st-answered span, .ledger li.st-conceded span, .ledger li.st-checked span { color:var(--good); }
+      .ledger em { color:var(--text-muted); }
+      .l-cost { font-family:var(--font-mono); font-size:0.62rem; color:var(--text-muted); margin-top:0.4rem; }
+      .warn { color:#e0864a; font-size:0.78rem; }
+      .none { font-size:0.8rem; color:var(--text-muted); }
+      .waiting { font-size:0.8rem; color:var(--good); }
+
+      .diff { font-family:var(--font-mono); font-size:0.68rem; line-height:1.5; white-space:pre-wrap; word-break:break-word; margin-top:0.5rem; max-height:70vh; overflow:auto; padding:0.5rem; background:rgba(0,0,0,0.3); border-radius:4px; }
+      .diff .add { color:var(--good); display:block; background:rgba(95,191,143,0.07); }
+      .diff .del { color:#e0864a; display:block; background:rgba(224,134,74,0.07); }
+      .diff .hunk { color:var(--text-muted); display:block; }
+      .critic.pass { border-color:rgba(95,191,143,0.45); }
+      .critic.fail { border-color:rgba(224,134,74,0.45); }
+      .verdict strong { color:var(--text-primary); }
+      .moved { margin-top:0.7rem; }
+
+      .ask textarea { width:100%; font:inherit; font-size:0.9rem; color:var(--text-primary); background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.15); border-radius:4px; padding:0.6rem; margin:0.4rem 0; }
+      .ask button { font:inherit; font-size:0.85rem; color:var(--void); background:var(--sagredo); border:none; border-radius:4px; padding:0.5rem 0.9rem; cursor:pointer; }
+      .ask-msg { font-size:0.8rem; margin-top:0.4rem; }
+
+      .how { margin:2rem 0 1rem; }
+      .how ul { padding-left:1.1rem; margin-top:0.6rem; }
+      .how li { font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.5rem; }
+      .how strong { color:var(--text-primary); font-weight:500; }
+      .others p { font-size:0.8rem; color:var(--text-muted); margin-bottom:0.4rem; }
+      .others a { margin-right:0.6rem; }
+      .others a.on { color:var(--text-primary); }
+    </style>
+  </body>
+</html>
