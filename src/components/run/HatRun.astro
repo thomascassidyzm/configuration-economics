@@ -1,0 +1,252 @@
+---
+// A six-hat run: Blue's opening and split, each hat as its own bounded run
+// (loss, early stop, checkpoint), Red left to Tom, Blue's verdict, the
+// Galileo dialogue as publication, the full checkpoint diff and the critic.
+import { marked } from 'marked';
+const { run, live } = Astro.props as { run: any; live: boolean };
+
+const esc = (s: string) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const md = (s: string) => marked.parse(esc(s ?? ''), { async: false }) as string;
+const usd = (n?: number) => `$${(n ?? 0).toFixed(n && n < 0.01 ? 3 : 2)}`;
+const tok = (n?: number) => (n ?? 0) >= 1e6 ? `${((n ?? 0) / 1e6).toFixed(2)}M` : `${Math.round((n ?? 0) / 1000)}k`;
+const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+
+const ORDER = [
+  { key: 'white', name: 'White', loss: 'unchecked facts' },
+  { key: 'yellow', name: 'Yellow', loss: 'value not yet found' },
+  { key: 'black', name: 'Black', loss: 'risks not yet found' },
+  { key: 'green', name: 'Green', loss: 'alternatives not yet tried' },
+];
+const hatOf = (k: string) => (run.hats ?? []).find((h: any) => h.hat === k);
+const moneyPct = Math.min(100, (run.spentUsd / run.budget.usdCap) * 100);
+const tokPct = Math.min(100, (run.spentTokens / run.budget.tokenCap) * 100);
+const where = run.state === 'opening' ? 'Blue is opening'
+  : run.state === 'running' ? `${(hatOf(run.currentHat)?.name ?? '')} hat · round ${hatOf(run.currentHat)?.rounds ?? 0}`
+  : run.state === 'closing' ? 'Blue is closing'
+  : run.state === 'critic' ? 'the critic is reading'
+  : run.state === 'dialogue' ? 'writing the dialogue' : '';
+
+function spark(loss: any[], max: number) {
+  const W = 120, H = 34, P = 5;
+  const m = Math.max(1, ...loss.map(l => l.loss));
+  const x = (i: number) => P + (i * (W - 2 * P)) / Math.max(1, max);
+  const y = (v: number) => H - P - (v / m) * (H - 2 * P);
+  return { W, H, d: loss.map((l, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(l.loss).toFixed(1)}`).join(' '), pts: loss.map((l, i) => ({ x: x(i), y: y(l.loss) })) };
+}
+function wordDiff(line: string) {
+  return esc(line).replace(/\[-([\s\S]*?)-\]/g, '<del>$1</del>').replace(/\{\+([\s\S]*?)\+\}/g, '<ins>$1</ins>');
+}
+const diffLines = (run.checkpoint?.diff ?? '').split('\n').filter((l: string) => l.trim() && !l.startsWith('@@'));
+---
+
+<section class="status">
+  <span class={`pill ${live ? 'running' : run.state}`}>{live ? `live · ${where}` : run.state === 'failed' ? 'failed' : 'run stopped'}</span>
+  {run.stopReason && !live && <span class="stop-reason">{run.stopReason}</span>}
+</section>
+
+<section class="panel budget" aria-label="Budget">
+  <h2>Budget <span class="h2-note">one per run · {esc(run.budget.setBy)}</span></h2>
+  <p class="figures"><strong>{usd(run.spentUsd)}</strong> of <strong>{usd(run.budget.usdCap)}</strong></p>
+  <div class="bar"><div class="fill" style={`width:${moneyPct.toFixed(1)}%`}></div></div>
+  <p class="figures"><strong>{tok(run.spentTokens)}</strong> of <strong>{tok(run.budget.tokenCap)}</strong> tokens</p>
+  <div class="bar"><div class="fill tok" style={`width:${tokPct.toFixed(1)}%`}></div></div>
+  <p class="small">On the site's own Alexander key. {usd(run.budget.closeReserveUsd)} is held for the close (verdict, checkpoint, critic, dialogue). Blue's own spend so far: {usd(run.blueSpentUsd)}.</p>
+  {run.split && (
+    <>
+      <h3>Blue's split</h3>
+      <ul class="split">
+        {ORDER.map(o => {
+          const h = hatOf(o.key);
+          return (
+            <li class={`hat-${o.key}`}>
+              <span class="dot"></span>
+              <span class="s-name">{o.name}</span>
+              <span class="s-usd">{usd(h?.shareUsd ?? run.split[o.key].usd)}{h ? <em> · spent {usd(h.spentUsd)}</em> : null}</span>
+              <span class="s-why">{run.split[o.key].reason}</span>
+            </li>
+          );
+        })}
+      </ul>
+      <p class="small">Pool: <strong>{usd(run.pool)}</strong></p>
+      {run.poolMoves?.length > 0 && (
+        <ul class="moves">
+          {run.poolMoves.map((m: any) => (
+            <li>{m.kind === 'return' ? `${ORDER.find(o => o.key === m.hat)?.name} returned ${usd(m.usd)} to the pool` : m.kind === 'grant' ? `Blue moved ${usd(m.usd)} from the pool to ${ORDER.find(o => o.key === m.hat)?.name}` : m.kind === 'refused' ? `Blue kept the pool from ${ORDER.find(o => o.key === m.hat)?.name}` : `${usd(m.usd)} left unallocated`}{m.reason ? <em> · {m.reason}</em> : null}</li>
+          ))}
+        </ul>
+      )}
+    </>
+  )}
+</section>
+
+<section class="hat-chapter hat-blue">
+  <p class="hat-k">Blue · opens</p>
+  {run.opening ? (
+    <>
+      <p class="opening-q">{run.opening.question}</p>
+      <div class="body" set:html={md(run.opening.text)} />
+    </>
+  ) : <p class="waiting">Blue is reading the note and splitting the budget.</p>}
+  <p class="agents">The three agents: {run.agents.join(', ')}. Off the thread: clerk {run.clerkModel}, research {run.researcher}, Blue {run.blueModel}, writer {run.writerModel}, held-out critic {run.criticModel}.</p>
+</section>
+
+{ORDER.map(o => {
+  const h = hatOf(o.key);
+  if (!h) return (
+    <section class={`hat-chapter hat-${o.key} pending`}>
+      <p class="hat-k">{o.name} hat · {o.loss}</p>
+      <p class="small">Not started.</p>
+    </section>
+  );
+  const sp = spark(h.loss, 3);
+  return (
+    <section class={`hat-chapter hat-${o.key}`} id={`hat-${o.key}`}>
+      <header class="hat-head">
+        <p class="hat-k">{o.name} hat · loss = {o.loss}</p>
+        <div class="hat-loss">
+          <svg viewBox={`0 0 ${sp.W} ${sp.H}`} class="spark" aria-hidden="true"><path d={sp.d} />{sp.pts.map((p: any) => <circle cx={p.x} cy={p.y} r="2.5" />)}</svg>
+          <span class="trail">{h.loss.map((l: any) => l.loss).join(' → ')}</span>
+        </div>
+        <p class="small">{h.state === 'running' ? `round ${h.rounds} · running` : h.stopReason} · {usd(h.spentUsd)} of {usd(h.shareUsd)}</p>
+      </header>
+      {h.items.map((it: any) => (
+        it.kind === 'turn' ? (
+          <article class="turn">
+            <header class="turn-head"><span class="who">{it.agent}</span><span class="meta">round {it.round} · {usd(it.costUsd)}{it.readerQuestions ? ` · carries ${it.readerQuestions} reader question${it.readerQuestions === 1 ? '' : 's'}` : ''}</span></header>
+            <div class="body" set:html={md(it.text)} />
+          </article>
+        ) : it.kind === 'research' ? (
+          <aside class={`research ${it.state === 'running' ? 'pending' : ''}`}>
+            <p class="r-line"><span class="r-label">{it.label}</span><span class="r-by">asked by {it.askedBy}</span></p>
+            <p class="r-answer">{it.line}</p>
+            {it.sources?.length > 0 && <p class="r-sources">{it.sources.map((s: string) => <a href={s} rel="noopener nofollow" target="_blank">{host(s)}</a>)}</p>}
+            {it.state !== 'running' && (
+              <details id={`loop-${it.label}`}>
+                <summary>the full loop · {it.model} · {usd(it.costUsd)}</summary>
+                <p class="r-q"><strong>Question.</strong> {it.question}</p>
+                <ol class="steps">{(it.loop ?? []).map((s: any) => <li><span>{s.step}</span> {s.what}</li>)}</ol>
+                {it.full && <div class="r-full" set:html={md(it.full)} />}
+              </details>
+            )}
+          </aside>
+        ) : (
+          <p class="tally">{it.round === 0 ? 'start' : `after round ${it.round}`} · {o.loss} <strong>{it.loss}</strong>{it.round > 0 ? ` · ${it.newItems} new` : ''}{it.parseFailed ? ' · the clerk did not parse; last ledger stands' : ''}</p>
+        )
+      ))}
+      {h.checkpoint && (
+        <details class="hat-checkpoint" id={`ck-${o.key}`} open={!live}>
+          <summary>Checkpoint · {h.checkpoint.items.length} {o.key === 'white' ? 'facts' : o.key === 'yellow' ? 'values' : o.key === 'black' ? 'risks' : 'alternatives'} · {o.loss} {h.checkpoint.baseline} → {h.checkpoint.loss}</summary>
+          {h.checkpoint.summary && <p class="ck-sum">{h.checkpoint.summary}</p>}
+          <ul class="findings">{h.checkpoint.items.map((i: any) => <li class={i.status ? `st-${i.status}` : ''}>{i.status && <span>{i.status}</span>}{i.text}{i.by && i.by !== 'note' ? <em> ({i.by})</em> : null}</li>)}</ul>
+          {h.checkpoint.leads?.length > 0 && (<><p class="small">Still open:</p><ul class="findings leads">{h.checkpoint.leads.map((l: any) => <li>{l.text}</li>)}</ul></>)}
+        </details>
+      )}
+    </section>
+  );
+})}
+
+<section class="hat-chapter hat-red">
+  <p class="hat-k">Red hat</p>
+  <p class="small">{run.red}</p>
+</section>
+
+<section class="hat-chapter hat-blue">
+  <p class="hat-k">Blue · closes</p>
+  {run.verdict ? (
+    <>
+      <div class="body" set:html={md(run.verdict.text)} />
+      {run.verdict.recommend && <p class="recommend"><strong>Recommends:</strong> {run.verdict.recommend}</p>}
+    </>
+  ) : <p class="small">After the four hats.</p>}
+</section>
+
+{run.dialogue?.lines?.length > 0 && (
+  <section class="dialogue" aria-label="The dialogue">
+    <h2>The dialogue <span class="h2-note">the run, told · {run.dialogue.model} · {usd(run.dialogue.costUsd)}</span></h2>
+    <p class="small">Written from the hats' findings after the run, for readers. Salviati presents, Sagredo asks as the outsider, Simplicio voices the Black hat at full strength. It adds no finding of its own.</p>
+    {run.dialogue.lines.map((l: any) => (
+      <p class={`line ${String(l.speaker).toLowerCase()}`}><span class="spk">{l.speaker}.</span> {l.text}</p>
+    ))}
+  </section>
+)}
+
+{run.checkpoint && (
+  <section class="panel checkpoint" aria-label="Checkpoint">
+    <h2>The note's checkpoint</h2>
+    <p>The note rewritten from the hats' findings ({run.checkpoint.model}, {usd(run.checkpoint.costUsd)}).</p>
+    {run.checkpoint.changed ? (
+      <details id="diff">
+        <summary>what the run changed, word by word</summary>
+        <div class="wdiff">{diffLines.map((l: string) => <p set:html={wordDiff(l)} />)}</div>
+      </details>
+    ) : <p class="none">The run did not change the note.</p>}
+  </section>
+)}
+
+{run.critic && (
+  <section class={`panel critic ${run.critic.pass ? 'pass' : 'fail'}`} aria-label="Held-out critic">
+    <h2>Held-out critic <span class="h2-note">{run.critic.model} · never saw the thread · {usd(run.critic.costUsd)}</span></h2>
+    <p class="verdict"><strong>{run.critic.pass ? 'Passed' : 'Did not pass'}</strong>{run.critic.score != null && <> · {run.critic.score}/10 (5 = no better than the original)</>}</p>
+    <p>{run.critic.verdict}</p>
+    {run.critic.better?.length ? <><h3>Better</h3><ul>{run.critic.better.map((b: string) => <li>{b}</li>)}</ul></> : null}
+    {run.critic.worse?.length ? <><h3>Worse</h3><ul>{run.critic.worse.map((b: string) => <li>{b}</li>)}</ul></> : null}
+    {run.critic.unsupported?.length ? <><h3>Unsupported</h3><ul>{run.critic.unsupported.map((b: string) => <li>{b}</li>)}</ul></> : null}
+    <p class="moved">{run.published ? <>The note in <a href={`/open/${run.noteSlug}`}>/open</a> moved to this checkpoint.</> : run.critic.pass && run.checkpoint?.changed ? <>The critic passed it; the note moves when this record lands.</> : <>The note in /open did not move: it moves only when a run changed it and the critic passed it.</>}</p>
+  </section>
+)}
+
+<style is:global>
+  .hat-white { --hat:#d8d8e4; --wash:rgba(216,216,228,0.035); }
+  .hat-yellow { --hat:#e2c35a; --wash:rgba(226,195,90,0.04); }
+  .hat-black { --hat:#9a9ab4; --wash:rgba(0,0,0,0.45); }
+  .hat-green { --hat:#5fbf8f; --wash:rgba(95,191,143,0.04); }
+  .hat-blue { --hat:#4a9eff; --wash:rgba(74,158,255,0.04); }
+  .hat-red { --hat:#d0604a; --wash:rgba(208,96,74,0.04); }
+  .hat-chapter { border-left:3px solid var(--hat); background:var(--wash); padding:0.9rem 1rem; margin:0 0 1.2rem; border-radius:0 6px 6px 0; }
+  .hat-chapter.pending { opacity:0.45; }
+  .hat-k { font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--hat); margin-bottom:0.4rem; }
+  .hat-head { margin-bottom:0.9rem; }
+  .hat-loss { display:flex; align-items:center; gap:0.6rem; }
+  .spark { width:120px; height:34px; }
+  .spark path { fill:none; stroke:var(--hat); stroke-width:1.6; }
+  .spark circle { fill:var(--hat); }
+  .trail { font-family:var(--font-mono); font-size:0.8rem; color:var(--text-primary); }
+  .small { font-size:0.78rem !important; color:var(--text-muted) !important; }
+  .opening-q { font-family:var(--font-display); font-size:1.3rem; line-height:1.3; margin-bottom:0.5rem; }
+  .agents { font-size:0.74rem; color:var(--text-muted); margin-top:0.5rem; }
+  .hat-chapter .turn { border-left:1px solid rgba(255,255,255,0.12); padding-left:0.8rem; margin:0 0 1.1rem; }
+  .hat-chapter .who { font-family:var(--font-mono); font-size:0.78rem; color:var(--hat); }
+  .hat-chapter .research { margin-left:0; }
+  .tally { font-family:var(--font-mono); font-size:0.66rem; color:var(--text-muted); margin:0 0 1rem; padding:0.25rem 0; border-top:1px dashed rgba(255,255,255,0.08); }
+  .tally strong { color:var(--text-primary); }
+  .hat-checkpoint { border:1px solid var(--hat); border-radius:5px; padding:0.6rem 0.75rem; margin-top:0.6rem; }
+  .hat-checkpoint summary { cursor:pointer; font-size:0.78rem; color:var(--text-primary); }
+  .ck-sum { font-size:0.84rem; color:var(--text-secondary); margin:0.5rem 0; }
+  .findings { list-style:none; }
+  .findings li { font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.35rem; }
+  .findings li span { font-family:var(--font-mono); font-size:0.58rem; text-transform:uppercase; margin-right:0.4rem; padding:0.05rem 0.3rem; border-radius:2px; background:rgba(255,255,255,0.06); }
+  .findings li.st-checked span { color:var(--good); } .findings li.st-unchecked span, .findings li.st-contradicted span { color:#e0864a; }
+  .findings.leads li { color:var(--text-muted); }
+  .findings em { color:var(--text-muted); }
+  .split { list-style:none; padding:0 !important; }
+  .split li { display:grid; grid-template-columns:0.9rem 4rem 1fr; gap:0 0.4rem; align-items:baseline; margin-bottom:0.45rem; }
+  .split .dot { width:0.6rem; height:0.6rem; border-radius:50%; background:var(--hat); display:inline-block; }
+  .split .s-name { font-size:0.82rem; color:var(--text-primary); }
+  .split .s-usd { font-family:var(--font-mono); font-size:0.72rem; color:var(--text-primary); }
+  .split .s-usd em { color:var(--text-muted); font-style:normal; }
+  .split .s-why { grid-column:2 / -1; font-size:0.76rem; color:var(--text-secondary); }
+  .moves { list-style:none; padding:0 !important; }
+  .moves li { font-size:0.76rem !important; color:var(--text-secondary); margin-bottom:0.2rem; }
+  .moves em { color:var(--text-muted); }
+  .fill.tok { background:var(--good); }
+  .recommend { font-size:0.88rem; margin-top:0.4rem; }
+  .dialogue { margin:2rem 0 1.4rem; }
+  .dialogue h2 { font-family:var(--font-display); font-weight:500; font-size:1.5rem; margin-bottom:0.3rem; }
+  .dialogue .line { font-size:0.94rem; margin:0 0 0.85rem; }
+  .dialogue .spk { font-family:var(--font-display); font-size:1.08rem; }
+  .dialogue .salviati .spk { color:var(--salviati); } .dialogue .sagredo .spk { color:var(--sagredo); } .dialogue .simplicio .spk { color:var(--simplicio); }
+  .wdiff { margin-top:0.5rem; max-height:70vh; overflow:auto; font-size:0.78rem; color:var(--text-muted); }
+  .wdiff p { margin-bottom:0.6rem; }
+  .wdiff del { color:#e0864a; background:rgba(224,134,74,0.08); }
+  .wdiff ins { color:var(--good); background:rgba(95,191,143,0.08); text-decoration:none; }
+</style>

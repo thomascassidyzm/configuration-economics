@@ -1,0 +1,140 @@
+---
+// The three-seat prototype's run (run-001), kept rendering exactly as it ran.
+import { marked } from 'marked';
+import type { RunItem } from '../../lib/run-store';
+const { run, live } = Astro.props as { run: any; live: boolean };
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const md = (s: string) => marked.parse(esc(s ?? ''), { async: false }) as string;
+const usd = (n?: number) => `$${(n ?? 0).toFixed(n && n < 0.1 ? 3 : 2)}`;
+const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+const SEAT_CLASS: Record<string, string> = { Salviati: 'salviati', Sagredo: 'sagredo', Simplicio: 'simplicio' };
+const pts: any[] = run?.loss ?? [];
+const maxLoss = Math.max(1, ...pts.map(p => p.loss));
+const W = 320, H = 110, PAD = 22;
+const xAt = (i: number) => PAD + (i * (W - 2 * PAD)) / Math.max(1, run?.budget.maxRounds ?? 1);
+const yAt = (v: number) => H - PAD - (v / maxLoss) * (H - 2 * PAD);
+const path = pts.map((p, i) => `${i ? 'L' : 'M'}${xAt(i).toFixed(1)},${yAt(p.loss).toFixed(1)}`).join(' ');
+const last = pts[pts.length - 1];
+const spentPct = run ? Math.min(100, (run.spentUsd / run.budget.usdCap) * 100) : 0;
+const items: RunItem[] = run?.items ?? [];
+---
+          <section class="status">
+            <span class={`pill ${run.state}`}>{live ? (run.state === 'running' ? `live · round ${run.round || 0}` : run.state === 'checkpointing' ? 'live · writing the checkpoint' : 'live · the critic is reading') : run.state === 'failed' ? 'failed' : 'run stopped'}</span>
+            {run.stopReason && <span class="stop-reason">{run.stopReason}</span>}
+          </section>
+
+          <section class="panel budget" aria-label="Budget">
+            <h2>Budget <span class="h2-note">fixed before the run started</span></h2>
+            <div class="bar"><div class="fill" style={`width:${spentPct.toFixed(1)}%`}></div></div>
+            <p class="figures"><strong>{usd(run.spentUsd)}</strong> spent of a <strong>{usd(run.budget.usdCap)}</strong> cap, on the site's own Alexander key. {usd(run.budget.usdReserve)} of it is held back for the checkpoint and the critic.</p>
+            <ul class="caps">
+              <li><span>rounds</span>{run.round} of {run.budget.maxRounds}</li>
+              <li><span>research loops</span>{run.researchCount} of {run.budget.maxResearch}</li>
+              <li><span>early stop</span>first round from {run.budget.minRounds} on where the loss does not fall</li>
+            </ul>
+          </section>
+
+          <section class="panel loss" aria-label="Loss">
+            <h2>Loss <span class="h2-note">lower is better</span></h2>
+            <p class="formula">loss = open objections + unchecked load-bearing claims + anyone left with fewer options</p>
+            {pts.length > 0 && (
+              <svg viewBox={`0 0 ${W} ${H}`} class="curve" role="img" aria-label={`Loss by round: ${pts.map(p => p.loss).join(', ')}`}>
+                <line x1={PAD} y1={H - PAD} x2={W - PAD} y2={H - PAD} class="axis" />
+                <path d={path} class="line" />
+                {pts.map((p, i) => (
+                  <g>
+                    <circle cx={xAt(i)} cy={yAt(p.loss)} r="3.5" class="dot" />
+                    <text x={xAt(i)} y={yAt(p.loss) - 8} class="val">{p.loss}</text>
+                    <text x={xAt(i)} y={H - 6} class="tick">{p.round === 0 ? 'start' : `r${p.round}`}</text>
+                  </g>
+                ))}
+              </svg>
+            )}
+            {last && <p class="now">Now <strong>{last.loss}</strong> = {last.objections} open objection{last.objections === 1 ? '' : 's'} + {last.claims} unchecked claim{last.claims === 1 ? '' : 's'} + {last.fewerOptions} left with fewer options.{pts.length > 1 && <> Started at {pts[0].loss}.</>}</p>}
+          </section>
+
+          <section class="seats" aria-label="Seats">
+            {Object.entries(run.seats).map(([name, s]) => (
+              <div class={`seat ${SEAT_CLASS[name]}`}>
+                <span class="seat-name">{name}</span>
+                <span class="seat-model">{s.model}</span>
+                <p class="seat-role">{s.role}</p>
+              </div>
+            ))}
+            <p class="offstage">Off the thread: a clerk ({run.clerk}) keeps the loss ledger, research loops ({run.researcher}, web search) go out and return one line with sources, and a held-out critic ({run.criticModel}) that never sees the thread scores the checkpoint.</p>
+          </section>
+
+          <section class="thread" aria-label="The thread">
+            <h2 class="thread-h">The thread</h2>
+            {items.map(it => (
+              it.kind === 'turn' ? (
+                <article class={`turn ${SEAT_CLASS[it.speaker!] ?? ''}`} id={`t${it.n}`}>
+                  <header class="turn-head">
+                    <span class="who">{it.speaker}</span>
+                    <span class="meta">round {it.round} · {it.model} · {usd(it.costUsd)}</span>
+                  </header>
+                  {it.readerQuestions ? <p class="carried">carries {it.readerQuestions} reader question{it.readerQuestions === 1 ? '' : 's'}, in his own words</p> : null}
+                  <div class="body" set:html={md(it.text ?? '')} />
+                  {it.changes && it.changes.length > 0 && (
+                    <ul class="changes">{it.changes.map(c => <li><span>change</span>{c}</li>)}</ul>
+                  )}
+                </article>
+              ) : it.kind === 'research' ? (
+                <aside class={`research ${it.state === 'running' ? 'pending' : ''}`} id={`r-${it.label}`}>
+                  <p class="r-line"><span class="r-label">{it.label}</span><span class="r-by">asked by {it.askedBy}</span></p>
+                  <p class="r-answer">{it.line}</p>
+                  {it.sources && it.sources.length > 0 && (
+                    <p class="r-sources">{it.sources.map(s => <a href={s} rel="noopener nofollow" target="_blank">{host(s)}</a>)}</p>
+                  )}
+                  {it.state !== 'running' && (
+                    <details id={`loop-${it.label}`}>
+                      <summary>the full loop · {it.model} · {usd(it.costUsd)}</summary>
+                      <p class="r-q"><strong>Question.</strong> {it.question}</p>
+                      <ol class="steps">{(it.loop ?? []).map(s => <li><span>{s.step}</span> {s.what}</li>)}</ol>
+                      {it.full && <div class="r-full" set:html={md(it.full)} />}
+                    </details>
+                  )}
+                </aside>
+              ) : (
+                <div class="ledger" id={`l${it.round}`}>
+                  <details id={`ledger-${it.round}`}>
+                    <summary><span class="l-k">{it.round === 0 ? 'baseline' : `after round ${it.round}`}</span> loss <strong>{it.loss}</strong></summary>
+                    {it.parseFailed && <p class="warn">The clerk's answer did not parse; the previous ledger stands for this round.</p>}
+                    <h3>Objections</h3>
+                    <ul>{(it.objections ?? []).map(o => <li class={`st-${o.status}`}><span>{o.status}</span>{o.text} <em>({o.by})</em></li>)}</ul>
+                    <h3>Load-bearing claims</h3>
+                    <ul>{(it.claims ?? []).map(c => <li class={`st-${c.status}`}><span>{c.status}</span>{c.text}{c.by ? <em> ({c.by})</em> : null}</li>)}</ul>
+                    <h3>Left with fewer options</h3>
+                    {(it.fewerOptions ?? []).length ? <ul>{it.fewerOptions!.map(f => <li class="st-open"><span>{f.who}</span>{f.how}</li>)}</ul> : <p class="none">Nobody, on the clerk's reading.</p>}
+                    <p class="l-cost">clerk · {it.model} · {usd(it.costUsd)}</p>
+                  </details>
+                </div>
+              )
+            ))}
+            {live && <p class="waiting">The run is live. This page follows it.</p>}
+          </section>
+
+          {run.checkpoint && (
+            <section class="panel checkpoint" aria-label="Checkpoint">
+              <h2>Checkpoint</h2>
+              <p>The best design at the stop, written out in full by Salviati ({run.checkpoint.model}, {usd(run.checkpoint.costUsd)}). Loss {run.checkpoint.baselineLoss} at the start, {run.checkpoint.lossAtStop} at the stop.</p>
+              {run.checkpoint.changed ? (
+                <details id="diff">
+                  <summary>what the run changed</summary>
+                  <pre class="diff">{run.checkpoint.diff.split('\n').map(l => <span class={l.startsWith('+') ? 'add' : l.startsWith('-') ? 'del' : l.startsWith('@@') ? 'hunk' : ''}>{l + '\n'}</span>)}</pre>
+                </details>
+              ) : <p class="none">The run did not change the note.</p>}
+            </section>
+          )}
+
+          {run.critic && (
+            <section class={`panel critic ${run.critic.pass ? 'pass' : 'fail'}`} aria-label="Held-out critic">
+              <h2>Held-out critic <span class="h2-note">{run.critic.model} · never saw the thread · {usd(run.critic.costUsd)}</span></h2>
+              <p class="verdict"><strong>{run.critic.pass ? 'Passed' : 'Did not pass'}</strong>{run.critic.score != null && <> · {run.critic.score}/10 (5 = no better than the original)</>}</p>
+              <p>{run.critic.verdict}</p>
+              {run.critic.better?.length ? <><h3>Better</h3><ul>{run.critic.better.map(b => <li>{b}</li>)}</ul></> : null}
+              {run.critic.worse?.length ? <><h3>Worse</h3><ul>{run.critic.worse.map(b => <li>{b}</li>)}</ul></> : null}
+              {run.critic.unsupported?.length ? <><h3>Unsupported</h3><ul>{run.critic.unsupported.map(b => <li>{b}</li>)}</ul></> : null}
+              <p class="moved">{run.published ? <>The note in <a href={`/open/${run.noteSlug}`}>/open</a> moved to this checkpoint.</> : run.critic.pass && run.checkpoint?.changed ? <>The critic passed it; the note moves when this record lands.</> : <>The note in /open did not move: it moves only when a run changed it and the critic passed it.</>}</p>
+            </section>
+          )}

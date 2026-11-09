@@ -12,11 +12,12 @@
 //
 // The thread is read live from the store the runner writes to; nothing here
 // waits for a build. The six-hat sessions it grew out of are at /world-computer/hats.
-import { marked } from 'marked';
 import { VERSION, BUILD } from '../../lib/version';
 import PhoneNav from '../../components/PhoneNav.astro';
 import { getRun, listRuns } from '../../lib/run-store';
-import type { Run, RunItem } from '../../lib/run-store';
+import type { Run } from '../../lib/run-store';
+import SeatRun from '../../components/run/SeatRun.astro';
+import HatRun from '../../components/run/HatRun.astro';
 
 export const prerender = false;
 Astro.response.headers.set('cache-control', 'no-store');
@@ -26,25 +27,8 @@ const want = Astro.url.searchParams.get('run');
 const runId = want && ids.includes(want) ? want : ids[ids.length - 1];
 const run: Run | null = runId ? await getRun(runId) : null;
 
-const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const md = (s: string) => marked.parse(esc(s ?? ''), { async: false }) as string;
-const usd = (n?: number) => `$${(n ?? 0).toFixed(n && n < 0.1 ? 3 : 2)}`;
-const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
-const live = run && ['running', 'checkpointing', 'critic'].includes(run.state);
-
-const SEAT_CLASS: Record<string, string> = { Salviati: 'salviati', Sagredo: 'sagredo', Simplicio: 'simplicio' };
-
-// The loss curve: one point per round, round 0 the baseline.
-const pts = run?.loss ?? [];
-const maxLoss = Math.max(1, ...pts.map(p => p.loss));
-const W = 320, H = 110, PAD = 22;
-const xAt = (i: number) => PAD + (i * (W - 2 * PAD)) / Math.max(1, run?.budget.maxRounds ?? 1);
-const yAt = (v: number) => H - PAD - (v / maxLoss) * (H - 2 * PAD);
-const path = pts.map((p, i) => `${i ? 'L' : 'M'}${xAt(i).toFixed(1)},${yAt(p.loss).toFixed(1)}`).join(' ');
-const last = pts[pts.length - 1];
-
-const spentPct = run ? Math.min(100, (run.spentUsd / run.budget.usdCap) * 100) : 0;
-const items: RunItem[] = run?.items ?? [];
+const LIVE_STATES = ['opening', 'running', 'closing', 'checkpointing', 'critic', 'dialogue'];
+const live = !!run && LIVE_STATES.includes(run.state);
 ---
 
 <html lang="en">
@@ -53,7 +37,7 @@ const items: RunItem[] = run?.items ?? [];
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>The world computer — Configuration Economics</title>
-    <meta name="description" content="Three seats work one design note in public, in a bounded run: a budget fixed before it starts, a loss, an early stop, a checkpoint and a held-out critic." />
+    <meta name="description" content="Three agents on three models think one design note through the six hats in public. Each hat is a bounded run with its own loss, one budget split by Blue, and the findings told as a Galileo dialogue." />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -74,7 +58,7 @@ const items: RunItem[] = run?.items ?? [];
 
     <main>
       <header class="page-header">
-        <p class="kicker">The world computer · three seats · bounded runs</p>
+        <p class="kicker">The world computer · six hats · bounded runs</p>
         {run ? (
           <>
             <h1>{run.title}</h1>
@@ -90,139 +74,16 @@ const items: RunItem[] = run?.items ?? [];
       </header>
 
       <div id="live" data-run={run?.id ?? ''} data-updated={run?.updatedAt ?? ''} data-live={live ? '1' : '0'}>
-      {run && (
-        <>
-          <section class="status">
-            <span class={`pill ${run.state}`}>{live ? (run.state === 'running' ? `live · round ${run.round || 0}` : run.state === 'checkpointing' ? 'live · writing the checkpoint' : 'live · the critic is reading') : run.state === 'failed' ? 'failed' : 'run stopped'}</span>
-            {run.stopReason && <span class="stop-reason">{run.stopReason}</span>}
-          </section>
-
-          <section class="panel budget" aria-label="Budget">
-            <h2>Budget <span class="h2-note">fixed before the run started</span></h2>
-            <div class="bar"><div class="fill" style={`width:${spentPct.toFixed(1)}%`}></div></div>
-            <p class="figures"><strong>{usd(run.spentUsd)}</strong> spent of a <strong>{usd(run.budget.usdCap)}</strong> cap, on the site's own Alexander key. {usd(run.budget.usdReserve)} of it is held back for the checkpoint and the critic.</p>
-            <ul class="caps">
-              <li><span>rounds</span>{run.round} of {run.budget.maxRounds}</li>
-              <li><span>research loops</span>{run.researchCount} of {run.budget.maxResearch}</li>
-              <li><span>early stop</span>first round from {run.budget.minRounds} on where the loss does not fall</li>
-            </ul>
-          </section>
-
-          <section class="panel loss" aria-label="Loss">
-            <h2>Loss <span class="h2-note">lower is better</span></h2>
-            <p class="formula">loss = open objections + unchecked load-bearing claims + anyone left with fewer options</p>
-            {pts.length > 0 && (
-              <svg viewBox={`0 0 ${W} ${H}`} class="curve" role="img" aria-label={`Loss by round: ${pts.map(p => p.loss).join(', ')}`}>
-                <line x1={PAD} y1={H - PAD} x2={W - PAD} y2={H - PAD} class="axis" />
-                <path d={path} class="line" />
-                {pts.map((p, i) => (
-                  <g>
-                    <circle cx={xAt(i)} cy={yAt(p.loss)} r="3.5" class="dot" />
-                    <text x={xAt(i)} y={yAt(p.loss) - 8} class="val">{p.loss}</text>
-                    <text x={xAt(i)} y={H - 6} class="tick">{p.round === 0 ? 'start' : `r${p.round}`}</text>
-                  </g>
-                ))}
-              </svg>
-            )}
-            {last && <p class="now">Now <strong>{last.loss}</strong> = {last.objections} open objection{last.objections === 1 ? '' : 's'} + {last.claims} unchecked claim{last.claims === 1 ? '' : 's'} + {last.fewerOptions} left with fewer options.{pts.length > 1 && <> Started at {pts[0].loss}.</>}</p>}
-          </section>
-
-          <section class="seats" aria-label="Seats">
-            {Object.entries(run.seats).map(([name, s]) => (
-              <div class={`seat ${SEAT_CLASS[name]}`}>
-                <span class="seat-name">{name}</span>
-                <span class="seat-model">{s.model}</span>
-                <p class="seat-role">{s.role}</p>
-              </div>
-            ))}
-            <p class="offstage">Off the thread: a clerk ({run.clerk}) keeps the loss ledger, research loops ({run.researcher}, web search) go out and return one line with sources, and a held-out critic ({run.criticModel}) that never sees the thread scores the checkpoint.</p>
-          </section>
-
-          <section class="thread" aria-label="The thread">
-            <h2 class="thread-h">The thread</h2>
-            {items.map(it => (
-              it.kind === 'turn' ? (
-                <article class={`turn ${SEAT_CLASS[it.speaker!] ?? ''}`} id={`t${it.n}`}>
-                  <header class="turn-head">
-                    <span class="who">{it.speaker}</span>
-                    <span class="meta">round {it.round} · {it.model} · {usd(it.costUsd)}</span>
-                  </header>
-                  {it.readerQuestions ? <p class="carried">carries {it.readerQuestions} reader question{it.readerQuestions === 1 ? '' : 's'}, in his own words</p> : null}
-                  <div class="body" set:html={md(it.text ?? '')} />
-                  {it.changes && it.changes.length > 0 && (
-                    <ul class="changes">{it.changes.map(c => <li><span>change</span>{c}</li>)}</ul>
-                  )}
-                </article>
-              ) : it.kind === 'research' ? (
-                <aside class={`research ${it.state === 'running' ? 'pending' : ''}`} id={`r-${it.label}`}>
-                  <p class="r-line"><span class="r-label">{it.label}</span><span class="r-by">asked by {it.askedBy}</span></p>
-                  <p class="r-answer">{it.line}</p>
-                  {it.sources && it.sources.length > 0 && (
-                    <p class="r-sources">{it.sources.map(s => <a href={s} rel="noopener nofollow" target="_blank">{host(s)}</a>)}</p>
-                  )}
-                  {it.state !== 'running' && (
-                    <details id={`loop-${it.label}`}>
-                      <summary>the full loop · {it.model} · {usd(it.costUsd)}</summary>
-                      <p class="r-q"><strong>Question.</strong> {it.question}</p>
-                      <ol class="steps">{(it.loop ?? []).map(s => <li><span>{s.step}</span> {s.what}</li>)}</ol>
-                      {it.full && <div class="r-full" set:html={md(it.full)} />}
-                    </details>
-                  )}
-                </aside>
-              ) : (
-                <div class="ledger" id={`l${it.round}`}>
-                  <details id={`ledger-${it.round}`}>
-                    <summary><span class="l-k">{it.round === 0 ? 'baseline' : `after round ${it.round}`}</span> loss <strong>{it.loss}</strong></summary>
-                    {it.parseFailed && <p class="warn">The clerk's answer did not parse; the previous ledger stands for this round.</p>}
-                    <h3>Objections</h3>
-                    <ul>{(it.objections ?? []).map(o => <li class={`st-${o.status}`}><span>{o.status}</span>{o.text} <em>({o.by})</em></li>)}</ul>
-                    <h3>Load-bearing claims</h3>
-                    <ul>{(it.claims ?? []).map(c => <li class={`st-${c.status}`}><span>{c.status}</span>{c.text}{c.by ? <em> ({c.by})</em> : null}</li>)}</ul>
-                    <h3>Left with fewer options</h3>
-                    {(it.fewerOptions ?? []).length ? <ul>{it.fewerOptions!.map(f => <li class="st-open"><span>{f.who}</span>{f.how}</li>)}</ul> : <p class="none">Nobody, on the clerk's reading.</p>}
-                    <p class="l-cost">clerk · {it.model} · {usd(it.costUsd)}</p>
-                  </details>
-                </div>
-              )
-            ))}
-            {live && <p class="waiting">The run is live. This page follows it.</p>}
-          </section>
-
-          {run.checkpoint && (
-            <section class="panel checkpoint" aria-label="Checkpoint">
-              <h2>Checkpoint</h2>
-              <p>The best design at the stop, written out in full by Salviati ({run.checkpoint.model}, {usd(run.checkpoint.costUsd)}). Loss {run.checkpoint.baselineLoss} at the start, {run.checkpoint.lossAtStop} at the stop.</p>
-              {run.checkpoint.changed ? (
-                <details id="diff">
-                  <summary>what the run changed</summary>
-                  <pre class="diff">{run.checkpoint.diff.split('\n').map(l => <span class={l.startsWith('+') ? 'add' : l.startsWith('-') ? 'del' : l.startsWith('@@') ? 'hunk' : ''}>{l + '\n'}</span>)}</pre>
-                </details>
-              ) : <p class="none">The run did not change the note.</p>}
-            </section>
-          )}
-
-          {run.critic && (
-            <section class={`panel critic ${run.critic.pass ? 'pass' : 'fail'}`} aria-label="Held-out critic">
-              <h2>Held-out critic <span class="h2-note">{run.critic.model} · never saw the thread · {usd(run.critic.costUsd)}</span></h2>
-              <p class="verdict"><strong>{run.critic.pass ? 'Passed' : 'Did not pass'}</strong>{run.critic.score != null && <> · {run.critic.score}/10 (5 = no better than the original)</>}</p>
-              <p>{run.critic.verdict}</p>
-              {run.critic.better?.length ? <><h3>Better</h3><ul>{run.critic.better.map(b => <li>{b}</li>)}</ul></> : null}
-              {run.critic.worse?.length ? <><h3>Worse</h3><ul>{run.critic.worse.map(b => <li>{b}</li>)}</ul></> : null}
-              {run.critic.unsupported?.length ? <><h3>Unsupported</h3><ul>{run.critic.unsupported.map(b => <li>{b}</li>)}</ul></> : null}
-              <p class="moved">{run.published ? <>The note in <a href={`/open/${run.noteSlug}`}>/open</a> moved to this checkpoint.</> : run.critic.pass && run.checkpoint?.changed ? <>The critic passed it; the note moves when this record lands.</> : <>The note in /open did not move: it moves only when a run changed it and the critic passed it.</>}</p>
-            </section>
-          )}
-        </>
-      )}
+      {run && (run.engine === 'hats' ? <HatRun run={run} live={!!live} /> : <SeatRun run={run} live={!!live} />)}
       </div>
 
-      {run && run.state === 'running' && (
-        <section class="panel ask" aria-label="Ask Sagredo">
-          <h2>Ask through Sagredo</h2>
-          <p>Sagredo carries readers' questions into the room in his own words at his next turn. Your text is not published and reaches no person.</p>
+      {run && live && (
+        <section class="panel ask" aria-label="Ask the room">
+          <h2>Ask the room</h2>
+          <p>Your question goes to the agents at the start of their next round, under whatever hat they are wearing. Your text is not published and reaches no person.</p>
           <form id="ask">
-            <textarea name="q" maxlength="400" rows="3" placeholder="What would you want the outsider to ask?" required></textarea>
-            <button type="submit">Give it to Sagredo</button>
+            <textarea name="q" maxlength="400" rows="3" placeholder="What would you want the room to look at?" required></textarea>
+            <button type="submit">Send it in</button>
             <p class="ask-msg" aria-live="polite"></p>
           </form>
         </section>
@@ -232,12 +93,12 @@ const items: RunItem[] = run?.items ?? [];
         <details>
           <summary>How a run works</summary>
           <ul>
-            <li><strong>Three seats.</strong> After Galileo's <em>Dialogue on the Two Chief World Systems</em>. Salviati argues the design. Sagredo is the intelligent outsider who has to be convinced. Simplicio holds the conventional view at full strength, with real evidence, on a different model from the other two so the strongest objection is not a sibling of the argument it attacks.</li>
-            <li><strong>Research happens off the thread.</strong> Any seat can ask a checkable question. A loop goes out to the web and comes back as one line with its sources; the whole loop is under it, one tap away.</li>
-            <li><strong>The budget is fixed before the start</strong> and shown above: dollars, rounds, research loops.</li>
-            <li><strong>The loss</strong> is recounted by a clerk after every round: open objections, plus load-bearing claims nobody has checked, plus anyone the design leaves with fewer options. The run stops early the first round the loss does not fall.</li>
-            <li><strong>The checkpoint</strong> is the best design at the stop, with a diff of what changed. A <strong>held-out critic</strong> that never saw the thread scores it against the original.</li>
-            <li><strong>Nothing publishes itself.</strong> Research loops never touch /open. The design note moves only when a run changed it and the critic passed it.</li>
+            <li><strong>The engine is the six hats.</strong> Three agents on three different models wear the same hat together and take turns in one direction, building on each other. It is parallel thinking: nobody argues against anybody. Blue opens with the question and closes with the verdict. Red is Tom's gut, and it is left to him.</li>
+            <li><strong>Each hat is one bounded run with its own loss.</strong> White counts unchecked facts, Yellow value not yet found, Black risks not yet found, Green alternatives not yet tried. A clerk recounts it after every round. A hat stops early when it stops adding, and ends in a checkpoint: its findings, frozen.</li>
+            <li><strong>One budget per run</strong>, in money and in tokens, set before the start. Blue splits it across the hats with a reason for each. A hat that stops early returns what it did not spend to a pool, and Blue can move pool money to a hat whose loss is still falling. Every move is shown.</li>
+            <li><strong>Research happens off the thread.</strong> A loop goes out to the web and comes back as one line with its sources; the whole loop is one tap away.</li>
+            <li><strong>The dialogue is how the run is told, not how it thinks.</strong> After the hats, the findings are rendered as Galileo's three: Salviati presents, Sagredo asks as the outsider, Simplicio voices the Black hat at full strength.</li>
+            <li><strong>Nothing publishes itself.</strong> The design note moves only when the run's checkpoint changed it and a held-out critic, which never saw the thread, passed it.</li>
           </ul>
         </details>
       </section>

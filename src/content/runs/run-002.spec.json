@@ -1,0 +1,22 @@
+{
+  "id": "run-002",
+  "title": "What a ratchet cell takes from each level of government — six hats",
+  "question": "As the governance note now stands, what does a Bethesda ratchet cell take from each level of government and from its roofless neighbour, and which posture should it adopt by default?",
+  "note": "src/content/open/NOTES-ratchet-cell-governance-ledger.md",
+  "agents": ["opus", "sonnet", "haiku"],
+  "blue": "sonnet",
+  "clerk": "sonnet",
+  "researcher": "sonnet",
+  "writer": "opus",
+  "critic": "fable",
+  "budget": {
+    "setBy": "chosen by the agent for the first run, as Tom asked: modest",
+    "usdCap": 3.5,
+    "tokenCap": 1500000,
+    "closeReserveUsd": 0.9,
+    "tokenShareForHats": 0.85,
+    "roundCostEstimate": 0.2,
+    "maxRoundsPerHat": 3,
+    "maxResearch": 6
+  }
+}

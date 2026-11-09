@@ -39,6 +39,9 @@ export interface RunItem {
 }
 
 export interface Run {
+  /** 'hats' for the six-hat engine; absent on the three-seat prototype (run-001). */
+  engine?: 'hats';
+  [extra: string]: any;
   id: string;
   title: string;
   question: string;
@@ -50,7 +53,7 @@ export interface Run {
   researcher: string;
   criticModel: string;
   budget: { usdCap: number; usdReserve: number; maxRounds: number; minRounds: number; patience: number; maxResearch: number };
-  state: 'running' | 'checkpointing' | 'critic' | 'stopped' | 'failed';
+  state: string;
   stopReason: string | null;
   startedAt: string;
   updatedAt: string;
