@@ -88,7 +88,7 @@ const run = {
   },
   clerk: MODELS[spec.clerk].family,
   researcher: MODELS[spec.researcher].family,
-  critic: MODELS[spec.critic].family,
+  criticModel: MODELS[spec.critic].family,
   budget: spec.budget, // fixed before start
   state: 'running',
   stopReason: null,
@@ -237,9 +237,10 @@ SOURCES: <url> | <url>`;
       const { json, cost } = await call(spec.researcher, { system, messages, effort: 'medium', tools, maxTokens: 12000 });
       item.costUsd += cost;
       for (const b of json.content || []) {
-        if (b.type === 'server_tool_use') item.loop.push({ step: b.name === 'web_search' ? 'search' : 'fetch', what: b.input?.query || b.input?.url || '' });
+        if (b.type === 'server_tool_use' && b.name === 'web_search') item.loop.push({ step: 'search', what: b.input?.query || '' });
+        if (b.type === 'server_tool_use' && b.name === 'web_fetch') item.loop.push({ step: 'fetch', what: b.input?.url || '' });
         if (b.type === 'web_search_tool_result' && Array.isArray(b.content)) item.loop.push({ step: 'results', what: b.content.slice(0, 5).map(r => r.url).join(' | ') });
-        if (b.type === 'web_fetch_tool_result') item.loop.push({ step: 'read', what: b.content?.url || (b.content?.error_code ? `error: ${b.content.error_code}` : '') });
+        if (b.type === 'web_fetch_tool_result' && b.content?.error_code) item.loop.push({ step: 'fetch failed', what: b.content.error_code });
       }
       text += textOf(json) + '\n';
       if (json.stop_reason !== 'pause_turn') break;
@@ -349,12 +350,20 @@ async function main() {
   }
 
   // ---- checkpoint ----
+  // Research alone never moves a note: with no seat turn there is no run to checkpoint.
+  if (!run.items.some(i => i.kind === 'turn')) {
+    run.state = 'stopped'; run.endedAt = new Date().toISOString();
+    run.stopReason = (run.stopReason ? run.stopReason + '; ' : '') + 'no seat spoke, so there is no checkpoint and the note does not move';
+    await save();
+    return;
+  }
   run.state = 'checkpointing'; await save();
   const changes = run.items.filter(i => i.kind === 'turn' && i.speaker === 'Salviati').flatMap(i => i.changes);
   const ckUser = `You are Salviati. The run has stopped (${run.stopReason}). Write the CHECKPOINT: the note as it should now stand, in full, as markdown.
 - Start from the note exactly as given. Change only what the run supports: apply the CHANGE lines you still stand by after Simplicio's replies, fold in research results with their source URLs inline, and drop or soften claims the run contradicted or could not check.
 - Keep everything the run did not touch word for word, including the title line.
-- Directly under the title's italic intro paragraph, add one italic line: "_Run ${run.id.replace('run-', '')} of the world computer (${new Date().toISOString().slice(0, 10)}) moved this note: <one sentence on what changed>._"
+- Directly under the title's italic intro paragraph, add one italic line: "_Moved on ${new Date().toISOString().slice(0, 10)} by a [world computer run](/world-computer?run=${run.id}): <one plain sentence on what changed>._"
+- Put each new finding in the one place it bears, plus the sources list. Do not restate it across sections.
 - No preamble and no closing remarks: output the note and nothing else.
 
 Adopted CHANGE lines during the run:\n${changes.map(c => '- ' + c).join('\n') || '(none)'}\n\nTHE THREAD:\n\n${threadText()}`;
@@ -379,9 +388,9 @@ Judge whether the checkpoint should replace the original in public. Pass it only
   try {
     const { json: cr, cost: crCost } = await call(spec.critic, { system: 'You score design-note revisions. Be exact and unsentimental.', messages: [{ role: 'user', content: crUser }], effort: 'medium', maxTokens: 16000 });
     const v = JSON.parse(textOf(cr).replace(/^```(json)?|```$/gm, '').trim());
-    run.critic = { ...v, model: run.critic, costUsd: crCost, stop: cr.stop_reason };
+    run.critic = { ...v, model: run.criticModel, costUsd: crCost, stop: cr.stop_reason };
   } catch (e) {
-    run.critic = { pass: false, score: null, verdict: `critic failed: ${e.message.slice(0, 200)}`, model: run.critic, costUsd: 0 };
+    run.critic = { pass: false, score: null, verdict: `critic failed: ${e.message.slice(0, 200)}`, model: run.criticModel, costUsd: 0 };
   }
 
   // ---- publish rule ----

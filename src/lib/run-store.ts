@@ -48,7 +48,7 @@ export interface Run {
   seats: Record<string, { model: string; role: string }>;
   clerk: string;
   researcher: string;
-  critic: string;
+  criticModel: string;
   budget: { usdCap: number; usdReserve: number; maxRounds: number; minRounds: number; patience: number; maxResearch: number };
   state: 'running' | 'checkpointing' | 'critic' | 'stopped' | 'failed';
   stopReason: string | null;
