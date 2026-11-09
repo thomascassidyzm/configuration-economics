@@ -1,0 +1,983 @@
+{
+  "id": "run-001",
+  "title": "What a ratchet cell takes from each level of government",
+  "question": "Does the governance ledger hold up: is the real take sideways (onto the roofless neighbour) rather than upwards, and is 'option 1 plus option 5 by default, option 2 to campaign for' the right posture for a Bethesda cell?",
+  "note": "src/content/open/NOTES-ratchet-cell-governance-ledger.md",
+  "noteSlug": "NOTES-ratchet-cell-governance-ledger",
+  "noteSha": "3369eb3",
+  "seats": {
+    "Salviati": {
+      "model": "Opus",
+      "role": "argues the design"
+    },
+    "Sagredo": {
+      "model": "Opus",
+      "role": "the intelligent outsider, to be convinced; readers’ questions enter here"
+    },
+    "Simplicio": {
+      "model": "Sonnet",
+      "role": "the conventional view, at full strength, with evidence"
+    }
+  },
+  "clerk": "Sonnet",
+  "researcher": "Sonnet",
+  "criticModel": "Fable",
+  "budget": {
+    "usdCap": 4,
+    "usdReserve": 0.7,
+    "roundCostEstimate": 0.7,
+    "maxRounds": 4,
+    "minRounds": 2,
+    "patience": 1,
+    "maxResearch": 6
+  },
+  "state": "stopped",
+  "stopReason": "early stop: loss 27 after round 2 did not fall below 16 (best, round 0)",
+  "startedAt": "2026-11-09T10:41:20.416Z",
+  "updatedAt": "2026-11-09T10:53:43.578Z",
+  "endedAt": "2026-11-09T10:53:43.578Z",
+  "spentUsd": 2.1056,
+  "round": 2,
+  "researchCount": 6,
+  "loss": [
+    {
+      "round": 0,
+      "loss": 16,
+      "objections": 9,
+      "claims": 7,
+      "fewerOptions": 0
+    },
+    {
+      "round": 1,
+      "loss": 21,
+      "objections": 12,
+      "claims": 8,
+      "fewerOptions": 1
+    },
+    {
+      "round": 2,
+      "loss": 27,
+      "objections": 17,
+      "claims": 9,
+      "fewerOptions": 1
+    }
+  ],
+  "items": [
+    {
+      "kind": "research",
+      "label": "R1",
+      "askedBy": "the note",
+      "question": "SP Energy Networks' network capacity / constraint information for the primary substation serving Bethesda, Gwynedd (SP Manweb area): is it shown as constrained (demand or generation headroom), and is any flexibility tender or Flexible Connection zone live there? Use SPEN's own network capacity map, heat maps, or flexibility procurement documents.",
+      "line": "Not found — I could not retrieve Bethesda's constraint status or any live flexibility tender or Flexible Connection zone from SPEN's own data (searches were cut off by a tool limit; only the heat-map methodology PDF was seen).",
+      "sources": [
+        "https://www.spenergynetworks.co.uk/userfiles/file/dg_heat_maps_overview.pdf"
+      ],
+      "loop": [
+        {
+          "step": "search",
+          "what": "SP Energy Networks Bethesda primary substation generation capacity heat map Gwynedd"
+        },
+        {
+          "step": "results",
+          "what": "https://www.spenergynetworks.co.uk/userfiles/file/dg_heat_maps_overview.pdf | https://www.spenergynetworks.co.uk/userfiles/file/Transport_Capacity_Map_Explanation_Note.pdf | https://www.spenergynetworks.co.uk/userfiles/file/33671_SPEN_December_2019_Newsletter_Heat_Maps.pdf | https://spenergynetworks.opendatasoft.com/pages/distribution-capacity-heatmaps/ | https://spenergynetworks.opendatasoft.com/explore/assets/transmission-generation-heat-map0/"
+        },
+        {
+          "step": "search",
+          "what": "SP Manweb Bethesda substation flexibility tender constraint"
+        },
+        {
+          "step": "results",
+          "what": "https://www.spenergynetworks.co.uk/userfiles/file/SPM_NDP_Parts1and2_CapacityandDevelopmentReport.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SPM_Long_Term_Development_Statement_Nov_2022.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SP_Energy_Networks_2024_Network_Development_Plan_-_SP_Manweb_Parts_1and2_-_Main_Report.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SPM-Long-Term-Development-Statement-Nov-2024.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf"
+        },
+        {
+          "step": "search",
+          "what": "SP Energy Networks distribution flexibility tender Gwynedd Bethesda Penrhyn Ogwen"
+        },
+        {
+          "step": "results",
+          "what": "https://transportandenergy.com/2024/11/04/sp-energy-networks-demonstrates-flexibility/ | https://www.energylivenews.com/2023/05/02/sp-energy-networks-launches-flexibility-tender/ | https://www.spenergynetworks.co.uk/userfiles/file/ITT_Letter_2024-25_Flexibility_Tenders.pdf | https://www.spenergynetworks.co.uk/news/pages/sp_energy_networks_launches_flexibility_tender_to_support_increased_uptake_of_low_carbon_technologies.aspx | https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf"
+        },
+        {
+          "step": "search",
+          "what": "SP Energy Networks Bethesda primary substation generation capacity heat map Gwynedd"
+        },
+        {
+          "step": "results",
+          "what": "https://www.spenergynetworks.co.uk/userfiles/file/dg_heat_maps_overview.pdf | https://www.spenergynetworks.co.uk/userfiles/file/Transport_Capacity_Map_Explanation_Note.pdf | https://www.spenergynetworks.co.uk/userfiles/file/33671_SPEN_December_2019_Newsletter_Heat_Maps.pdf | https://spenergynetworks.opendatasoft.com/pages/distribution-capacity-heatmaps/ | https://spenergynetworks.opendatasoft.com/explore/assets/transmission-generation-heat-map0/"
+        }
+      ],
+      "costUsd": 0.131216,
+      "model": "Sonnet",
+      "state": "done",
+      "at": "2026-11-09T10:41:21.027Z",
+      "n": 0,
+      "full": "I couldn't answer this from SPEN's own data. My search tool hit its usage limit before I could open any SPEN page, so nothing below is checked against a figure.\n\n- **What I did:** One search, for SPEN's distributed generation heat maps, returned SPEN's heat map overview PDF. It only explains the method. The heat maps cover the 11kV network in SP Manweb and SP Distribution. They report fault level, available generation capacity and primary transformer reverse power flow capability. The excerpt I saw had no Bethesda entry.\n- **What I didn't do:** I never found the Bethesda primary substation by name. I never opened the SP Manweb heat map data or SPEN's network capacity map. I never opened SPEN's flexibility tender or Flexible Connection zone documents. So I don't know whether Bethesda shows as constrained for demand or generation, or whether a flexibility tender or Flexible Connection zone is live there.\n- **What I searched:** I ran several queries combining Bethesda, Gwynedd, SP Manweb, primary substation, heat map, flexibility tender and network capacity map. Only the first one returned results I could read. The rest failed on the tool limit.\n- **To close this:** Look up the Bethesda primary on SPEN's SP Manweb generation and demand heat map and its flexibility tender dashboard. That would give the headroom status and show whether any tender or zone covers it."
+    },
+    {
+      "kind": "research",
+      "label": "R2",
+      "askedBy": "the note",
+      "question": "The rateable value or business-rates entry on the Valuation Office Agency (VOA) list for Ynni Ogwen's hydro scheme on the Afon Ogwen at Bethesda (Ynni Ogwen Cyf, around 100 kW): what rateable value is listed, from which list (2023 Welsh list), and does any relief or exemption apply?",
+      "line": "Not found: I could not open the VOA entry, so I have no rateable value or list confirmation for Ynni Ogwen's hydro scheme. The only relief evidence is the Welsh Government's application-based grant (100% for community hydro up to £50,000 rateable value, announced 2018 and extended for 2019-20, with Ynni Ogwen a named beneficiary), and I found nothing confirming it applies on the 2023 list.",
+      "sources": [
+        "https://www.gov.wales/100-rates-relief-community-hydro-projects",
+        "https://www.gov.wales/100-business-rate-relief-continue-flow-community-hydro-projects"
+      ],
+      "loop": [
+        {
+          "step": "search",
+          "what": "Ynni Ogwen hydro Bethesda rateable value VOA business rates"
+        },
+        {
+          "step": "results",
+          "what": "https://www.dailypost.co.uk/news/local-news/rates-relief-hydro-electricity-wales-15726132 | https://businessnewswales.com/hydro-projects-set-to-receive-100-business-rate-relief/ | https://www.gov.wales/100-business-rate-relief-continue-flow-community-hydro-projects | https://www.wigan.gov.uk/Business/Finance-and-Grants/Business-Rates/Valuation-Office-Agency.aspx | https://grokipedia.com/page/Bethesda,_Gwynedd"
+        },
+        {
+          "step": "search",
+          "what": "Ynni Ogwen Cyf hydro electric power station Bethesda rateable value 2023 list"
+        },
+        {
+          "step": "results",
+          "what": "https://whq.org.uk/the-magazine/issue/108/hydro-scheme-delivers-community-benefits/ | https://www.dailypost.co.uk/news/local-news/rates-relief-hydro-electricity-wales-15726132 | https://businessnewswales.com/hydro-projects-set-to-receive-100-business-rate-relief/ | https://en.wikipedia.org/wiki/Ynni_Cymru | https://north-wales-business.co.uk/clean-green-hydro-electric-power-is-good-for-business-in-north-wales/"
+        },
+        {
+          "step": "search",
+          "what": "Ynni Ogwen Cyf hydro electric power station Bethesda rateable value 2023 list"
+        },
+        {
+          "step": "results",
+          "what": "https://whq.org.uk/the-magazine/issue/108/hydro-scheme-delivers-community-benefits/ | https://www.dailypost.co.uk/news/local-news/rates-relief-hydro-electricity-wales-15726132 | https://businessnewswales.com/hydro-projects-set-to-receive-100-business-rate-relief/ | https://en.wikipedia.org/wiki/Ynni_Cymru | https://north-wales-business.co.uk/clean-green-hydro-electric-power-is-good-for-business-in-north-wales/"
+        },
+        {
+          "step": "search",
+          "what": "Ynni Ogwen business rates hydro relief Welsh Government rateable value"
+        },
+        {
+          "step": "results",
+          "what": "https://www.gov.wales/100-business-rate-relief-continue-flow-community-hydro-projects | https://www.dailypost.co.uk/news/local-news/rates-relief-hydro-electricity-wales-15726132 | https://businessnewswales.com/hydro-projects-set-to-receive-100-business-rate-relief/ | https://senedd.wales/media/4i3dmvrd/18-036-web-english.pdf | https://www.knightfrank.co.uk/commercial/guides/business-rates-wales"
+        },
+        {
+          "step": "fetch",
+          "what": "https://www.tax.service.gov.uk/business-rates-find/search?postcode=LL57+3AN"
+        },
+        {
+          "step": "fetch failed",
+          "what": "url_not_in_prior_context"
+        },
+        {
+          "step": "fetch",
+          "what": "https://www.google.com/search?q=Ynni+Ogwen+rateable+value"
+        },
+        {
+          "step": "fetch failed",
+          "what": "url_not_in_prior_context"
+        }
+      ],
+      "costUsd": 0.203264,
+      "model": "Sonnet",
+      "state": "done",
+      "at": "2026-11-09T10:41:46.647Z",
+      "n": 1,
+      "full": "Search likely returned an error dict.I could not find the rateable value. The Valuation Office Agency (VOA) entry for Ynni Ogwen's hydro scheme did not turn up in any search, and I did not read it. The VOA's \"Find a business rates valuation\" service is an interactive search, and I couldn't open it or retrieve a record from it. My search tool then hit its usage limit, so I could not confirm the 2023 Welsh list entry or the description of the property. I have no rateable value or list figure to give you, and I won't estimate one.\n\nOn relief, I only have Welsh Government material, and it is from 2018–19:\n- Welsh Government set up a grant scheme in 2018 giving 100% rates relief to community hydro projects with a rateable value of up to £50,000. Community hydro-projects with a rateable value of up to £50,000 will receive a 100% rates relief under a new grant scheme.\n- This is an application-based grant. It is not a statutory exemption or a reduction applied to the rating list. The scheme is application based and hydro projects will be able to apply for a grant towards their 2019-20 rates liability.\n- Ynni Ogwen was named as a beneficiary. One of the projects supported through the scheme last year was the Ynni Ogwen Community Hydropower Project in Bethesda. Its founder director said the support had saved the scheme £14,000 over its first two years.\n- The scheme was tied to the 2017 revaluation. A Knight Frank guide says hydropower schemes with a rateable value of up to £50,000 can apply for support covering the period from 2017 to 2023. I found nothing showing that the relief carries over to the 2023 list. Applying under the 2023 list would need confirmation from Welsh Government or Gwynedd Council."
+    },
+    {
+      "kind": "ledger",
+      "round": 0,
+      "model": "Sonnet",
+      "loss": 16,
+      "objections": [
+        {
+          "id": "O1",
+          "by": "note",
+          "text": "Option 1 has nothing to sell unless the Bethesda substation is constrained, and SPEN's tenders are thin and pitched at HV/EHV (13.84 MW contracted of 56 MW tendered), with low-voltage products rare; R1 could not retrieve the constraint status.",
+          "status": "open"
+        },
+        {
+          "id": "O2",
+          "by": "note",
+          "text": "Ofgem's cost allocation review may push more cost into standing charges, cutting the unit-rate savings that rungs 2 and 5 depend on.",
+          "status": "open"
+        },
+        {
+          "id": "O3",
+          "by": "note",
+          "text": "Option 2's royalty is only a local tax on a thin-margin rung unless an upstream body such as GB Energy or Ynni Cymru reimburses it; the UK has no EEG-style account, and the scale is only about £800 a year.",
+          "status": "open"
+        },
+        {
+          "id": "O4",
+          "by": "note",
+          "text": "Option 2 moves the unpaid-volunteer 'residual saint' burden onto the community council rather than removing it.",
+          "status": "open"
+        },
+        {
+          "id": "O5",
+          "by": "note",
+          "text": "Option 3 lets resource-rich counties keep rates that Wales deliberately pools, taking from counties without wind or water, and England's retention produced little.",
+          "status": "open"
+        },
+        {
+          "id": "O6",
+          "by": "note",
+          "text": "The relief in option 3 may be worth zero if community hydro already sits under small business rates relief; R2 found no rateable value and no confirmation that the 2018-19 community hydro relief applies to the 2023 list.",
+          "status": "open"
+        },
+        {
+          "id": "O7",
+          "by": "note",
+          "text": "Option 4's RO transfer is time-limited to 2028-29 and reversible, Dutch history suggests tax-route support converts to subsidy, and the fiscal ledger is unvalidated and may show a net Treasury loss.",
+          "status": "open"
+        },
+        {
+          "id": "O8",
+          "by": "note",
+          "text": "Option 5's behind-the-meter emphasis helps only people with roofs, private wires or anchor hosts, and shrinking through-grid sharing excludes roofless would-be members.",
+          "status": "open"
+        },
+        {
+          "id": "O9",
+          "by": "note",
+          "text": "The whole note is a single-seat desk pass with no independent adversary and has not been through the gate.",
+          "status": "open"
+        }
+      ],
+      "claims": [
+        {
+          "id": "C1",
+          "text": "Bethesda's primary substation is constrained, so a flexibility revenue line exists for option 1.",
+          "status": "unchecked",
+          "by": "R1 found nothing; constraint status unretrieved"
+        },
+        {
+          "id": "C2",
+          "text": "Ynni Ogwen's hydro is rated and would gain from a community-owned rates relief, which prices option 3.",
+          "status": "unchecked",
+          "by": "R2 found no VOA entry or rateable value"
+        },
+        {
+          "id": "C3",
+          "text": "Rooftop and onsite plant is exempt from Welsh rates from 1 April 2024 to 31 March 2035.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C4",
+          "text": "The 2025 Budget moved 75% of domestic RO cost to the Exchequer for 2026-29 and ended ECO on bills, shrinking the sideways cost shift.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C5",
+          "text": "The DNO loses no revenue to a cell because allowed revenue is fixed by the RIIO-ED2 price control, so the loss is reallocated to other bill-payers.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C6",
+          "text": "Germany's §6 EEG royalty of up to 0.2 ct/kWh is reimbursed by the grid operator for EEG-subsidised plants, which is the model for option 2.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C7",
+          "text": "VAT forgone is about £25 a year per member household, so the Treasury's loss is small.",
+          "status": "unchecked"
+        }
+      ],
+      "fewerOptions": [],
+      "costUsd": 0.029462,
+      "parseFailed": false,
+      "at": "2026-11-09T10:42:26.991Z",
+      "n": 2
+    },
+    {
+      "kind": "turn",
+      "round": 1,
+      "speaker": "Salviati",
+      "model": "Opus",
+      "text": "Two research results came back, and both cut into the note's confidence, so I start by conceding.\n\nR1 did not find Bethesda's constraint status. That is a failure of retrieval, not a negative: we do not learn that the substation is unconstrained, only that the note's \"one query settles it\" has not been settled. But the note already treats option 1 as the default posture and says it \"passes both halves wherever a constraint exists\". That is a conditional dressed up as a recommendation. The honest default is narrower. Grow behind the meter (option 5) and pay the backbone, both of which hold whatever the substation's state. The flexibility sale should be held as an unpriced option, not a revenue line. Nothing is lost by saying so, because condition 3 of the parent gate still names flexibility as a persistent value. We simply have not shown that it exists here.\n\nR2 is more interesting, because it partly answers something the note listed as unverified. Wales has already run the community half of option 3. An application-based 100% relief for community hydro up to £50,000 rateable value was announced in 2018 and extended for 2019–20, and Ynni Ogwen was a named beneficiary. We cannot say whether it survives on the 2023 list. Even so, it changes option 3. The relief half has a Welsh precedent and may already be worth zero to the cell at the margin. What remains contested is only retention by the county, and that is exactly the half that breaks the redistributive pool. So option 3 shrinks to a single question: can new commercial capacity above a baseline be retained without taking from counties that have no wind or water? Its claim to \"pass for the cell\" now depends on whether that grant lapsed.",
+      "changes": [
+        "In \"What I think\", replace \"option 1 plus option 5 is the ratchet cell's governance posture by default … passes both halves wherever a constraint exists\" with: \"Option 5 plus the backbone half of option 1 is the default. The flexibility sale is a held option, unpriced until Bethesda's constraint status is known (R1: not retrievable from SPEN's data in this pass).\"",
+        "In option 3, add a Wales precedent line. It should say that the Welsh Government ran an application-based 100% rates relief for community hydro up to £50,000 rateable value (announced 2018, extended 2019–20, Ynni Ogwen named; R2), and that its status on the 2023 list is unconfirmed. Rewrite the verdict so that the open question is county retention of new commercial rates only. Move \"any current Welsh hydro-specific rates relief\" from \"Not verified\" to \"partly verified (R2)\".",
+        "In \"What I would do next\", item 1, add that the first attempt failed on a tool limit (R1), and that a non-answer must not be read as \"unconstrained\"."
+      ],
+      "asks": [
+        "Did the Welsh Government's 100% rates relief for community hydro schemes (up to £50,000 rateable value) continue beyond 2019–20, and does it apply to the 2023 Welsh rating list?",
+        "Do SPEN's most recent flexibility services procurement documents list any competition zone or secondary or primary substation in Gwynedd that covers Bethesda?"
+      ],
+      "readerQuestions": 0,
+      "costUsd": 0.0456856,
+      "stop": "end_turn",
+      "at": "2026-11-09T10:42:48.679Z",
+      "n": 3
+    },
+    {
+      "kind": "research",
+      "label": "R3",
+      "askedBy": "Salviati",
+      "question": "Did the Welsh Government's 100% rates relief for community hydro schemes (up to £50,000 rateable value) continue beyond 2019–20, and does it apply to the 2023 Welsh rating list?",
+      "line": "Yes – Welsh Government's grant-based 100% relief for community hydro (up to £50,000 RV) was extended past 2019–20 and has guidance pages for 2022–23 and 2023–24, so it covers the 2023 list, though I could not open the 2023–24 page to confirm the terms are unchanged.",
+      "sources": [
+        "https://www.gov.wales/low-carbon-energy",
+        "https://www.gov.wales/non-domestic-business-rates-support-community-owned-hydropower-projects-2022-2023"
+      ],
+      "loop": [
+        {
+          "step": "search",
+          "what": "Welsh Government non-domestic rates relief community hydro schemes 100% rateable value £50,000 2023 revaluation"
+        },
+        {
+          "step": "results",
+          "what": "https://www.gov.wales/100-rates-relief-community-hydro-projects | https://businesswales.gov.wales/non-domestic-rates-transitional-rates-relief-2023-revaluation | https://www.dailypost.co.uk/news/local-news/rates-relief-hydro-electricity-wales-15726132 | https://www.gov.wales/100-business-rate-relief-continue-flow-community-hydro-projects | https://www.knightfrank.co.uk/commercial/guides/business-rates-wales"
+        },
+        {
+          "step": "search",
+          "what": "Welsh Government hydropower relief scheme 2023 non-domestic rates guidance"
+        },
+        {
+          "step": "results",
+          "what": "https://businesswales.gov.wales/non-domestic-rates-transitional-rates-relief-2023-revaluation | https://businesswales.gov.wales/non-domestic-rates-stakeholder-update-march-2023 | https://www.gov.wales/non-domestic-business-rates-support-community-owned-hydropower-projects-2022-2023 | https://businesswales.gov.wales/non-domestic-rates-improvement-rates-relief | https://www.gov.wales/written-statement-non-domestic-rates-support-2023-24"
+        },
+        {
+          "step": "search",
+          "what": "Hydropower Relief Scheme Wales 2024-25 2025-26 community hydro rates"
+        },
+        {
+          "step": "results",
+          "what": "https://www.dailypost.co.uk/news/local-news/rates-relief-hydro-electricity-wales-15726132 | https://www.gov.wales/100-rates-relief-community-hydro-projects | https://www.british-hydro.org/good-news-at-last-for-business-rates-and-hydropower-in-wales/ | https://www.gov.wales/non-domestic-rates-actuals-april-2024-march-2025-html | https://corporate.dwrcymru.com/-/media/project/files/page-documents/corporate/library/our-charges/summary-of-household-charges/summary-of-household-charges-2025-2026.ashx"
+        },
+        {
+          "step": "fetch",
+          "what": "https://www.gov.wales/non-domestic-business-rates-support-community-owned-hydropower-projects-2022-2023"
+        },
+        {
+          "step": "fetch failed",
+          "what": "url_not_accessible"
+        },
+        {
+          "step": "search",
+          "what": "non-domestic rates support community owned hydropower projects 2023 to 2024 gov.wales"
+        },
+        {
+          "step": "results",
+          "what": "https://www.gov.wales/non-domestic-business-rates-support-community-owned-hydropower-projects-2022-2023 | https://www.gov.wales/low-carbon-energy | https://www.gov.wales/sites/default/files/publications/2025-02/energy-generation-in-wales-2023.pdf | https://www.gov.wales/written-statement-non-domestic-rates-support-2023-24 | https://www.gov.wales/100-business-rate-relief-continue-flow-community-hydro-projects"
+        },
+        {
+          "step": "fetch",
+          "what": "https://www.gov.wales/non-domestic-business-rates-support-community-owned-hydropower-projects-2023-2024"
+        },
+        {
+          "step": "fetch failed",
+          "what": "url_not_in_prior_context"
+        },
+        {
+          "step": "fetch",
+          "what": "https://www.gov.wales/non-domestic-business-rates-support-community-owned-hydropower-projects-2022-2023"
+        },
+        {
+          "step": "fetch failed",
+          "what": "url_not_accessible"
+        }
+      ],
+      "costUsd": 0.204188,
+      "model": "Sonnet",
+      "state": "done",
+      "at": "2026-11-09T10:42:49.080Z",
+      "n": 4,
+      "full": "Let me read the 2022-23 page and look for later years.Yes to both, with one caveat. I couldn't open the 2023-24 scheme page itself, so I haven't seen its eligibility wording.\n\n- **Continuation after 2019–20:** The scheme was launched in 2018 and was announced as continuing for 2019–20. The grant is application-based for the 2019-20 liability. Welsh Government then published guidance titled \"Non-domestic (business) rates support for community owned hydropower projects 2022 to 2023\". That page was first published on 2 April 2020 and last updated on 25 August 2022. The scheme therefore ran past 2019–20, into at least 2022–23.\n- **The 2023 list:** The gov.wales Low carbon energy index lists a page called \"Non-domestic (business) rates support for community owned hydropower projects 2023 to 2024\". That year falls under the 1 April 2023 revaluation, so the scheme was still running on the 2023 list.\n- **Not confirmed:** I did not confirm whether the 100% rate and the £50,000 rateable value cap are unchanged for 2023–24. I also found nothing on years after 2023–24.\n\nThe search tool hit its usage limit before I could open the 2023-24 guidance page. The original 2018 announcement (a 100% grant for community schemes up to £50,000 rateable value) is on gov.wales."
+    },
+    {
+      "kind": "research",
+      "label": "R4",
+      "askedBy": "Salviati",
+      "question": "Do SPEN's most recent flexibility services procurement documents list any competition zone or secondary or primary substation in Gwynedd that covers Bethesda?",
+      "line": "Not found: the April 2025 SPEN/SP Manweb Flexibility Procurement Statement names no Bethesda or Gwynedd zone or substation, and I did not get to open the Market Prospectus or tender zone data (the statement points to them), so Bethesda's status there is unverified.",
+      "sources": [
+        "https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf"
+      ],
+      "loop": [
+        {
+          "step": "search",
+          "what": "SP Energy Networks flexibility tender SP Manweb Bethesda substation"
+        },
+        {
+          "step": "results",
+          "what": "https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf | https://www.spenergynetworks.co.uk/userfiles/file/March23-Procurement-Statement-Issued.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SPM_NDP_Parts1and2_CapacityandDevelopmentReport.pdf | https://www.spenergynetworks.co.uk/userfiles/file/2024-25-Market-Prospectus.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SP_Energy_Networks_2024_Network_Development_Plan_-_SP_Manweb_Parts_1and2_-_Main_Report.pdf"
+        },
+        {
+          "step": "search",
+          "what": "SP Energy Networks flexibility services procurement SP Manweb Gwynedd primary substation"
+        },
+        {
+          "step": "results",
+          "what": "https://www.spenergynetworks.co.uk/userfiles/file/SP_Energy_Networks_2024_Network_Development_Plan_-_SP_Manweb_Parts_1and2_-_Main_Report.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf | https://www.spenergynetworks.co.uk/userfiles/file/March23-Procurement-Statement-Issued.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Report.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SPM%20NDP%20-%20Parts%201%20and%202%20-%20Capacity%20and%20Development%20Report%20v1.pdf"
+        },
+        {
+          "step": "search",
+          "what": "SPEN flexibility tender zones Bethesda Penrhyn Bangor Gwynedd"
+        },
+        {
+          "step": "results",
+          "what": "https://democracy.gwynedd.llyw.cymru/mgAi.aspx?ID=24416 | https://en.wikipedia.org/wiki/Bethesda,_Gwynedd | https://gwynedd.llyw.cymru/en/Council/Documents---Council/Strategies-and-policies/Environment-and-planning/Planning-policy/Supporting-documents/Gwynedd-Anglesey-Retail-Study-Vol-2-February-2013-(DC.006).pdf | https://en.wikipedia.org/wiki/Tregarth | https://www.spenergynetworks.co.uk/pages/flexibility.aspx"
+        },
+        {
+          "step": "search",
+          "what": "SP Energy Networks flexibility tender SP Manweb Bethesda substation"
+        },
+        {
+          "step": "results",
+          "what": "https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf | https://www.spenergynetworks.co.uk/userfiles/file/March23-Procurement-Statement-Issued.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SPM_NDP_Parts1and2_CapacityandDevelopmentReport.pdf | https://www.spenergynetworks.co.uk/userfiles/file/2024-25-Market-Prospectus.pdf | https://www.spenergynetworks.co.uk/userfiles/file/SP_Energy_Networks_2024_Network_Development_Plan_-_SP_Manweb_Parts_1and2_-_Main_Report.pdf"
+        },
+        {
+          "step": "fetch",
+          "what": "https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf"
+        }
+      ],
+      "costUsd": 0.223912,
+      "model": "Sonnet",
+      "state": "done",
+      "at": "2026-11-09T10:43:28.263Z",
+      "n": 5,
+      "full": "r is a string (JSON).I couldn't confirm this either way. My searches hit a tool limit before I could open SPEN's actual tender or zone lists.\n\nWhat I checked:\n- I read the full text of SPEN's April 2025 Distribution Flexibility Service Procurement Statement for SP Distribution and SP Manweb. It never mentions Bethesda, Gwynedd, Bangor or Penrhyn.\n- It names \"North Wales\" only as a region SPEN serves. It lists no zones or substations.\n- It points to a separate Market Prospectus and an interactive flexibility data document that hold the competition zones, and I did not open either.\n- My searches for a Bethesda or Gwynedd zone or substation in SPEN's tender material returned nothing usable before the limit.\n\nTo close this out, someone should open the Market Prospectus and the monthly tender or constraint-zone data on SPEN's flexibility pages and search them for Bethesda and its likely upstream substations. I don't know which substations those are."
+    },
+    {
+      "kind": "turn",
+      "round": 1,
+      "speaker": "Sagredo",
+      "model": "Opus",
+      "text": "Some of this now persuades me. The sideways finding holds up: none of the research so far has given me reason to think a level of government is the real loser. And R3 settles something useful. Wales has kept its grant-based relief for community hydro into the 2023 list, so the \"exempt the community\" half of option 3 already exists. That leaves option 3 as one question only: may Gwynedd keep rates from new commercial generation without taking from counties that have no rivers or hills? I think Salviati is right to shrink it that far.\n\nOn option 1, R4 is not proof, but it is a straw in the wind. The April 2025 procurement statement names no Gwynedd zone at all. Together with R1's empty hand, I would now treat the flexibility sale as something that probably does not exist here until someone shows it does.\n\nWhat I am still not convinced of is the size of the thing the whole note turns on. The roofless neighbour is called the only real loser, yet the note never says how much that neighbour loses. It even lists \"the network share of a typical unit rate\" as unverified. If the shifted cost is a few pounds a year, the horizontal finding is true but rather unimportant, and option 2 becomes a remedy larger than the wound. If it is tens of pounds, the case for options 4 and 5 gets much stronger.\n\nI have a second doubt about option 2. If GB Energy or Ynni Cymru pays the royalty, how is that not a grant under another name? The parent ladder forbids later rungs that lean on grants.\n\nMy two questions follow from that. How many pounds a year does one non-member household carry per cell member? And does an upstream reimburser count as grant dependence?",
+      "changes": [],
+      "asks": [
+        "After April 2026, what share of a typical GB domestic unit rate (p/kWh) is still recovered per kWh through network charges and policy levies, rather than through standing charges?"
+      ],
+      "readerQuestions": 0,
+      "costUsd": 0.030325599999999998,
+      "stop": "end_turn",
+      "at": "2026-11-09T10:44:23.871Z",
+      "n": 6
+    },
+    {
+      "kind": "research",
+      "label": "R5",
+      "askedBy": "Sagredo",
+      "question": "After April 2026, what share of a typical GB domestic unit rate (p/kWh) is still recovered per kWh through network charges and policy levies, rather than through standing charges?",
+      "line": "Not verified: I could not find the official network-plus-policy share of the April 2026 electricity unit rate (24.67p/kWh average, with a 57.21p/day standing charge); an unverified snippet from Ofgem's summary PDF suggests network costs of about 26–29% and policy costs of about 5–6% of the cap, but I could not tell which table those belong to.",
+      "sources": [
+        "https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-april-and-30-june-2026",
+        "https://www.ofgem.gov.uk/sites/default/files/2026-06/Summary-of-changes-to-energy-price-cap-1-July-to-30-September-2026.pdf"
+      ],
+      "loop": [
+        {
+          "step": "search",
+          "what": "Ofgem price cap April 2026 unit rate standing charge breakdown network costs policy costs p/kWh"
+        },
+        {
+          "step": "results",
+          "what": "https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-april-and-30-june-2026 | https://www.ofgem.gov.uk/sites/default/files/2026-06/Summary-of-changes-to-energy-price-cap-1-July-to-30-September-2026.pdf | https://switchtogether.co.uk/resource-hub/blog/uk-energy-price-cap-explained | https://commonslibrary.parliament.uk/research-briefings/cbp-10339/ | https://saveonenergybills.co.uk/suppliers-and-tariffs/ofgem-price-cap-explained/"
+        },
+        {
+          "step": "fetch",
+          "what": "https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-april-and-30-june-2026"
+        },
+        {
+          "step": "fetch",
+          "what": "https://www.ofgem.gov.uk/energy-advice-households/energy-price-cap-explained"
+        },
+        {
+          "step": "fetch failed",
+          "what": "url_not_in_prior_context"
+        },
+        {
+          "step": "fetch",
+          "what": "https://www.ofgem.gov.uk/sites/default/files/2026-06/Summary-of-changes-to-energy-price-cap-1-July-to-30-September-2026.pdf"
+        },
+        {
+          "step": "search",
+          "what": "Ofgem April 2026 price cap electricity unit rate breakdown pence per kWh network costs policy costs Warm Home Discount moved to unit rate"
+        },
+        {
+          "step": "results",
+          "what": "https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-april-and-30-june-2026 | https://www.energy-uk.org.uk/publications/energy-uk-explains-april-2026-price-cap/ | https://heatable.co.uk/boiler-advice/history-of-ofgems-energy-price-cap | https://www.ofgem.gov.uk/press-release/energy-price-cap-will-fall-7-april | https://www.edfenergy.com/energywise/energy-price-cap-april-2026"
+        }
+      ],
+      "costUsd": 0.23577399999999998,
+      "model": "Sonnet",
+      "state": "done",
+      "at": "2026-11-09T10:44:24.275Z",
+      "n": 7,
+      "full": "I couldn't confirm the share. The tool limit ran out before I could open the Ofgem document that gives the unit-rate cost split.\n\n**What I checked**\n- I searched for the Ofgem price cap for April 2026 and its split between unit rate and standing charge.\n- Ofgem's page for 1 April to 30 June 2026 gives the electricity default-tariff averages. The average unit rate is 24.67p/kWh, and the standing charge is 57.21p/day.\n- That page also says costs related to the Warm Home Discount move from the standing charge to the unit rate from April 2026. Energy UK describes the same shift.\n- Ofgem's July–September 2026 summary PDF has cost-share tables for April–June 2026. The search snippet showed network costs at 26–29% and policy costs at 5–6%. The snippet didn't label which table was electricity unit rate, electricity standing charge, gas or total. I couldn't open the PDF to check, so those percentages are not a verified answer.\n\n**What I did not find**\n- I did not find a figure for the share of the 24.67p/kWh unit rate that is network charges plus policy levies. I couldn't verify one.\n- The place to get it is Ofgem's April–June 2026 price cap \"Annex 9 – levelisation / cost allowance\" workbook, or its April 2026 decision documents. These split the electricity unit rate into wholesale, network, policy, operating costs and VAT."
+    },
+    {
+      "kind": "turn",
+      "round": 1,
+      "speaker": "Simplicio",
+      "model": "Sonnet",
+      "text": "Concession first: R3 beats me on option 3's relief half. Wales already runs a community hydro relief, and the note's \"needs the rateable value\" is now a smaller problem. But R3 also shows what that relief is: an application-based grant, with terms for 2023–24 unconfirmed. So the note's \"exempt\" is wrong for hydro, and the cell already leans on a discretionary Welsh Government payment.\n\nThat bears on Sagredo's second question, and I answer yes. A royalty reimbursed by GB Energy or Ynni Cymru is a subsidy. Germany's §6 worked because the EEG account was a standing, statutory, levy-funded stream. The UK has nothing like it, and the note itself shows the 2025 Budget moving levy costs to the Exchequer, where a future budget can reverse them. The Dutch history the note cites says the same: tax-route support became a subsidy. The royalty goes to the council, not the cell, but the cell is only \"neutral\" while the reimbursement lasts. When it stops, the asset owner pays. That is the grant dependence the ladder forbids.\n\nOn size, R5 gives no verified figure, and its unverified snippet (network about 26–29% of the cap, policy about 5–6%) does not say how much of that is recovered per kWh. The note's \"cells cannot dodge the residuals\" is true at the DNO-to-supplier level. How a member's bill shows them depends on the supplier's tariff design. Until someone measures it, \"the only real loser\" and \"an unknown but material cut\" are both unsupported.\n\nWho has fewer options? The roofless would-be member. Option 5 demotes rung 5, their only door, to a top-up. Option 1 is meant to pay for that door, yet R1 and R4 found no flexibility market at Bethesda. That leaves the roofless door with no funder.",
+      "changes": [],
+      "asks": [
+        "In Ofgem's April 2026 price cap decision, what share of domestic electricity network cost is recovered through the unit rate and what share through the standing charge?"
+      ],
+      "readerQuestions": 0,
+      "costUsd": 0.043771,
+      "stop": "end_turn",
+      "at": "2026-11-09T10:45:19.546Z",
+      "n": 8
+    },
+    {
+      "kind": "research",
+      "label": "R6",
+      "askedBy": "Simplicio",
+      "question": "In Ofgem's April 2026 price cap decision, what share of domestic electricity network cost is recovered through the unit rate and what share through the standing charge?",
+      "line": "research loop failed (fetch failed).",
+      "sources": [],
+      "loop": [],
+      "costUsd": 0,
+      "model": "Sonnet",
+      "state": "done",
+      "at": "2026-11-09T10:45:19.936Z",
+      "n": 9,
+      "full": ""
+    },
+    {
+      "kind": "ledger",
+      "round": 1,
+      "model": "Sonnet",
+      "loss": 21,
+      "objections": [
+        {
+          "id": "O1",
+          "by": "note",
+          "text": "Option 1 has nothing to sell unless the Bethesda substation is constrained, and SPEN's tenders are thin and pitched at HV/EHV; R1 and R4 found no constraint status and no Gwynedd zone, so the flexibility line is unshown here.",
+          "status": "open"
+        },
+        {
+          "id": "O2",
+          "by": "note",
+          "text": "Ofgem's cost allocation review may push more cost into standing charges, cutting the unit-rate savings that rungs 2 and 5 depend on.",
+          "status": "open"
+        },
+        {
+          "id": "O3",
+          "by": "note",
+          "text": "Option 2's royalty is only a local tax on a thin-margin rung unless an upstream body reimburses it; the UK has no EEG-style account, and the scale is only about £800 a year.",
+          "status": "open"
+        },
+        {
+          "id": "O4",
+          "by": "note",
+          "text": "Option 2 moves the unpaid-volunteer 'residual saint' burden onto the community council rather than removing it.",
+          "status": "open"
+        },
+        {
+          "id": "O5",
+          "by": "note",
+          "text": "Option 3 lets resource-rich counties keep rates that Wales deliberately pools, taking from counties without wind or water, and England's retention produced little.",
+          "status": "open"
+        },
+        {
+          "id": "O6",
+          "by": "note",
+          "text": "The relief half of option 3 may be worth zero because Wales already runs a community hydro relief; R3 indicates it covers the 2023 list but terms for 2023-24 are unconfirmed and no rateable value was found.",
+          "status": "answered"
+        },
+        {
+          "id": "O7",
+          "by": "note",
+          "text": "Option 4's RO transfer is time-limited to 2028-29 and reversible, Dutch history suggests tax-route support converts to subsidy, and the fiscal ledger is unvalidated.",
+          "status": "open"
+        },
+        {
+          "id": "O8",
+          "by": "note",
+          "text": "Option 5's behind-the-meter emphasis helps only people with roofs, private wires or anchor hosts, and shrinking through-grid sharing excludes roofless would-be members.",
+          "status": "open"
+        },
+        {
+          "id": "O9",
+          "by": "note",
+          "text": "The whole note is a single-seat desk pass with no independent adversary and has not been through the gate.",
+          "status": "open"
+        },
+        {
+          "id": "O10",
+          "by": "Salviati",
+          "text": "Option 1 is presented as a default posture but is conditional on a constraint that has not been shown; the default should be option 5 plus paying the backbone, with flexibility an unpriced option.",
+          "status": "conceded"
+        },
+        {
+          "id": "O11",
+          "by": "Sagredo",
+          "text": "The note never quantifies what the roofless neighbour loses per year, so the 'only real loser' finding may be true but trivial, making option 2 a remedy larger than the wound.",
+          "status": "open"
+        },
+        {
+          "id": "O12",
+          "by": "Sagredo",
+          "text": "An upstream reimburser (GB Energy or Ynni Cymru) paying option 2's royalty is a grant under another name, which the ladder forbids.",
+          "status": "open"
+        },
+        {
+          "id": "O13",
+          "by": "Simplicio",
+          "text": "The note's 'exempt' wording is wrong for hydro, which gets an application-based discretionary grant, so the cell already leans on a Welsh Government payment.",
+          "status": "conceded"
+        },
+        {
+          "id": "O14",
+          "by": "Simplicio",
+          "text": "Whether cells avoid per-kWh network and levy charges depends on how suppliers pass residuals through in tariffs, which is unmeasured, so 'cells cannot dodge the residuals' is unsupported at member-bill level.",
+          "status": "open"
+        },
+        {
+          "id": "O15",
+          "by": "Simplicio",
+          "text": "With no flexibility market found at Bethesda, the roofless members' door (rung 5) has no funder under option 1 while option 5 demotes it.",
+          "status": "open"
+        }
+      ],
+      "claims": [
+        {
+          "id": "C1",
+          "text": "Bethesda's primary substation is constrained, so a flexibility revenue line exists for option 1.",
+          "status": "unchecked",
+          "by": "R1 and R4 found no constraint status and no Gwynedd zone in the 2025 procurement statement"
+        },
+        {
+          "id": "C2",
+          "text": "Ynni Ogwen's hydro is rated and would gain from a community-owned rates relief, which prices option 3.",
+          "status": "unchecked",
+          "by": "R2 found no VOA entry or rateable value; R3 suggests the Welsh community hydro relief covers the 2023 list but terms are unconfirmed"
+        },
+        {
+          "id": "C3",
+          "text": "Rooftop and onsite plant is exempt from Welsh rates from 1 April 2024 to 31 March 2035.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C4",
+          "text": "The 2025 Budget moved 75% of domestic RO cost to the Exchequer for 2026-29 and ended ECO on bills, shrinking the sideways cost shift.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C5",
+          "text": "The DNO loses no revenue to a cell because allowed revenue is fixed by the RIIO-ED2 price control, so the loss is reallocated to other bill-payers.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C6",
+          "text": "Germany's §6 EEG royalty of up to 0.2 ct/kWh is reimbursed by the grid operator for EEG-subsidised plants, which is the model for option 2.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C7",
+          "text": "VAT forgone is about £25 a year per member household, so the Treasury's loss is small.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C8",
+          "text": "Wales's grant-based 100% rates relief for community hydro up to £50,000 rateable value continued past 2019-20 and has guidance for 2022-23 and 2023-24.",
+          "status": "checked",
+          "by": "R3"
+        },
+        {
+          "id": "C9",
+          "text": "The share of the unit rate still recovered per kWh through network and policy charges after April 2026 is material enough to make the sideways shift significant.",
+          "status": "unchecked",
+          "by": "R5 and R6 could not verify the split"
+        }
+      ],
+      "fewerOptions": [
+        {
+          "who": "The roofless would-be member",
+          "how": "Option 5 demotes through-grid sharing, their only door, to a top-up layer, while the option 1 revenue meant to fund it has not been found at Bethesda."
+        }
+      ],
+      "costUsd": 0.044932,
+      "parseFailed": false,
+      "at": "2026-11-09T10:50:34.605Z",
+      "n": 10
+    },
+    {
+      "kind": "turn",
+      "round": 2,
+      "speaker": "Salviati",
+      "model": "Opus",
+      "text": "Simplicio is right three times, and the note should change each time rather than argue.\n\nFirst, the county row. \"Exempt\" is wrong for hydro. The 2023 Regulations exempt rooftop and onsite plant. Standalone hydro stays on the list, and what it gets is an application-based Welsh Government grant (R3), whose 2023–24 terms nobody here has confirmed. The cell's rung 7 already rests on a discretionary payment, and the note should say so.\n\nSecond, the royalty. A reimbursement from GB Energy or Ynni Cymru is a subsidy while it lasts. My repair is to make the asset owner's duty contingent: the royalty is payable only out of reimbursement actually received, and it falls to zero the moment reimbursement stops. The asset owner can then never be worse off than today. No rung's rationale depends on the money, so the ladder's grant rule is not breached. The risk sits with the community council, which today receives nothing, so it loses no option either. That is weaker than §6 EEG, but it is honest.\n\nThird, the roofless door. Option 5 as written does narrow it, and option 1 cannot fund it, since R1 and R4 found no market. The repair is to fund the door from inside rung 5. Use the Italian split the note already praises: shared kWh pay their own cost-reflective network share. The roofless member then shifts nothing onto non-members and needs no outside funder. The cost is smaller savings, not a closed door.\n\nOn size, I concede to Sagredo. R5 is unverified and R6 failed, so \"the only real loser\" stays unsized. The finding should be stated as the only line with a loser, magnitude not yet measured.",
+      "changes": [
+        "In the ledger's County row, replace \"The roof rungs therefore take nothing from rates. Only standalone assets… are rated\" with a statement that standalone community hydro is rated but may receive an application-based 100% Welsh Government grant up to £50,000 RV (R3), with 2023–24 terms unconfirmed.",
+        "In option 2's Design, add: \"The royalty is payable only from reimbursement received and lapses to zero if reimbursement ends, so the asset owner never pays net.\" Rewrite its Verdict to say it passes the asset-owner half unconditionally and the council half only while funded.",
+        "In option 5, replace \"treat through-grid matching as the top-up layer\" with \"keep rung 5 open as of right, with shared kWh paying their cost-reflective network share (the Italian CER split), so the roofless door needs no flexibility revenue\". In \"The finding first\", change \"the only line in the ledger with a real loser\" to \"the only line with a loser; its size is not yet measured\"."
+      ],
+      "asks": [
+        "In Ofgem's April 2026 price cap methodology, what are the network-cost and policy-cost allowances for a typical domestic electricity customer, split between the unit rate (p/kWh) and the standing charge (p/day)?",
+        "What are the current (2025–26) eligibility terms and cap of the Welsh Government's non-domestic rates support for community-owned hydropower projects?"
+      ],
+      "readerQuestions": 0,
+      "costUsd": 0.091646,
+      "stop": "end_turn",
+      "at": "2026-11-09T10:50:56.101Z",
+      "n": 11
+    },
+    {
+      "kind": "turn",
+      "round": 2,
+      "speaker": "Sagredo",
+      "model": "Opus",
+      "text": "Some of this now persuades me. Salviati's corrections to the county row are plainly right: standalone hydro sits on a discretionary grant, not an exemption, and the note should say so. I also accept stating the sideways finding as \"the only line with a loser, size not yet measured\". That claim is honest, though it is now a much weaker one than the note's headline.\n\nI am not yet persuaded by either repair, for reasons that mirror each other.\n\nOn the contingent royalty: if it is payable only from reimbursement received, the asset owner is safe. But the council's income then depends entirely on GB Energy or Ynni Cymru choosing to pay. That is simply a grant to the community council, routed through a hydro meter. Why the wrapper? What does a per-kWh royalty do that a direct fuel-poverty grant to the council would not? If the answer is \"it ties the money to local generation and so to consent\", I can see that. But the note should say it, because otherwise option 2 looks like decoration on a subsidy.\n\nOn the roofless door: making shared kWh pay their own cost-reflective network share keeps the door open. But I do not know whether anything worthwhile is left behind it. If the network share is most of the saving, a roofless member joins for very little. And this split covers only network charges, not the per-kWh levies, which would still shift. I also do not know whether any GB supplier arrangement would let a cell pay such a share at all. Italy has a mechanism for it, and I have not heard that we do.\n\nSo my questions are two. After that split, what does a roofless rung-5 member actually save per year? And is there any existing UK route by which a cell could pay a cost-reflective network share for shared kWh?",
+      "changes": [],
+      "asks": [
+        "In Ofgem's April 2026 price cap model, how many pence per kWh of the electricity unit rate are network charges and policy costs?"
+      ],
+      "readerQuestions": 0,
+      "costUsd": 0.0395936,
+      "stop": "end_turn",
+      "at": "2026-11-09T10:51:09.910Z",
+      "n": 12
+    },
+    {
+      "kind": "turn",
+      "round": 2,
+      "speaker": "Simplicio",
+      "model": "Sonnet",
+      "text": "Salviati's contingent royalty does protect the asset owner, and I concede that. It cannot leave the owner worse off than today. But Sagredo's question stands, and the answer is that it is a grant to the council with a hydro meter attached. If the only reason for the wrapper is consent and the tie to local generation, the note should say so, and it should stop calling option 2 a \"design already working somewhere\". Germany's §6 worked because the money came from a statutory account. Nothing in the note or R1–R6 shows a UK equivalent.\n\nThe roofless-door repair has a bigger hole. The Italian split works in Italy because Italian law built a mechanism for it. For GB, I am confident of one public fact: distribution charges are billed to the supplier, who passes them through in the customer's tariff. A cell with no licence has no obvious way to pay a separate network share for its shared kWh. Neither the note nor any research result shows one. Without a mechanism, \"shared kWh pay their own share\" is a wish.\n\nThe repair also does not deliver \"shifts nothing\". It covers network charges only. The per-kWh levies still move onto non-members, as the note itself says. And R5 could not even show how much of a unit rate is per-kWh. So nobody can yet say what a roofless member saves after the split, and Sagredo's first question is still unanswered. If the answer is pennies, the door is open in name only.\n\nSo the party left with fewer options is still the roofless would-be member. Option 5 demotes their only route, and the repair funding it has no mechanism and no figure. The note should keep rung 5 at full standing until someone shows what lies behind it. Demoting it before then removes an option on the strength of an assumption.",
+      "changes": [],
+      "asks": [
+        "Is there any existing GB mechanism (licence exemption, supplier-led local tariff, or Ofgem sandbox) by which a community energy group can pay or be charged a cost-reflective distribution charge on kWh shared between members, and what did it show for member savings?"
+      ],
+      "readerQuestions": 0,
+      "costUsd": 0.041913,
+      "stop": "end_turn",
+      "at": "2026-11-09T10:51:23.500Z",
+      "n": 13
+    },
+    {
+      "kind": "ledger",
+      "round": 2,
+      "model": "Sonnet",
+      "loss": 27,
+      "objections": [
+        {
+          "id": "O1",
+          "by": "note",
+          "text": "Option 1 has nothing to sell unless the Bethesda substation is constrained, and SPEN's tenders are thin and pitched at HV/EHV; R1 and R4 found no constraint status and no Gwynedd zone, so the flexibility line is unshown here.",
+          "status": "open"
+        },
+        {
+          "id": "O2",
+          "by": "note",
+          "text": "Ofgem's cost allocation review may push more cost into standing charges, cutting the unit-rate savings that rungs 2 and 5 depend on.",
+          "status": "open"
+        },
+        {
+          "id": "O3",
+          "by": "note",
+          "text": "Option 2's royalty is only a local tax on a thin-margin rung unless an upstream body reimburses it; the UK has no EEG-style account, and the scale is only about £800 a year.",
+          "status": "open"
+        },
+        {
+          "id": "O4",
+          "by": "note",
+          "text": "Option 2 moves the unpaid-volunteer 'residual saint' burden onto the community council rather than removing it.",
+          "status": "open"
+        },
+        {
+          "id": "O5",
+          "by": "note",
+          "text": "Option 3 lets resource-rich counties keep rates that Wales deliberately pools, taking from counties without wind or water, and England's retention produced little.",
+          "status": "open"
+        },
+        {
+          "id": "O6",
+          "by": "note",
+          "text": "The relief half of option 3 may be worth zero because Wales already runs a community hydro relief; R3 indicates it covers the 2023 list but terms for 2023-24 are unconfirmed and no rateable value was found.",
+          "status": "answered"
+        },
+        {
+          "id": "O7",
+          "by": "note",
+          "text": "Option 4's RO transfer is time-limited to 2028-29 and reversible, Dutch history suggests tax-route support converts to subsidy, and the fiscal ledger is unvalidated.",
+          "status": "open"
+        },
+        {
+          "id": "O8",
+          "by": "note",
+          "text": "Option 5's behind-the-meter emphasis helps only people with roofs, private wires or anchor hosts, and shrinking through-grid sharing excludes roofless would-be members.",
+          "status": "open"
+        },
+        {
+          "id": "O9",
+          "by": "note",
+          "text": "The whole note is a single-seat desk pass with no independent adversary and has not been through the gate.",
+          "status": "open"
+        },
+        {
+          "id": "O10",
+          "by": "Salviati",
+          "text": "Option 1 is presented as a default posture but is conditional on a constraint that has not been shown; the default should be option 5 plus paying the backbone, with flexibility an unpriced option.",
+          "status": "conceded"
+        },
+        {
+          "id": "O11",
+          "by": "Sagredo",
+          "text": "The note never quantifies what the roofless neighbour loses per year, so the 'only real loser' finding may be true but trivial, making option 2 a remedy larger than the wound.",
+          "status": "open"
+        },
+        {
+          "id": "O12",
+          "by": "Sagredo",
+          "text": "An upstream reimburser (GB Energy or Ynni Cymru) paying option 2's royalty is a grant under another name, which the ladder forbids.",
+          "status": "open"
+        },
+        {
+          "id": "O13",
+          "by": "Simplicio",
+          "text": "The note's 'exempt' wording is wrong for hydro, which gets an application-based discretionary grant, so the cell already leans on a Welsh Government payment.",
+          "status": "conceded"
+        },
+        {
+          "id": "O14",
+          "by": "Simplicio",
+          "text": "Whether cells avoid per-kWh network and levy charges depends on how suppliers pass residuals through in tariffs, which is unmeasured, so 'cells cannot dodge the residuals' is unsupported at member-bill level.",
+          "status": "open"
+        },
+        {
+          "id": "O15",
+          "by": "Simplicio",
+          "text": "With no flexibility market found at Bethesda, the roofless members' door (rung 5) has no funder under option 1 while option 5 demotes it.",
+          "status": "open"
+        },
+        {
+          "id": "O16",
+          "by": "Sagredo",
+          "text": "A contingent royalty paid only from reimbursement received is just a direct grant to the council routed through a hydro meter; the note must say what the per-kWh wrapper adds (e.g. tie to consent) or drop it.",
+          "status": "open"
+        },
+        {
+          "id": "O17",
+          "by": "Simplicio",
+          "text": "Option 2 is not a 'design already working somewhere' in the UK: Germany's §6 relied on a statutory EEG account and no UK equivalent has been shown.",
+          "status": "open"
+        },
+        {
+          "id": "O18",
+          "by": "Sagredo",
+          "text": "Salviati's repair (shared kWh pay their own cost-reflective network share) leaves unknown what a roofless rung-5 member saves; if the network share is most of the saving, little is left.",
+          "status": "open"
+        },
+        {
+          "id": "O19",
+          "by": "Simplicio",
+          "text": "No GB mechanism is shown by which an unlicensed cell could pay a separate network share on shared kWh, since charges are billed to the supplier; the repair is a wish without one.",
+          "status": "open"
+        },
+        {
+          "id": "O20",
+          "by": "Simplicio",
+          "text": "The network-share repair does not cover per-kWh levies, which still shift onto non-members, so it does not deliver 'shifts nothing'.",
+          "status": "open"
+        }
+      ],
+      "claims": [
+        {
+          "id": "C1",
+          "text": "Bethesda's primary substation is constrained, so a flexibility revenue line exists for option 1.",
+          "status": "unchecked",
+          "by": "R1 and R4 found no constraint status and no Gwynedd zone in the 2025 procurement statement"
+        },
+        {
+          "id": "C2",
+          "text": "Ynni Ogwen's hydro is rated and would gain from a community-owned rates relief, which prices option 3.",
+          "status": "unchecked",
+          "by": "R2 found no VOA entry or rateable value; R3 suggests the Welsh community hydro relief covers the 2023 list but terms are unconfirmed"
+        },
+        {
+          "id": "C3",
+          "text": "Rooftop and onsite plant is exempt from Welsh rates from 1 April 2024 to 31 March 2035.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C4",
+          "text": "The 2025 Budget moved 75% of domestic RO cost to the Exchequer for 2026-29 and ended ECO on bills, shrinking the sideways cost shift.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C5",
+          "text": "The DNO loses no revenue to a cell because allowed revenue is fixed by the RIIO-ED2 price control, so the loss is reallocated to other bill-payers.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C6",
+          "text": "Germany's §6 EEG royalty of up to 0.2 ct/kWh is reimbursed by the grid operator for EEG-subsidised plants, which is the model for option 2.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C7",
+          "text": "VAT forgone is about £25 a year per member household, so the Treasury's loss is small.",
+          "status": "unchecked"
+        },
+        {
+          "id": "C8",
+          "text": "Wales's grant-based 100% rates relief for community hydro up to £50,000 rateable value continued past 2019-20 and has guidance for 2022-23 and 2023-24.",
+          "status": "checked",
+          "by": "R3"
+        },
+        {
+          "id": "C9",
+          "text": "The share of the unit rate still recovered per kWh through network and policy charges after April 2026 is material enough to make the sideways shift significant.",
+          "status": "unchecked",
+          "by": "R5 and R6 could not verify the split"
+        },
+        {
+          "id": "C10",
+          "text": "A GB cell can pay a cost-reflective network share on shared kWh through some existing mechanism, as Italy's CER does.",
+          "status": "unchecked"
+        }
+      ],
+      "fewerOptions": [
+        {
+          "who": "The roofless would-be member",
+          "how": "Option 5 demotes through-grid sharing, their only door, to a top-up layer, while the funding repair (a network share paid on shared kWh) has no shown mechanism or savings figure and option 1 revenue has not been found at Bethesda."
+        }
+      ],
+      "costUsd": 0.054976,
+      "parseFailed": false,
+      "at": "2026-11-09T10:51:37.402Z",
+      "n": 14
+    }
+  ],
+  "checkpoint": {
+    "text": "# The ratchet cell's governance ledger — what each level gives up, and where every level gains\n\n_Published live (2026-11-09). A follow-on to the ratchet cell (`NOTES-ratchet-cell.md`). The question: as a cell climbs its ladder, what does it take from each level of governance, from community council to the UN — VAT, levies, network charges, business rates, grid upkeep? And which designs, already working somewhere, let every level gain more than it gives up? This is a desk pass by one agent: about a dozen sourced lookups, no fleet and no independent adversary seat. Each option carries its own adversary, but the run has not been through the gate. Figures marked ≈ are orders of magnitude, not models._\n\n_Moved on 2026-11-09 by a [world computer run](/world-computer?run=run-001): standalone hydro is rated but can get a discretionary Welsh grant rather than an exemption; the flexibility sale is now held back until Bethesda's constraint status is known; the royalty is made contingent on reimbursement; rung 5 stays open as of right; and the roofless neighbour's loss is marked as unmeasured._\n\n---\n\n## The finding first: the loser is the roofless neighbour, not a level of government\n\nGo through the ledger level by level and something unexpected appears. **Most levels of governance lose little or nothing to a ratchet cell, and several gain.** The real cost of the cell falls sideways, not upwards. It lands on the household with no roof, no share and no club place, which ends up carrying a larger share of the fixed system costs that cell members stop paying per kWh. The walls ledger in the parent note already lists this as *network-cost shifting: political contest*. This pass gives it its proper place. It is the only line with a loser; its size is not yet measured. That loser is not a government.\n\nSo \"every level gains\" is the wrong test, or at least only half of it. It mostly passes already. The test that bites is **every level gains *and* the non-participant is no worse off.** The options below are scored on both halves.\n\n## The ledger — what a cell takes, level by level\n\nThe take comes in three kinds, and they should never be added together: a **fiscal loss** (money a government no longer receives), a **reallocation** (a revenue-capped cost that moves onto other bill-payers), and a **gain**.\n\n| Level | What a cell touches | Kind | Size and sign |\n|---|---|---|---|\n| **Community council** (Cyngor Cymuned) | Nothing. The precept is unaffected. | — | Zero take. Possible gain: a council roof can host a rung-3 lease, and the council can hold or channel a benefit fund. |\n| **County** (Gwynedd) | Non-domestic rates on standalone generation (hydro, ground-mount); planning. Rates are pooled nationally in Wales, so the county keeps nothing directly. | Fiscal, small | Rooftop and onsite plant has been **exempt from Welsh rates since 1 April 2024, to 31 March 2035** (Valuation for Rating (Plant and Machinery) (Wales) (Amendment) Regs 2023), so the roof rungs take nothing from rates. Standalone assets (rung 7's hydro, any ground-mount) stay rated. Standalone community hydro is **not exempt**, but it may receive an application-based 100% Welsh Government grant up to £50,000 rateable value ([R3](https://www.gov.wales/non-domestic-business-rates-support-community-owned-hydropower-projects-2022-2023)). Guidance exists for 2023–24, but its terms are unconfirmed. Gains: lower energy bills in its own schools and buildings, fewer fuel-poor households. |\n| **Welsh Government** | The rates pool; Ynni Cymru grant spend (rung 0). Energy licensing is **reserved**, so there is no tax or levy lever here. | Spend in, target out | A net gainer against its own target of **1.5 GW locally owned by 2035**. Every cell is cheap delivery of a stated objective. |\n| **UK Treasury** | VAT at 5% on every displaced kWh; 0% VAT on solar installs (to March 2027); income tax on share interest; CBS corporation tax; the share of the Renewables Obligation it now funds. | Fiscal loss, partly offset | VAT forgone ≈ **£25 a year per member household** displacing ~2,000 kWh at ~26p. Offsets: taxable share interest, employment taxes on the paid officer, and lower fuel-poverty spend. Probably net-negative but small. Not modelled. |\n| **Ofgem / DNO** (SP Energy Networks, North Wales) | Distribution and transmission charges per kWh. | **Reallocation** | The DNO loses **nothing**: allowed revenue is set by the price control (RIIO-ED2), so lower volume raises unit tariffs for everyone else. The transmission and distribution *residuals* already moved to banded fixed charges under the 2022 Targeted Charging Review, so cells cannot dodge them at the DNO-to-supplier level. How a member's bill shows them depends on the supplier's tariff design. What cells still avoid is the per-kWh, cost-reflective part. The **gain** is flexibility: a cell battery or diverter that defers reinforcement is cheaper than copper, and the DNO keeps part of any underspend under its totex incentive. |\n| **Policy levies** (RO, FiT, CfD, ECO, Warm Home Discount) | Per-kWh levies on supplied energy. | **Reallocation** | The total cost is fixed (certificates and contracts are owed whatever the volume), so a cell shifts levy onto non-members. **This contest shrank in April 2026.** The 2025 Budget ended ECO on bills and moved **75% of domestic RO cost to the Exchequer** for 2026–29 (≈£150 a year off the average bill combined; ≈£90 from RO alone, per the government factsheet). That moves cost from a regressive base (per kWh) to a progressive one (general taxation). It is the largest single cut to the cell's sideways take so far, and it happened for reasons unrelated to cells. |\n| **EU** | Nothing. The UK is outside; ETS linking and CBAM do not reach a domestic cell. | — | Precedent library only (see options). |\n| **UN** (UNFCCC, SDG 7) | Nothing. | — | Takes nothing and can give nothing a cell can spend. Its only currency is attributable mitigation in the UK's NDC, which cells add to at no cost to it. |\n\n**Read it upward:** above the UK there is nothing to negotiate. **Read it at the UK:** the Treasury's loss is VAT-sized and small. The DNO's is zero by construction. **Read it sideways:** the real contest is levy and network reallocation onto non-members, and the 2026 levy move has already cut it, by an amount not yet measured.\n\n## The options\n\nEach one is a design already running somewhere, mapped onto the cell's levels, scored on both halves of the test, and set against its strongest adversary.\n\n### 1. Pay the backbone, sell the flexibility — the network level gains by buying what the cell can do\n\n**Design.** The cell does not try to avoid network costs it causes. Members keep paying the fixed residuals (the 2022 Targeted Charging Review already makes that compulsory), and the cell volunteers a capacity-based contribution for any through-grid sharing (rung 5). The cell then *sells* to SP Energy Networks what it is physically good at: diverters and anchor batteries (rungs 1 and 6) bid into the DNO's flexibility tenders for the local substation, getting paid to defer reinforcement.\n\n**Who gains.** DNO: deferral is cheaper than reinforcement, and it keeps part of the underspend. Non-members: lower reinforcement cost in their tariffs, and no residual shifted onto them. Cell: a new revenue line built on persistent value, which is exactly what condition 3 of the parent gate demanded (\"price off self-consumption, avoided-network and flexibility value — the parts that persist\").\n\n**Precedents.** SPEN runs flexibility tenders across North Wales through Piclo/ElectronConnect: 113 MW secured at 12 HV/EHV sites in north-west England and North Wales in one earlier round. Italy's renewable energy communities (CER) reimburse only the *cost-reflective* network component on shared energy, not the residual. That is the right split. Germany's new energy sharing (§42c EnWG, live 1 June 2026) deliberately gives **no** network-charge reduction, on the grounds that shared electrons still use the wires.\n\n**Adversary.** The tenders are thin and pitched at the wrong voltage. SPEN's 2025 round contracted **13.84 MW of 56 MW tendered**, mostly at HV/EHV. Low-voltage contracts, the voltage where a valley cell sits, are new and rare. Unless the Bethesda substation is actually constrained, there is nothing to sell, and the value per kWh may be pennies. Worse, Ofgem's *Energy System Cost Allocation and Recovery Review* (call for input closed September 2025) may push more cost onto standing charges, which cuts the unit-rate savings that rungs 2 and 5 run on. **Verdict:** passes both halves if the substation is constrained. Otherwise it is a posture with no revenue. One query to SPEN's constraint maps settles which, and that query has not yet succeeded (see next steps).\n\n### 2. A per-kWh royalty to the community council, reimbursed from above — the German §6 shape\n\n**Design.** Large cell assets (the rung-7 hydro, any rung-3 anchor roof over a threshold) pay a small per-kWh royalty to the community council. The council uses its general power of competence to spend it on the fuel-poor cohort the parent gate found the ladder cannot reach (the \"false for the acute fuel-poverty cohort\" clause). The decisive feature is borrowed exactly: **the royalty is reimbursed by the level above**, so the asset owner is neutral, the community council gains, and the payer is the level that wants consent and build rate. The royalty is payable only from reimbursement received and lapses to zero if reimbursement ends, so the asset owner never pays net. In substance this is a grant to the council, paid through a generation meter. The only reason for the per-kWh wrapper is that it ties the money to local generation, and so to consent.\n\n**Precedents.** Germany, §6 EEG: operators may pay affected municipalities up to **0.2 ct/kWh**, and for EEG-subsidised plants the grid operator reimburses it. In effect the national surcharge account pays the municipality. Since the 2024 EEErtrBetG, projects approved after 31 December 2024 must pay (0.2 ct/kWh wind, 0.1 ct/kWh ground-mount PV, up to 0.4 ct/kWh for wind by agreement). The UK has now built its own version for consent: the **Bill Discount Scheme** gives households within 500 m of 43 new transmission projects £250 a year for ten years from 2027, funded by every bill-payer at roughly 80p–£2 a year. Wales keeps a register of community benefit (the £5k/MW onshore wind norm). None of these is a UK statutory account of the §6 kind. The German shape has no working UK equivalent yet.\n\n**Who gains.** Community council: income it has never had, ring-fenced to the cohort the ladder fails. County and Welsh Government: progress on the fuel-poverty and local-ownership targets. Nation: social licence. Non-members: if the royalty pays for fuel-poverty outreach, the most exposed non-participants are the ones who gain.\n\n**Adversary.** The UK has no EEG account. If nobody above reimburses, there is no royalty, and a reimbursement from GB Energy or Ynni Cymru is a subsidy for as long as it lasts. A future budget can end it, as it could reverse the 2026 levy move. Scale is honest but small: 0.2p × a 100 kW hydro's ≈400 MWh is ≈**£800 a year**. That is a real outreach budget for one valley, but no more. And the community council is itself run by unpaid volunteers, so the parent note's \"residual saint\" moves rather than disappears. **Verdict:** passes the asset-owner half unconditionally, because the owner never pays net, and no rung's rationale depends on the money. It passes the council half only while it is funded. The candidate funder is Great British Energy's community fund or Ynni Cymru, paying the royalty rather than the capex. If funding stops, the council falls back to today's position of zero.\n\n### 3. Exempt the community, retain the commercial — the county finally holds a stake\n\n**Design.** Split the rates treatment of standalone generation by ownership. Community-owned assets (CBS, asset-locked) get full relief. Commercial generation in the same county pays rates, and the county **retains** them instead of pooling them. Gwynedd gains real income from the big commercial projects it hosts, the cell's rung-7 assets pay nothing, and the Welsh pool loses only the small rates bill on community assets.\n\n**Precedents, one per nation.** *Scotland:* Renewable Energy Generation Relief gives community-owned schemes (≥15% of annual profit to a community organisation) 100% relief up to £145k rateable value, tapering above. *England:* the Non-Domestic Rating (Renewable Energy Projects) Regulations 2013 let councils keep rates from designated renewable projects, protected from the April 2026 retention reset. *Wales:* onsite plant has been exempt since April 2024, so the roof half is already done. For standalone hydro, the Welsh Government has run an application-based 100% rates relief for community hydro up to £50,000 rateable value. It was announced in 2018 and extended for 2019–20, with Ynni Ogwen named as a beneficiary ([R2](https://www.gov.wales/100-rates-relief-community-hydro-projects); [extension](https://www.gov.wales/100-business-rate-relief-continue-flow-community-hydro-projects)). Its status on the 2023 list is unconfirmed: guidance pages exist up to 2023–24, but those terms were not read (R3, cited in the ledger). *Spain:* municipalities may voluntarily waive up to **50% of IBI** (property tax) and **95% of ICIO** (works tax) on solar installs. Many do, so the lowest level gives up tax by choice, because the local return is worth more to it.\n\n**Who gains.** County: a retained income it lacks today. Welsh Government: delivery of the 1.5 GW target at the cost of a small slice of the pool. Cell: cheaper rung-7 assets. Non-members: neutral to slightly positive (council income).\n\n**Adversary.** Wales pools non-domestic rates *on purpose*: it is redistributive. Letting resource-rich counties keep generation rates takes from the counties without wind or water. That is zero-sum inside Wales, which is the very move the option claims to avoid. England's retention mostly produced nothing, because the de facto onshore wind ban followed straight after. And a small community hydro may already sit under small business rates relief, so the relief half could be worth zero. The Spanish evidence cuts both ways: 38% of municipalities offer no IBI bonus at all. **Verdict:** the community-relief half already exists in Wales as a discretionary grant, so it adds little that is new. The one open question is whether Gwynedd can **retain rates from new commercial capacity only**, above a baseline, as England designed it, without taking from counties that have no wind or water. Unless retention is limited in that way, the option fails at Wales level. The Ogwen hydro's rateable value is still unpriced, because the VOA entry was not retrieved (R2).\n\n### 4. Move the take from the bill to the tax base — the Dutch fiscal route, and why it was abandoned\n\n**Design.** Close the sideways contest at the root. The cost a cell shifts onto non-members is whatever is recovered *per kWh* without being caused per kWh: levies and network residuals. Every pound moved from that base to general taxation shrinks the cell's take from its roofless neighbour, and a tax base is progressive where a per-kWh charge is regressive. The cell-specific version adds a published **fiscal ledger** for each cell: VAT forgone set against taxes paid (share interest, wages, CBS corporation tax) and fuel-poverty spend avoided, so the Treasury can see its own balance.\n\n**Precedents.** *UK, already moving:* the 2025 Budget took ECO off bills and 75% of domestic RO cost into the Exchequer for 2026–29, under the Energy Independence Bill. *Netherlands:* the **postcoderoosregeling** (to March 2021) gave cooperative members in neighbouring postcodes a reduced energy-tax rate on their share of the cooperative's output. It was a direct Treasury-to-cell fiscal transfer. It was **replaced by a subsidy** (the SCE, from April 2021) because the fiscal route was complex and hard to target, and the first SCE round was fully allocated in about two months, which is waitlist evidence. *Belgium (Flanders):* the meter-that-runs-backwards was struck down in 2021 precisely as a regressive cross-subsidy. That is the counter-precedent this option exists to avoid.\n\n**Who gains.** Non-members: most of all, because the shift onto them shrinks. Treasury: neutral-to-negative, but now *visible*, and the per-cell ledger turns an argument into arithmetic. Cell: unaffected or slightly negative (smaller per-kWh savings), which is exactly the spread compression the parent template already designs around.\n\n**Adversary.** This option is mostly a description of what is already happening, plus a ledger. The RO transfer is time-limited (to 2028–29), and a future budget can reverse it. The Dutch history says tax-route support for cells gets converted into subsidy once it grows, and subsidy is the grant-dependence the ladder is built to avoid (\"no later rung's rationale cites grants\"). The fiscal ledger is unvalidated, and an honest one may show a net Treasury loss. **Verdict:** the strongest on the non-member half and the weakest on the Treasury half. Its real value is defensive: it puts a number on the \"regressive cells\" attack before someone else does.\n\n### 5. The frame-breaker: share the electrons without sharing the wires\n\n**Design.** Stop asking how to compensate the levels the cell takes from, and push value down the ladder towards rungs that take nothing. Behind-the-meter and private-wire rungs (1, 2, 3 and anchor batteries) use no public network for the shared kWh, so they shift no network cost at all. Through-grid sharing (rung 5) is where the reallocation lives. Reorder the cell's growth plan so its expansion comes mainly from roofs, diverters, private wires and behind-the-meter storage. Keep rung 5 open as of right, with shared kWh paying their cost-reflective network share (the Italian CER split), so the roofless door needs no flexibility revenue.\n\n**Precedent.** The physics, and the German legislator's reading of it: §42c gives through-grid sharing no network relief *because* it uses the network. Italy, Spain and Austria went the other way and discount shared kWh, which buys uptake at the cost of the sideways shift. Bethesda's own evidence points the same way: the binding constraint is *generation supply*, not demand. The missing rungs are roofs, which are behind the meter by design.\n\n**Who gains.** Every level, almost trivially, because almost nothing is taken. Non-members: not harmed by behind-the-meter self-consumption beyond its levy share, which the 2026 move has shrunk.\n\n**Adversary.** Self-consumption is still volume that does not pay per-kWh levies, so the sideways shift shrinks but never reaches zero. More seriously, behind-the-meter value goes only to people with roofs, private wires or anchor hosts, which is exactly the equity residue the parent gate found. Rung 5 is how a roofless member joins. The Italian split repairs this only in part, and three gaps remain. It covers network charges, not per-kWh levies, which still shift. No GB route has been shown by which a cell without a supply licence could pay a separate network share for shared kWh, since distribution charges are billed to the supplier. And nobody has yet measured what a roofless member still saves after the split. **Verdict:** the cleanest answer to the governance question and still the weakest on equity. Its job is as a dial, not a doctrine: grow behind the meter by default, and keep through-grid membership open at full standing as the roofless door. Do not demote it until someone shows what lies behind that door.\n\n## What I think\n\nThe question assumed the fight was vertical: parish against county against Westminster. The ledger says it is horizontal. Above the UK nothing is taken. At the UK level the Treasury's loss is VAT-sized and the DNO's is zero by design. The real cost lands on non-participating bill-payers, and it is already shrinking for reasons unrelated to cells (the 2022 residual reform, the 2026 levy move). **My read: option 5 plus the backbone half of option 1 is the default. The flexibility sale is a held option, unpriced until Bethesda's constraint status is known (R1: not retrievable from SPEN's data in this pass).** **Option 2 is the one worth campaigning for**, because it is the only design that turns a level of government into the *funder* of the fuel-poverty cohort the ladder cannot reach. It needs exactly one thing the UK lacks, an upstream reimburser, and GB Energy's community programme is the obvious candidate. Option 3 is good for Gwynedd but breaks the Welsh pool, so it only works in its English, new-capacity-only form. Option 4 is a defensive ledger to keep in a drawer, not a strategy.\n\n## What I would do next\n\n1. **One lookup that decides option 1:** SPEN's network capacity and constraint map for the Bethesda primary substation. Constrained means a flexibility line exists. Unconstrained means option 1 is posture only. The first attempt failed on a tool limit ([R1](https://www.spenergynetworks.co.uk/userfiles/file/dg_heat_maps_overview.pdf)). The April 2025 procurement statement names no Bethesda or Gwynedd zone, but the Market Prospectus and the tender-zone data were not opened ([R4](https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf)). A non-answer must not be read as \"unconstrained\".\n2. **One number that prices option 3:** the rateable value (or rates exemption status) of Ynni Ogwen's hydro, from the VOA list. The first attempt could not open the entry (R2).\n3. **Ask the Germany question in the UK:** whether GB Energy's community fund or Ynni Cymru would reimburse a per-kWh community-council royalty in place of a capex grant. It is the cheapest design here that discharges the fuel-poverty clause. *Outward-facing, so Tom's call.*\n4. **Size the sideways loser and the roofless door:** how many pounds a year one non-member carries per cell member, what a rung-5 member saves after paying a cost-reflective network share, and whether any GB route lets a cell pay that share. R5 found no verified figure, and R6 failed to fetch.\n5. **Run this through the gate.** This was a single-seat desk pass. Option 2 especially needs an independent adversary before it climbs.\n\n## Sources checked in this pass\n\nGerman §6 EEG and the 2024 EEErtrBetG (Taylor Wessing, gesetze-im-internet); §42c EnWG energy sharing (Gleiss Lutz, Görg, cleanthinking); Italian CER grant and tariff (ReScoop, Advant NCTM, ANCE — the base €/MWh tariff was **not** found, so it is not quoted); Welsh onsite-plant rates exception (WSI 2023/1229, gov.wales); Scottish Renewable Energy Generation Relief (mygov.scot and council pages); English renewable-project rates retention (SI 2013, gov.uk retention reset 2026); Spanish IBI/ICIO bonuses (fiscal-impuestos, selectra, interempresas); Dutch postcoderoos to SCE (solarmagazine, officielebekendmakingen); UK 2025 Budget levy moves (gov.uk Energy Independence Bill factsheet, Cornwall Insight); Bill Discount Scheme (gov.uk); SPEN flexibility tenders (SPEN C31E procurement reports); Welsh 1.5 GW local-ownership target (gov.wales, Regen).\n\nAdded by the run: R1, SPEN DG heat-map methodology (https://www.spenergynetworks.co.uk/userfiles/file/dg_heat_maps_overview.pdf), with Bethesda's status not found; R2, Welsh community hydro rates relief (https://www.gov.wales/100-rates-relief-community-hydro-projects, https://www.gov.wales/100-business-rate-relief-continue-flow-community-hydro-projects), with the VOA entry not found; R3, the relief's continuation (https://www.gov.wales/low-carbon-energy, https://www.gov.wales/non-domestic-business-rates-support-community-owned-hydropower-projects-2022-2023); R4, SPEN 2025 C31E procurement statement (https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf), with no Gwynedd zone named; R5, Ofgem price cap April 2026 (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-april-and-30-june-2026, https://www.ofgem.gov.uk/sites/default/files/2026-06/Summary-of-changes-to-energy-price-cap-1-July-to-30-September-2026.pdf).\n\n**Partly verified (R2, R3):** a current Welsh hydro-specific rates relief. It exists as an application-based grant up to 2023–24, but those terms are unconfirmed.\n\n**Not verified, so not relied on:** Austria's energy-community network discounts (named only as a direction above); the network share of a typical unit rate (R5 gives only an unverified snippet of about 26–29% network and 5–6% policy cost in the cap, from an unknown table, and does not say how much is recovered per kWh; R6 failed); any GB mechanism for a cell to pay a network share on shared kWh.\n\n---\n\n_Forming register. Not promoted into `propositions.ts`. Single-seat desk pass. The horizontal-not-vertical finding is offered as a candidate refinement of the parent's walls ledger, not yet a climb._\n",
+    "diff": "@@ -4,2 +4,4 @@ _Published live (2026-11-09). A follow-on to the ratchet cell (`NOTES-ratchet-ce\n \n+_Moved on 2026-11-09 by a [world computer run](/world-computer?run=run-001): standalone hydro is rated but can get a discretionary Welsh grant rather than an exemption; the flexibility sale is now held back until Bethesda's constraint status is known; the royalty is made contingent on reimbursement; rung 5 stays open as of right; and the roofless neighbour's loss is marked as unmeasured._\n+\n ---\n@@ -8,3 +10,3 @@ _Published live (2026-11-09). A follow-on to the ratchet cell (`NOTES-ratchet-ce\n \n-Go through the ledger level by level and something unexpected appears. **Most levels of governance lose little or nothing to a ratchet cell, and several gain.** The real cost of the cell falls sideways, not upwards. It lands on the household with no roof, no share and no club place, which ends up carrying a larger share of the fixed system costs that cell members stop paying per kWh. The walls ledger in the parent note already lists this as *network-cost shifting: political contest*. This pass gives it its proper place. It is the only line in the ledger with a real loser, and that loser is not a government.\n+Go through the ledger level by level and something unexpected appears. **Most levels of governance lose little or nothing to a ratchet cell, and several gain.** The real cost of the cell falls sideways, not upwards. It lands on the household with no roof, no share and no club place, which ends up carrying a larger share of the fixed system costs that cell members stop paying per kWh. The walls ledger in the parent note already lists this as *network-cost shifting: political contest*. This pass gives it its proper place. It is the only line with a loser; its size is not yet measured. That loser is not a government.\n \n@@ -19,6 +21,6 @@ The take comes in three kinds, and they should never be added together: a **fisc\n | **Community council** (Cyngor Cymuned) | Nothing. The precept is unaffected. | — | Zero take. Possible gain: a council roof can host a rung-3 lease, and the council can hold or channel a benefit fund. |\n-| **County** (Gwynedd) | Non-domestic rates on standalone generation (hydro, ground-mount); planning. Rates are pooled nationally in Wales, so the county keeps nothing directly. | Fiscal, small | Rooftop and onsite plant has been **exempt from Welsh rates since 1 April 2024, to 31 March 2035** (Valuation for Rating (Plant and Machinery) (Wales) (Amendment) Regs 2023). The roof rungs therefore take nothing from rates. Only standalone assets (rung 7's hydro, any ground-mount) are rated. Gains: lower energy bills in its own schools and buildings, fewer fuel-poor households. |\n+| **County** (Gwynedd) | Non-domestic rates on standalone generation (hydro, ground-mount); planning. Rates are pooled nationally in Wales, so the county keeps nothing directly. | Fiscal, small | Rooftop and onsite plant has been **exempt from Welsh rates since 1 April 2024, to 31 March 2035** (Valuation for Rating (Plant and Machinery) (Wales) (Amendment) Regs 2023), so the roof rungs take nothing from rates. Standalone assets (rung 7's hydro, any ground-mount) stay rated. Standalone community hydro is **not exempt**, but it may receive an application-based 100% Welsh Government grant up to £50,000 rateable value ([R3](https://www.gov.wales/non-domestic-business-rates-support-community-owned-hydropower-projects-2022-2023)). Guidance exists for 2023–24, but its terms are unconfirmed. Gains: lower energy bills in its own schools and buildings, fewer fuel-poor households. |\n | **Welsh Government** | The rates pool; Ynni Cymru grant spend (rung 0). Energy licensing is **reserved**, so there is no tax or levy lever here. | Spend in, target out | A net gainer against its own target of **1.5 GW locally owned by 2035**. Every cell is cheap delivery of a stated objective. |\n | **UK Treasury** | VAT at 5% on every displaced kWh; 0% VAT on solar installs (to March 2027); income tax on share interest; CBS corporation tax; the share of the Renewables Obligation it now funds. | Fiscal loss, partly offset | VAT forgone ≈ **£25 a year per member household** displacing ~2,000 kWh at ~26p. Offsets: taxable share interest, employment taxes on the paid officer, and lower fuel-poverty spend. Probably net-negative but small. Not modelled. |\n-| **Ofgem / DNO** (SP Energy Networks, North Wales) | Distribution and transmission charges per kWh. | **Reallocation** | The DNO loses **nothing**: allowed revenue is set by the price control (RIIO-ED2), so lower volume raises unit tariffs for everyone else. The transmission and distribution *residuals* already moved to banded fixed charges under the 2022 Targeted Charging Review, so cells cannot dodge them. What cells still avoid is the per-kWh, cost-reflective part. The **gain** is flexibility: a cell battery or diverter that defers reinforcement is cheaper than copper, and the DNO keeps part of any underspend under its totex incentive. |\n+| **Ofgem / DNO** (SP Energy Networks, North Wales) | Distribution and transmission charges per kWh. | **Reallocation** | The DNO loses **nothing**: allowed revenue is set by the price control (RIIO-ED2), so lower volume raises unit tariffs for everyone else. The transmission and distribution *residuals* already moved to banded fixed charges under the 2022 Targeted Charging Review, so cells cannot dodge them at the DNO-to-supplier level. How a member's bill shows them depends on the supplier's tariff design. What cells still avoid is the per-kWh, cost-reflective part. The **gain** is flexibility: a cell battery or diverter that defers reinforcement is cheaper than copper, and the DNO keeps part of any underspend under its totex incentive. |\n | **Policy levies** (RO, FiT, CfD, ECO, Warm Home Discount) | Per-kWh levies on supplied energy. | **Reallocation** | The total cost is fixed (certificates and contracts are owed whatever the volume), so a cell shifts levy onto non-members. **This contest shrank in April 2026.** The 2025 Budget ended ECO on bills and moved **75% of domestic RO cost to the Exchequer** for 2026–29 (≈£150 a year off the average bill combined; ≈£90 from RO alone, per the government factsheet). That moves cost from a regressive base (per kWh) to a progressive one (general taxation). It is the largest single cut to the cell's sideways take so far, and it happened for reasons unrelated to cells. |\n@@ -27,3 +29,3 @@ The take comes in three kinds, and they should never be added together: a **fisc\n \n-**Read it upward:** above the UK there is nothing to negotiate. **Read it at the UK:** the Treasury's loss is VAT-sized and small. The DNO's is zero by construction. **Read it sideways:** the real contest is levy and network reallocation onto non-members, and the 2026 levy move has already cut it by an unknown but material amount.\n+**Read it upward:** above the UK there is nothing to negotiate. **Read it at the UK:** the Treasury's loss is VAT-sized and small. The DNO's is zero by construction. **Read it sideways:** the real contest is levy and network reallocation onto non-members, and the 2026 levy move has already cut it, by an amount not yet measured.\n \n@@ -41,3 +43,3 @@ Each one is a design already running somewhere, mapped onto the cell's levels, s\n \n-**Adversary.** The tenders are thin and pitched at the wrong voltage. SPEN's 2025 round contracted **13.84 MW of 56 MW tendered**, mostly at HV/EHV. Low-voltage contracts, the voltage where a valley cell sits, are new and rare. Unless the Bethesda substation is actually constrained, there is nothing to sell, and the value per kWh may be pennies. Worse, Ofgem's *Energy System Cost Allocation and Recovery Review* (call for input closed September 2025) may push more cost onto standing charges, which cuts the unit-rate savings that rungs 2 and 5 run on. **Verdict:** passes both halves if the substation is constrained. Otherwise it is a posture with no revenue. One query to SPEN's constraint maps settles which.\n+**Adversary.** The tenders are thin and pitched at the wrong voltage. SPEN's 2025 round contracted **13.84 MW of 56 MW tendered**, mostly at HV/EHV. Low-voltage contracts, the voltage where a valley cell sits, are new and rare. Unless the Bethesda substation is actually constrained, there is nothing to sell, and the value per kWh may be pennies. Worse, Ofgem's *Energy System Cost Allocation and Recovery Review* (call for input closed September 2025) may push more cost onto standing charges, which cuts the unit-rate savings that rungs 2 and 5 run on. **Verdict:** passes both halves if the substation is constrained. Otherwise it is a posture with no revenue. One query to SPEN's constraint maps settles which, and that query has not yet succeeded (see next steps).\n \n@@ -45,5 +47,5 @@ Each one is a design already running somewhere, mapped onto the cell's levels, s\n \n-**Design.** Large cell assets (the rung-7 hydro, any rung-3 anchor roof over a threshold) pay a small per-kWh royalty to the community council. The council uses its general power of competence to spend it on the fuel-poor cohort the parent gate found the ladder cannot reach (the \"false for the acute fuel-poverty cohort\" clause). The decisive feature is borrowed exactly: **the royalty is reimbursed by the level above**, so the asset owner is neutral, the community council gains, and the payer is the level that wants consent and build rate.\n+**Design.** Large cell assets (the rung-7 hydro, any rung-3 anchor roof over a threshold) pay a small per-kWh royalty to the community council. The council uses its general power of competence to spend it on the fuel-poor cohort the parent gate found the ladder cannot reach (the \"false for the acute fuel-poverty cohort\" clause). The decisive feature is borrowed exactly: **the royalty is reimbursed by the level above**, so the asset owner is neutral, the community council gains, and the payer is the level that wants consent and build rate. The royalty is payable only from reimbursement received and lapses to zero if reimbursement ends, so the asset owner never pays net. In substance this is a grant to the council, paid through a generation meter. The only reason for the per-kWh wrapper is that it ties the money to local generation, and so to consent.\n \n-**Precedents.** Germany, §6 EEG: operators may pay affected municipalities up to **0.2 ct/kWh**, and for EEG-subsidised plants the grid operator reimburses it. In effect the national surcharge account pays the municipality. Since the 2024 EEErtrBetG, projects approved after 31 December 2024 must pay (0.2 ct/kWh wind, 0.1 ct/kWh ground-mount PV, up to 0.4 ct/kWh for wind by agreement). The UK has now built its own version for consent: the **Bill Discount Scheme** gives households within 500 m of 43 new transmission projects £250 a year for ten years from 2027, funded by every bill-payer at roughly 80p–£2 a year. Wales keeps a register of community benefit (the £5k/MW onshore wind norm).\n+**Precedents.** Germany, §6 EEG: operators may pay affected municipalities up to **0.2 ct/kWh**, and for EEG-subsidised plants the grid operator reimburses it. In effect the national surcharge account pays the municipality. Since the 2024 EEErtrBetG, projects approved after 31 December 2024 must pay (0.2 ct/kWh wind, 0.1 ct/kWh ground-mount PV, up to 0.4 ct/kWh for wind by agreement). The UK has now built its own version for consent: the **Bill Discount Scheme** gives households within 500 m of 43 new transmission projects £250 a year for ten years from 2027, funded by every bill-payer at roughly 80p–£2 a year. Wales keeps a register of community benefit (the £5k/MW onshore wind norm). None of these is a UK statutory account of the §6 kind. The German shape has no working UK equivalent yet.\n \n@@ -51,3 +53,3 @@ Each one is a design already running somewhere, mapped onto the cell's levels, s\n \n-**Adversary.** The UK has no EEG account. If nobody above reimburses, the royalty is just a local tax on a thin-margin rung, and the capital layer (condition 1, possibly clearing only 2–3%) cannot carry it. Scale is honest but small: 0.2p × a 100 kW hydro's ≈400 MWh is ≈**£800 a year**. That is a real outreach budget for one valley, but no more. And the community council is itself run by unpaid volunteers, so the parent note's \"residual saint\" moves rather than disappears. **Verdict:** passes both halves *only with* an upstream reimburser. The candidate is Great British Energy's community fund or Ynni Cymru, paying the royalty rather than the capex. Without one it fails the asset-owner half.\n+**Adversary.** The UK has no EEG account. If nobody above reimburses, there is no royalty, and a reimbursement from GB Energy or Ynni Cymru is a subsidy for as long as it lasts. A future budget can end it, as it could reverse the 2026 levy move. Scale is honest but small: 0.2p × a 100 kW hydro's ≈400 MWh is ≈**£800 a year**. That is a real outreach budget for one valley, but no more. And the community council is itself run by unpaid volunteers, so the parent note's \"residual saint\" moves rather than disappears. **Verdict:** passes the asset-owner half unconditionally, because the owner never pays net, and no rung's rationale depends on the money. It passes the council half only while it is funded. The candidate funder is Great British Energy's community fund or Ynni Cymru, paying the royalty rather than the capex. If funding stops, the council falls back to today's position of zero.\n \n@@ -57,3 +59,3 @@ Each one is a design already running somewhere, mapped onto the cell's levels, s\n \n-**Precedents, one per nation.** *Scotland:* Renewable Energy Generation Relief gives community-owned schemes (≥15% of annual profit to a community organisation) 100% relief up to £145k rateable value, tapering above. *England:* the Non-Domestic Rating (Renewable Energy Projects) Regulations 2013 let councils keep rates from designated renewable projects, protected from the April 2026 retention reset. *Wales:* onsite plant has been exempt since April 2024, so the roof half is already done. *Spain:* municipalities may voluntarily waive up to **50% of IBI** (property tax) and **95% of ICIO** (works tax) on solar installs. Many do, so the lowest level gives up tax by choice, because the local return is worth more to it.\n+**Precedents, one per nation.** *Scotland:* Renewable Energy Generation Relief gives community-owned schemes (≥15% of annual profit to a community organisation) 100% relief up to £145k rateable value, tapering above. *England:* the Non-Domestic Rating (Renewable Energy Projects) Regulations 2013 let councils keep rates from designated renewable projects, protected from the April 2026 retention reset. *Wales:* onsite plant has been exempt since April 2024, so the roof half is already done. For standalone hydro, the Welsh Government has run an application-based 100% rates relief for community hydro up to £50,000 rateable value. It was announced in 2018 and extended for 2019–20, with Ynni Ogwen named as a beneficiary ([R2](https://www.gov.wales/100-rates-relief-community-hydro-projects); [extension](https://www.gov.wales/100-business-rate-relief-continue-flow-community-hydro-projects)). Its status on the 2023 list is unconfirmed: guidance pages exist up to 2023–24, but those terms were not read (R3, cited in the ledger). *Spain:* municipalities may voluntarily waive up to **50% of IBI** (property tax) and **95% of ICIO** (works tax) on solar installs. Many do, so the lowest level gives up tax by choice, because the local return is worth more to it.\n \n@@ -61,3 +63,3 @@ Each one is a design already running somewhere, mapped onto the cell's levels, s\n \n-**Adversary.** Wales pools non-domestic rates *on purpose*: it is redistributive. Letting resource-rich counties keep generation rates takes from the counties without wind or water. That is zero-sum inside Wales, which is the very move the option claims to avoid. England's retention mostly produced nothing, because the de facto onshore wind ban followed straight after. And a small community hydro may already sit under small business rates relief, so the relief half could be worth zero. The Spanish evidence cuts both ways: 38% of municipalities offer no IBI bonus at all. **Verdict:** passes for the county and the cell. Fails the \"every level\" test at Wales level unless retention is limited to *new* commercial capacity above a baseline, which is how England designed it. Needs the rateable value of the Ogwen hydro to price the relief.\n+**Adversary.** Wales pools non-domestic rates *on purpose*: it is redistributive. Letting resource-rich counties keep generation rates takes from the counties without wind or water. That is zero-sum inside Wales, which is the very move the option claims to avoid. England's retention mostly produced nothing, because the de facto onshore wind ban followed straight after. And a small community hydro may already sit under small business rates relief, so the relief half could be worth zero. The Spanish evidence cuts both ways: 38% of municipalities offer no IBI bonus at all. **Verdict:** the community-relief half already exists in Wales as a discretionary grant, so it adds little that is new. The one open question is whether Gwynedd can **retain rates from new commercial capacity only**, above a baseline, as England designed it, without taking from counties that have no wind or water. Unless retention is limited in that way, the option fails at Wales level. The Ogwen hydro's rateable value is still unpriced, because the VOA entry was not retrieved (R2).\n \n@@ -75,3 +77,3 @@ Each one is a design already running somewhere, mapped onto the cell's levels, s\n \n-**Design.** Stop asking how to compensate the levels the cell takes from, and push value down the ladder towards rungs that take nothing. Behind-the-meter and private-wire rungs (1, 2, 3 and anchor batteries) use no public network for the shared kWh, so they shift no network cost at all. Through-grid sharing (rung 5) is where the reallocation lives. Reorder the cell's growth plan so its expansion comes mainly from roofs, diverters, private wires and behind-the-meter storage, and treat through-grid matching as the *top-up* layer instead of the core.\n+**Design.** Stop asking how to compensate the levels the cell takes from, and push value down the ladder towards rungs that take nothing. Behind-the-meter and private-wire rungs (1, 2, 3 and anchor batteries) use no public network for the shared kWh, so they shift no network cost at all. Through-grid sharing (rung 5) is where the reallocation lives. Reorder the cell's growth plan so its expansion comes mainly from roofs, diverters, private wires and behind-the-meter storage. Keep rung 5 open as of right, with shared kWh paying their cost-reflective network share (the Italian CER split), so the roofless door needs no flexibility revenue.\n \n@@ -81,3 +83,3 @@ Each one is a design already running somewhere, mapped onto the cell's levels, s\n \n-**Adversary.** Self-consumption is still volume that does not pay per-kWh levies, so the sideways shift shrinks but never reaches zero. More seriously, behind-the-meter value goes only to people with roofs, private wires or anchor hosts, which is exactly the equity residue the parent gate found. Rung 5 is how a roofless member joins. Shrinking it to protect roofless non-members excludes roofless would-be members. **Verdict:** the cleanest answer to the governance question and the worst answer to the equity question. Its job is as a dial, not a doctrine: grow behind the meter by default, and keep through-grid membership open as the roofless door, paid for under option 1.\n+**Adversary.** Self-consumption is still volume that does not pay per-kWh levies, so the sideways shift shrinks but never reaches zero. More seriously, behind-the-meter value goes only to people with roofs, private wires or anchor hosts, which is exactly the equity residue the parent gate found. Rung 5 is how a roofless member joins. The Italian split repairs this only in part, and three gaps remain. It covers network charges, not per-kWh levies, which still shift. No GB route has been shown by which a cell without a supply licence could pay a separate network share for shared kWh, since distribution charges are billed to the supplier. And nobody has yet measured what a roofless member still saves after the split. **Verdict:** the cleanest answer to the governance question and still the weakest on equity. Its job is as a dial, not a doctrine: grow behind the meter by default, and keep through-grid membership open at full standing as the roofless door. Do not demote it until someone shows what lies behind that door.\n \n@@ -85,3 +87,3 @@ Each one is a design already running somewhere, mapped onto the cell's levels, s\n \n-The question assumed the fight was vertical: parish against county against Westminster. The ledger says it is horizontal. Above the UK nothing is taken. At the UK level the Treasury's loss is VAT-sized and the DNO's is zero by design. The real cost lands on non-participating bill-payers, and it is already shrinking for reasons unrelated to cells (the 2022 residual reform, the 2026 levy move). **My read: option 1 plus option 5 is the ratchet cell's governance posture by default.** Grow behind the meter, pay the backbone, sell flexibility where the substation is constrained. That costs nothing to adopt and passes both halves wherever a constraint exists. **Option 2 is the one worth campaigning for**, because it is the only design that turns a level of government into the *funder* of the fuel-poverty cohort the ladder cannot reach. It needs exactly one thing the UK lacks, an upstream reimburser, and GB Energy's community programme is the obvious candidate. Option 3 is good for Gwynedd but breaks the Welsh pool, so it only works in its English, new-capacity-only form. Option 4 is a defensive ledger to keep in a drawer, not a strategy.\n+The question assumed the fight was vertical: parish against county against Westminster. The ledger says it is horizontal. Above the UK nothing is taken. At the UK level the Treasury's loss is VAT-sized and the DNO's is zero by design. The real cost lands on non-participating bill-payers, and it is already shrinking for reasons unrelated to cells (the 2022 residual reform, the 2026 levy move). **My read: option 5 plus the backbone half of option 1 is the default. The flexibility sale is a held option, unpriced until Bethesda's constraint status is known (R1: not retrievable from SPEN's data in this pass).** **Option 2 is the one worth campaigning for**, because it is the only design that turns a level of government into the *funder* of the fuel-poverty cohort the ladder cannot reach. It needs exactly one thing the UK lacks, an upstream reimburser, and GB Energy's community programme is the obvious candidate. Option 3 is good for Gwynedd but breaks the Welsh pool, so it only works in its English, new-capacity-only form. Option 4 is a defensive ledger to keep in a drawer, not a strategy.\n \n@@ -89,6 +91,7 @@ The question assumed the fight was vertical: parish against county against Westm\n \n-1. **One lookup that decides option 1:** SPEN's network capacity and constraint map for the Bethesda primary substation. Constrained means a flexibility line exists. Unconstrained means option 1 is posture only.\n-2. **One number that prices option 3:** the rateable value (or rates exemption status) of Ynni Ogwen's hydro, from the VOA list.\n+1. **One lookup that decides option 1:** SPEN's network capacity and constraint map for the Bethesda primary substation. Constrained means a flexibility line exists. Unconstrained means option 1 is posture only. The first attempt failed on a tool limit ([R1](https://www.spenergynetworks.co.uk/userfiles/file/dg_heat_maps_overview.pdf)). The April 2025 procurement statement names no Bethesda or Gwynedd zone, but the Market Prospectus and the tender-zone data were not opened ([R4](https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf)). A non-answer must not be read as \"unconstrained\".\n+2. **One number that prices option 3:** the rateable value (or rates exemption status) of Ynni Ogwen's hydro, from the VOA list. The first attempt could not open the entry (R2).\n 3. **Ask the Germany question in the UK:** whether GB Energy's community fund or Ynni Cymru would reimburse a per-kWh community-council royalty in place of a capex grant. It is the cheapest design here that discharges the fuel-poverty clause. *Outward-facing, so Tom's call.*\n-4. **Run this through the gate.** This was a single-seat desk pass. Option 2 especially needs an independent adversary before it climbs.\n+4. **Size the sideways loser and the roofless door:** how many pounds a year one non-member carries per cell member, what a rung-5 member saves after paying a cost-reflective network share, and whether any GB route lets a cell pay that share. R5 found no verified figure, and R6 failed to fetch.\n+5. **Run this through the gate.** This was a single-seat desk pass. Option 2 especially needs an independent adversary before it climbs.\n \n@@ -96,3 +99,9 @@ The question assumed the fight was vertical: parish against county against Westm\n \n-German §6 EEG and the 2024 EEErtrBetG (Taylor Wessing, gesetze-im-internet); §42c EnWG energy sharing (Gleiss Lutz, Görg, cleanthinking); Italian CER grant and tariff (ReScoop, Advant NCTM, ANCE — the base €/MWh tariff was **not** found, so it is not quoted); Welsh onsite-plant rates exception (WSI 2023/1229, gov.wales); Scottish Renewable Energy Generation Relief (mygov.scot and council pages); English renewable-project rates retention (SI 2013, gov.uk retention reset 2026); Spanish IBI/ICIO bonuses (fiscal-impuestos, selectra, interempresas); Dutch postcoderoos to SCE (solarmagazine, officielebekendmakingen); UK 2025 Budget levy moves (gov.uk Energy Independence Bill factsheet, Cornwall Insight); Bill Discount Scheme (gov.uk); SPEN flexibility tenders (SPEN C31E procurement reports); Welsh 1.5 GW local-ownership target (gov.wales, Regen). **Not verified, so not relied on:** Austria's energy-community network discounts (named only as a direction above); the network share of a typical unit rate; any current Welsh hydro-specific rates relief.\n+German §6 EEG and the 2024 EEErtrBetG (Taylor Wessing, gesetze-im-internet); §42c EnWG energy sharing (Gleiss Lutz, Görg, cleanthinking); Italian CER grant and tariff (ReScoop, Advant NCTM, ANCE — the base €/MWh tariff was **not** found, so it is not quoted); Welsh onsite-plant rates exception (WSI 2023/1229, gov.wales); Scottish Renewable Energy Generation Relief (mygov.scot and council pages); English renewable-project rates retention (SI 2013, gov.uk retention reset 2026); Spanish IBI/ICIO bonuses (fiscal-impuestos, selectra, interempresas); Dutch postcoderoos to SCE (solarmagazine, officielebekendmakingen); UK 2025 Budget levy moves (gov.uk Energy Independence Bill factsheet, Cornwall Insight); Bill Discount Scheme (gov.uk); SPEN flexibility tenders (SPEN C31E procurement reports); Welsh 1.5 GW local-ownership target (gov.wales, Regen).\n+\n+Added by the run: R1, SPEN DG heat-map methodology (https://www.spenergynetworks.co.uk/userfiles/file/dg_heat_maps_overview.pdf), with Bethesda's status not found; R2, Welsh community hydro rates relief (https://www.gov.wales/100-rates-relief-community-hydro-projects, https://www.gov.wales/100-business-rate-relief-continue-flow-community-hydro-projects), with the VOA entry not found; R3, the relief's continuation (https://www.gov.wales/low-carbon-energy, https://www.gov.wales/non-domestic-business-rates-support-community-owned-hydropower-projects-2022-2023); R4, SPEN 2025 C31E procurement statement (https://www.spenergynetworks.co.uk/userfiles/file/SPEN_2025_C31E_Procurement_Statement.pdf), with no Gwynedd zone named; R5, Ofgem price cap April 2026 (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-april-and-30-june-2026, https://www.ofgem.gov.uk/sites/default/files/2026-06/Summary-of-changes-to-energy-price-cap-1-July-to-30-September-2026.pdf).\n+\n+**Partly verified (R2, R3):** a current Welsh hydro-specific rates relief. It exists as an application-based grant up to 2023–24, but those terms are unconfirmed.\n+\n+**Not verified, so not relied on:** Austria's energy-community network discounts (named only as a direction above); the network share of a typical unit rate (R5 gives only an unverified snippet of about 26–29% network and 5–6% policy cost in the cap, from an unknown table, and does not say how much is recovered per kWh; R6 failed); any GB mechanism for a cell to pay a network share on shared kWh.",
+    "changed": true,
+    "costUsd": 0.2423576,
+    "model": "Opus",
+    "lossAtStop": 27,
+    "baselineLoss": 16
+  },
+  "critic": {
+    "pass": true,
+    "score": 7,
+    "better": [
+      "Records the failed lookups (R1 Bethesda constraint, R2 VOA entry, R6) on the page instead of leaving them as promised next steps, and explicitly forbids reading a non-answer as 'unconstrained'.",
+      "Upgrades the Welsh community-hydro rates position from 'not verified' to a sourced, dated grant (2018, extended 2019–20, Ynni Ogwen named, R2/R3) with its post-2023 status honestly left open; option 3's verdict is correspondingly downgraded to 'adds little new'.",
+      "Option 2's royalty is made contingent on reimbursement and renamed for what it is (a grant through a generation meter), with the new caveat that the reimbursement is itself a reversible subsidy.",
+      "Option 5 drops the 'top-up' demotion of rung 5, keeps the roofless door open as of right, and adds three real gaps (levies still shift, no GB route for an unlicensed cell to pay a network share, roofless member savings unmeasured).",
+      "Adds a true caveat that TCR residual recovery is fixed at DNO-to-supplier level but a member's bill depends on supplier tariff design.",
+      "Default recommendation is correctly reweighted: flexibility sale held as unpriced until constraint status is known, rather than asserted as default posture.",
+      "New next step 4 names the two quantities the whole finding rests on (sideways loss per non-member, rung-5 member savings after split)."
+    ],
+    "worse": [
+      "R6 is referred to twice ('failed to fetch') but never identified in the sources list.",
+      "Ledger row cites R3 (a 2022–23 page) while saying 'guidance exists for 2023–24, but its terms are unconfirmed'; the dating of what was and wasn't read is slightly muddled between the ledger and option 3.",
+      "Option 1's design still has the cell 'volunteer a capacity-based contribution' for rung 5 while option 5 now has shared kWh pay a cost-reflective share; the two mechanisms are not reconciled.",
+      "'Unknown but material' becomes 'not yet measured', which quietly drops the author's judgement that the 2026 levy move was material; defensible, but unflagged."
+    ],
+    "unsupported": [
+      "'distribution charges are billed to the supplier' (true, but stated without source as a load-bearing step in option 5's adversary)",
+      "'no rung's rationale depends on the money' (option 2 verdict; asserted, not shown against the parent ladder)",
+      "R6 as a source: referenced but not listed or described",
+      "'No GB route has been shown…' is presented as a finding of the run but no search record is given beyond R5/R6"
+    ],
+    "verdict": "The revision is more honest than the original at every point it touches: it logs failed retrievals, downgrades claims to their evidenced level, and removes the one design move (demoting rung 5) that would have cost roofless would-be members an option. Remaining flaws are bookkeeping (an unlisted R6, a dating muddle on the Welsh hydro relief, an unreconciled overlap between options 1 and 5), none of which outweighs the gains.",
+    "model": "Fable",
+    "costUsd": 0.44252,
+    "stop": "end_turn"
+  },
+  "published": true
+}
