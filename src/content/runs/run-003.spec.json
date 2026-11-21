@@ -21,8 +21,8 @@
     "END IN ACTION. The room exists to produce concrete, systematic steps an AI agent could start on tomorrow from public information, and to say which one comes first. A turn that stays abstract has not done its job."
   ],
   "budget": {
-    "setBy": "set in the commission: about $5 and 2,000,000 tokens, a little more than run-002 because the question is broader",
-    "usdCap": 5.0,
+    "setBy": "set in the commission: about $5 and 2,000,000 tokens, a little more than run-002 because the question is broader; cap lowered to $4.70 because a first start was stopped after $0.26 and restarted",
+    "usdCap": 4.7,
     "tokenCap": 2000000,
     "closeReserveUsd": 1.5,
     "tokenShareForHats": 0.85,
