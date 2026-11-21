@@ -1,6 +1,6 @@
 # Which way does it push? Configuration Economics as a possibility-space framework, and what AI agents can do about the harms GDP hides
 
-_Forming (2026-11-21). A starting note, written to be worked on in public by a six-hat run of the world computer. It restates Configuration Economics (CE) in plain words as a way of asking one question of any move: which way does it push the set of futures that people and living systems can still reach, and can that push be undone? It then drafts the action steps: a systematic way of pointing AI agents at the slow harms that GDP and growth figures do not show. Nothing below has been checked yet. Every factual claim is marked unverified until a run checks it._
+_Forming (2026-11-21). A starting note, written to be worked on in public by a six-hat run of the world computer. It restates Configuration Economics (CE) in plain words as a way of asking one question of any move: which way does it push the set of futures that people and living systems can still reach, and can that push be undone? It then drafts the action steps: a systematic way of pointing AI agents at the slow harms that GDP and growth figures do not show. Run-003 checked some of it and gave its sources; every other factual claim stays marked unverified until a run checks it._
 
 _Moved on 2026-11-21 by a [six-hat run](/world-computer?run=run-003): step 1 now begins by reading the environmental accounts that already exist, starting with one Victorian river basin's published water record, and step 2 waits for a published blind test on past years._
 
@@ -54,7 +54,7 @@ GDP answers a different question: how much was bought and sold this year. A move
 
 ## What GDP does not show (a starting list, unverified)
 
-These are the kinds of harm the action steps are aimed at. None is checked yet.
+These are the kinds of harm the action steps are aimed at. Only an item that carries a source has been checked.
 
 - **Running down what cannot be rebuilt.** Selling a forest counts as income, and headline GDP is not adjusted for the loss of the forest. The loss is counted elsewhere, though: the UN's international standard for environmental accounts, adopted in 2012 and kept beside the national accounts that produce GDP, books timber and other resource loss as depletion of an asset. Soil erosion and degradation are covered mainly by a later 2021 standard for ecosystem accounts ([SEEA Central Framework](https://seea.un.org/sites/default/files/1_21.pdf); [SEEA Ecosystem Accounting](https://seea.un.org/ecosystem-accounting)). So the gap lies in the headline figure people quote, not in the absence of any books.
 - **Costs moved onto someone else.** Pollution, noise, risk and unpaid care land on people who were not part of the trade.
