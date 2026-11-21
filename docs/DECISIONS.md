@@ -1,5 +1,12 @@
 # Decisions
 
+## 2026-11-21 — World computer run-004: the whole-effect check (job #995, Tom's yes through Watson)
+
+- **What:** a second run the same day, on a new forming note (`NOTES-whole-effect-check.md`), covering the steps run-003 left unworked. Same engine, same seats, Blue and critic on Fable, cap $5.00; spent $2.59; critic passed 7/10; note moved.
+- **Spec choices:** a new note, not run-003's, so the room would not anchor on the river-basin example again; two added room rules (test every idea on three kinds of initiative; the product is a procedure and a page). Seeded with Tom's Bologna framing in the note's own words; only "More possibilities for all and less to none" is quoted, because that was the only wording recovered verbatim.
+- **What the run decided about the design:** the agent does not judge an initiative. The initiative drafts its own answers; the agent tags each claim by source, asks what the draft omits, states where tracing stops, and the page can be withdrawn. The run recommends dropping the name "whole-effect check"; no new name is chosen (Tom's call).
+- **Conductor edits after the checkpoint:** the stale "nothing checked" notice and one heading, as the critic flagged. Nothing else.
+
 ## 2026-11-21 — World computer run-003: the runner takes its subject from the spec; Blue on Fable (job #995)
 
 - **What:** run-003 asked a global question (CE as a plain "which way does it push?" frame, and systematic steps for AI agents on the harms GDP hides) on the six-hat engine. The engine's rulings are untouched: seats Opus, Sonnet, Haiku; critic Fable, held out.

@@ -1,6 +1,6 @@
 # The whole-effect check: a service an AI agent can offer any initiative
 
-_Forming (2026-11-21). A starting note for a six-hat run of the world computer. It follows [run-003](/world-computer?run=run-003), which worked only the first of seven draft steps for AI agents and left four unworked: tracing where hidden costs land, checking the whole effect of an initiative, comparing ownership arrangements, and proposing the small move that can be undone. This note folds those four into one service and asks the room to make it concrete. Nothing below has been checked. Every factual claim is unverified until a run checks it._
+_Forming (2026-11-21). A starting note for a six-hat run of the world computer. It follows [run-003](/world-computer?run=run-003), which worked only the first of seven draft steps for AI agents and left four unworked: tracing where hidden costs land, checking the whole effect of an initiative, comparing ownership arrangements, and proposing the small move that can be undone. This note folds those four into one service and asks the room to make it concrete. Run-004 checked some of it and gave its sources; every other factual claim stays unverified until a run checks it. The current design is under "The service, as the run left it"; the first draft is kept above it for the record._
 
 _Moved on 2026-11-21 by a [six-hat run](/world-computer?run=run-004): the agent no longer judges an initiative; it tags and questions the initiative's own draft under a stated stopping sentence, and the page itself can be withdrawn._
 
@@ -91,7 +91,7 @@ These are risks to the design, not charges against anyone.
 - **Trials that are hard to undo.** A trial called reversible may be hard to withdraw once households have budgeted around it, for example reserved capacity for fuel-poor households. A funder may also treat "can be undone" as a reason to stop early.
 - **Unanswered questions.** Questions may go unanswered by an unstaffed body, leaving the page as the only account.
 
-## What the run is asked to settle
+## What run-004 was asked to settle
 
 - The exact steps the agent takes for each part, in order, so that a different agent given the same initiative would produce much the same page. *(Steps drafted above. Whether two agents match is untested.)*
 - What the agent must be handed, and what it can find for itself. *(Partly settled by steps 3 and 5.)*
