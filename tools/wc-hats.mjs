@@ -55,9 +55,22 @@ const MODELS = {
   opus:   { id: 'claude-opus-5-5',   family: 'Opus',   inP: 4,   outP: 20 },
   sonnet: { id: 'claude-sonnet-5-5', family: 'Sonnet', inP: 2,   outP: 10 },
   haiku:  { id: 'claude-haiku-5-5',  family: 'Haiku',  inP: 0.1, outP: 0.5 },
-  fable:  { id: 'claude-fable-5-1',  family: 'Fable',  inP: 10,  outP: 50 },
+  fable:  { id: 'claude-fable-5-2',  family: 'Fable',  inP: 10,  outP: 50 },
 };
 const SEARCH_USD = 0.01;
+
+// ---- what a spec may say about its own subject (defaults = what run-001/002 ran with) ----
+//   context          one line telling the research loop what the room is working on
+//   researchSources  the kinds of source the research loop should prefer
+//   blackVoices      whose conventional view the Black hat speaks for
+//   roomRules        extra rules of the room, added to every agent's frame
+//   push             false = commit on the current branch and push nothing (main is not the runner's to move)
+const CONTEXT = spec.context || 'the room is working on a note about what a community energy "ratchet cell" in Bethesda (Dyffryn Ogwen, Gwynedd, North Wales; distribution network SP Energy Networks, SP Manweb licence area) takes from each level of government.';
+const RESEARCH_SOURCES = spec.researchSources || "regulator, network operator, government, Valuation Office, statute, the operator's own site";
+const BLACK_VOICES = spec.blackVoices || 'regulator, network operator, Treasury, rating officer, sceptical economist';
+const ROOM_RULES = (spec.roomRules || []).map(r => `\n- ${r}`).join('');
+// The same rules for the voices that never see the frame: Blue and the dialogue writer.
+const HOUSE = ROOM_RULES ? `\n\nRules of this room, which bind what you write too:${ROOM_RULES}` : '';
 
 const HATS = {
   white:  { name: 'White',  loss: 'unchecked facts',            item: 'fact',        lead: null,
@@ -65,7 +78,7 @@ const HATS = {
   yellow: { name: 'Yellow', loss: 'value not yet found',        item: 'value',       lead: 'a place value might lie that nobody has worked yet',
             brief: 'Value only. Find where this design creates value, for whom and why, including value the note has missed. Build on each other: deepen or extend the last turn, never doubt it.' },
   black:  { name: 'Black',  loss: 'risks not yet found',        item: 'risk',        lead: 'a place a risk might lie that nobody has worked yet',
-            brief: 'Risk only. Find what could go wrong, who could lose, what the conventional view (regulator, network operator, Treasury, rating officer, sceptical economist) would say against it, with evidence. Build on each other\'s risks: sharpen them, find the next one. This is the hat\'s job, not a fight.' },
+            brief: `Risk only. Find what could go wrong, who could lose, what the conventional view (${BLACK_VOICES}) would say against it, with evidence. Build on each other\'s risks: sharpen them, find the next one. This is the hat's job, not a fight.` },
   green:  { name: 'Green',  loss: 'alternatives not yet tried', item: 'alternative', lead: 'an alternative named but not yet worked through',
             brief: 'Alternatives only. Propose designs, moves and frame-breakers that answer the risks and widen the value already found. Work one through properly rather than listing ten. Build on each other.' },
 };
@@ -193,7 +206,7 @@ The room is working on ONE design note, below. Rules:
 - Never invent a figure, a rule or a source. If a fact matters and is not in the note or a research result, ask for research.
 - Research results from THIS run are listed under RESEARCH SO FAR with their labels; cite them by label. R-labels inside the note itself point to an earlier run's research and are already folded into the note's text. "Not found" is a finding.
 - Nobody in this room can contact any real person or organisation; never propose that as a step of the run.
-- Everything you write is published the moment you write it.`;
+- Everything you write is published the moment you write it.${ROOM_RULES}`;
 
 const systemBlocks = () => [
   { type: 'text', text: FRAME },
@@ -223,11 +236,11 @@ async function research(h, question, askedBy) {
   run.researchCount++;
   const item = { kind: 'research', label: `R${run.researchBase + run.researchCount}`, askedBy, question, line: '(running…)', sources: [], loop: [], costUsd: 0, tokens: 0, model: run.researcher, state: 'running' };
   h.items.push(item); await save();
-  const system = `You are a research loop working off-thread for a public design room. Answer ONE question from primary or authoritative public sources (regulator, network operator, government, Valuation Office, statute, the operator's own site). Search, open the pages that matter, and check the figure itself rather than a summary of it. Never contact anyone. If you cannot find it, say exactly what you searched and that it was not found; that is a valid answer.
+  const system = `You are a research loop working off-thread for a public design room. Answer ONE question from primary or authoritative public sources (${RESEARCH_SOURCES}). Search, open the pages that matter, and check the figure itself rather than a summary of it. Never contact anyone. If you cannot find it, say exactly what you searched and that it was not found; that is a valid answer.
 Finish with exactly two lines:
 ONE LINE: <the answer in one sentence, with the figure or finding and its date if it has one>
 SOURCES: <url> | <url>`;
-  const messages = [{ role: 'user', content: `Context: the room is working on a note about what a community energy "ratchet cell" in Bethesda (Dyffryn Ogwen, Gwynedd, North Wales; distribution network SP Energy Networks, SP Manweb licence area) takes from each level of government.\n\nQuestion: ${question}` }];
+  const messages = [{ role: 'user', content: `Context: ${CONTEXT}\n\nQuestion: ${question}` }];
   const tools = [
     { type: 'web_search_20260209', name: 'web_search', max_uses: 8 },
     { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: 3, max_content_tokens: 6000 },
@@ -262,7 +275,7 @@ SOURCES: <url> | <url>`;
 // ---- Blue ---------------------------------------------------------------------
 async function blue(user, maxTokens = 6000) {
   const { json, cost } = await call(spec.blue, {
-    system: 'You wear the Blue hat: process, not content. You decide what the room thinks about and how its budget is spent, and you report plainly. Return only what you are asked for.',
+    system: 'You wear the Blue hat: process, not content. You decide what the room thinks about and how its budget is spent, and you report plainly. Return only what you are asked for.' + HOUSE,
     messages: [{ role: 'user', content: user }], effort: 'low', maxTokens,
   });
   run.blueSpentUsd += cost;
@@ -460,7 +473,7 @@ BLUE'S VERDICT: ${run.verdict.text}\nRECOMMEND: ${run.verdict.recommend}\n\nWHAT
   run.state = 'dialogue'; await save();
   try {
     const { json: dj, cost } = await call(spec.writer, {
-      system: 'You write for readers. You render a finished piece of thinking as a short dialogue in the manner of Galileo\'s Dialogue Concerning the Two Chief World Systems. You add no finding of your own.',
+      system: 'You write for readers. You render a finished piece of thinking as a short dialogue in the manner of Galileo\'s Dialogue Concerning the Two Chief World Systems. You add no finding of your own.' + HOUSE,
       messages: [{ role: 'user', content: `Render this six-hat run for readers as a dialogue of about 700-900 words between:
 - SALVIATI, who presents the design and what the White, Yellow and Green hats found;
 - SAGREDO, the intelligent outsider who has to be convinced, asking what a thoughtful reader would ask;
@@ -496,7 +509,7 @@ async function main() {
     execFileSync('git', ['add', '--', ...files], { cwd: ROOT });
     const loss = run.hats.map(h => `${h.name} ${h.checkpoint.baseline}→${h.checkpoint.loss}`).join(', ');
     execFileSync('git', ['commit', '-q', '-m', `World computer ${run.id} (six hats): ${loss}; critic ${run.critic.pass ? 'passed' : 'did not pass'} (${run.critic.score ?? '—'}/10)${run.published ? '; note moved' : '; note unchanged'}; spent $${run.spentUsd.toFixed(2)} of $${run.budget.usdCap.toFixed(2)}, ${run.spentTokens.toLocaleString('en-GB')} tokens\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`], { cwd: ROOT });
-    if (spawnSync('git', ['push', 'origin', 'HEAD:main'], { cwd: ROOT }).status !== 0) {
+    if (spec.push !== false && spawnSync('git', ['push', 'origin', 'HEAD:main'], { cwd: ROOT }).status !== 0) {
       execFileSync('git', ['pull', '--rebase', 'origin', 'main'], { cwd: ROOT });
       execFileSync('git', ['push', 'origin', 'HEAD:main'], { cwd: ROOT });
     }

@@ -1,0 +1,33 @@
+{
+  "id": "run-003",
+  "title": "Which way does it push? AI agents and the harms GDP hides — six hats",
+  "question": "Starting from the world as it is now, with no blame assigned and every ownership arrangement treated as one option among many, what systematic steps can AI agents take, alongside every existing initiative, to find and reduce the slow harms that GDP and growth metrics hide, and which step is worth doing first?",
+  "note": "src/content/open/NOTES-ce-possibility-space-ai-action.md",
+  "agents": ["opus", "sonnet", "haiku"],
+  "blue": "fable",
+  "clerk": "sonnet",
+  "researcher": "sonnet",
+  "writer": "opus",
+  "critic": "fable",
+  "push": false,
+  "context": "the room is working on a global (not local) note that restates Configuration Economics as a plain question about any move (which way does it push the set of futures people and living systems can still reach, and can the push be undone?) and drafts systematic steps AI agents can take to find and reduce the slow harms that GDP and growth figures hide.",
+  "researchSources": "statistical offices and the UN System of National Accounts; the Stiglitz-Sen-Fitoussi commission; the UN SEEA Ecosystem Accounting framework; the planetary boundaries papers; doughnut economics; OECD, UN and World Bank Beyond-GDP work; governments that run wellbeing budgets; peer-reviewed papers",
+  "blackVoices": "a finance ministry economist, a national statistician, a growth economist, someone who runs an existing Beyond-GDP initiative, a community that has been studied before and gained nothing, an AI-safety sceptic",
+  "roomRules": [
+    "PLAIN WORDS. Readers are people at a conference who run other initiatives and have never heard of this framework. Do not use its internal terms (option space, delta-omega, R_living, distinction physics, configuration). Say everything as a direction of travel from the world as it is today: which way does a move push the set of futures people and living systems can still reach, for whom, how soon, and can it be undone?",
+    "FORWARD-FACING AND BLAME-AGNOSTIC. The present state is the starting point. Never assign blame, guilt, debt or reparation, and never argue about who caused the present. History may be used only as information about where everyone now stands.",
+    "OWNERSHIP IS AN ARRANGEMENT. Treat every ownership or property arrangement as one option among several to compare, never as a fixed fact.",
+    "PLAY NICELY. No initiative, school of thought, institution or person is the enemy or is wrong. Name other initiatives only to say what they already do well and how this work could serve them. This binds the Black hat too: its risks are risks to the design, not charges against anyone.",
+    "END IN ACTION. The room exists to produce concrete, systematic steps an AI agent could start on tomorrow from public information, and to say which one comes first. A turn that stays abstract has not done its job."
+  ],
+  "budget": {
+    "setBy": "set in the commission: about $5 and 2,000,000 tokens, a little more than run-002 because the question is broader",
+    "usdCap": 5.0,
+    "tokenCap": 2000000,
+    "closeReserveUsd": 1.5,
+    "tokenShareForHats": 0.85,
+    "roundCostEstimate": 0.22,
+    "maxRoundsPerHat": 3,
+    "maxResearch": 8
+  }
+}
