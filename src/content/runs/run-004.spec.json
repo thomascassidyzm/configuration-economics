@@ -1,0 +1,39 @@
+{
+  "id": "run-004",
+  "title": "The whole-effect check: what an AI agent does for any initiative that asks — six hats",
+  "question": "An initiative asks an AI agent to check the whole effect of what it is doing. Starting from the present, with no blame assigned, what exactly does the agent do, step by step, to trace hidden costs and indirect effects, compare ownership arrangements and propose the small move that can be undone, so that the result is more possibilities for all and less to none, and what does the one page it hands back look like?",
+  "note": "src/content/open/NOTES-whole-effect-check.md",
+  "agents": [
+    "opus",
+    "sonnet",
+    "haiku"
+  ],
+  "blue": "fable",
+  "clerk": "sonnet",
+  "researcher": "sonnet",
+  "writer": "opus",
+  "critic": "fable",
+  "push": false,
+  "context": "the room is working on a general (not local) note describing a \"whole-effect check\": a one-page service an AI agent could offer any initiative, tracing costs that are not in the price, indirect effects, how different ownership arrangements have worked out, and a small reversible move. The measure is whether a move opens or closes the futures people and living systems can still reach.",
+  "researchSources": "peer-reviewed reviews and meta-analyses (for example on rebound effects, on commons and ownership arrangements after Elinor Ostrom, on social return and impact assessment methods); statistical offices; OECD, UN and World Bank Beyond-GDP work; the circular-economy literature; established assessment standards (life-cycle assessment, social impact assessment, theory of change); governments that run wellbeing budgets",
+  "blackVoices": "someone who runs a small initiative with no spare time, an impact-assessment professional, a funder, a national statistician, a neighbour who is not a member of the initiative, an AI-safety sceptic",
+  "roomRules": [
+    "PLAIN WORDS. Readers are people at a conference who run other initiatives and have never heard of this framework. Do not use its internal terms (option space, delta-omega, R_living, distinction physics, configuration). Say everything as a direction of travel from the world as it is today: which way does a move push the set of futures people and living systems can still reach, for whom, how soon, and can it be undone?",
+    "FORWARD-FACING AND BLAME-AGNOSTIC. The present state is the starting point. Never assign blame, guilt, debt or reparation, and never argue about who caused the present. History may be used only as information about where everyone now stands.",
+    "OWNERSHIP IS AN ARRANGEMENT. Treat every ownership or property arrangement as one option among several to compare, never as a fixed fact.",
+    "PLAY NICELY. No initiative, school of thought, institution or person is the enemy or is wrong. Name other initiatives only to say what they already do well and how this work could serve them. This binds the Black hat too: its risks are risks to the design, not charges against anyone.",
+    "END IN ACTION. The room exists to produce concrete, systematic steps an AI agent could start on tomorrow from public information, and to say which one comes first. A turn that stays abstract has not done its job.",
+    "STAY GENERAL, PROVE IT ON EXAMPLES. The service must work for any initiative. Test each idea on two or three different KINDS of initiative (for example a community energy scheme, a repair and reuse network, a wellbeing budget). Never let the whole run settle on one place, one dataset or one example; run-003 did that with a single river basin and this run exists to cover the ground it left.",
+    "THE PRODUCT IS A PROCEDURE AND A PAGE. By the end the room must have the agent's steps in order and the layout of the one page it hands back, plain enough that someone running an initiative could read it on a phone and say yes or no to being checked."
+  ],
+  "budget": {
+    "setBy": "set by Tom through Watson: same engine, cap about $5",
+    "usdCap": 5.0,
+    "tokenCap": 2000000,
+    "closeReserveUsd": 1.5,
+    "tokenShareForHats": 0.85,
+    "roundCostEstimate": 0.22,
+    "maxRoundsPerHat": 3,
+    "maxResearch": 8
+  }
+}
