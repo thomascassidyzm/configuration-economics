@@ -2,6 +2,8 @@
 
 _Forming (2026-11-21). A starting note, written to be worked on in public by a six-hat run of the world computer. It restates Configuration Economics (CE) in plain words as a way of asking one question of any move: which way does it push the set of futures that people and living systems can still reach, and can that push be undone? It then drafts the action steps: a systematic way of pointing AI agents at the slow harms that GDP and growth figures do not show. Nothing below has been checked yet. Every factual claim is marked unverified until a run checks it._
 
+_Moved on 2026-11-21 by a [six-hat run](/world-computer?run=run-003): step 1 now begins by reading the environmental accounts that already exist, starting with one Victorian river basin's published water record, and step 2 waits for a published blind test on past years._
+
 ---
 
 ## Where this starts
@@ -54,7 +56,7 @@ GDP answers a different question: how much was bought and sold this year. A move
 
 These are the kinds of harm the action steps are aimed at. None is checked yet.
 
-- **Running down what cannot be rebuilt.** Selling a forest counts as income. The loss of the forest is not counted. (Unverified as stated; national accounts treatment to be checked.)
+- **Running down what cannot be rebuilt.** Selling a forest counts as income, and headline GDP is not adjusted for the loss of the forest. The loss is counted elsewhere, though: the UN's international standard for environmental accounts, adopted in 2012 and kept beside the national accounts that produce GDP, books timber and other resource loss as depletion of an asset. Soil erosion and degradation are covered mainly by a later 2021 standard for ecosystem accounts ([SEEA Central Framework](https://seea.un.org/sites/default/files/1_21.pdf); [SEEA Ecosystem Accounting](https://seea.un.org/ecosystem-accounting)). So the gap lies in the headline figure people quote, not in the absence of any books.
 - **Costs moved onto someone else.** Pollution, noise, risk and unpaid care land on people who were not part of the trade.
 - **Repair counted as gain.** Cleaning up a spill, treating an illness caused by bad air, and rebuilding after a flood all add to GDP.
 - **Unpaid work.** Care, volunteering and subsistence produce a great deal and count as nothing. (Size unverified.)
@@ -66,23 +68,49 @@ These are the kinds of harm the action steps are aimed at. None is checked yet.
 
 A first draft of the systematic part. Each step is something an AI agent can do now, from public information, without anyone's permission and without contacting anyone.
 
-1. **Keep a second set of books for one place.** For a town, a river basin or a country, list what is being run down, what is being built up, and what cannot be rebuilt, beside the GDP figure. Use the accounts that already exist before making new ones.
-2. **Watch for the doors that close for good.** Scan for moves under way that would cause loss that cannot be undone, and say so early, with the evidence.
+1. **Read the second set of books that already exists, and show where it stops.** Official environmental accounts already sit beside growth figures (see the first item in the list above), so the agent's job is to read them, not rebuild them. The first product is a line-by-line guide to one river basin's published water record: the Campaspe in Victoria, Australia, from 2003-04 to 2024-25.
+
+   Victoria publishes water accounts with a page for each of its 29 river basins in the 2021-22 and 2024-25 editions. Its archive holds editions from 2003-04 whose own description says they cover each basin, but no older edition has yet been opened to confirm this ([Victorian Water Accounts](https://accounts.water.vic.gov.au/); [Murray 2024-25](https://accounts.water.vic.gov.au/2025/local-water-reports/surface-water-by-river-basin/murray/); [previous accounts](https://accounts.water.vic.gov.au/water-explained/previous-accounts/); [Ovens 2021-22](https://accounts.water.vic.gov.au/2022/local-water-reports/surface-water-by-river-basin/ovens/)). The 2023-24 Campaspe page lists the environmental water holder's entitlements, for example 20,855 ML high-reliability and 4,394 ML low-reliability under the 2013 entitlement, and compares 2022-23 with 2023-24 ([Campaspe 2023-24](https://accounts.water.vic.gov.au/2024/local-water-reports/surface-water-by-river-basin/campaspe/)).
+
+   The guide:
+   - marks every change in layout, definition or unit. The accounts moved to a new website and structure from 2021-22, with a mapping file for the old sections, so the older tables and units must not be assumed to match the newer ones ([about the accounts](https://accounts.water.vic.gov.au/about-us/); [East Gippsland 2023-24](https://accounts.water.vic.gov.au/2024/local-water-reports/surface-water-by-river-basin/east-gippsland/)). Otherwise a change of definition could be reported as a slow decline.
+   - gives, for each line, what the line does not show, and the year it describes beside the year it was published. Otherwise a dry spell that is already over can read as a present warning.
+   - keeps a legal claim on water apart from water that actually reached the river. No line for water delivered to the environment has been confirmed. None is to be inferred from rainfall, storage or flow, because an inferred figure set beside an official one looks official.
+   - says plainly that volumes are not river health, and that saying nothing about soil, fish or wetlands is not a finding of no harm.
+   - ends each section in questions for readers, not findings.
+
+   Still to check before publishing: whether the agency's licence permits quoting its tables. Known limits: the choice of basin and years is itself a selection, and a guide that works where the books are unusually good does not show that the method works where they are thin. Thin books are where hidden harms are least visible.
+2. **Watch for the doors that close for good.** Scan for moves under way that would cause loss that cannot be undone, and say so early, with the evidence. *Hold this step until the method has been tested blind on past years and the test published.* A false alarm about irreversible loss can harm a community's livelihood or an initiative's name. Water accounts cannot show what is irreversible on their own, and public records of such loss may not be current. The test runs as follows:
+   - Before any later year is opened, publish a dated scoring file. It lists the chosen years (crossing the 2021-22 layout change), the early-year flags, and five outcomes: shown later, not shown, contradicted, could not be checked, and falls on a recorded layout change. The last counts as a likely false alarm.
+   - Count false alarms beside hits, and list them first.
+   - Score two simple benchmarks the same way: a lazy rule, such as flagging any line that falls two years running, and the basin's environmental water managers' own publicly stated priorities, copied word for word with their address. If the method does not beat both, it should say that it adds little.
 3. **Trace where the cost lands.** For any project or policy, follow each cost that does not appear in its price to the people and living systems who carry it.
 4. **Check the whole effect of an initiative, as a service to it.** For any initiative that asks, list its side effects, indirect effects and costs moved elsewhere. No ranking, no verdict on the initiative.
 5. **Compare arrangements, including ownership ones.** For a given resource, set out several real arrangements that exist somewhere (private, state, commons, trust, shared) and say which way each has pushed.
 6. **Propose the small move that can be undone.** Where a harm is found, suggest the smallest step that pushes the right way and can be reversed if it fails.
-7. **Write down what worked so it can travel.** A recorded method costs almost nothing to copy.
+7. **Write down what worked so it can travel.** A recorded method costs almost nothing to copy. *This runs alongside step 1 from the first day.* Publish the method with every source so each line can be checked. Errors travel with a copied method, and whether it carries over to soil is not known. Soil erosion or degradation accounts exist for Rwanda (World Bank, 2020), Uganda and Canada's farmland (Statistics Canada, 2023). The Murray-Darling Basin and the EU cover soil only as an erosion-control service or a proposed framework, and the 2021 ecosystem standard has no standalone soil account ([Rwanda accounts](https://documents1.worldbank.org/curated/en/832111581305068419/pdf/Rwanda-Natural-Capital-Accounts-Ecosystems.pdf); [Statistics Canada](https://www150.statcan.gc.ca/n1/pub/16-001-m/16-001-m2023001-eng.htm)). Those accounts measure different things under different legal and statistical rules. The first trial should therefore carry the guide's format, not its conclusions, onto an empty Rwanda template.
 
-Which of these is worth doing first is the question the run is asked.
+The run's answer on order: start tomorrow with step 1 in the narrower form above, with step 7 alongside it, and hold step 2 until its blind test is published. The other steps are not yet ranked. The next check is to open one pre-2021 edition and confirm that the Campaspe tables, their units and any delivery line are there.
 
 ## What is not known
 
-- Whether "which way does it push" can be answered reliably enough, by agents working only from public data, to be useful to people running real initiatives.
-- Which existing accounts (if any) already do most of step 1, and where they stop.
-- How an agent's finding reaches anyone who can act on it without the agent contacting them.
-- Who could be made worse off by AI agents doing this at scale.
+- Whether "which way does it push" can be answered reliably enough, by agents working only from public data, to be useful to people running real initiatives. Different models may answer it in opposite ways, and a second model's review is not independent checking, because models trained on similar text share blind spots.
+- Which existing accounts (if any) already do most of step 1, and where they stop. About 41 countries were compiling environmental or ecosystem accounts of this kind in 2023, up from 34 in 2020, but the UN site names no countries for 2023 ([2023 global assessment](https://seea.un.org/en/news/findings-2023-global-assessment-environmental-economic-accounting); [introduction to ecosystem accounting](https://seea.un.org/en/Introduction-to-Ecosystem-Accounting)). Which places publish them by river basin or city was not found beyond Victoria.
+- How an agent's finding reaches anyone who can act on it without the agent contacting them. A published correction page helps only if the people named know it exists.
+- Who could be made worse off by AI agents doing this at scale. Named entitlement holders, basin managers and river groups could suffer in prices, lending or reputation from a note they never asked to be in, and may first meet it when it is quoted against them. Agents publishing at scale also copy small errors at scale. Places without published accounts risk being passed over again.
 
 ## Sources
 
-None yet. The run adds them.
+- SEEA Central Framework: https://seea.un.org/sites/default/files/1_21.pdf
+- SEEA Ecosystem Accounting: https://seea.un.org/ecosystem-accounting
+- SEEA, introduction to ecosystem accounting (country list, around end of 2019): https://seea.un.org/en/Introduction-to-Ecosystem-Accounting
+- SEEA, findings of the 2023 global assessment: https://seea.un.org/en/news/findings-2023-global-assessment-environmental-economic-accounting
+- Victorian Water Accounts: https://accounts.water.vic.gov.au/
+- Victorian Water Accounts 2024-25, Murray basin: https://accounts.water.vic.gov.au/2025/local-water-reports/surface-water-by-river-basin/murray/
+- Victorian Water Accounts, previous accounts archive: https://accounts.water.vic.gov.au/water-explained/previous-accounts/
+- Victorian Water Accounts 2021-22, Ovens basin: https://accounts.water.vic.gov.au/2022/local-water-reports/surface-water-by-river-basin/ovens/
+- Victorian Water Accounts 2023-24, Campaspe basin: https://accounts.water.vic.gov.au/2024/local-water-reports/surface-water-by-river-basin/campaspe/
+- Victorian Water Accounts, about us (2021-22 restructure and mapping file): https://accounts.water.vic.gov.au/about-us/
+- Victorian Water Accounts 2023-24, East Gippsland basin: https://accounts.water.vic.gov.au/2024/local-water-reports/surface-water-by-river-basin/east-gippsland/
+- World Bank (2020), Rwanda Natural Capital Accounts, Ecosystems: https://documents1.worldbank.org/curated/en/832111581305068419/pdf/Rwanda-Natural-Capital-Accounts-Ecosystems.pdf
+- Statistics Canada (2023), agroecosystem accounts: https://www150.statcan.gc.ca/n1/pub/16-001-m/16-001-m2023001-eng.htm
