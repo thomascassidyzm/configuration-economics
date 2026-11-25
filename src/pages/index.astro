@@ -7,6 +7,7 @@
 import { VERSION, BUILD } from '../lib/version';
 import PhoneNav from '../components/PhoneNav.astro';
 import ScopeMap from '../components/ScopeMap.astro';
+import { HELIX_MARK } from '../lib/helix-mark';
 ---
 
 <html lang="en">
@@ -47,6 +48,11 @@ import ScopeMap from '../components/ScopeMap.astro';
       h1 { font-family: var(--font-display); font-size: 3rem; font-weight: 300; line-height: 1.1; margin-bottom: 0.5rem; }
       .subtitle { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.75rem; }
       .claim { font-family: var(--font-display); font-size: 1.45rem; font-style: italic; color: var(--text-primary); line-height: 1.4; margin-bottom: 1.25rem; }
+      .mark { width: 200px; margin: 0 0 1.25rem -6px; }
+      .mark :global(svg) { display: block; width: 100%; height: auto; }
+      .line { font-family: var(--font-display); font-size: 1.7rem; font-style: italic; color: var(--accent); line-height: 1.3; margin-bottom: 0.9rem; }
+      .mark-link { color: var(--accent); text-decoration: none; }
+      .note + .note { margin-top: 0.75rem; }
       .note { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; }
 
       .side-note { font-size: 0.8125rem; color: var(--text-muted); line-height: 1.6; max-width: 560px; margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.06); }
@@ -73,7 +79,9 @@ import ScopeMap from '../components/ScopeMap.astro';
     </nav>
     <main>
       <header class="hero">
+        <div class="mark"><Fragment set:html={HELIX_MARK} /></div>
         <h1>Configuration Economics</h1>
+        <p class="line">Round and round, up we go.</p>
         <p class="subtitle">A Living Epistemic Work</p>
         <p class="claim">Value is about what enables future possibilities, not what gets consumed.</p>
         <p class="note">
@@ -81,6 +89,7 @@ import ScopeMap from '../components/ScopeMap.astro';
           each claim carries its epistemic status, and an embedded guide helps you
           think through the framework at your own depth.
         </p>
+        <p class="note"><a class="mark-link" href="/open/NOTES-circular-to-helical">What the coil means &rarr;</a></p>
       </header>
 
       <ScopeMap />
