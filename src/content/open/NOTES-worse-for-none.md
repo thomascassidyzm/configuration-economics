@@ -6,6 +6,8 @@ _Provenance. Tom Cassidy, 2026-11-25 and 26, in conversation with the AI model h
 
 ---
 
+<figure style="margin:2rem auto;max-width:520px"><a href="/sheets/sheet-2-the-bus.svg"><img src="/sheets/sheet-2-the-bus.svg" alt="A hand-drawn blueprint titled: a better seat on the bus is not the same as a longer trip. A bus drives towards the edge of a cliff. The front seat is labelled best view, most room, looks like winning. The back seat is labelled less of everything, same bus. The edge is labelled every seat goes over together. A dashed line continuing the road past the edge is labelled more road, what we're for. Two boxes underneath: who has the best seat, which compares people right now (long word: symmetry), and how far does it go, for everyone, for how long (long word: continuity)." style="display:block;width:100%;height:auto" loading="lazy" /></a><figcaption style="font-size:0.85rem;opacity:0.7;margin-top:0.5rem">Sheet 2, the bus. The idea of §4 as one drawing, in plain words. [ASSEMBLER]</figcaption></figure>
+
 ## 1. It started with a drawing
 
 The coil in `NOTES-circular-to-helical` was being turned into a mark: something a person could draw on a napkin. Tom was torn between two pictures of "up".
