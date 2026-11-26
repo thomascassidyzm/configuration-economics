@@ -59,6 +59,8 @@ Tom's rule is about deltas. Failed tries are not deltas; they are what was rejec
 
 This also says where the third term of Tom's equation sits in the drawing (same atoms × constant solar flux × pattern intelligence). The same atoms and the sun alone give a ring. What turns the ring into a coil is choosing the better arrangement each time round. Round is the atoms, the rays are the sun, and the rise is the selection. `NOTES-circular-to-helical` §4 says the same thing as "the rise per turn is where selection lives".
 
+<figure style="margin:2rem auto;max-width:520px"><a href="/sheets/sheet-9-the-plank.svg"><img src="/sheets/sheet-9-the-plank.svg" alt="A hand-drawn blueprint titled: a try is not a change; draw lots of lines, the rule is for the cut. A plank on two trestles carries pencil lines, some crossed out and some rubbed out, and a saw sitting in one cut. Two boxes: a try, on paper, in a model or a small test, can fail; a change, made for real in the world, is what the rule is for." style="display:block;width:100%;height:auto" loading="lazy" /></a><figcaption style="font-size:0.85rem;opacity:0.7;margin-top:0.5rem">Sheet 9, the plank. §2 as one drawing (added 2026-11-26). [ASSEMBLER]</figcaption></figure>
+
 ---
 
 ## 3. The objection an economist raises first
@@ -133,6 +135,8 @@ Two things survive even this:
 - **Rank.** If everyone's reach grows, nobody's reach shrinks, and the gap between them can still narrow. Someone who values being ahead, as such, does lose. The plain statement would be: this protects your reach, not your lead.
 - **The energy budget.** Under bounded flux, an option that is still listed but can no longer be powered has not been kept. "Closes nothing" has to mean reachable.
 
+<figure style="margin:2rem auto;max-width:520px"><a href="/sheets/sheet-10-the-steps.svg"><img src="/sheets/sheet-10-the-steps.svg" alt="A hand-drawn blueprint titled: your reach, not your lead. A tall and a short figure stand at a bookcase with a stepladder beside it. With the steps anyone can reach the top shelf; the tall one can still reach as high as before, and the lead between them gets smaller. Two boxes: your reach went up for both; your lead can shrink, and if being ahead matters to you that is a real loss." style="display:block;width:100%;height:auto" loading="lazy" /></a><figcaption style="font-size:0.85rem;opacity:0.7;margin-top:0.5rem">Sheet 10, the steps. The “rank” caution above as one drawing (added 2026-11-26). [ASSEMBLER]</figcaption></figure>
+
 ---
 
 ## 5. Two quantities
@@ -157,6 +161,8 @@ The assembler proposed a ranking of moves. It is the assembler's, and Tom has no
 1. Never lower the capacity to generate more.
 2. Good: raises what is possible now.
 3. Best: raises the capacity itself.
+
+<figure style="margin:2rem auto;max-width:520px"><a href="/sheets/sheet-7-the-hen.svg"><img src="/sheets/sheet-7-the-hen.svg" alt="A hand-drawn blueprint titled: a full basket of eggs is not the same as the hen that lays them. A hen stands beside a basket heaped with eggs. One box says why it is hard to see: eat the hen and the basket still looks full for a few days. Another gives one way to rank a move: best, more hens; good, more eggs; never, eggs paid for with the hen; marked a proposal, still argued." style="display:block;width:100%;height:auto" loading="lazy" /></a><figcaption style="font-size:0.85rem;opacity:0.7;margin-top:0.5rem">Sheet 7, the hen. §5 as one drawing (added 2026-11-26). The ranking on it is the assembler’s proposal; Tom has not ruled on it. [ASSEMBLER]</figcaption></figure>
 
 ---
 

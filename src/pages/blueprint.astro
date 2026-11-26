@@ -1,0 +1,88 @@
+---
+// /blueprint — the blueprint sheets. One idea, one sheet, plain words on the drawing: things a
+// person could redraw to explain the idea to someone else. Drawn by tools/sheets.mjs (one file
+// per sheet in tools/sheets/); add a row here when a sheet is added.
+import { VERSION, BUILD } from '../lib/version';
+import PhoneNav from '../components/PhoneNav.astro';
+
+const SHEETS: { n: number; file: string; title: string; sub: string; href: string; where: string; misleads: string }[] = [
+  { n: 1, file: "sheet-1-the-coil", title: "How things get better", sub: "without using more stuff", href: "/open/NOTES-circular-to-helical", where: "From circular to helical", misleads: "The coil has no scale on its upward axis: nobody can yet measure “more you can do next”." },
+  { n: 2, file: "sheet-2-the-bus", title: "A better seat on the bus", sub: "is not the same as a longer trip", href: "/open/NOTES-worse-for-none", where: "“Worse for none”, §4", misleads: "A passenger can say the edge is after their stop. And “more road” is one phrase for several different things." },
+  { n: 3, file: "sheet-3-the-jar", title: "The sun is pay", sub: "coal, oil and gas are savings: they spend once", href: "/explore#energy-income-inheritance", where: "energy-income-inheritance", misleads: "The jar suggests we can see how much is left. Nobody knows the level exactly; running out is more like the bottom getting harder to reach." },
+  { n: 4, file: "sheet-4-the-well", title: "A full well with the lid on", sub: "is not the same as water to drink", href: "/explore#held-value-not-reachable", where: "held-value-not-reachable", misleads: "Lifting the lid looks as if it makes more water. It may only move the same water around. And water is used up when drunk, where knowledge is not." },
+  { n: 5, file: "sheet-5-the-stepping-stones", title: "What a stone is worth", sub: "the ways on it leaves you, one step at a time", href: "/explore#value-option-space", where: "value-option-space, option-space-as-chess-moves", misleads: "The stones are fixed and easy to count. Real options cannot be counted, and one person’s step can sink stones for someone else." },
+  { n: 6, file: "sheet-6-the-stump", title: "Broken fast, built slow", sub: "so a seedling does not pay for the tree", href: "/explore#asymmetry-of-option-space-change", where: "asymmetry-of-option-space-change", misleads: "A tree suggests every loss is someone choosing to cut and every rebuild is slow. Some builds are fast and some losses are slow." },
+  { n: 7, file: "sheet-7-the-hen", title: "A full basket of eggs", sub: "is not the same as the hen that lays them", href: "/open/NOTES-worse-for-none", where: "“Worse for none”, §5", misleads: "The hen is easy to see in the drawing. In life the thing that makes more is the hard part to see, and it drains bit by bit, not all at once. The ranking on the sheet is a proposal, still argued." },
+  { n: 8, file: "sheet-8-the-bridge", title: "People just use a bridge", sub: "so ask who it reaches, and what carries the rest", href: "/open/NOTES-recursive-fitness-and-bridge-test", where: "The bridge test", misleads: "A bridge is built once by someone with the money to build it. The picture is quiet about who that is." },
+  { n: 9, file: "sheet-9-the-plank", title: "A try is not a change", sub: "draw lots of lines. the rule is for the cut.", href: "/open/NOTES-worse-for-none", where: "“Worse for none”, §2", misleads: "A saw cut is one person, one cut, for ever. Real changes reach other people and are not always permanent, and a small trial in the world is itself a small change." },
+  { n: 10, file: "sheet-10-the-steps", title: "Your reach, not your lead", sub: "what this keeps safe, and what it doesn’t", href: "/open/NOTES-worse-for-none", where: "“Worse for none”, §4 and objection 5", misleads: "The steps look free; someone made and paid for them. And where the good things are scarce, being ahead is part of your reach." },
+  { n: 11, file: "sheet-11-the-receipt", title: "The cost that lands", sub: "somewhere else, or later", href: "/open/NOTES-razor-blade-case", where: "displaced-costs and the razor-blade case", misleads: "A receipt makes the rest of the bill look like one line that could simply be added. Often nobody knows its size, or who will be handed it." },
+  { n: 12, file: "sheet-12-the-lantern", title: "Choose from where you stand", sub: "take the best step from here, then look again", href: "/explore#option-space-as-chess-moves", where: "option-space-as-chess-moves (after Dave Snowden)", misleads: "The ground stands still and the lantern lights the same distance every way. Real ground shifts with time, and there is more than one walker." }
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>The blueprint — Configuration Economics</title>
+    <meta name="description" content="A living blueprint for a world that works for everybody, one hand-drawn sheet per idea." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Sora:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style is:global>
+      :root { --void:#0a0a0c; --text-primary:#e8e8f0; --text-secondary:#a0a0b8; --text-muted:#606080; --accent:#4a9eff; --font-display:'Cormorant Garamond',serif; --font-body:'Sora',sans-serif; --font-mono:'JetBrains Mono',monospace; }
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { font-family:var(--font-body); background:var(--void); color:var(--text-primary); min-height:100vh; line-height:1.7; }
+      .top-nav { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,12,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:2rem; padding:0 2rem; z-index:100; }
+      .nav-home { font-family:var(--font-display); font-size:1.125rem; color:var(--text-primary); text-decoration:none; }
+      .nav-link { font-size:0.875rem; color:var(--text-secondary); text-decoration:none; }
+      .nav-link:hover { color:var(--accent); }
+      .nav-right { display:flex; align-items:center; gap:1rem; margin-left:auto; flex-wrap:wrap; }
+      .nav-version { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent); }
+      .nav-build { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); opacity:0.7; }
+      main { max-width:1080px; margin:0 auto; padding:100px 2rem 6rem; }
+      h1 { font-family:var(--font-display); font-weight:400; font-size:2.6rem; line-height:1.15; margin:0 0 0.6rem; }
+      .lede { color:var(--text-secondary); max-width:640px; margin:0 0 2.5rem; }
+      .grid { display:grid; grid-template-columns:minmax(0,1fr); gap:2.5rem 2rem; }
+      @media (min-width:700px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+      .sheet a.pic { display:block; border-radius:6px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,0.45); }
+      .sheet img { display:block; width:100%; height:auto; }
+      .sheet-n { font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-top:0.9rem; }
+      .sheet-title { font-family:var(--font-display); font-size:1.35rem; line-height:1.25; color:var(--text-primary); margin:0.1rem 0 0.35rem; }
+      .sheet-title span { color:var(--text-secondary); font-style:italic; }
+      .sheet p { color:var(--text-secondary); font-size:0.85rem; line-height:1.6; margin:0 0 0.35rem; }
+      .sheet p strong { color:var(--text-primary); font-weight:400; }
+      .sheet p a { color:var(--accent); text-decoration:none; }
+      @media (max-width:640px) { main { padding-left:1.25rem; padding-right:1.25rem; } h1 { font-size:2.1rem; } }
+    </style>
+      <PhoneNav />
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="/" class="nav-home">Configuration Economics</a>
+      <div class="nav-right">
+        <a href="/open" class="nav-link">Open</a>
+        <a href="/explore" class="nav-link">Propositions</a>
+        <span class="nav-version">{VERSION}</span>
+        <span class="nav-build">build {BUILD}</span>
+      </div>
+    </nav>
+    <main>
+      <h1>A living blueprint for a world that works for everybody</h1>
+      <p class="lede">One idea, one sheet, in plain words: drawings a person could redraw to explain the idea to someone else. Like everything else here they are works in progress, added to and improved as we go. Every picture misleads somewhere, so each sheet says where. Tap a sheet to see it full size.</p>
+      <div class="grid">
+        {SHEETS.map(s => (
+          <div class="sheet" id={s.file}>
+            <a class="pic" href={`/sheets/${s.file}.svg`}><img src={`/sheets/${s.file}.svg`} width="780" height="1240" loading="lazy" alt={`Hand-drawn blueprint sheet ${s.n}: ${s.title}, ${s.sub}`} /></a>
+            <div class="sheet-n">Sheet {s.n}</div>
+            <div class="sheet-title">{s.title} <span>{s.sub}</span></div>
+            <p><strong>Where it is argued:</strong> <a href={s.href}>{s.where} &rarr;</a></p>
+            <p><strong>Where the picture misleads:</strong> {s.misleads}</p>
+          </div>
+        ))}
+      </div>
+    </main>
+  </body>
+</html>
