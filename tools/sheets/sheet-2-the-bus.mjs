@@ -18,7 +18,7 @@ const strokes =
   `<circle cx="212" cy="558" r="26" fill="${B.paper}"/><circle cx="212" cy="558" r="8"/><circle cx="400" cy="558" r="26" fill="${B.paper}"/><circle cx="400" cy="558" r="8"/>` +
   `<path d="M476 480H530M514 468L532 480L514 492" stroke-width="3"/></g>` +
   lead([[420, 262], [380, 310], [358, 384]]) + lead([[110, 262], [130, 320], [150, 386]]) + lead([[640, 478], [640, 500], [630, 524]]) +
-  `<path d="M50 936H376V1076H50Z" stroke-width="2"/><path d="M404 936H730V1076H404Z" stroke-width="2"/>` + tb.strokes;
+  `<path d="M50 924H376V1064H50Z" stroke-width="2"/><path d="M404 924H730V1064H404Z" stroke-width="2"/>` + tb.strokes;
 
 export default sheet({
   title: 'Blueprint sheet 2, the bus: a better seat on the bus is not the same as a longer trip',
@@ -29,8 +29,8 @@ export default sheet({
     T(548, 640, 'THE EDGE', 22) + T(548, 668, 'every seat goes', 19) + T(548, 692, 'over together.', 19) + T(548, 724, 'hard to see from', 17, soft) + T(548, 746, 'inside: everyone is', 17, soft) + T(548, 768, 'looking at the seats.', 17, soft) +
     T(560, 440, 'MORE ROAD', 22, gold) + T(560, 466, 'what we’re for', 19, gold) +
     T(50, 620, 'THE USUAL FIGHT', 22) + T(50, 650, 'is about who sits where.', 20) + T(50, 696, 'THIS IS NOT THAT.', 22) + T(50, 726, 'nobody is asked to move back.', 20) + T(50, 752, 'the job is to make the road', 20) + T(50, 778, 'go on for longer, for every seat.', 20) +
-    T(50, 916, 'TWO WAYS TO LOOK AT IT', 19, soft) +
-    T(68, 972, 'WHO HAS THE BEST SEAT?', 21) + T(68, 1004, 'compares people, right now.', 18) + T(68, 1052, 'long word: symmetry', 17, soft) +
-    T(422, 972, 'HOW FAR DOES IT GO?', 21) + T(422, 1004, 'for everyone, for how long.', 18) + T(422, 1052, 'long word: continuity', 17, soft) +
+    T(50, 904, 'TWO WAYS TO LOOK AT IT', 19, soft) +
+    T(68, 960, 'WHO HAS THE BEST SEAT?', 21) + T(68, 992, 'compares people, right now.', 18) + T(68, 1040, 'long word: symmetry', 17, soft) +
+    T(422, 960, 'HOW FAR DOES IT GO?', 21) + T(422, 992, 'for everyone, for how long.', 18) + T(422, 1040, 'long word: continuity', 17, soft) +
     tb.text,
 });

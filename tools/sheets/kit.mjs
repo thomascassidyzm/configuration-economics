@@ -10,7 +10,8 @@
 //
 // A sheet file is tools/sheets/sheet-<n>-<name>.mjs and default-exports sheet({...}).
 // Canvas is 780 wide and 1240 tall; keep clear of the frame (x 40–740, y 40–1200).
-// Title at (50,78) size 40, subtitle at (50,112) size 25 soft; title block bottom right via titleBlock().
+// Title at (50,78) size 40, subtitle at (50,112) size 25 soft; title block bottom right via titleBlock()
+// (it occupies x 420–736, y 1084–1198; keep your drawing clear of it).
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -35,8 +36,9 @@ export const dim = (x, y1, y2) => `<path d="M${x} ${y1}V${y2}M${x - 9} ${y1}H${x
 export const box = (x, y, w, h, sw = 2) => `<path d="M${x} ${y}H${x + w}V${y + h}H${x}Z" stroke-width="${sw}"/>`;
 // the title block, bottom right. Returns { strokes, text }.
 export const titleBlock = (n, name) => ({
-  strokes: `<path d="M420 1108H736V1196H420Z" stroke-width="2"/><path d="M420 1156H736" stroke-width="2"/>`,
-  text: T(436, 1142, 'CONFIGURATION ECONOMICS') + T(436, 1184, `sheet ${n} · ${name}`, 18, soft) + T(622, 1184, 'not to scale', 17, soft),
+  strokes: `<path d="M420 1084H736V1198H420Z" stroke-width="2"/><path d="M420 1122H736M420 1166H736" stroke-width="2"/>`,
+  text: T(436, 1111, 'CONFIGURATION ECONOMICS') + T(436, 1141, 'a living blueprint for a world', 15.5, soft) + T(436, 1159, 'that works for everybody', 15.5, soft) +
+    T(436, 1188, `sheet ${n} · ${name}`, 16, soft) + T(634, 1188, 'not to scale', 15, soft),
 });
 // the sun, off to the side, with one ray landing on each turn
 export function sun(sx, sy, targets) {
