@@ -15,6 +15,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { bake } from './bake.mjs';
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const FONTS = `@font-face{font-family:Arch;src:url(data:font/ttf;base64,${readFileSync(join(ROOT, 'tools/sheets-fonts/ArchitectsDaughter-Regular.ttf')).toString('base64')})}`;
 export const W = 780;
@@ -24,7 +25,8 @@ export const d = (p) => 'M' + p.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}
 // repeatable random numbers, so a sheet draws the same every time
 export const seeded = (seed = 7) => () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
 
-// TEXT. T(x, y, 'words', size, soft | gold). Text is not wobbled; strokes are.
+// TEXT. T(x, y, 'words', size, soft | gold). Text is not wobbled; strokes are (the wobble is baked
+// into the line by bake.mjs when the sheet is made, so it stays clean at any size).
 export const soft = { fill: B.soft }, gold = { fill: B.sun };
 export const T = (x, y, s, size = 21, o = {}) => `<text x="${x}" y="${y}" font-size="${size}" text-anchor="${o.anchor || 'start'}" fill="${o.fill || B.ink}"${o.rot ? ` transform="rotate(${o.rot} ${x} ${y})"` : ''}>${s}</text>`;
 
@@ -57,10 +59,9 @@ export function sun(sx, sy, targets) {
 export function sheet({ strokes, text, title, seed = 4, height = 1240 }) {
   const H = height;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img"><title>${title}</title><defs><style>${FONTS}</style>
- <filter id="wob" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="${seed}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="8"/></filter>
  <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="2"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.07 0"/></filter>
  <pattern id="grid" width="39" height="39" patternUnits="userSpaceOnUse"><path d="M39 0H0V39" fill="none" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/></pattern></defs>
- <rect width="${W}" height="${H}" fill="${B.paper}"/><rect width="${W}" height="${H}" fill="url(#grid)"/><rect width="${W}" height="${H}" filter="url(#paper)"/><g><rect x="22" y="22" width="${W - 44}" height="${H - 44}" fill="none" stroke="${B.ink}" stroke-width="2.5" filter="url(#wob)"/>
- <g filter="url(#wob)" stroke="${B.ink}" stroke-width="${B.sw}" fill="none" stroke-linecap="round" stroke-linejoin="round">${strokes}</g>
+ <rect width="${W}" height="${H}" fill="${B.paper}"/><rect width="${W}" height="${H}" fill="url(#grid)"/><rect width="${W}" height="${H}" filter="url(#paper)"/><g>${bake(`<rect x="22" y="22" width="${W - 44}" height="${H - 44}" fill="none" stroke="${B.ink}" stroke-width="2.5"/>`, seed)}
+ <g stroke="${B.ink}" stroke-width="${B.sw}" fill="none" stroke-linecap="round" stroke-linejoin="round">${bake(strokes, seed)}</g>
  <g font-family="${B.font}" fill="${B.ink}">${text}</g></g></svg>`;
 }
