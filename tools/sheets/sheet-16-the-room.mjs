@@ -1,4 +1,4 @@
-// Sheet 16, the room: room for everyone, under a roof that holds. After Kate Raworth, Doughnut Economics (2017)
+// Sheet 16, the room: a floor and a roof. After Kate Raworth, Doughnut Economics (2017)
 // and the Doughnut Economics Action Lab. Her idea, drawn fresh (not her doughnut diagram): an economy should meet
 // the needs of all people (a floor nobody falls through) within the means of the living planet (a roof nobody
 // breaks through). Between the two is the safe and just space.
@@ -50,10 +50,10 @@ const strokes =
   `<path d="M50 990H376V1092H50Z" stroke-width="2"/><path d="M404 990H730V1092H404Z" stroke-width="2"/>` + tb.strokes;
 
 export default sheet({
-  title: 'Blueprint sheet 16, the room: room for everyone, under a roof that holds. After Kate Raworth',
+  title: 'Blueprint sheet 16, the room: a floor and a roof. After Kate Raworth',
   seed: 6,
   strokes,
-  text: T(50, 78, 'ROOM FOR EVERYONE', 40) + T(50, 112, 'with a floor nobody falls through, and a roof that holds', 23, soft) +
+  text: T(50, 78, 'A FLOOR AND A ROOF', 40) + T(50, 112, 'nobody falls through one, nothing breaks through the other', 23, soft) +
     T(50, 178, 'THE ROOF', 22) + T(50, 206, 'what the living planet can bear:', 19) + T(50, 230, 'steady weather, good soil, the ozone layer.', 19) +
     T(470, 178, 'THROUGH THE ROOF', 22) + T(470, 206, 'taking more than', 19) + T(470, 230, 'the planet can bear.', 19) +
     T(196, 474, 'THE ROOM BETWEEN', 22, gold) + T(196, 500, 'safe for the planet,', 19, gold) + T(196, 524, 'fair to everyone.', 19, gold) +
