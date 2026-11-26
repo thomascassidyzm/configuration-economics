@@ -4,17 +4,17 @@ import { B, T, soft, gold, d, lead, dim, sun, titleBlock, sheet } from './kit.mj
 
 // the coil: 3.25 turns, widening as it climbs, ending on its left edge where the pen is already going up
 const C = { cx: 330, y0: 740, turns: 3.25, R0: 118, R1: 168, sq: 0.36, rise: 105 };
-const A1 = Math.PI, A0 = A1 - C.turns * 2 * Math.PI;
-const cpt = (a) => { const t = (a - A0) / (A1 - A0), R = C.R0 + (C.R1 - C.R0) * t; return [C.cx + R * Math.cos(a), C.y0 + R * C.sq * Math.sin(a) - C.rise * (a - A0) / (2 * Math.PI)]; };
-function coil() {
+export const A1 = Math.PI, A0 = A1 - C.turns * 2 * Math.PI;
+export const cpt = (a) => { const t = (a - A0) / (A1 - A0), R = C.R0 + (C.R1 - C.R0) * t; return [C.cx + R * Math.cos(a), C.y0 + R * C.sq * Math.sin(a) - C.rise * (a - A0) / (2 * Math.PI)]; };
+export function coil(paper = B.paper, sw = B.sw) {
   const n = 400, segs = []; let cur = null;
   for (let i = 0; i <= n; i++) { const a = A0 + (A1 - A0) * i / n, front = Math.sin(a) > 0; if (!cur || cur.front !== front) { const p = cur ? cur.p[cur.p.length - 1] : null; cur = { front, p: p ? [p] : [] }; segs.push(cur); } cur.p.push(cpt(a)); }
   const [ex, ey] = cpt(A1);
   const arrow = `<path d="M${ex} ${ey} C${ex - 2} ${ey - 50} ${ex + 4} ${ey - 90} ${ex + 12} ${ey - 135}"/><path d="M${ex - 8} ${ey - 108} L${ex + 12} ${ey - 137} L${ex + 27} ${ey - 104}"/>`;
   return segs.filter((s) => !s.front).map((s) => `<path d="${d(s.p)}"/>`).join('') +
-    segs.filter((s) => s.front).map((s) => `<path d="${d(s.p.slice(2, -2))}" stroke="${B.paper}" stroke-width="${B.sw * 4.5}" stroke-linecap="butt"/><path d="${d(s.p)}"/>`).join('') + arrow;
+    segs.filter((s) => s.front).map((s) => `<path d="${d(s.p.slice(2, -2))}" stroke="${paper}" stroke-width="${sw * 4.5}" stroke-linecap="butt"/><path d="${d(s.p)}"/>`).join('') + arrow;
 }
-const rightEdges = () => [0.75, 1.75, 2.75].map((t) => { const [x, y] = cpt(A0 + t * 2 * Math.PI); return [x + 22, y]; });
+export const rightEdges = () => [0.75, 1.75, 2.75].map((t) => { const [x, y] = cpt(A0 + t * 2 * Math.PI); return [x + 22, y]; });
 const front = (t) => cpt(A0 + t * 2 * Math.PI);
 const SUN = [672, 520];
 const tb = titleBlock(1, 'the coil');
