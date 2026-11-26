@@ -7,7 +7,6 @@
 import { VERSION, BUILD } from '../lib/version';
 import PhoneNav from '../components/PhoneNav.astro';
 import ScopeMap from '../components/ScopeMap.astro';
-import { HELIX_MARK } from '../lib/helix-mark';
 ---
 
 <html lang="en">
@@ -45,13 +44,20 @@ import { HELIX_MARK } from '../lib/helix-mark';
       .nav-build { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); opacity:0.7; }
 
       main { max-width: 1080px; margin: 0 auto; padding: 120px 2rem 5rem; }
-      .hero { max-width: 640px; margin-bottom: 3rem; }
+      .hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
+      .hero-head, .hero-body { max-width: 640px; }
+      .hero-sheet { display: block; max-width: 520px; border-radius: 6px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.45); }
+      .hero-sheet img { display: block; width: 100%; height: auto; }
+      @media (min-width: 900px) {
+        .hero { grid-template-columns: minmax(0, 1fr) 460px; grid-template-rows: auto 1fr; column-gap: 3.5rem; row-gap: 0.5rem; align-items: start; }
+        .hero-head { grid-column: 1; grid-row: 1; }
+        .hero-body { grid-column: 1; grid-row: 2; }
+        .hero-sheet { grid-column: 2; grid-row: 1 / span 2; }
+      }
       h1 { font-family: var(--font-display); font-size: 3rem; font-weight: 300; line-height: 1.1; margin-bottom: 0.5rem; }
       .subtitle { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.75rem; }
       .claim { font-family: var(--font-display); font-size: 1.45rem; font-style: italic; color: var(--text-primary); line-height: 1.4; margin-bottom: 1.25rem; }
-      .strap { font-family: var(--font-display); font-size: 1.3rem; color: var(--text-primary); line-height: 1.35; margin-bottom: 1.1rem; }
-      .mark { width: 250px; margin: 0 0 1.25rem -10px; }
-      .mark :global(svg) { display: block; width: 100%; height: auto; }
+      .strap { font-family: var(--font-display); font-size: 1.3rem; color: var(--text-primary); line-height: 1.35; margin-bottom: 0; }
       .line { font-family: var(--font-display); font-size: 1.7rem; font-style: italic; color: var(--accent); line-height: 1.3; margin-bottom: 0.9rem; }
       .mark-link { color: var(--accent); text-decoration: none; }
       .note + .note { margin-top: 0.75rem; }
@@ -81,17 +87,23 @@ import { HELIX_MARK } from '../lib/helix-mark';
     </nav>
     <main>
       <header class="hero">
-        <div class="mark"><Fragment set:html={HELIX_MARK} /></div>
-        <h1>Configuration Economics</h1>
-        <p class="strap">A living blueprint for a world that works for everybody.</p>
-        <p class="line">Round and round, up we go.</p>
-        <p class="claim">Value is about what enables future possibilities, not what gets consumed.</p>
-        <p class="note">
-          A living epistemic work where content can be read at multiple resolutions,
-          each claim carries its epistemic status, and an embedded guide helps you
-          think through the framework at your own depth.
-        </p>
-        <p class="note"><a class="mark-link" href="/open/NOTES-circular-to-helical">What the coil means &rarr;</a></p>
+        <div class="hero-head">
+          <h1>Configuration Economics</h1>
+          <p class="strap">A living blueprint for a world that works for everybody.</p>
+        </div>
+        <a class="hero-sheet" href="/open/NOTES-circular-to-helical">
+          <img src="/sheets/sheet-1-the-coil.svg" width="780" height="1240" alt="A hand-drawn blueprint titled: how things get better, without using more stuff. A coil of three turns climbs and ends in an arrow, labelled up equals more things you can do next. A sun at the side sends one ray to each turn, labelled turns up every day, nothing else is added. Other labels: the same stuff going round again, nothing new dug up. The lift: each time round the stuff is put together a bit better; the sun can't do this part, someone has to work it out. Each turn is wider: one better way makes the next easier to find. A box reads: the rule for every turn, better for someone, worse for no one; that's the aim, it can be hard to find. In the corner, the other two ways: use it up, goes up, runs out; round and round, lasts, gets no higher." />
+        </a>
+        <div class="hero-body">
+          <p class="line">Round and round, up we go.</p>
+          <p class="claim">Value is about what enables future possibilities, not what gets consumed.</p>
+          <p class="note">
+            A living epistemic work where content can be read at multiple resolutions,
+            each claim carries its epistemic status, and an embedded guide helps you
+            think through the framework at your own depth.
+          </p>
+          <p class="note"><a class="mark-link" href="/open/NOTES-circular-to-helical">What the coil means &rarr;</a></p>
+        </div>
       </header>
 
       <ScopeMap />
